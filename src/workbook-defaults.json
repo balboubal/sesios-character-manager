@@ -1,0 +1,2716 @@
+{
+  "defaultState": {
+    "schemaVersion": 1,
+    "character": {
+      "name": "Zele Kopsffmann",
+      "race": "Human (Sesian)",
+      "className": "Rogue",
+      "age": 20,
+      "weight": 72,
+      "height": 180,
+      "background": "Charlatan (A)",
+      "eyes": "",
+      "skin": "",
+      "hair": "",
+      "features": "Forgery kit proficiency\nThieve's kit proficiency\nGaming set (Playing Cards) proficiency\nSimple weapons proficiency\nMarital weapons that have the finesse or light property proficiency\nExpertise: Gambling, Pick Pocketing",
+      "level": 2,
+      "currentHitPoints": 16,
+      "temporaryHitPoints": 0,
+      "currentMana": 0,
+      "currentFocus": 1,
+      "alignment": "Chaotic Evil",
+      "sanctum": "None",
+      "faith": "None",
+      "spellcastingAbility": "AWR"
+    },
+    "abilityBonuses": {
+      "strength": 1,
+      "speed": 2,
+      "vitality": 1,
+      "intelligence": 1,
+      "awareness": 1,
+      "talent": 9
+    },
+    "personality": [
+      {
+        "name": "Greedy",
+        "cost": 10
+      },
+      {
+        "name": "Deceitful",
+        "cost": 10
+      },
+      {
+        "name": "Cynical",
+        "cost": 15
+      },
+      {
+        "name": "Master Manipulator",
+        "cost": 35
+      },
+      {
+        "name": "",
+        "cost": 0
+      },
+      {
+        "name": "",
+        "cost": 0
+      }
+    ],
+    "bonuses": {
+      "physicalDamage": 0,
+      "hitPoints": 0,
+      "spellDamage": 0,
+      "armor": 0,
+      "resistance": 0,
+      "evasion": 0,
+      "focus": 0,
+      "criticalChance": 0,
+      "mana": 0,
+      "moveSpeed": 0
+    },
+    "equipment": {
+      "righthand": "Dagger",
+      "lefthand": "Dagger of the Viper",
+      "headgear": "",
+      "plate": "Vest of the Black Hand",
+      "footwear": "",
+      "trinket": "Imani's Pendant",
+      "secondarytrinket": "",
+      "necklace": ""
+    },
+    "inventory": [
+      {
+        "name": "Forgery Kit",
+        "quantity": 1,
+        "equipped": false,
+        "weightOverride": null
+      },
+      {
+        "name": "Costume",
+        "quantity": 1,
+        "equipped": false,
+        "weightOverride": null
+      },
+      {
+        "name": "Fine clothes",
+        "quantity": 1,
+        "equipped": false,
+        "weightOverride": null
+      },
+      {
+        "name": "Zele's Luggage Chest",
+        "quantity": 1,
+        "equipped": false,
+        "weightOverride": 20
+      },
+      {
+        "name": "Noble’s satchel",
+        "quantity": 1,
+        "equipped": false,
+        "weightOverride": null
+      },
+      {
+        "name": "Zele's Book",
+        "quantity": 1,
+        "equipped": false,
+        "weightOverride": null
+      },
+      {
+        "name": "Coin of Many Faces",
+        "quantity": 1,
+        "equipped": false,
+        "weightOverride": null
+      },
+      {
+        "name": "Dagger",
+        "quantity": 1,
+        "equipped": false,
+        "weightOverride": null
+      },
+      {
+        "name": "Imani's Pendant",
+        "quantity": 1,
+        "equipped": false,
+        "weightOverride": null
+      },
+      {
+        "name": "Vest of the Black Hand",
+        "quantity": 1,
+        "equipped": false,
+        "weightOverride": null
+      },
+      {
+        "name": "Thieve's Kit",
+        "quantity": 1,
+        "equipped": false,
+        "weightOverride": null
+      },
+      {
+        "name": "Teddy Bear",
+        "quantity": 1,
+        "equipped": false,
+        "weightOverride": null
+      },
+      {
+        "name": "Leather Mage Robe",
+        "quantity": 1,
+        "equipped": false,
+        "weightOverride": null
+      },
+      {
+        "name": "Dagger of the Viper",
+        "quantity": 1,
+        "equipped": false,
+        "weightOverride": null
+      }
+    ],
+    "currency": {
+      "copper": 0,
+      "silver": 200,
+      "gold": 67,
+      "platinum": 10
+    },
+    "jewelry": [
+      "",
+      "",
+      "",
+      ""
+    ],
+    "gems": [
+      "",
+      "",
+      "",
+      ""
+    ],
+    "activeEffects": [
+      {
+        "status": "Blood Mark",
+        "duration": "Will not wear off",
+        "ailment": "",
+        "mark": ""
+      },
+      {
+        "status": "",
+        "duration": "",
+        "ailment": "",
+        "mark": ""
+      },
+      {
+        "status": "",
+        "duration": "",
+        "ailment": "",
+        "mark": ""
+      },
+      {
+        "status": "",
+        "duration": "",
+        "ailment": "",
+        "mark": ""
+      },
+      {
+        "status": "",
+        "duration": "",
+        "ailment": "",
+        "mark": ""
+      },
+      {
+        "status": "",
+        "duration": "",
+        "ailment": "",
+        "mark": ""
+      },
+      {
+        "status": "",
+        "duration": "",
+        "ailment": "",
+        "mark": ""
+      }
+    ],
+    "specialEffects": {
+      "immunities": "",
+      "vulnerabilities": "",
+      "resistances": ""
+    },
+    "skills": {
+      "28": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "29": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "30": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "31": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "32": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "34": {
+        "proficient": true,
+        "bonus": 0
+      },
+      "35": {
+        "proficient": true,
+        "bonus": 0
+      },
+      "36": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "37": {
+        "proficient": true,
+        "bonus": 0
+      },
+      "38": {
+        "proficient": true,
+        "bonus": 0
+      },
+      "39": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "40": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "41": {
+        "proficient": true,
+        "bonus": 0
+      },
+      "42": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "44": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "45": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "46": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "48": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "49": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "50": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "51": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "52": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "53": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "54": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "55": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "56": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "57": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "58": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "59": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "60": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "61": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "62": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "63": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "64": {
+        "proficient": true,
+        "bonus": 0
+      },
+      "65": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "66": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "67": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "68": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "69": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "70": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "71": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "72": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "73": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "74": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "75": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "77": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "78": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "79": {
+        "proficient": true,
+        "bonus": 0
+      },
+      "80": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "81": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "82": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "83": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "84": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "85": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "86": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "87": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "88": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "89": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "90": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "91": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "92": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "93": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "94": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "95": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "96": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "97": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "98": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "100": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "101": {
+        "proficient": true,
+        "bonus": 0
+      },
+      "102": {
+        "proficient": true,
+        "bonus": 0
+      },
+      "103": {
+        "proficient": true,
+        "bonus": 0
+      },
+      "104": {
+        "proficient": true,
+        "bonus": 0
+      },
+      "105": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "106": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "107": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "108": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "109": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "110": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "111": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "112": {
+        "proficient": true,
+        "bonus": 0
+      },
+      "113": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "114": {
+        "proficient": false,
+        "bonus": 0
+      }
+    },
+    "savingThrows": {
+      "strength": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "speed": {
+        "proficient": true,
+        "bonus": 0
+      },
+      "vitality": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "intelligence": {
+        "proficient": true,
+        "bonus": 0
+      },
+      "awareness": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "talent": {
+        "proficient": false,
+        "bonus": 0
+      }
+    },
+    "spells": {
+      "Cantrips": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ],
+      "Level 1": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ],
+      "Level 2": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ],
+      "Level 3": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ],
+      "Level 4": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ],
+      "Level 5": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ],
+      "Level 6": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ],
+      "Level 7": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ],
+      "Level 8": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ],
+      "Level 9": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ]
+    },
+    "damageTool": {
+      "multiplier": 1,
+      "accuracyAbility": "STR",
+      "accuracyDebuff": 0,
+      "rollCount": 2,
+      "rolls": [
+        50,
+        50,
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "criticalRoll": 79
+    },
+    "hunger": {
+      "startingRations": 1,
+      "days": [
+        {
+          "day": 1,
+          "foodGained": 3,
+          "rationsEaten": 1
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        },
+        {
+          "day": "",
+          "foodGained": "",
+          "rationsEaten": ""
+        }
+      ]
+    },
+    "hearth": {
+      "restCycle": 1,
+      "log": [
+        {
+          "rest": 1,
+          "day": 1,
+          "dish": "Hushback Silver-Reed Broth",
+          "eaten": true,
+          "boonUsed": true
+        },
+        {
+          "rest": "",
+          "day": "",
+          "dish": "",
+          "eaten": false,
+          "boonUsed": false
+        },
+        {
+          "rest": "",
+          "day": "",
+          "dish": "",
+          "eaten": false,
+          "boonUsed": false
+        },
+        {
+          "rest": "",
+          "day": "",
+          "dish": "",
+          "eaten": false,
+          "boonUsed": false
+        },
+        {
+          "rest": "",
+          "day": "",
+          "dish": "",
+          "eaten": false,
+          "boonUsed": false
+        },
+        {
+          "rest": "",
+          "day": "",
+          "dish": "",
+          "eaten": false,
+          "boonUsed": false
+        },
+        {
+          "rest": "",
+          "day": "",
+          "dish": "",
+          "eaten": false,
+          "boonUsed": false
+        },
+        {
+          "rest": "",
+          "day": "",
+          "dish": "",
+          "eaten": false,
+          "boonUsed": false
+        },
+        {
+          "rest": "",
+          "day": "",
+          "dish": "",
+          "eaten": false,
+          "boonUsed": false
+        },
+        {
+          "rest": "",
+          "day": "",
+          "dish": "",
+          "eaten": false,
+          "boonUsed": false
+        },
+        {
+          "rest": "",
+          "day": "",
+          "dish": "",
+          "eaten": false,
+          "boonUsed": false
+        },
+        {
+          "rest": "",
+          "day": "",
+          "dish": "",
+          "eaten": false,
+          "boonUsed": false
+        },
+        {
+          "rest": "",
+          "day": "",
+          "dish": "",
+          "eaten": false,
+          "boonUsed": false
+        },
+        {
+          "rest": "",
+          "day": "",
+          "dish": "",
+          "eaten": false,
+          "boonUsed": false
+        },
+        {
+          "rest": "",
+          "day": "",
+          "dish": "",
+          "eaten": false,
+          "boonUsed": false
+        },
+        {
+          "rest": "",
+          "day": "",
+          "dish": "",
+          "eaten": false,
+          "boonUsed": false
+        },
+        {
+          "rest": "",
+          "day": "",
+          "dish": "",
+          "eaten": false,
+          "boonUsed": false
+        },
+        {
+          "rest": "",
+          "day": "",
+          "dish": "",
+          "eaten": false,
+          "boonUsed": false
+        },
+        {
+          "rest": "",
+          "day": "",
+          "dish": "",
+          "eaten": false,
+          "boonUsed": false
+        },
+        {
+          "rest": "",
+          "day": "",
+          "dish": "",
+          "eaten": false,
+          "boonUsed": false
+        }
+      ],
+      "acquired": {
+        "Lysael Glassfin Parcels": 0,
+        "Vellhorn Cloud Curd": 0,
+        "Brumox Winter Pot": 0,
+        "Hrimchar Smoke-Cakes": 0,
+        "Hushback Silver-Reed Broth": 3,
+        "Telleth Bellbread ⚠": 0,
+        "Duskhide Marrow Tartine": 0,
+        "Blackwake Vigil Soup": 0,
+        "Azurefin Nayara Skewers": 0,
+        "Reedhorn Yoghurt Hearthbread": 0,
+        "Vaelwyn Bark-Honey Dumplings": 0,
+        "Qasira Well-Bowl": 0,
+        "Gorak Ash-Roast": 0,
+        "Iril Candle-Pear ✦": 0
+      }
+    }
+  }
+}

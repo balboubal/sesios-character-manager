@@ -1,0 +1,153 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="color-scheme" content="light" />
+    <meta name="theme-color" content="#10202b" />
+    <meta
+      name="description"
+      content="A complete browser-based conversion of the Amutsu tabletop RPG character workbook."
+    />
+    <title>Amutsu Character Sheet</title>
+    <link rel="stylesheet" href="styles.css" />
+    <script src="data.js" defer></script>
+    <script src="engine.js" defer></script>
+    <script src="script.js" defer></script>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to application</a>
+
+    <div class="app-shell">
+      <aside class="app-sidebar" aria-label="Application navigation">
+        <a class="brand" href="#character" data-route-link="character" aria-label="Amutsu Character Sheet home">
+          <span class="brand-mark" aria-hidden="true">A</span>
+          <span>
+            <strong>Amutsu</strong>
+            <small>Character Record</small>
+          </span>
+        </a>
+
+        <nav class="primary-nav" aria-label="Workbook pages">
+          <button class="nav-link is-active" type="button" data-route="character">
+            <span aria-hidden="true">◈</span><span>Character Sheet</span>
+          </button>
+          <button class="nav-link" type="button" data-route="skills">
+            <span aria-hidden="true">✦</span><span>Skills</span>
+          </button>
+          <button class="nav-link" type="button" data-route="inventory">
+            <span aria-hidden="true">▣</span><span>Inventory</span>
+          </button>
+          <button class="nav-link" type="button" data-route="spells">
+            <span aria-hidden="true">✧</span><span>Spells</span>
+          </button>
+          <button class="nav-link" type="button" data-route="survival">
+            <span aria-hidden="true">⌁</span><span>Effects & Survival</span>
+          </button>
+
+          <p class="nav-kicker">Catalogues</p>
+
+          <button class="nav-link" type="button" data-route="traits">
+            <span aria-hidden="true">◇</span><span>Personality Traits</span>
+          </button>
+          <button class="nav-link" type="button" data-route="conditions">
+            <span aria-hidden="true">⚑</span><span>Rules & Conditions</span>
+          </button>
+          <button class="nav-link" type="button" data-route="items">
+            <span aria-hidden="true">◆</span><span>Item Catalogue</span>
+          </button>
+          <button class="nav-link" type="button" data-route="food">
+            <span aria-hidden="true">●</span><span>Hearthcraft</span>
+          </button>
+          <button class="nav-link" type="button" data-route="crafting">
+            <span aria-hidden="true">⚒</span><span>Crafting Catalogue</span>
+          </button>
+        </nav>
+
+        <div class="sidebar-foot">
+          <span class="save-indicator" id="save-indicator" role="status" aria-live="polite">
+            <span class="save-dot" aria-hidden="true"></span>
+            <span id="save-text">Saved locally</span>
+          </span>
+          <small>Workbook logic preserved offline</small>
+        </div>
+      </aside>
+
+      <div class="app-stage">
+        <header class="app-header">
+          <div class="mobile-route-wrap">
+            <label for="mobile-route">Page</label>
+            <select id="mobile-route" aria-label="Choose application page">
+              <option value="character">Character Sheet</option>
+              <option value="skills">Skills</option>
+              <option value="inventory">Inventory</option>
+              <option value="spells">Spells</option>
+              <option value="survival">Effects & Survival</option>
+              <option value="traits">Personality Traits</option>
+              <option value="conditions">Rules & Conditions</option>
+              <option value="items">Item Catalogue</option>
+              <option value="food">Hearthcraft</option>
+              <option value="crafting">Crafting Catalogue</option>
+            </select>
+          </div>
+
+          <div class="header-context" aria-live="polite">
+            <span class="eyebrow" id="page-eyebrow">Character Sheet</span>
+            <strong id="header-character-name">Zele Kopsffmann</strong>
+          </div>
+
+          <div class="header-actions" aria-label="Data actions">
+            <button class="button button-quiet" type="button" id="export-button">Export JSON</button>
+            <button class="button button-quiet" type="button" id="import-button">Import JSON</button>
+            <button class="button button-danger" type="button" id="reset-button">Reset</button>
+            <input class="visually-hidden" type="file" id="import-file" accept="application/json,.json" />
+          </div>
+        </header>
+
+        <main id="main-content" tabindex="-1">
+          <div class="route-loading" id="route-root" aria-live="polite">
+            <span class="loading-mark" aria-hidden="true"></span>
+            Loading character record…
+          </div>
+        </main>
+
+        <footer class="app-footer">
+          <span>Amutsu Character Sheet</span>
+          <span>Source workbook: Amutsu Character Sheet.xlsx</span>
+        </footer>
+      </div>
+    </div>
+
+    <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+
+    <dialog class="image-dialog" id="image-dialog" aria-labelledby="image-dialog-title">
+      <div class="dialog-bar">
+        <h2 id="image-dialog-title">Craftable Equipment Catalogue</h2>
+        <button class="icon-button" type="button" data-close-dialog aria-label="Close image">×</button>
+      </div>
+      <div class="image-dialog-canvas">
+        <img
+          id="dialog-image"
+          src="assets/craftable-equipment-catalogue.webp"
+          alt="Catalogue II showing craftable equipment, consumables, alchemy, recipes, and legendary crafts"
+        />
+      </div>
+    </dialog>
+
+    <dialog class="confirm-dialog" id="reset-dialog" aria-labelledby="reset-dialog-title">
+      <div class="confirm-dialog-body">
+        <p class="page-kicker">Local data action</p>
+        <h2 id="reset-dialog-title">Restore original workbook values?</h2>
+        <p>This replaces every editable field and the locally saved character state.</p>
+        <div class="confirm-dialog-actions">
+          <button class="button button-quiet" type="button" id="cancel-reset-button">Keep current data</button>
+          <button class="button button-danger" type="button" id="confirm-reset-button">Reset all fields</button>
+        </div>
+      </div>
+    </dialog>
+
+    <noscript>
+      <div class="noscript-message">This character sheet requires JavaScript to calculate workbook formulas.</div>
+    </noscript>
+  </body>
+</html>

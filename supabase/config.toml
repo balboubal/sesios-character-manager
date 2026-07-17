@@ -1,0 +1,4 @@
+project_id = "bxujxmmoyxlqjdqhpkjs"
+
+[functions.invite-player]
+verify_jwt = true

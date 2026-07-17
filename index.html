@@ -1,0 +1,25 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="theme-color" content="#10202b" />
+    <meta
+      name="description"
+      content="Private campaign character management for the World of Sesios."
+    />
+    <title>Sesios Character Manager</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><rect rx=%2222%22 width=%22100%22 height=%22100%22 fill=%22%2310202b%22/><text x=%2250%22 y=%2268%22 text-anchor=%22middle%22 font-size=%2262%22 fill=%22%23e2aa4f%22>S</text></svg>" />
+  </head>
+  <body>
+    <a class="skip-link" href="#app-main">Skip to content</a>
+    <div id="app" aria-live="polite">
+      <div class="boot-screen" role="status">
+        <span class="spinner" aria-hidden="true"></span>
+        <p>Opening the campaign…</p>
+      </div>
+    </div>
+    <div class="toast-region" id="toast-region" aria-live="polite" aria-atomic="true"></div>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
