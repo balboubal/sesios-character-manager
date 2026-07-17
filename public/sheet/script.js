@@ -240,8 +240,8 @@
       if (input) {
         setPath(state, input.dataset.bind, inputValue(input));
         recalculate();
+        refreshComputedBindings();
         scheduleSave();
-        renderRoute({ preserveScroll: true });
       }
 
       const filter = event.target.closest("[data-filter]");
