@@ -55,7 +55,16 @@ async function initialize() {
 
   supabase.auth.onAuthStateChange((event, session) => {
     application.session = session;
+    // Recovery links fire PASSWORD_RECOVERY; invite links fire SIGNED_IN with
+    // the token in the URL. In both cases the user must set a password, so
+    // route them to the password-setup screen rather than the app.
     if (event === "PASSWORD_RECOVERY") application.passwordFlow = true;
+    if (
+      event === "SIGNED_IN" &&
+      (initialAuthType === "invite" || initialAuthType === "recovery")
+    ) {
+      application.passwordFlow = true;
+    }
     window.setTimeout(() => synchronizeSession(), 0);
   });
 }
