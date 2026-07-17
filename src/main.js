@@ -560,9 +560,16 @@ async function handleClick(event) {
     return;
   }
   if (action === "close-modal") {
-    if (event.target.closest("[data-modal-panel]") && event.target === button.closest("[data-modal-panel]")) return;
-    application.modal = null;
-    render();
+    // `button` is the nearest [data-action="close-modal"]. The × and Cancel
+    // buttons carry that action themselves and sit inside the panel, so they
+    // should close. The backdrop also carries it, but a click on a field
+    // inside the panel bubbles up to the backdrop — that must NOT close.
+    const closeButtonInsidePanel = button.closest("[data-modal-panel]");
+    const clickedBackdropDirectly = event.target === button && !button.closest("[data-modal-panel]");
+    if (closeButtonInsidePanel || clickedBackdropDirectly) {
+      application.modal = null;
+      render();
+    }
     return;
   }
   if (action === "new-catalogue-entry") {
