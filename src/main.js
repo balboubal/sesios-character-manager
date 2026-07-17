@@ -611,8 +611,8 @@ function handleInput(event) {
 }
 
 async function signIn(form) {
-  setFormBusy(form, true, "Signing in…");
   const values = new FormData(form);
+  setFormBusy(form, true, "Signing in…");
   const { error } = await supabase.auth.signInWithPassword({
     email: String(values.get("email") || "").trim(),
     password: String(values.get("password") || ""),
