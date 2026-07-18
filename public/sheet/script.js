@@ -236,6 +236,28 @@
     });
 
     root.addEventListener("change", (event) => {
+      const hearthMealCheckbox = event.target.closest("[data-hearth-eat]");
+      if (hearthMealCheckbox) {
+        const result = engine.applyHearthMealEdit(
+          state,
+          Number(hearthMealCheckbox.dataset.hearthEat),
+          hearthMealCheckbox.checked,
+        );
+        recalculate();
+        scheduleSave();
+        renderRoute({ preserveScroll: true });
+
+        if (!result.accepted) {
+          const message = {
+            "missing-dish": "Choose a dish before marking this meal eaten.",
+            "missing-day": "Enter a valid travel day in the Hunger Tracker before logging a meal.",
+            "missing-row": "That meal row is no longer available. Refresh and try again.",
+          }[result.reason];
+          showToast(message || "The meal could not be logged.", "error");
+        }
+        return;
+      }
+
       const input = event.target.closest("[data-bind]");
       if (input) {
         setPath(state, input.dataset.bind, inputValue(input));
@@ -875,7 +897,7 @@
         <td data-label="Rest"><input class="table-input" type="number" min="0" step="1" data-value-type="number" data-bind="hearth.log.${index}.rest" value="${escapeHtml(entry.rest)}" aria-label="Rest cycle for meal row ${index + 1}" /></td>
         <td data-label="Day"><input class="table-input" type="number" min="0" step="1" data-value-type="number" data-bind="hearth.log.${index}.day" value="${escapeHtml(entry.day)}" aria-label="Day for meal row ${index + 1}" /></td>
         <td data-label="Dish"><select class="table-input" data-bind="hearth.log.${index}.dish" aria-label="Dish for meal row ${index + 1}">${renderOptions(data.food.dishes.map((dish) => dish.name), entry.dish, "None")}</select></td>
-        <td data-label="Eaten"><input type="checkbox" data-bind="hearth.log.${index}.eaten" ${entry.eaten ? "checked" : ""} aria-label="Meal eaten for row ${index + 1}" /></td>
+        <td data-label="Eaten"><input type="checkbox" data-hearth-eat="${index}" ${entry.eaten ? "checked" : ""} aria-label="Meal eaten for row ${index + 1}" /></td>
         <td data-label="Boon Used"><input type="checkbox" data-bind="hearth.log.${index}.boonUsed" ${entry.boonUsed ? "checked" : ""} aria-label="Hearth boon used for row ${index + 1}" /></td>
         <td class="cell-description" data-label="Resolved Effect"><output data-output="hearth.rows.${index}.effect">${escapeHtml(formatOutput(derived.hearth.rows[index]?.effect))}</output></td>
       </tr>`)
