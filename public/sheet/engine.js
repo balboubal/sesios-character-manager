@@ -279,6 +279,60 @@
     };
   }
 
+  function createInventoryEntry(name = "") {
+    return {
+      name: String(name || ""),
+      quantity: 1,
+      equipped: false,
+      weightOverride: null,
+    };
+  }
+
+  function mergeInventorySlots(defaultInventory, suppliedInventory) {
+    const defaults = Array.isArray(defaultInventory) ? defaultInventory : [];
+    const supplied = Array.isArray(suppliedInventory) ? suppliedInventory : defaults;
+
+    return supplied.map((entry, index) => {
+      const fallback = defaults[index] || createInventoryEntry();
+      const values = entry && typeof entry === "object" ? entry : {};
+      return { ...fallback, ...values };
+    });
+  }
+
+  function addInventorySlot(state) {
+    if (!Array.isArray(state.inventory)) state.inventory = [];
+    const entry = createInventoryEntry();
+    state.inventory.push(entry);
+    return entry;
+  }
+
+  function removeInventorySlot(state, index) {
+    if (!Array.isArray(state.inventory)) return null;
+    const position = Number(index);
+    if (!Number.isInteger(position) || position < 0 || position >= state.inventory.length) {
+      return null;
+    }
+    return state.inventory.splice(position, 1)[0] || null;
+  }
+
+  function addInventoryItem(state, itemName) {
+    const name = String(itemName || "").trim();
+    if (!name) return false;
+    if (!Array.isArray(state.inventory)) state.inventory = [];
+
+    const existing = state.inventory.find((entry) => entry.name === name);
+    if (existing) {
+      existing.quantity = Math.max(0, numberValue(existing.quantity)) + 1;
+      return true;
+    }
+
+    const entry =
+      state.inventory.find((candidate) => !String(candidate.name || "").trim()) ||
+      addInventorySlot(state);
+    Object.assign(entry, createInventoryEntry(name));
+    return true;
+  }
+
   function applyHearthMealEdit(state, index, isEating) {
     const entry = state.hearth?.log?.[index];
     if (!entry) return { accepted: false, reason: "missing-row" };
@@ -611,6 +665,11 @@
 
   global.AmutsuEngine = {
     calculate,
+    createInventoryEntry,
+    mergeInventorySlots,
+    addInventorySlot,
+    removeInventorySlot,
+    addInventoryItem,
     applyHearthMealEdit,
     numberValue,
     formatNumber,

@@ -75,16 +75,22 @@
     return JSON.parse(JSON.stringify(value));
   }
 
-  function mergeWithDefaults(defaultValue, suppliedValue) {
+  function mergeWithDefaults(defaultValue, suppliedValue, path = "") {
     if (Array.isArray(defaultValue)) {
+      if (path === "inventory") {
+        return engine.mergeInventorySlots(defaultValue, suppliedValue);
+      }
       const supplied = Array.isArray(suppliedValue) ? suppliedValue : [];
-      return defaultValue.map((item, index) => mergeWithDefaults(item, supplied[index]));
+      return defaultValue.map((item, index) =>
+        mergeWithDefaults(item, supplied[index], `${path}.${index}`),
+      );
     }
     if (defaultValue && typeof defaultValue === "object") {
       const supplied = suppliedValue && typeof suppliedValue === "object" ? suppliedValue : {};
       const merged = {};
       Object.keys(defaultValue).forEach((key) => {
-        merged[key] = mergeWithDefaults(defaultValue[key], supplied[key]);
+        const childPath = path ? `${path}.${key}` : key;
+        merged[key] = mergeWithDefaults(defaultValue[key], supplied[key], childPath);
       });
       return merged;
     }
@@ -781,10 +787,13 @@
           <td class="cell-number" data-label="Weight">${weightControl}</td>
           <td class="cell-number" data-label="Value"><output data-output="inventory.rows.${index}.value" data-format="sp">${escapeHtml(formatOutput(calculated.value, "sp"))}</output></td>
           <td data-label="Equipped"><input type="checkbox" data-bind="inventory.${index}.equipped" ${entry.equipped ? "checked" : ""} aria-label="Mark inventory row ${index + 1} equipped" /></td>
-          <td data-label="Action"><button class="button button-small button-quiet" type="button" data-action="clear-inventory" data-index="${index}">Clear</button></td>
+          <td data-label="Action"><div class="inventory-row-actions"><button class="button button-small button-quiet" type="button" data-action="clear-inventory" data-index="${index}">Clear</button><button class="button button-small button-danger" type="button" data-action="remove-inventory-slot" data-index="${index}" aria-label="Remove inventory slot ${index + 1}">Remove</button></div></td>
         </tr>`;
       })
       .join("");
+    const inventoryTable = rows
+      ? `<div class="data-table-wrap responsive-card-table"><table class="data-table"><thead><tr><th>Item</th><th>Rarity</th><th>Type</th><th>Description</th><th>Qty</th><th>Weight</th><th>Value</th><th>Equipped</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table></div>`
+      : `<div class="empty-state"><strong>No inventory slots</strong><span>Add an item slot to begin tracking equipment and belongings.</span></div>`;
 
     const jewelryFields = state.jewelry.map((value, index) => field(`Jewelry ${index + 1}`, `jewelry.${index}`, value)).join("");
     const gemFields = state.gems.map((value, index) => field(`Gem ${index + 1}`, `gems.${index}`, value)).join("");
@@ -806,7 +815,7 @@
         <article class="encumbrance-card"><span>Maximum</span><strong>${output("inventory.thresholds.maximum", "kg")}</strong></article>
         <article class="encumbrance-card"><span>Current Strength</span><strong>${output("abilityScores.strength", "integer")}</strong></article>
       </div><div class="encumbrance-meter" aria-hidden="true"><span data-encumbrance-meter></span></div></div></section>
-      <section class="section-gap" aria-labelledby="inventory-table-heading"><h2 class="visually-hidden" id="inventory-table-heading">Inventory entries</h2>${itemList}<div class="data-table-wrap responsive-card-table"><table class="data-table"><thead><tr><th>Item</th><th>Rarity</th><th>Type</th><th>Description</th><th>Qty</th><th>Weight</th><th>Value</th><th>Equipped</th><th>Action</th></tr></thead><tbody>${rows}</tbody></table></div></section>
+      <section class="section-gap" aria-labelledby="inventory-table-heading"><h2 class="visually-hidden" id="inventory-table-heading">Inventory entries</h2>${itemList}<div class="inventory-table-toolbar"><div class="inventory-slot-summary"><strong>${state.inventory.length} item ${state.inventory.length === 1 ? "slot" : "slots"}</strong><span>Add or remove slots whenever the character needs more or less space.</span></div><button class="button button-primary" type="button" data-action="add-inventory-slot">Add item slot</button></div>${inventoryTable}</section>
       <div class="layout-grid two section-gap">
         <section class="panel"><div class="panel-heading plum"><h2>Currency</h2><span class="heading-note">1 PP = 1000 SP · 1 GP = 100 SP · 1 CP = 0.1 SP</span></div><div class="panel-body"><div class="currency-grid">
           ${field("Copper", "currency.copper", state.currency.copper, { type: "number", min: 0, step: 1 })}
@@ -1211,21 +1220,6 @@
     return state.equipment.righthand ? "lefthand" : "righthand";
   }
 
-  function addInventoryItem(itemName) {
-    const existing = state.inventory.find((entry) => entry.name === itemName);
-    if (existing) {
-      existing.quantity = Math.max(0, engine.numberValue(existing.quantity)) + 1;
-      return true;
-    }
-    const empty = state.inventory.find((entry) => !String(entry.name || "").trim());
-    if (!empty) return false;
-    empty.name = itemName;
-    empty.quantity = 1;
-    empty.equipped = false;
-    empty.weightOverride = null;
-    return true;
-  }
-
   function handleRouteAction(event) {
     const routeButton = event.target.closest("[data-route]");
     if (routeButton) {
@@ -1270,13 +1264,41 @@
     }
     if (action === "clear-inventory") {
       const index = Number(button.dataset.index);
-      state.inventory[index] = { name: "", quantity: 1, equipped: false, weightOverride: null };
+      if (state.inventory[index]) {
+        state.inventory[index] = engine.createInventoryEntry();
+        changed = true;
+        message = `Inventory row ${index + 1} cleared.`;
+      }
+    }
+    if (action === "add-inventory-slot") {
+      engine.addInventorySlot(state);
       changed = true;
-      message = `Inventory row ${index + 1} cleared.`;
+      message = `Inventory slot ${state.inventory.length} added.`;
+    }
+    if (action === "remove-inventory-slot") {
+      const index = Number(button.dataset.index);
+      const entry = state.inventory[index];
+      if (entry) {
+        const itemName = String(entry.name || "").trim();
+        const hasCustomValues =
+          itemName ||
+          entry.equipped === true ||
+          (entry.weightOverride !== null && entry.weightOverride !== "") ||
+          engine.numberValue(entry.quantity) !== 1;
+        if (
+          hasCustomValues &&
+          !window.confirm(`Remove ${itemName ? `“${itemName}”` : `inventory slot ${index + 1}`}?`)
+        ) {
+          return;
+        }
+        engine.removeInventorySlot(state, index);
+        changed = true;
+        message = itemName ? `${itemName} removed from inventory.` : `Inventory slot ${index + 1} removed.`;
+      }
     }
     if (action === "add-item") {
-      changed = addInventoryItem(button.dataset.name);
-      message = changed ? `${button.dataset.name} added to inventory.` : "All inventory rows are occupied.";
+      changed = engine.addInventoryItem(state, button.dataset.name);
+      message = changed ? `${button.dataset.name} added to inventory.` : "The item could not be added.";
     }
     if (action === "equip-item") {
       const item = data.items.find((entry) => entry.name === button.dataset.name);
