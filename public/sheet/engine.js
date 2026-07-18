@@ -279,6 +279,42 @@
     };
   }
 
+  function applyHearthMealEdit(state, index, isEating) {
+    const entry = state.hearth?.log?.[index];
+    if (!entry) return { accepted: false, reason: "missing-row" };
+
+    entry.eaten = isEating === true;
+    if (!entry.eaten) {
+      entry.rest = "";
+      entry.day = "";
+      return { accepted: true, reason: "cleared" };
+    }
+
+    if (!String(entry.dish || "").trim()) {
+      entry.eaten = false;
+      return { accepted: false, reason: "missing-dish" };
+    }
+
+    const enteredDays = (state.hunger?.days || [])
+      .map((day) => day?.day)
+      .filter(
+        (value) =>
+          value !== "" &&
+          value !== null &&
+          value !== undefined &&
+          !Number.isNaN(Number(value)),
+      );
+
+    if (enteredDays.length === 0) {
+      entry.eaten = false;
+      return { accepted: false, reason: "missing-day" };
+    }
+
+    entry.rest = state.hearth?.restCycle ?? "";
+    entry.day = enteredDays[enteredDays.length - 1];
+    return { accepted: true, reason: "logged" };
+  }
+
   function calculateHearth(state, data) {
     const dishesByName = new Map(data.food.dishes.map((dish) => [dish.name, dish]));
     const acquired = state.hearth?.acquired || {};
@@ -575,6 +611,7 @@
 
   global.AmutsuEngine = {
     calculate,
+    applyHearthMealEdit,
     numberValue,
     formatNumber,
     abilityModifier,
