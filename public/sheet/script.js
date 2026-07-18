@@ -275,11 +275,71 @@
   function scheduleFilterRender(input) {
     window.clearTimeout(ui.filterTimer);
     const filterName = input.dataset.filter;
-    const selectionStart = input.selectionStart;
-    const selectionEnd = input.selectionEnd;
     ui.filterTimer = window.setTimeout(() => {
-      renderRoute({ preserveScroll: true, restoreFilter: filterName, selectionStart, selectionEnd });
+      updateFilteredResults(filterName);
     }, 120);
+  }
+
+  // Updates only the results grid/count for a filter change, instead of
+  // re-rendering (and therefore destroying and recreating) the whole page.
+  // This is what stops a search box's caret from being reset to position 0
+  // on every keystroke, which was causing typed text to appear reversed.
+  function updateFilteredResults(filterName) {
+    if (ui.route === "traits") {
+      renderTraitsResults();
+      return;
+    }
+    if (ui.route === "skills") {
+      renderSkillsResults();
+      return;
+    }
+    if (ui.route === "conditions") {
+      renderConditionsResults();
+      return;
+    }
+    if (ui.route === "items") {
+      renderItemsResults();
+      return;
+    }
+    if (ui.route === "food") {
+      renderFoodResults();
+      return;
+    }
+    if (ui.route === "crafting") {
+      renderCraftingResults();
+      return;
+    }
+    // Fallback path, kept in case a future filtered page hasn't been
+    // migrated to a surgical results-only update yet.
+    const active = document.activeElement;
+    const selectionStart = active && active.dataset && active.dataset.filter === filterName ? active.selectionStart : null;
+    const selectionEnd = active && active.dataset && active.dataset.filter === filterName ? active.selectionEnd : null;
+    renderRoute({ preserveScroll: true, restoreFilter: filterName, selectionStart, selectionEnd });
+  }
+
+  function renderTraitsResults() {
+    const query = ui.filters.traitsQuery.trim().toLowerCase();
+    const selectedGroup = ui.filters.traitsGroup;
+    const traits = data.traits.filter((trait) => {
+      const matchesQuery = !query || `${trait.name} ${trait.benefit} ${trait.drawback}`.toLowerCase().includes(query);
+      return matchesQuery && (selectedGroup === "All" || trait.group === selectedGroup);
+    });
+    const grid = root.querySelector(".catalog-grid");
+    const count = root.querySelector(".filter-count");
+    if (grid) {
+      grid.innerHTML = traits.map(renderTraitCard).join("") ||
+        `<div class="empty-state"><strong>No matching traits</strong><span>Change the search or group filter.</span></div>`;
+    }
+    if (count) count.textContent = `${traits.length} of ${data.traits.length} traits`;
+  }
+
+  function renderTraitCard(trait) {
+    return `<article class="catalog-card trait-card" data-group="${escapeHtml(trait.group)}">
+        <header class="trait-card-head"><div><div class="card-meta"><span class="pill">${escapeHtml(trait.group)}</span></div><h2>${escapeHtml(trait.name)}</h2></div><span class="trait-cost" aria-label="Cost ${escapeHtml(trait.cost)}">${escapeHtml(trait.cost)}</span></header>
+        <div class="trait-effect"><strong>Benefit</strong><p>${escapeHtml(trait.benefit)}</p></div>
+        <div class="trait-drawback"><strong>Drawback</strong><p>${escapeHtml(trait.drawback)}</p></div>
+        <div class="card-actions"><button class="button button-primary button-small" type="button" data-action="add-trait" data-name="${escapeHtml(trait.name)}">Add to character</button></div>
+      </article>`;
   }
 
   function navigate(route) {
@@ -603,17 +663,19 @@
     </section>`;
   }
 
-  function renderSkillsPage() {
+  function computeVisibleSkills() {
     const query = ui.filters.skillsQuery.trim().toLowerCase();
     const selectedAbility = ui.filters.skillsAbility;
-    const visibleSkills = data.skills.filter((skill) => {
+    return data.skills.filter((skill) => {
       const matchesQuery = !query || `${skill.name} ${skill.description} ${skill.group}`.toLowerCase().includes(query);
       const matchesAbility = selectedAbility === "All" || skill.group === selectedAbility;
       return matchesQuery && matchesAbility;
     });
+  }
 
+  function renderSkillGroupsMarkup(visibleSkills) {
     const groups = unique(visibleSkills.map((skill) => skill.group));
-    const groupMarkup = groups
+    return groups
       .map((group) => {
         const skills = visibleSkills.filter((skill) => skill.group === group);
         const ability = data.abilityDefinitions.find((definition) => definition.label === group);
@@ -636,6 +698,27 @@
         return `<section class="skill-group"><header class="skill-group-header"><h2>${escapeHtml(group)} skills</h2><output>${ability ? escapeHtml(formatOutput(derived.abilityModifiers[ability.id], "signed")) : ""} ability modifier</output></header><div class="skill-list">${rows}</div></section>`;
       })
       .join("");
+  }
+
+  // Surgical update for the Skills filters: patches only the results
+  // container and match count, so the search input is never torn down and
+  // recreated mid-keystroke (which was resetting the caret to position 0 and
+  // making typed text appear reversed). Mirrors renderTraitsResults().
+  function renderSkillsResults() {
+    const visibleSkills = computeVisibleSkills();
+    const container = root.querySelector('[data-filter-results="skills"]');
+    if (container) {
+      container.innerHTML = renderSkillGroupsMarkup(visibleSkills) ||
+        `<div class="empty-state"><strong>No matching skills</strong><span>Change the search or ability filter.</span></div>`;
+    }
+    const count = root.querySelector(".filter-count");
+    if (count) count.textContent = `${visibleSkills.length} of ${data.skills.length} skills`;
+  }
+
+  function renderSkillsPage() {
+    const visibleSkills = computeVisibleSkills();
+    const selectedAbility = ui.filters.skillsAbility;
+    const groupMarkup = renderSkillGroupsMarkup(visibleSkills);
 
     return `<section class="page" data-page="skills">${pageHeading(
       "Character Sheet formulas",
@@ -653,7 +736,7 @@
         <label class="visually-hidden" for="skills-ability">Filter by ability</label><select class="filter-control" id="skills-ability" data-filter="skillsAbility">${renderOptions(["All", ...data.abilityDefinitions.map((ability) => ability.label)], selectedAbility)}</select>
         <span class="filter-count">${visibleSkills.length} of ${data.skills.length} skills</span>
       </div>
-      ${groupMarkup || `<div class="empty-state"><strong>No matching skills</strong><span>Change the search or ability filter.</span></div>`}
+      <div data-filter-results="skills">${groupMarkup || `<div class="empty-state"><strong>No matching skills</strong><span>Change the search or ability filter.</span></div>`}</div>
     </section>`;
   }
 
@@ -832,14 +915,7 @@
       const matchesQuery = !query || `${trait.name} ${trait.benefit} ${trait.drawback}`.toLowerCase().includes(query);
       return matchesQuery && (selectedGroup === "All" || trait.group === selectedGroup);
     });
-    const cards = traits
-      .map((trait) => `<article class="catalog-card trait-card" data-group="${escapeHtml(trait.group)}">
-        <header class="trait-card-head"><div><div class="card-meta"><span class="pill">${escapeHtml(trait.group)}</span></div><h2>${escapeHtml(trait.name)}</h2></div><span class="trait-cost" aria-label="Cost ${escapeHtml(trait.cost)}">${escapeHtml(trait.cost)}</span></header>
-        <div class="trait-effect"><strong>Benefit</strong><p>${escapeHtml(trait.benefit)}</p></div>
-        <div class="trait-drawback"><strong>Drawback</strong><p>${escapeHtml(trait.drawback)}</p></div>
-        <div class="card-actions"><button class="button button-primary button-small" type="button" data-action="add-trait" data-name="${escapeHtml(trait.name)}">Add to character</button></div>
-      </article>`)
-      .join("");
+    const cards = traits.map(renderTraitCard).join("");
     return `<section class="page" data-page="traits">${pageHeading(
       "Personality Traits worksheet",
       "Personality Traits",
@@ -854,25 +930,46 @@
     </section>`;
   }
 
-  function renderConditionsPage() {
+  function computeFilteredConditions() {
     const query = ui.filters.conditionsQuery.trim().toLowerCase();
     const selectedRegion = ui.filters.conditionsRegion;
     const selectedType = ui.filters.conditionsType;
-    const conditions = data.conditions.filter((condition) => {
+    return data.conditions.filter((condition) => {
       const haystack = `${condition.id} ${condition.name} ${condition.region} ${condition.type} ${condition.exposure} ${condition.save} ${condition.tags}`.toLowerCase();
       return (!query || haystack.includes(query)) &&
         (selectedRegion === "All" || condition.region === selectedRegion) &&
         (selectedType === "All" || condition.type === selectedType);
     });
-    const conditionCards = conditions
-      .map((condition) => `<article class="catalog-card condition-card">
+  }
+
+  function renderConditionCard(condition) {
+    return `<article class="catalog-card condition-card">
         <div class="card-meta"><span class="pill pill-blue">${escapeHtml(condition.region)}</span><span class="pill">${escapeHtml(condition.type)}</span><span class="pill pill-amber">${escapeHtml(condition.id)}</span></div>
         <h2>${escapeHtml(condition.name)}</h2><p><strong>Exposure:</strong> ${escapeHtml(condition.exposure)}</p><p><strong>Save:</strong> ${escapeHtml(condition.save)}</p>
         <div class="condition-stage"><div><strong>Mark I</strong><span>${escapeHtml(condition.mark1)}</span></div><div><strong>Mark II</strong><span>${escapeHtml(condition.mark2)}</span></div><div><strong>Mark III</strong><span>${escapeHtml(condition.mark3)}</span></div><div><strong>Crisis</strong><span>${escapeHtml(condition.crisis)}</span></div></div>
         <p><strong>Treatment:</strong> ${escapeHtml(condition.treatment)}</p><p><strong>Tags:</strong> ${escapeHtml(condition.tags)}</p>
         <div class="card-actions"><button class="button button-primary button-small" type="button" data-action="add-condition" data-name="${escapeHtml(condition.name)}">Track ailment</button></div>
-      </article>`)
-      .join("");
+      </article>`;
+  }
+
+  // Surgical update for the Conditions filters: patches only the catalogue
+  // grid and match count instead of re-rendering the whole page.
+  function renderConditionsResults() {
+    const conditions = computeFilteredConditions();
+    const grid = root.querySelector(".catalog-grid");
+    const count = root.querySelector(".filter-count");
+    if (grid) {
+      grid.innerHTML = conditions.map(renderConditionCard).join("") ||
+        `<div class="empty-state"><strong>No matching conditions</strong><span>Change the active filters.</span></div>`;
+    }
+    if (count) count.textContent = `${conditions.length} of ${data.conditions.length} conditions`;
+  }
+
+  function renderConditionsPage() {
+    const conditions = computeFilteredConditions();
+    const selectedRegion = ui.filters.conditionsRegion;
+    const selectedType = ui.filters.conditionsType;
+    const conditionCards = conditions.map(renderConditionCard).join("");
     const classProfiles = data.classes
       .map((profile) => {
         const values = derived.allClassStats[profile.name];
@@ -912,7 +1009,7 @@
       .join("");
   }
 
-  function renderItemsPage() {
+  function computeFilteredItems() {
     const query = ui.filters.itemsQuery.trim().toLowerCase();
     const selectedRarity = ui.filters.itemsRarity;
     const selectedType = ui.filters.itemsType;
@@ -923,13 +1020,51 @@
         (selectedType === "All" || item.type === selectedType);
     });
     const visibleItems = filteredItems.slice(0, ui.itemLimit);
-    const cards = visibleItems
+    return { filteredItems, visibleItems };
+  }
+
+  function renderItemCards(visibleItems) {
+    return visibleItems
       .map((item) => `<article class="catalog-card item-card" data-rarity="${escapeHtml(item.rarity)}">
         <div class="card-meta">${rarityMarkup(item.rarity)}<span class="pill pill-blue">${escapeHtml(item.type)}</span></div><h2>${escapeHtml(item.name)}</h2>
         <div class="item-stat-grid">${itemDisplayStats(item)}</div><p>${escapeHtml(item.tags || "No source tags")}</p>
         <div class="card-actions"><button class="button button-primary button-small" type="button" data-action="add-item" data-name="${escapeHtml(item.name)}">Add to inventory</button><button class="button button-accent button-small" type="button" data-action="equip-item" data-name="${escapeHtml(item.name)}">Equip</button></div>
       </article>`)
       .join("");
+  }
+
+  // Surgical update for the Items filters: patches only the catalogue grid,
+  // match count, and load-more button instead of re-rendering the whole
+  // page (which was destroying and recreating the search input on every
+  // keystroke, resetting the caret to position 0 and reversing typed text).
+  function renderItemsResults() {
+    const { filteredItems, visibleItems } = computeFilteredItems();
+    const grid = root.querySelector(".catalog-grid");
+    const count = root.querySelector(".filter-count");
+    if (grid) {
+      grid.innerHTML = renderItemCards(visibleItems) ||
+        `<div class="empty-state"><strong>No matching items</strong><span>Change the active filters.</span></div>`;
+    }
+    if (count) {
+      count.textContent = `Showing ${visibleItems.length} of ${filteredItems.length} matches · ${data.items.length} total items`;
+    }
+    const needsLoadMore = visibleItems.length < filteredItems.length;
+    const loadMoreWrap = root.querySelector(".catalog-load-more");
+    if (needsLoadMore && !loadMoreWrap) {
+      grid?.insertAdjacentHTML(
+        "afterend",
+        `<div class="catalog-load-more"><button class="button button-primary" type="button" data-action="load-more-items">Load more items</button></div>`,
+      );
+    } else if (!needsLoadMore && loadMoreWrap) {
+      loadMoreWrap.remove();
+    }
+  }
+
+  function renderItemsPage() {
+    const { filteredItems, visibleItems } = computeFilteredItems();
+    const selectedRarity = ui.filters.itemsRarity;
+    const selectedType = ui.filters.itemsType;
+    const cards = renderItemCards(visibleItems);
     return `<section class="page" data-page="items">${pageHeading(
       "Items worksheet",
       "Item Catalogue",
@@ -946,19 +1081,37 @@
     </section>`;
   }
 
-  function renderFoodPage() {
+  function computeFilteredDishes() {
     const query = ui.filters.foodQuery.trim().toLowerCase();
     const selectedRegion = ui.filters.foodRegion;
-    const dishes = data.food.dishes.filter((dish) => {
+    return data.food.dishes.filter((dish) => {
       const haystack = `${dish.name} ${dish.region} ${dish.method} ${dish.effect}`.toLowerCase();
       return (!query || haystack.includes(query)) && (selectedRegion === "All" || dish.region === selectedRegion);
     });
-    const cards = dishes
-      .map((dish) => {
-        const pantry = derived.hearth.pantry.find((entry) => entry.name === dish.name);
-        return `<article class="catalog-card food-card"><div class="card-meta"><span class="pill pill-blue">${escapeHtml(dish.region)}</span><span class="pill pill-amber">${escapeHtml(dish.cost)} SP</span><span class="pill">${escapeHtml(pantry?.left || 0)} left</span></div><h2>${escapeHtml(dish.name)}</h2><p>${escapeHtml(dish.method)}</p><div class="food-effect"><strong>Hearth Boon</strong><p>${escapeHtml(dish.effect)}</p></div><div class="card-actions"><button class="button button-primary button-small" type="button" data-action="add-food" data-name="${escapeHtml(dish.name)}">Add serving</button></div></article>`;
-      })
-      .join("");
+  }
+
+  function renderFoodCard(dish) {
+    const pantry = derived.hearth.pantry.find((entry) => entry.name === dish.name);
+    return `<article class="catalog-card food-card"><div class="card-meta"><span class="pill pill-blue">${escapeHtml(dish.region)}</span><span class="pill pill-amber">${escapeHtml(dish.cost)} SP</span><span class="pill">${escapeHtml(pantry?.left || 0)} left</span></div><h2>${escapeHtml(dish.name)}</h2><p>${escapeHtml(dish.method)}</p><div class="food-effect"><strong>Hearth Boon</strong><p>${escapeHtml(dish.effect)}</p></div><div class="card-actions"><button class="button button-primary button-small" type="button" data-action="add-food" data-name="${escapeHtml(dish.name)}">Add serving</button></div></article>`;
+  }
+
+  // Surgical update for the Hearthcraft filters: patches only the
+  // catalogue grid and match count instead of re-rendering the whole page.
+  function renderFoodResults() {
+    const dishes = computeFilteredDishes();
+    const grid = root.querySelector(".catalog-grid");
+    const count = root.querySelector(".filter-count");
+    if (grid) {
+      grid.innerHTML = dishes.map(renderFoodCard).join("") ||
+        `<div class="empty-state"><strong>No matching dishes</strong><span>Change the search or region filter.</span></div>`;
+    }
+    if (count) count.textContent = `${dishes.length} of ${data.food.dishes.length} dishes`;
+  }
+
+  function renderFoodPage() {
+    const dishes = computeFilteredDishes();
+    const selectedRegion = ui.filters.foodRegion;
+    const cards = dishes.map(renderFoodCard).join("");
     return `<section class="page" data-page="food">${pageHeading(
       "Food Catalogue worksheet",
       "Hearthcraft",
@@ -975,20 +1128,42 @@
     </section>`;
   }
 
-  function renderCraftingPage() {
+  function computeFilteredCraftingSections() {
     const query = ui.filters.craftingQuery.trim().toLowerCase();
-    const sections = data.crafting.sections
+    return data.crafting.sections
       .map((section) => {
         const rows = section.rows.filter((row) => !query || `${section.name} ${section.headers.join(" ")} ${row.join(" ")}`.toLowerCase().includes(query));
         return { ...section, rows };
       })
       .filter((section) => section.rows.length || (!query && section.headers.length));
-    const sectionMarkup = sections
+  }
+
+  function renderCraftingSectionsMarkup(sections) {
+    return sections
       .map((section) => `<section class="craft-section"><h2>${escapeHtml(section.name)}</h2><div class="craft-rows">
         <div class="craft-row craft-headers" style="--craft-columns: ${section.headers.length}">${section.headers.map((header) => `<span>${escapeHtml(header)}</span>`).join("")}</div>
         ${section.rows.map((row) => `<div class="craft-row" style="--craft-columns: ${section.headers.length}">${section.headers.map((header, index) => `<span data-label="${escapeHtml(header)}">${escapeHtml(row[index] ?? "")}</span>`).join("")}</div>`).join("")}
       </div></section>`)
       .join("");
+  }
+
+  // Surgical update for the Crafting Catalogue filter: patches only the
+  // results container and match count instead of re-rendering the whole page.
+  function renderCraftingResults() {
+    const sections = computeFilteredCraftingSections();
+    const container = root.querySelector(".skill-groups");
+    const count = root.querySelector(".filter-count");
+    const matchedRows = sections.reduce((sum, section) => sum + section.rows.length, 0);
+    if (container) {
+      container.innerHTML = renderCraftingSectionsMarkup(sections) ||
+        `<div class="empty-state"><strong>No matching crafting records</strong><span>Change the search terms.</span></div>`;
+    }
+    if (count) count.textContent = `${matchedRows} matching rows in ${sections.length} sections`;
+  }
+
+  function renderCraftingPage() {
+    const sections = computeFilteredCraftingSections();
+    const sectionMarkup = renderCraftingSectionsMarkup(sections);
     const matchedRows = sections.reduce((sum, section) => sum + section.rows.length, 0);
     return `<section class="page" data-page="crafting">${pageHeading(
       "Crafting Catalogue worksheet",
