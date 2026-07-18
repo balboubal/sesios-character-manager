@@ -89,6 +89,8 @@
     },
   };
 
+  const PERSONALITY_TRAIT_LIMIT = 70;
+
   function numberValue(value) {
     if (typeof value === "number") return Number.isFinite(value) ? value : 0;
     if (typeof value === "boolean") return value ? 1 : 0;
@@ -331,6 +333,86 @@
       addInventorySlot(state);
     Object.assign(entry, createInventoryEntry(name));
     return true;
+  }
+
+  function mergePersonalitySlots(defaultPersonality, suppliedPersonality) {
+    const source = Array.isArray(suppliedPersonality)
+      ? suppliedPersonality
+      : Array.isArray(defaultPersonality)
+        ? defaultPersonality
+        : [];
+    return source.map((entry) => ({
+      name: String(entry?.name || ""),
+      cost: numberValue(entry?.cost),
+    }));
+  }
+
+  function calculatePersonality(state, data) {
+    const catalogueByName = new Map(
+      (data.traits || []).map((trait) => [String(trait.name || ""), trait]),
+    );
+    const rows = (state.personality || [])
+      .map((entry, index) => {
+        const name = String(entry?.name || "").trim();
+        if (!name) return null;
+        const catalogueTrait = catalogueByName.get(name);
+        const hasStoredCost = entry?.cost !== undefined && entry?.cost !== null && entry?.cost !== "";
+        const cost = numberValue(hasStoredCost ? entry.cost : catalogueTrait?.cost);
+        return { index, name, cost };
+      })
+      .filter(Boolean);
+    const total = rows.reduce((sum, entry) => sum + entry.cost, 0);
+
+    return {
+      rows,
+      total,
+      limit: PERSONALITY_TRAIT_LIMIT,
+      remaining: Math.max(0, PERSONALITY_TRAIT_LIMIT - total),
+      atLimit: total >= PERSONALITY_TRAIT_LIMIT,
+      overLimit: total > PERSONALITY_TRAIT_LIMIT,
+    };
+  }
+
+  function addPersonalityTrait(state, data, traitName) {
+    const name = String(traitName || "").trim();
+    const trait = (data.traits || []).find((entry) => entry.name === name);
+    if (!trait) return { added: false, reason: "missing-trait" };
+
+    const personality = calculatePersonality(state, data);
+    if (personality.rows.some((entry) => entry.name === trait.name)) {
+      return { added: false, reason: "duplicate", ...personality };
+    }
+
+    const nextTotal = personality.total + numberValue(trait.cost);
+    if (nextTotal > personality.limit) {
+      return { added: false, reason: "limit", nextTotal, ...personality };
+    }
+
+    if (!Array.isArray(state.personality)) state.personality = [];
+    const empty = state.personality.find((entry) => !String(entry.name || "").trim());
+    const target = empty || {};
+    if (!empty) state.personality.push(target);
+
+    target.name = trait.name;
+    target.cost = numberValue(trait.cost);
+    return {
+      added: true,
+      reason: "added",
+      ...calculatePersonality(state, data),
+    };
+  }
+
+  function removePersonalityTrait(state, index) {
+    if (!Array.isArray(state.personality)) return { removed: false, reason: "missing-slot" };
+    const position = Number(index);
+    if (!Number.isInteger(position) || position < 0 || position >= state.personality.length) {
+      return { removed: false, reason: "missing-slot" };
+    }
+
+    const name = String(state.personality[position]?.name || "").trim();
+    if (!name) return { removed: false, reason: "empty-slot" };
+    state.personality.splice(position, 1);
+    return { removed: true, reason: "removed", name };
   }
 
   function applyHearthMealEdit(state, index, isEating) {
@@ -601,6 +683,7 @@
     const criticalRoll = numberValue(state.damageTool?.criticalRoll);
     const criticalStrike = criticalRoll <= criticalChance;
 
+    const personality = calculatePersonality(state, data);
     const hunger = calculateHunger(state);
     const hearth = calculateHearth(state, data);
 
@@ -658,6 +741,7 @@
         criticalRoll,
         criticalStrike,
       },
+      personality,
       hunger,
       hearth,
     };
@@ -670,6 +754,10 @@
     addInventorySlot,
     removeInventorySlot,
     addInventoryItem,
+    mergePersonalitySlots,
+    calculatePersonality,
+    addPersonalityTrait,
+    removePersonalityTrait,
     applyHearthMealEdit,
     numberValue,
     formatNumber,
