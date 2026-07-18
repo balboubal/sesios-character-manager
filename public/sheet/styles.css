@@ -1139,7 +1139,6 @@ input[type="checkbox"] {
 }
 
 .skill-group {
-  overflow: hidden;
   background: var(--surface);
   border: 1px solid var(--line-strong);
   border-radius: var(--radius);
@@ -1153,6 +1152,7 @@ input[type="checkbox"] {
   padding: 10px 14px;
   color: white;
   background: var(--blue-dark);
+  border-radius: var(--radius) var(--radius) 0 0;
 }
 
 .skill-group:nth-child(2n) .skill-group-header {
@@ -1195,6 +1195,7 @@ input[type="checkbox"] {
 
 .skill-row:last-child {
   border-bottom: 0;
+  border-radius: 0 0 var(--radius) var(--radius);
 }
 
 .skill-row:nth-child(2n) {
@@ -1222,6 +1223,7 @@ input[type="checkbox"] {
   border-radius: 50%;
   font-size: 11px;
   font-weight: 900;
+  z-index: 10;
 }
 
 .tooltip-button[data-tooltip] {
@@ -1230,7 +1232,7 @@ input[type="checkbox"] {
 
 .tooltip-button[data-tooltip]::after {
   position: absolute;
-  z-index: 30;
+  z-index: 9999;
   bottom: calc(100% + 8px);
   left: 50%;
   width: min(310px, 70vw);
@@ -1254,6 +1256,7 @@ input[type="checkbox"] {
 .tooltip-button[data-tooltip]:focus::after {
   opacity: 1;
   transform: translate(-50%, 0);
+  z-index: 10;
 }
 
 .skill-score {
