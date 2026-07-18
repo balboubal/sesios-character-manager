@@ -37,6 +37,43 @@ const bridge = fs.readFileSync(path.join(root, "public/sheet/script.js"), "utf8"
 assert.match(bridge, /amutsu:state-change/, "Online character save bridge is missing");
 assert.match(bridge, /amutsu:load/, "Online character load bridge is missing");
 assert.match(bridge, /data-hearth-eat/, "Hearth meal checkbox handler is missing");
+assert.match(bridge, /add-inventory-slot/, "Add inventory slot control is missing");
+assert.match(bridge, /remove-inventory-slot/, "Remove inventory slot control is missing");
+assert.match(bridge, /path === "inventory"/, "Dynamic inventory persistence hook is missing");
+
+const inventoryEngine = context.window.AmutsuEngine;
+const defaultInventory = workbook.defaultState.inventory;
+const expandedInventory = [
+  ...defaultInventory,
+  { name: "Extra Rope", quantity: 2, equipped: false, weightOverride: 3 },
+  inventoryEngine.createInventoryEntry(),
+];
+const mergedInventory = inventoryEngine.mergeInventorySlots(defaultInventory, expandedInventory);
+assert.equal(mergedInventory.length, defaultInventory.length + 2);
+assert.equal(mergedInventory.at(-2).name, "Extra Rope");
+assert.equal(mergedInventory.at(-2).quantity, 2);
+assert.equal(inventoryEngine.mergeInventorySlots(defaultInventory, []).length, 0);
+const expandedCharacterState = JSON.parse(JSON.stringify(workbook.defaultState));
+expandedCharacterState.inventory = mergedInventory;
+assert.equal(
+  inventoryEngine.calculate(expandedCharacterState, workbook).inventory.rows.length,
+  defaultInventory.length + 2,
+);
+
+const dynamicInventoryState = {
+  inventory: [{ name: "Dagger", quantity: 1, equipped: false, weightOverride: null }],
+};
+assert.equal(inventoryEngine.addInventoryItem(dynamicInventoryState, "Forgery Kit"), true);
+assert.equal(dynamicInventoryState.inventory.length, 2);
+assert.equal(dynamicInventoryState.inventory[1].name, "Forgery Kit");
+assert.equal(inventoryEngine.addInventoryItem(dynamicInventoryState, "Dagger"), true);
+assert.equal(dynamicInventoryState.inventory.length, 2);
+assert.equal(dynamicInventoryState.inventory[0].quantity, 2);
+inventoryEngine.addInventorySlot(dynamicInventoryState);
+assert.equal(dynamicInventoryState.inventory.length, 3);
+assert.ok(inventoryEngine.removeInventorySlot(dynamicInventoryState, 1));
+assert.equal(dynamicInventoryState.inventory.length, 2);
+assert.equal(dynamicInventoryState.inventory.some((entry) => entry.name === "Forgery Kit"), false);
 
 const applyHearthMealEdit = context.window.AmutsuEngine.applyHearthMealEdit;
 const mealState = () => ({
