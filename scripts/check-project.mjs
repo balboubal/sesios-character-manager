@@ -26,6 +26,7 @@ requiredFiles.forEach((file) => {
 
 const context = { window: {} };
 vm.runInNewContext(fs.readFileSync(path.join(root, "public/sheet/data.js"), "utf8"), context);
+vm.runInNewContext(fs.readFileSync(path.join(root, "public/sheet/engine.js"), "utf8"), context);
 const workbook = context.window.AMUTSU_DATA;
 assert.equal(workbook.items.length, 267, "Workbook item catalogue changed unexpectedly");
 assert.equal(workbook.traits.length, 41, "Workbook trait catalogue changed unexpectedly");
@@ -35,6 +36,54 @@ assert.ok(workbook.defaultState.character, "Default character state is missing")
 const bridge = fs.readFileSync(path.join(root, "public/sheet/script.js"), "utf8");
 assert.match(bridge, /amutsu:state-change/, "Online character save bridge is missing");
 assert.match(bridge, /amutsu:load/, "Online character load bridge is missing");
+assert.match(bridge, /data-hearth-eat/, "Hearth meal checkbox handler is missing");
+
+const applyHearthMealEdit = context.window.AmutsuEngine.applyHearthMealEdit;
+const mealState = () => ({
+  hearth: {
+    restCycle: 8,
+    log: [{ rest: "", day: "", dish: "Broth", eaten: false, boonUsed: false }],
+  },
+  hunger: { days: [{ day: 2 }, { day: "" }, { day: 6 }, { day: "bad" }, { day: 9 }] },
+});
+
+const loggedMeal = mealState();
+let mealEditResult = applyHearthMealEdit(loggedMeal, 0, true);
+assert.equal(mealEditResult.accepted, true);
+assert.equal(mealEditResult.reason, "logged");
+assert.equal(loggedMeal.hearth.log[0].eaten, true);
+assert.equal(loggedMeal.hearth.log[0].rest, 8);
+assert.equal(loggedMeal.hearth.log[0].day, 9);
+
+const clearedMeal = mealState();
+clearedMeal.hearth.log[0] = {
+  rest: 7,
+  day: 12,
+  dish: "Broth",
+  eaten: true,
+  boonUsed: true,
+};
+mealEditResult = applyHearthMealEdit(clearedMeal, 0, false);
+assert.equal(mealEditResult.accepted, true);
+assert.equal(mealEditResult.reason, "cleared");
+assert.equal(clearedMeal.hearth.log[0].eaten, false);
+assert.equal(clearedMeal.hearth.log[0].rest, "");
+assert.equal(clearedMeal.hearth.log[0].day, "");
+assert.equal(clearedMeal.hearth.log[0].boonUsed, true);
+
+const missingDish = mealState();
+missingDish.hearth.log[0].dish = "";
+mealEditResult = applyHearthMealEdit(missingDish, 0, true);
+assert.equal(mealEditResult.accepted, false);
+assert.equal(mealEditResult.reason, "missing-dish");
+assert.equal(missingDish.hearth.log[0].eaten, false);
+
+const missingDay = mealState();
+missingDay.hunger.days = [{ day: "" }, { day: "invalid" }];
+mealEditResult = applyHearthMealEdit(missingDay, 0, true);
+assert.equal(mealEditResult.accepted, false);
+assert.equal(mealEditResult.reason, "missing-day");
+assert.equal(missingDay.hearth.log[0].eaten, false);
 
 const browserSources = [
   fs.readFileSync(path.join(root, "src/main.js"), "utf8"),
