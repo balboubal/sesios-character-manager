@@ -46,6 +46,17 @@ assert.match(bridge, /remove-trait/, "Personality-trait removal control is missi
 assert.match(bridge, /path === "personality"/, "Dynamic personality persistence hook is missing");
 assert.match(bridge, /equipmentSlotIcon/, "Equipment slot icons are missing");
 assert.match(bridge, /equipmentDetailsMarkup/, "Clear equipment bonus details are missing");
+assert.match(bridge, /data-metric-note/, "Live resource-caption bindings are missing");
+assert.match(
+  bridge,
+  /availableItems\.includes\(item\.name\)/,
+  "Catalogue equip actions must require an available inventory item",
+);
+assert.match(
+  bridge,
+  /new Set\(engine\.availableInventoryItemNames\(state\)\)/,
+  "Equipment dropdowns must use positive-quantity inventory items",
+);
 assert.doesNotMatch(
   bridge,
   /The source stores these eight item names|Parity mode retains|source row 12 anomaly|source rows/,
@@ -104,6 +115,34 @@ assert.equal(dynamicInventoryState.inventory.length, 3);
 assert.ok(inventoryEngine.removeInventorySlot(dynamicInventoryState, 1));
 assert.equal(dynamicInventoryState.inventory.length, 2);
 assert.equal(dynamicInventoryState.inventory.some((entry) => entry.name === "Forgery Kit"), false);
+
+const equipmentInventoryState = {
+  inventory: [
+    { name: "Dagger", quantity: 1, equipped: false },
+    { name: "Dagger", quantity: 2, equipped: false },
+    { name: "Shock Maul", quantity: 0, equipped: true },
+    { name: "Imani's Pendant", quantity: 1, equipped: false },
+    { name: "", quantity: 1, equipped: false },
+  ],
+  equipment: {
+    righthand: "Dagger",
+    lefthand: "Shock Maul",
+    trinket: "Imani's Pendant",
+    necklace: "Missing Item",
+  },
+};
+const availableEquipmentNames = inventoryEngine.availableInventoryItemNames(equipmentInventoryState);
+assert.deepEqual(Array.from(availableEquipmentNames), ["Dagger", "Imani's Pendant"]);
+const reconciledEquipment = inventoryEngine.reconcileEquipmentWithInventory(equipmentInventoryState);
+assert.equal(reconciledEquipment.clearedSlots.length, 2);
+assert.equal(equipmentInventoryState.equipment.righthand, "Dagger");
+assert.equal(equipmentInventoryState.equipment.lefthand, "");
+assert.equal(equipmentInventoryState.equipment.trinket, "Imani's Pendant");
+assert.equal(equipmentInventoryState.equipment.necklace, "");
+assert.equal(equipmentInventoryState.inventory[0].equipped, true);
+assert.equal(equipmentInventoryState.inventory[1].equipped, true);
+assert.equal(equipmentInventoryState.inventory[2].equipped, false);
+assert.equal(equipmentInventoryState.inventory[3].equipped, true);
 
 const baseDefenseState = JSON.parse(JSON.stringify(workbook.defaultState));
 const baseDefense = inventoryEngine.calculate(baseDefenseState, workbook);
