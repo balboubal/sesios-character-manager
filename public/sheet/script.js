@@ -143,7 +143,7 @@
   function bindOnlineBridge() {
     if (!embedded) return;
     const sidebarNote = document.querySelector(".sidebar-foot small");
-    if (sidebarNote) sidebarNote.textContent = "Workbook logic preserved online";
+    if (sidebarNote) sidebarNote.textContent = "Character calculations update automatically";
     saveText.textContent = "Connecting…";
 
     window.addEventListener("message", (event) => {
@@ -423,7 +423,7 @@
 
     root.querySelectorAll("[data-equipment-index]").forEach((element) => {
       const item = derived.equippedItems[Number(element.dataset.equipmentIndex)];
-      element.textContent = item ? equipmentSummary(item) : "No item equipped";
+      element.innerHTML = equipmentDetailsMarkup(item);
     });
 
     root.querySelectorAll("[data-roll-result]").forEach((element) => {
@@ -560,6 +560,78 @@
     return parts.filter(Boolean).join(" · ");
   }
 
+  function equipmentSlotIcon(slotId) {
+    const icons = {
+      righthand: `<path d="m14.8 4.1 5.1-1.3-1.3 5.1-8.8 8.8-2.5-2.5Z" /><path d="m6.2 13.3 4.5 4.5" /><path d="m5.3 16.8-2.4 2.4" />`,
+      lefthand: `<path d="M12 2.8 19.3 6v5.2c0 4.6-2.9 8-7.3 9.7-4.4-1.7-7.3-5.1-7.3-9.7V6Z" /><path d="M12 6.2v10.7" />`,
+      headgear: `<path d="M4 13.5V10a8 8 0 0 1 16 0v3.5" /><path d="M4 12.5h4v4H4Zm12 0h4v4h-4Z" /><path d="M8 16.5h8" />`,
+      plate: `<path d="m8 3 4 2 4-2 4 4-2.3 3v10H6.3V10L4 7Z" /><path d="M9 5.2 12 9l3-3.8M12 9v11" />`,
+      footwear: `<path d="M7.2 3v9.3L4 15.7V20h16v-1.5c0-2-1.8-3.2-4.2-3.2h-2.5l-2.1-3.8V3Z" /><path d="M4 17.2h15" />`,
+      trinket: `<path d="m12 3 6.5 6.5L12 21 5.5 9.5Z" /><path d="M5.5 9.5h13M9 9.5 12 3l3 6.5L12 21Z" />`,
+      secondarytrinket: `<circle cx="9" cy="12" r="5.2" /><circle cx="15" cy="12" r="5.2" /><path d="m12 5.5 2-2 2 2-2 2Z" />`,
+      necklace: `<path d="M5 4.5c.6 6.2 2.8 9.3 7 9.3s6.4-3.1 7-9.3" /><path d="m12 13.8 3 3.1-3 4.1-3-4.1Z" />`,
+    };
+    const icon = icons[slotId] || icons.trinket;
+    return `<span class="equipment-slot-icon is-${slug(slotId)}" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">${icon}</svg></span>`;
+  }
+
+  function hasEquipmentStat(value, format) {
+    if (format === "raw") {
+      const text = String(value ?? "").trim();
+      return text !== "" && text !== "-" && text !== "–";
+    }
+    const numeric = engine.numberValue(value);
+    return format === "wholePercent" ? Math.round(numeric) !== 0 : numeric !== 0;
+  }
+
+  function formatEquipmentStat(value, format) {
+    if (format === "raw") return String(value);
+    const numeric = engine.numberValue(value);
+    if (format === "fractionPercent") {
+      const percentage = numeric * 100;
+      return `${percentage > 0 ? "+" : ""}${engine.formatNumber(percentage, 2)}%`;
+    }
+    if (format === "wholePercent") {
+      const percentage = Math.round(numeric);
+      return `${percentage > 0 ? "+" : ""}${engine.formatNumber(percentage, 0)}%`;
+    }
+    if (format === "plain") return engine.formatNumber(numeric, 2);
+    return `${numeric > 0 ? "+" : ""}${engine.formatNumber(numeric, 2)}`;
+  }
+
+  function equipmentDetailsMarkup(item) {
+    if (!item?.name) return `<span class="equipment-empty">No item equipped</span>`;
+    const definitions = [
+      ["DMG", "Physical damage", item.physicalDamage, "raw"],
+      ["MAG", "Magical damage", item.magicalDamage, "raw"],
+      ["CRIT", "Critical chance", item.criticalChance, "fractionPercent"],
+      ["AC", "Armor", item.armor, "number"],
+      ["RES", "Resistance", item.resistance, "number"],
+      ["EVA", "Evasion", item.evasion, "number"],
+      ["STR", "Strength", item.strength, "number"],
+      ["SPD", "Speed", item.speed, "number"],
+      ["VIT", "Vitality", item.vitality, "number"],
+      ["INT", "Intelligence", item.intelligence, "number"],
+      ["AWR", "Awareness", item.awareness, "number"],
+      ["TAL", "Talent", item.talent, "number"],
+      ["LCK", "Luck", item.luck, "number"],
+      ["FOC", "Focus", item.focus, "number"],
+      ["REGEN", "Health regeneration", item.healthRegeneration, "number"],
+      ["REF", "Damage reflection", item.damageReflection, "number"],
+      ["GOLD", "Gold multiplier", item.goldMultiplier, "wholePercent"],
+      ["XP", "XP multiplier", item.xpMultiplier, "wholePercent"],
+      ["DUR", "Durability", item.durability, "plain"],
+    ];
+    const badges = definitions
+      .filter(([, , value, format]) => hasEquipmentStat(value, format))
+      .map(
+        ([label, title, value, format]) =>
+          `<span class="equipment-stat-badge" title="${escapeHtml(title)}"><b>${escapeHtml(label)}</b><span>${escapeHtml(formatEquipmentStat(value, format))}</span></span>`,
+      )
+      .join("");
+    return `<div class="equipment-item-meta">${rarityMarkup(item.rarity)}<span class="equipment-type">${escapeHtml(item.type || "Item")}</span></div><div class="equipment-bonuses">${badges || `<span class="equipment-no-bonuses">No listed bonuses</span>`}</div>`;
+  }
+
   function rarityMarkup(rarity) {
     if (!rarity) return `<span class="cell-muted">-</span>`;
     return `<span class="rarity rarity-${slug(rarity)}">${escapeHtml(rarity)}</span>`;
@@ -622,7 +694,8 @@
     const equipmentRows = data.equipmentSlots
       .map((slot, index) => {
         const selected = state.equipment[slot.id];
-        return `<div class="equipment-row"><label for="equipment-${slot.id}">${escapeHtml(slot.label)}</label><select class="table-input" id="equipment-${slot.id}" data-bind="equipment.${slot.id}">${renderOptions(equipmentNames, selected, "Empty slot")}</select><span class="equipment-stat-line" data-equipment-index="${index}">${escapeHtml(equipmentSummary(derived.equippedItems[index] || {}))}</span></div>`;
+        const item = derived.equippedItems[index];
+        return `<div class="equipment-row"><div class="equipment-slot">${equipmentSlotIcon(slot.id)}<label for="equipment-${slot.id}">${escapeHtml(slot.label)}</label></div><div class="equipment-row-main"><select class="table-input" id="equipment-${slot.id}" data-bind="equipment.${slot.id}">${renderOptions(equipmentNames, selected, "Empty slot")}</select><div class="equipment-details" data-equipment-index="${index}">${equipmentDetailsMarkup(item)}</div></div></div>`;
       })
       .join("");
 
@@ -642,9 +715,9 @@
       .join("");
 
     return `<section class="page" data-page="character">${pageHeading(
-      "Primary worksheet",
+      "Character overview",
       "Character Sheet",
-      "Live character statistics, equipment dependencies, saves, pools, and workbook calculation tools.",
+      "Live character statistics, equipment, saving throws, resource pools, and combat tools.",
       `<button class="button button-primary" type="button" data-action="print">Print current page</button>`,
     )}
       <section class="hero-record" aria-labelledby="identity-heading"><div class="hero-grid"><div class="identity-title"><p class="overline">Active Character</p><h2 id="identity-heading">${escapeHtml(character.name || "Unnamed Character")}</h2><p>${escapeHtml(character.race || "Unknown race")} · Level ${escapeHtml(character.level)} ${escapeHtml(character.className)}</p></div><div class="identity-fields">
@@ -692,17 +765,17 @@
       </div>
 
       <div class="layout-grid main-sidebar section-gap">
-        <section class="panel"><div class="panel-heading"><h2>Equipment</h2><span class="heading-note">Item Catalogue lookups</span></div><div class="panel-body"><div class="equipment-rows">${equipmentRows}</div><div class="callout warning section-gap">The source stores these eight item names as constant formulas. They are controlled selects here so equipment can function as an application while retaining every lookup dependency.</div></div></section>
+        <section class="panel equipment-panel"><div class="panel-heading"><h2>Equipment</h2><span class="heading-note">Equipped item bonuses</span></div><div class="panel-body"><div class="equipment-rows">${equipmentRows}</div></div></section>
         <section class="panel"><div class="panel-heading blue"><h2>Saving Throws & Passives</h2></div><div class="panel-body"><div class="save-rows">${saveRows}</div><h3 class="subsection-title">Passive proficiency</h3><dl class="key-value-list"><div class="key-value-row"><dt>Passive Perception</dt><dd>${output("passives.perception", "integer")}</dd></div><div class="key-value-row"><dt>Passive Insight</dt><dd>${output("passives.insight", "integer")}</dd></div><div class="key-value-row"><dt>Passive Investigation</dt><dd>${output("passives.investigation", "integer")}</dd></div></dl></div></section>
       </div>
 
       <div class="layout-grid two section-gap">
-        <section class="panel"><div class="panel-heading rust"><h2>Damage & Critical Tools</h2><span class="heading-note">Source roll formulas</span></div><div class="panel-body"><div class="form-grid four">
+        <section class="panel"><div class="panel-heading rust"><h2>Damage & Critical Tools</h2><span class="heading-note">Combat rolls</span></div><div class="panel-body"><div class="form-grid four">
           ${field("Damage Multiplier", "damageTool.multiplier", state.damageTool.multiplier, { type: "number", step: 0.1 })}
           ${field("Accuracy Type", "damageTool.accuracyAbility", state.damageTool.accuracyAbility, { type: "select", options: data.abilityDefinitions.map((ability) => ability.abbr) })}
           ${field("Accuracy Debuff", "damageTool.accuracyDebuff", state.damageTool.accuracyDebuff, { type: "number", step: 1 })}
           ${field("Roll Count", "damageTool.rollCount", state.damageTool.rollCount, { type: "number", min: 0, max: 7, step: 1 })}
-        </div><div class="inline-fields section-gap"><button class="button button-primary" type="button" data-action="roll-accuracy">Roll d100 checks</button><button class="button button-accent" type="button" data-action="roll-critical">Roll critical</button></div><h3 class="subsection-title">Accuracy rolls</h3><div class="damage-roll-grid">${damageRolls}</div><div class="damage-result"><div><span>Successful Rolls</span><strong data-output="damageTool.successfulRolls">${derived.damageTool.successfulRolls}</strong></div><div><span>Total Damage</span><strong data-output="damageTool.totalDamage" data-format="integer">${formatOutput(derived.damageTool.totalDamage, "integer")}</strong></div><div><span>Critical Roll</span><strong><span data-output="damageTool.criticalRoll">${derived.damageTool.criticalRoll}</span> · <span>${derived.damageTool.criticalStrike ? "CRITICAL" : "Normal"}</span></strong></div></div><p class="field-hint">Parity mode retains the workbook’s 0–99 critical roll versus fractional critical-chance comparison.</p></div></section>
+        </div><div class="inline-fields section-gap"><button class="button button-primary" type="button" data-action="roll-accuracy">Roll d100 checks</button><button class="button button-accent" type="button" data-action="roll-critical">Roll critical</button></div><h3 class="subsection-title">Accuracy rolls</h3><div class="damage-roll-grid">${damageRolls}</div><div class="damage-result"><div><span>Successful Rolls</span><strong data-output="damageTool.successfulRolls">${derived.damageTool.successfulRolls}</strong></div><div><span>Total Damage</span><strong data-output="damageTool.totalDamage" data-format="integer">${formatOutput(derived.damageTool.totalDamage, "integer")}</strong></div><div><span>Critical Roll</span><strong><span data-output="damageTool.criticalRoll">${derived.damageTool.criticalRoll}</span> · <span>${derived.damageTool.criticalStrike ? "CRITICAL" : "Normal"}</span></strong></div></div></div></section>
         <section class="panel"><div class="panel-heading amber"><h2>Details & Appearance</h2></div><div class="panel-body"><div class="form-grid two">
           ${field("Background", "character.background", character.background)}
           ${field("Alignment", "character.alignment", character.alignment, { type: "select", options: data.alignments })}
@@ -739,7 +812,7 @@
             const tooltip = skill.description
               ? `<button class="tooltip-button" type="button" data-tooltip="${escapeHtml(skill.description)}" aria-label="About ${escapeHtml(skill.name)}">?</button>`
               : "";
-            const bonusHint = skill.ignoresBonus ? `<span class="pill pill-amber">Source ignores bonus</span>` : "";
+            const bonusHint = skill.ignoresBonus ? `<span class="pill pill-amber">Manual bonus not applied</span>` : "";
             return `<div class="skill-row">
               <div class="skill-name"><span>${escapeHtml(skill.name)}</span>${tooltip}${bonusHint}</div>
               ${checkbox(`skills.${skill.sourceRow}.proficient`, skillState.proficient, "Proficient")}
@@ -775,9 +848,9 @@
     const groupMarkup = renderSkillGroupsMarkup(visibleSkills);
 
     return `<section class="page" data-page="skills">${pageHeading(
-      "Character Sheet formulas",
+      "Character abilities",
       "Skills",
-      "Every proficiency, manual bonus, ability dependency, and passive score from the source worksheet.",
+      "Track proficiencies, manual bonuses, ability dependencies, and passive scores.",
     )}
       <section class="metric-strip" aria-label="Skill summary">
         ${metricCard("Proficiency", "proficiency", "is-mana", "signed", `Level ${state.character.level}`)}
@@ -825,9 +898,9 @@
     const gemFields = state.gems.map((value, index) => field(`Gem ${index + 1}`, `gems.${index}`, value)).join("");
 
     return `<section class="page" data-page="inventory">${pageHeading(
-      "Character Sheet formulas",
+      "Character belongings",
       "Inventory",
-      "Catalogue lookups, currency conversion, carry thresholds, and movement penalties update immediately.",
+      "Track equipment, currency, valuables, carry limits, and movement penalties.",
     )}
       <section class="encumbrance-summary" aria-label="Inventory summary">
         <article class="encumbrance-card"><span>Carried weight</span><strong>${output("inventory.weight", "kg")}</strong></article>
@@ -849,7 +922,7 @@
           ${field("Gold", "currency.gold", state.currency.gold, { type: "number", min: 0, step: 1 })}
           ${field("Platinum", "currency.platinum", state.currency.platinum, { type: "number", min: 0, step: 1 })}
         </div><div class="balance-banner"><span>Total balance</span><strong>${output("inventory.balance", "sp")}</strong></div></div></section>
-        <section class="panel"><div class="panel-heading amber"><h2>Valuables</h2><span class="heading-note">Free-form source cells</span></div><div class="panel-body"><h3 class="subsection-title">Jewelry</h3><div class="form-grid two">${jewelryFields}</div><h3 class="subsection-title">Gems</h3><div class="form-grid two">${gemFields}</div></div></section>
+        <section class="panel"><div class="panel-heading amber"><h2>Valuables</h2><span class="heading-note">Jewelry and gems</span></div><div class="panel-body"><h3 class="subsection-title">Jewelry</h3><div class="form-grid two">${jewelryFields}</div><h3 class="subsection-title">Gems</h3><div class="form-grid two">${gemFields}</div></div></section>
       </div>
     </section>`;
   }
@@ -876,12 +949,12 @@
         .join("")}</tr>`)
       .join("");
     const levelNumber = Number((ui.spellLevel.match(/\d+/) || [0])[0]);
-    const tierText = levelNumber ? `${(levelNumber + 1) * 10} MP source tier` : "At-will cantrips";
+    const tierText = levelNumber ? `${(levelNumber + 1) * 10} MP tier` : "At-will cantrips";
 
     return `<section class="page" data-page="spells">${pageHeading(
-      "Character Sheet worksheet",
+      "Character spellbook",
       "Spells",
-      "A responsive spellbook retaining all ten source tiers and thirteen fields per spell.",
+      "Track prepared spells, casting details, mana tiers, and spell effects.",
     )}
       <section class="spell-toolbar" aria-label="Spellcasting summary">
         ${field("Spellcasting Ability", "character.spellcastingAbility", state.character.spellcastingAbility, { type: "select", options: data.abilityDefinitions.map((ability) => ability.abbr) })}
@@ -891,7 +964,7 @@
         <article class="spell-stat"><span>Maximum Mana</span><strong>${output("stats.maxMana", "integer")}</strong></article>
       </section>
       <div class="tab-list" role="tablist" aria-label="Spell levels">${levels.map((level) => `<button class="tab-button" type="button" role="tab" aria-selected="${level === ui.spellLevel}" data-action="spell-tab" data-level="${escapeHtml(level)}">${escapeHtml(level)}</button>`).join("")}</div>
-      <section aria-labelledby="spell-level-title"><header class="spell-level-heading"><h2 id="spell-level-title">${escapeHtml(ui.spellLevel)}</h2><span>${escapeHtml(tierText)} · ${entries.length} source rows</span></header><div class="data-table-wrap spell-table-wrap"><table class="data-table spell-table"><thead><tr>${spellFields.map(([, label]) => `<th>${escapeHtml(label)}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div></section>
+      <section aria-labelledby="spell-level-title"><header class="spell-level-heading"><h2 id="spell-level-title">${escapeHtml(ui.spellLevel)}</h2><span>${escapeHtml(tierText)} · ${entries.length} entries</span></header><div class="data-table-wrap spell-table-wrap"><table class="data-table spell-table"><thead><tr>${spellFields.map(([, label]) => `<th>${escapeHtml(label)}</th>`).join("")}</tr></thead><tbody>${rows}</tbody></table></div></section>
     </section>`;
   }
 
@@ -939,7 +1012,7 @@
       .join("");
 
     return `<section class="page" data-page="survival">${pageHeading(
-      "Character Sheet worksheet",
+      "Character status",
       "Effects & Survival",
       "Active conditions, hunger progression, regional meals, serving limits, and Hearth Boon state.",
     )}
@@ -949,14 +1022,14 @@
         <article class="summary-band-card"><span>Hearth Boon</span><strong class="condition-chip" data-hearth-status>${escapeHtml(derived.hearth.status)}</strong></article>
       </section>
       <div class="layout-grid two">
-        <section class="panel"><div class="panel-heading rust"><h2>Active Effects</h2><span class="heading-note">Seven source rows</span></div><div class="panel-body"><div class="data-table-wrap responsive-card-table"><table class="data-table"><thead><tr><th>Status</th><th>Duration</th><th>Ailment</th><th>Mark</th></tr></thead><tbody>${activeEffectRows}</tbody></table></div></div></section>
+        <section class="panel"><div class="panel-heading rust"><h2>Active Effects</h2><span class="heading-note">Up to seven tracked effects</span></div><div class="panel-body"><div class="data-table-wrap responsive-card-table"><table class="data-table"><thead><tr><th>Status</th><th>Duration</th><th>Ailment</th><th>Mark</th></tr></thead><tbody>${activeEffectRows}</tbody></table></div></div></section>
         <section class="panel"><div class="panel-heading blue"><h2>Special Effects</h2><span class="heading-note">Free-form notes</span></div><div class="panel-body"><div class="effect-grid">
           ${field("Immunities", "specialEffects.immunities", state.specialEffects.immunities, { type: "textarea" })}
           ${field("Vulnerabilities", "specialEffects.vulnerabilities", state.specialEffects.vulnerabilities, { type: "textarea" })}
           ${field("Resistances", "specialEffects.resistances", state.specialEffects.resistances, { type: "textarea" })}
         </div></div></section>
       </div>
-      <section class="panel section-gap"><div class="panel-heading amber"><h2>Hunger Tracker</h2><span class="heading-note">Thirty days · source row 12 anomaly retained</span></div><div class="panel-body"><div class="inline-fields">${field("Starting Rations", "hunger.startingRations", state.hunger.startingRations, { type: "number", min: 0, step: 1 })}</div><div class="data-table-wrap responsive-card-table section-gap"><table class="data-table"><thead><tr><th>Day</th><th>Food Gained</th><th>Rations Eaten</th><th>Food Left</th><th>Hunger</th><th>Condition</th></tr></thead><tbody>${hungerRows}</tbody></table></div></div></section>
+      <section class="panel section-gap"><div class="panel-heading amber"><h2>Hunger Tracker</h2><span class="heading-note">Thirty-day journey log</span></div><div class="panel-body"><div class="inline-fields">${field("Starting Rations", "hunger.startingRations", state.hunger.startingRations, { type: "number", min: 0, step: 1 })}</div><div class="data-table-wrap responsive-card-table section-gap"><table class="data-table"><thead><tr><th>Day</th><th>Food Gained</th><th>Rations Eaten</th><th>Food Left</th><th>Hunger</th><th>Condition</th></tr></thead><tbody>${hungerRows}</tbody></table></div></div></section>
       <section class="panel section-gap"><div class="panel-heading plum"><h2>Hearthcraft Tracker</h2><span class="heading-note">One boon per rest cycle</span></div><div class="panel-body"><div class="form-grid three">
         ${field("Current Rest Cycle", "hearth.restCycle", state.hearth.restCycle, { type: "number", min: 0, step: 1 })}
         <div class="field"><span class="field-label">Active Meal</span><output class="derived-output" data-output="hearth.activeMeal">${escapeHtml(derived.hearth.activeMeal)}</output></div>
@@ -974,9 +1047,9 @@
     });
     const cards = traits.map(renderTraitCard).join("");
     return `<section class="page" data-page="traits">${pageHeading(
-      "Personality Traits worksheet",
+      "Trait catalogue",
       "Personality Traits",
-      "All source traits, costs, benefits, and drawbacks with direct assignment to the character record.",
+      "Browse trait costs, benefits, and drawbacks, then assign them to the character.",
     )}
       <div class="filters" role="search">
         <label class="visually-hidden" for="traits-search">Search traits</label><input class="filter-control" id="traits-search" type="search" data-filter="traitsQuery" value="${escapeHtml(ui.filters.traitsQuery)}" placeholder="Search traits, benefits, or drawbacks" />
@@ -1035,12 +1108,12 @@
       .join("");
 
     return `<section class="page" data-page="conditions">${pageHeading(
-      "Data worksheet",
+      "Campaign reference",
       "Rules & Conditions",
       "Class calculation references, faith lists, and the complete regional condition catalogue.",
     )}
       <section class="panel"><div class="panel-heading blue"><h2>Class Profiles</h2><span class="heading-note">Calculated using current level, abilities, equipment, and bonuses</span></div><div class="panel-body"><div class="class-profile-grid">${classProfiles}</div></div></section>
-      <section class="panel section-gap"><div class="panel-heading amber"><h2>Faiths</h2><span class="heading-note">Source validation list</span></div><div class="panel-body"><div class="faith-list">${data.faiths.map((faith) => `<span class="pill">${escapeHtml(faith)}</span>`).join("")}</div></div></section>
+      <section class="panel section-gap"><div class="panel-heading amber"><h2>Faiths</h2><span class="heading-note">Available faiths</span></div><div class="panel-body"><div class="faith-list">${data.faiths.map((faith) => `<span class="pill">${escapeHtml(faith)}</span>`).join("")}</div></div></section>
       <h2 class="subsection-title">Condition Catalogue</h2>
       <div class="filters" role="search">
         <label class="visually-hidden" for="conditions-search">Search conditions</label><input class="filter-control" id="conditions-search" type="search" data-filter="conditionsQuery" value="${escapeHtml(ui.filters.conditionsQuery)}" placeholder="Search conditions, exposure, saves, or tags" />
@@ -1084,7 +1157,7 @@
     return visibleItems
       .map((item) => `<article class="catalog-card item-card" data-rarity="${escapeHtml(item.rarity)}">
         <div class="card-meta">${rarityMarkup(item.rarity)}<span class="pill pill-blue">${escapeHtml(item.type)}</span></div><h2>${escapeHtml(item.name)}</h2>
-        <div class="item-stat-grid">${itemDisplayStats(item)}</div><p>${escapeHtml(item.tags || "No source tags")}</p>
+        <div class="item-stat-grid">${itemDisplayStats(item)}</div><p>${escapeHtml(item.tags || "No tags")}</p>
         <div class="card-actions"><button class="button button-primary button-small" type="button" data-action="add-item" data-name="${escapeHtml(item.name)}">Add to inventory</button><button class="button button-accent button-small" type="button" data-action="equip-item" data-name="${escapeHtml(item.name)}">Equip</button></div>
       </article>`)
       .join("");
@@ -1123,9 +1196,9 @@
     const selectedType = ui.filters.itemsType;
     const cards = renderItemCards(visibleItems);
     return `<section class="page" data-page="items">${pageHeading(
-      "Items worksheet",
+      "Equipment catalogue",
       "Item Catalogue",
-      "All catalogue records and modifiers used by equipment and inventory lookups.",
+      "Browse equipment, item properties, modifiers, and inventory options.",
     )}
       <div class="filters" role="search">
         <label class="visually-hidden" for="items-search">Search items</label><input class="filter-control" id="items-search" type="search" data-filter="itemsQuery" value="${escapeHtml(ui.filters.itemsQuery)}" placeholder="Search names, tags, damage, or modifiers" />
@@ -1170,12 +1243,12 @@
     const selectedRegion = ui.filters.foodRegion;
     const cards = dishes.map(renderFoodCard).join("");
     return `<section class="page" data-page="food">${pageHeading(
-      "Food Catalogue worksheet",
+      "Regional cooking",
       "Hearthcraft",
       "Regional dishes, cooking checks, serving costs, and Hearth Boon effects.",
       `<button class="button button-primary" type="button" data-route="survival">Open survival tracker</button>`,
     )}
-      <section class="panel"><div class="panel-heading amber"><h2>Hearthcraft Rules</h2><span class="heading-note">Source rules table</span></div><div class="panel-body"><div class="rule-grid">${data.food.rules.map((rule) => `<article class="rule-card"><strong>${escapeHtml(rule.rule)}</strong><span>${escapeHtml(rule.value)}</span></article>`).join("")}</div></div></section>
+      <section class="panel"><div class="panel-heading amber"><h2>Hearthcraft Rules</h2><span class="heading-note">Cooking and rest rules</span></div><div class="panel-body"><div class="rule-grid">${data.food.rules.map((rule) => `<article class="rule-card"><strong>${escapeHtml(rule.rule)}</strong><span>${escapeHtml(rule.value)}</span></article>`).join("")}</div></div></section>
       <div class="filters section-gap" role="search">
         <label class="visually-hidden" for="food-search">Search dishes</label><input class="filter-control" id="food-search" type="search" data-filter="foodQuery" value="${escapeHtml(ui.filters.foodQuery)}" placeholder="Search dish names, methods, or effects" />
         <label class="visually-hidden" for="food-region">Filter region</label><select class="filter-control" id="food-region" data-filter="foodRegion">${renderOptions(["All", ...unique(data.food.dishes.map((dish) => dish.region))], selectedRegion)}</select>
@@ -1223,9 +1296,9 @@
     const sectionMarkup = renderCraftingSectionsMarkup(sections);
     const matchedRows = sections.reduce((sum, section) => sum + section.rows.length, 0);
     return `<section class="page" data-page="crafting">${pageHeading(
-      "Crafting Catalogue worksheet",
+      "Crafting reference",
       "Crafting Catalogue",
-      "Structured recipes and the original embedded catalogue reference image.",
+      "Browse structured recipes and the illustrated crafting reference.",
     )}
       <figure class="craft-reference"><img src="assets/craftable-equipment-catalogue.webp" alt="Craftable equipment, consumables, alchemy, recipe, and legendary crafting reference" /><button class="button button-primary" type="button" data-action="open-craft-image">View full size</button></figure>
       <div class="filters" role="search"><label class="visually-hidden" for="crafting-search">Search crafting catalogue</label><input class="filter-control" id="crafting-search" type="search" data-filter="craftingQuery" value="${escapeHtml(ui.filters.craftingQuery)}" placeholder="Search materials, recipes, sources, or uses" /><span class="filter-count">${matchedRows} matching rows in ${sections.length} sections</span></div>
@@ -1437,7 +1510,7 @@
       resetDialog.showModal();
       return;
     }
-    if (window.confirm("Reset every editable field to the original workbook values?")) resetState();
+    if (window.confirm("Reset every editable field to the original character values?")) resetState();
   }
 
   function resetState() {
@@ -1452,7 +1525,7 @@
     }
     scheduleSave();
     renderRoute();
-    showToast("Original workbook values restored.", "success");
+    showToast("Original character values restored.", "success");
   }
 
   function showToast(message, type) {

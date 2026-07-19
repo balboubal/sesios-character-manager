@@ -1073,7 +1073,11 @@ p {
   background: var(--line);
 }
 
-.equipment-rows,
+.equipment-rows {
+  display: grid;
+  gap: 0;
+}
+
 .save-rows {
   display: grid;
   gap: 8px;
@@ -1182,7 +1186,173 @@ p {
   border-color: #c46b6b;
 }
 
-.equipment-row,
+.equipment-row {
+  display: grid;
+  grid-template-columns: minmax(150px, 0.42fr) minmax(0, 1.58fr);
+  align-items: start;
+  gap: 14px;
+  padding: 14px 0;
+  border-bottom: 1px solid #dde2e4;
+}
+
+.equipment-row:first-child {
+  padding-top: 0;
+}
+
+.equipment-row:last-child {
+  padding-bottom: 0;
+  border-bottom: 0;
+}
+
+.equipment-slot {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-height: 42px;
+}
+
+.equipment-slot label {
+  color: #465760;
+  font-size: 12px;
+  font-weight: 850;
+  line-height: 1.25;
+  text-align: left;
+}
+
+.equipment-slot-icon {
+  display: grid;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  place-items: center;
+  color: #225f82;
+  background: var(--blue-pale);
+  border: 1px solid #99b8ca;
+  border-radius: 9px;
+}
+
+.equipment-slot-icon svg {
+  width: 22px;
+  height: 22px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.7;
+}
+
+.equipment-slot-icon.is-headgear,
+.equipment-slot-icon.is-plate {
+  color: #5b6470;
+  background: #edf0f2;
+  border-color: #adb6bc;
+}
+
+.equipment-slot-icon.is-footwear {
+  color: #8b660f;
+  background: var(--amber-pale);
+  border-color: #c8aa61;
+}
+
+.equipment-slot-icon.is-trinket,
+.equipment-slot-icon.is-secondarytrinket {
+  color: var(--purple);
+  background: var(--purple-pale);
+  border-color: #b3a6ca;
+}
+
+.equipment-slot-icon.is-necklace {
+  color: var(--green);
+  background: var(--green-pale);
+  border-color: #9dbbac;
+}
+
+.equipment-row-main {
+  display: grid;
+  gap: 8px;
+  min-width: 0;
+}
+
+.equipment-row-main select {
+  width: 100%;
+  text-align: left;
+}
+
+.equipment-details {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 6px 10px;
+  min-height: 27px;
+  color: #5b6c74;
+  font-size: 10px;
+  text-align: left;
+}
+
+.equipment-item-meta,
+.equipment-bonuses {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 5px;
+}
+
+.equipment-item-meta {
+  padding-right: 10px;
+  border-right: 1px solid #d5dcdf;
+}
+
+.equipment-type {
+  display: inline-flex;
+  align-items: center;
+  min-height: 23px;
+  padding: 2px 7px;
+  color: #40545e;
+  background: #edf1f3;
+  border: 1px solid #cbd4d8;
+  border-radius: 999px;
+  font-weight: 750;
+}
+
+.equipment-stat-badge {
+  display: inline-flex;
+  align-items: center;
+  min-height: 23px;
+  overflow: hidden;
+  color: #334851;
+  background: white;
+  border: 1px solid #b9c8cf;
+  border-radius: 5px;
+  font-variant-numeric: tabular-nums;
+  white-space: nowrap;
+}
+
+.equipment-stat-badge b {
+  align-self: stretch;
+  display: inline-flex;
+  align-items: center;
+  padding: 2px 5px;
+  color: white;
+  background: #315f78;
+  font-size: 8px;
+  letter-spacing: 0.04em;
+}
+
+.equipment-stat-badge span {
+  padding: 2px 6px;
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.equipment-empty,
+.equipment-no-bonuses {
+  color: #7b898f;
+  font-size: 10px;
+  font-style: italic;
+}
+
 .save-row {
   display: grid;
   grid-template-columns: minmax(116px, 0.65fr) minmax(0, 1.7fr) auto;
@@ -1192,24 +1362,15 @@ p {
   border-bottom: 1px solid #dde2e4;
 }
 
-.equipment-row:last-child,
 .save-row:last-child {
   padding-bottom: 0;
   border-bottom: 0;
 }
 
-.equipment-row > label,
 .save-row > label {
   color: #465760;
   font-size: 12px;
   font-weight: 800;
-}
-
-.equipment-stat-line {
-  min-width: 112px;
-  color: #5b6c74;
-  font-size: 10px;
-  text-align: right;
 }
 
 .checkbox-label {
@@ -2661,11 +2822,13 @@ input[type="checkbox"] {
 
   .equipment-row {
     grid-template-columns: 1fr;
-    gap: 5px;
+    gap: 8px;
+    padding: 12px 0;
   }
 
-  .equipment-stat-line {
-    text-align: left;
+  .equipment-item-meta {
+    padding-right: 0;
+    border-right: 0;
   }
 
   .save-row {
