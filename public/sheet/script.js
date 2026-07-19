@@ -4,7 +4,12 @@
   const data = window.AMUTSU_DATA;
   const engine = window.AmutsuEngine;
   const storageKey = "amutsu-character-sheet:v1";
-  const embedded = new URLSearchParams(window.location.search).get("embedded") === "1" && window.parent !== window;
+  const query = new URLSearchParams(window.location.search);
+  const embedded = query.get("embedded") === "1" && window.parent !== window;
+  const characterId = String(query.get("characterId") || "").trim();
+  const sheetLocationKey = characterId
+    ? `sesios-character-manager:sheet-location:v1:${characterId}`
+    : "";
   const routes = {
     character: { label: "Character Sheet", render: renderCharacterPage },
     skills: { label: "Skills", render: renderSkillsPage },
@@ -17,6 +22,7 @@
     food: { label: "Hearthcraft", render: renderFoodPage },
     crafting: { label: "Crafting Catalogue", render: renderCraftingPage },
   };
+  const sheetLocation = loadSheetLocation();
 
   const ui = {
     route: routeFromHash(),
@@ -39,6 +45,7 @@
     },
     filterTimer: null,
     saveTimer: null,
+    locationTimer: null,
   };
 
   let state = loadState();
@@ -61,7 +68,8 @@
 
   bindApplicationEvents();
   bindOnlineBridge();
-  renderRoute();
+  rememberSheetRoute(ui.route);
+  renderRoute({ restoreStoredScroll: true });
 
   if (embedded) {
     window.parent.postMessage({ type: "amutsu:ready" }, window.location.origin);
@@ -69,7 +77,67 @@
 
   function routeFromHash() {
     const candidate = window.location.hash.replace(/^#/, "");
-    return routes[candidate] ? candidate : "character";
+    if (routes[candidate]) return candidate;
+    return routes[sheetLocation.route] ? sheetLocation.route : "character";
+  }
+
+  function loadSheetLocation() {
+    const fallback = { route: "", scrollPositions: {} };
+    if (!sheetLocationKey) return fallback;
+    try {
+      const parsed = JSON.parse(window.sessionStorage.getItem(sheetLocationKey) || "null");
+      if (!parsed || typeof parsed !== "object") return fallback;
+      return {
+        route: typeof parsed.route === "string" ? parsed.route : "",
+        scrollPositions:
+          parsed.scrollPositions && typeof parsed.scrollPositions === "object"
+            ? { ...parsed.scrollPositions }
+            : {},
+      };
+    } catch (error) {
+      return fallback;
+    }
+  }
+
+  function writeSheetLocation() {
+    if (!sheetLocationKey) return;
+    try {
+      window.sessionStorage.setItem(sheetLocationKey, JSON.stringify(sheetLocation));
+    } catch (error) {
+      // Navigation still works when session storage is unavailable.
+    }
+  }
+
+  function rememberSheetRoute(route) {
+    if (!routes[route]) return;
+    sheetLocation.route = route;
+    writeSheetLocation();
+  }
+
+  function rememberSheetScroll(route = ui.route, scrollTop = window.scrollY) {
+    if (!routes[route]) return;
+    const top = Number(scrollTop);
+    sheetLocation.scrollPositions[route] = Number.isFinite(top) ? Math.max(0, top) : 0;
+    writeSheetLocation();
+  }
+
+  function captureSheetLocation() {
+    window.clearTimeout(ui.locationTimer);
+    rememberSheetRoute(ui.route);
+    rememberSheetScroll(ui.route, window.scrollY);
+  }
+
+  function scheduleSheetScrollSave() {
+    window.clearTimeout(ui.locationTimer);
+    const route = ui.route;
+    const scrollTop = window.scrollY;
+    ui.locationTimer = window.setTimeout(() => rememberSheetScroll(route, scrollTop), 120);
+  }
+
+  function restoreSheetScroll(route = ui.route) {
+    const top = Number(sheetLocation.scrollPositions[route]);
+    const scrollTop = Number.isFinite(top) ? Math.max(0, top) : 0;
+    window.requestAnimationFrame(() => window.scrollTo({ top: scrollTop, behavior: "auto" }));
   }
 
   function clone(value) {
@@ -119,26 +187,32 @@
     window.clearTimeout(ui.saveTimer);
     saveIndicator.classList.add("is-saving");
     saveText.textContent = embedded ? "Saving online…" : "Saving…";
-    ui.saveTimer = window.setTimeout(() => {
-      if (embedded) {
-        window.parent.postMessage(
-          { type: "amutsu:state-change", state: clone(state) },
-          window.location.origin,
-        );
-        return;
-      }
-      try {
-        window.localStorage.setItem(
-          storageKey,
-          JSON.stringify({ schemaVersion: state.schemaVersion, savedAt: new Date().toISOString(), state }),
-        );
-        saveIndicator.classList.remove("is-saving");
-        saveText.textContent = "Saved locally";
-      } catch (error) {
-        saveIndicator.classList.remove("is-saving");
-        saveText.textContent = "Local save unavailable";
-      }
-    }, 180);
+    ui.saveTimer = window.setTimeout(flushScheduledSave, 180);
+  }
+
+  function flushScheduledSave() {
+    if (ui.saveTimer == null) return false;
+    window.clearTimeout(ui.saveTimer);
+    ui.saveTimer = null;
+    if (embedded) {
+      window.parent.postMessage(
+        { type: "amutsu:state-change", state: clone(state) },
+        window.location.origin,
+      );
+      return true;
+    }
+    try {
+      window.localStorage.setItem(
+        storageKey,
+        JSON.stringify({ schemaVersion: state.schemaVersion, savedAt: new Date().toISOString(), state }),
+      );
+      saveIndicator.classList.remove("is-saving");
+      saveText.textContent = "Saved locally";
+    } catch (error) {
+      saveIndicator.classList.remove("is-saving");
+      saveText.textContent = "Local save unavailable";
+    }
+    return true;
   }
 
   function bindOnlineBridge() {
@@ -150,16 +224,24 @@
     window.addEventListener("message", (event) => {
       if (event.origin !== window.location.origin || event.source !== window.parent) return;
       if (event.data?.type === "amutsu:load") {
+        captureSheetLocation();
         applyCataloguePayload(event.data.catalogues);
         state = mergeWithDefaults(clone(data.defaultState), event.data.state || {});
         recalculate();
         saveIndicator.classList.remove("is-saving");
         saveText.textContent = "Saved online";
-        renderRoute();
+        renderRoute({ restoreStoredScroll: true });
       }
       if (event.data?.type === "amutsu:save-status") {
         saveIndicator.classList.toggle("is-saving", event.data.status === "saving");
         saveText.textContent = event.data.message || (event.data.status === "error" ? "Online save failed" : "Saved online");
+      }
+      if (event.data?.type === "amutsu:flush-request") {
+        flushScheduledSave();
+        window.parent.postMessage(
+          { type: "amutsu:flush-complete", requestId: event.data.requestId },
+          window.location.origin,
+        );
       }
     });
   }
@@ -313,8 +395,21 @@
     window.addEventListener("hashchange", () => {
       const route = routeFromHash();
       if (route !== ui.route) {
+        captureSheetLocation();
         ui.route = route;
-        renderRoute();
+        rememberSheetRoute(route);
+        renderRoute({ restoreStoredScroll: true });
+      }
+    });
+    window.addEventListener("scroll", scheduleSheetScrollSave, { passive: true });
+    window.addEventListener("pagehide", () => {
+      captureSheetLocation();
+      flushScheduledSave();
+    });
+    document.addEventListener("visibilitychange", () => {
+      if (document.visibilityState === "hidden") {
+        captureSheetLocation();
+        flushScheduledSave();
       }
     });
   }
@@ -391,13 +486,14 @@
 
   function navigate(route) {
     if (!routes[route]) return;
+    captureSheetLocation();
     ui.route = route;
+    rememberSheetRoute(route);
     if (window.location.hash !== `#${route}`) {
       window.history.pushState(null, "", `#${route}`);
     }
-    renderRoute();
+    renderRoute({ restoreStoredScroll: true });
     document.getElementById("main-content").focus({ preventScroll: true });
-    window.scrollTo({ top: 0, behavior: "smooth" });
   }
 
   function renderRoute(options) {
@@ -418,6 +514,8 @@
 
     if (config.preserveScroll) {
       window.scrollTo({ top: previousScroll });
+    } else if (config.restoreStoredScroll) {
+      restoreSheetScroll(ui.route);
     }
     if (config.restoreFilter) {
       window.requestAnimationFrame(() => {
