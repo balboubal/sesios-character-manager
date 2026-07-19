@@ -426,6 +426,14 @@
       element.innerHTML = equipmentDetailsMarkup(item);
     });
 
+    root.querySelectorAll("[data-inventory-meta]").forEach((element) => {
+      const index = Number(element.dataset.inventoryMeta);
+      const row = derived.inventory.rows[index];
+      const meta = inventoryRowMeta(row);
+      const field = element.dataset.inventoryField;
+      element.innerHTML = meta[field] ?? "";
+    });
+
     root.querySelectorAll("[data-roll-result]").forEach((element) => {
       const index = Number(element.dataset.rollResult);
       const result = derived.damageTool.rollResults[index];
@@ -547,6 +555,17 @@
 
   function pageHeading(kicker, title, description, actions) {
     return `<header class="page-heading"><div><p class="page-kicker">${escapeHtml(kicker)}</p><h1>${escapeHtml(title)}</h1><p>${escapeHtml(description)}</p></div>${actions ? `<div class="page-heading-actions">${actions}</div>` : ""}</header>`;
+  }
+
+  function inventoryRowMeta(row) {
+    const item = row?.item;
+    return {
+      rarity: rarityMarkup(item?.rarity),
+      type: escapeHtml(item?.type || "-"),
+      description: escapeHtml(
+        item ? equipmentSummary(item) || item.tags || "Catalogue item" : "Enter a catalogue item name",
+      ),
+    };
   }
 
   function equipmentSummary(item) {
@@ -873,15 +892,16 @@
     const rows = state.inventory
       .map((entry, index) => {
         const calculated = derived.inventory.rows[index] || {};
+        const meta = inventoryRowMeta(calculated);
         const useOverride = entry.weightOverride !== null && entry.weightOverride !== "";
         const weightControl = useOverride
           ? `<input class="table-input" type="number" min="0" step="0.1" data-value-type="number" data-bind="inventory.${index}.weightOverride" value="${escapeHtml(entry.weightOverride)}" aria-label="Weight override for inventory row ${index + 1}" />`
           : `<output data-output="inventory.rows.${index}.weight" data-format="kg">${escapeHtml(formatOutput(calculated.weight, "kg"))}</output>`;
         return `<tr>
           <td data-label="Item"><label class="visually-hidden" for="inventory-item-${index}">Item ${index + 1}</label><input class="table-input inventory-name-input" id="inventory-item-${index}" list="inventory-item-options" data-bind="inventory.${index}.name" value="${escapeHtml(entry.name)}" /></td>
-          <td data-label="Rarity">${rarityMarkup(calculated.item?.rarity)}</td>
-          <td data-label="Type">${escapeHtml(calculated.item?.type || "-")}</td>
-          <td class="cell-description" data-label="Description">${escapeHtml(calculated.item ? equipmentSummary(calculated.item) || calculated.item.tags || "Catalogue item" : "Enter a catalogue item name")}</td>
+          <td data-label="Rarity" data-inventory-meta="${index}" data-inventory-field="rarity">${meta.rarity}</td>
+          <td data-label="Type" data-inventory-meta="${index}" data-inventory-field="type">${meta.type}</td>
+          <td class="cell-description" data-label="Description" data-inventory-meta="${index}" data-inventory-field="description">${meta.description}</td>
           <td class="cell-number" data-label="Quantity"><input class="table-input number-input" type="number" min="0" step="1" data-value-type="number" data-bind="inventory.${index}.quantity" value="${escapeHtml(entry.quantity)}" aria-label="Quantity for inventory row ${index + 1}" /></td>
           <td class="cell-number" data-label="Weight">${weightControl}</td>
           <td class="cell-number" data-label="Value"><output data-output="inventory.rows.${index}.value" data-format="sp">${escapeHtml(formatOutput(calculated.value, "sp"))}</output></td>
