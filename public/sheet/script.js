@@ -245,6 +245,17 @@
     });
 
     root.addEventListener("change", (event) => {
+      const inventoryEquipCheckbox = event.target.closest("[data-inventory-equip]");
+      if (inventoryEquipCheckbox) {
+        const index = Number(inventoryEquipCheckbox.dataset.inventoryEquip);
+        const result = applyInventoryEquipToggle(index, inventoryEquipCheckbox.checked);
+        recalculate();
+        scheduleSave();
+        renderRoute({ preserveScroll: true });
+        if (result?.message) showToast(result.message, result.changed ? "success" : "error");
+        return;
+      }
+
       const hearthMealCheckbox = event.target.closest("[data-hearth-eat]");
       if (hearthMealCheckbox) {
         const result = engine.applyHearthMealEdit(
@@ -275,11 +286,14 @@
         scheduleSave();
       }
 
-      const filter = event.target.closest("[data-filter]");
-      if (filter) {
-        ui.filters[filter.dataset.filter] = filter.value;
-        renderRoute({ preserveScroll: true, restoreFilter: filter.dataset.filter });
-      }
+      // Note: filter inputs (search boxes and <select> dropdowns) are intentionally
+      // NOT handled here. The "input" listener above already updates ui.filters and
+      // triggers the surgical results refresh for both typing and <select> changes
+      // (select elements fire "input" as well as "change"). Re-running that refresh
+      // here too would rebuild the results grid at the exact moment a search box
+      // blurs — i.e. the instant the user clicks a result's action button — which
+      // silently swallowed that click because the button was destroyed mid-gesture,
+      // between mousedown and mouseup.
     });
 
     root.addEventListener("click", handleRouteAction);
@@ -905,7 +919,7 @@
           <td class="cell-number" data-label="Quantity"><input class="table-input number-input" type="number" min="0" step="1" data-value-type="number" data-bind="inventory.${index}.quantity" value="${escapeHtml(entry.quantity)}" aria-label="Quantity for inventory row ${index + 1}" /></td>
           <td class="cell-number" data-label="Weight">${weightControl}</td>
           <td class="cell-number" data-label="Value"><output data-output="inventory.rows.${index}.value" data-format="sp">${escapeHtml(formatOutput(calculated.value, "sp"))}</output></td>
-          <td data-label="Equipped"><input type="checkbox" data-bind="inventory.${index}.equipped" ${entry.equipped ? "checked" : ""} aria-label="Mark inventory row ${index + 1} equipped" /></td>
+          <td data-label="Equipped"><input type="checkbox" data-inventory-equip="${index}" ${entry.equipped ? "checked" : ""} aria-label="Mark inventory row ${index + 1} equipped" /></td>
           <td data-label="Action"><div class="inventory-row-actions"><button class="button button-small button-quiet" type="button" data-action="clear-inventory" data-index="${index}">Clear</button><button class="button button-small button-danger" type="button" data-action="remove-inventory-slot" data-index="${index}" aria-label="Remove inventory slot ${index + 1}">Remove</button></div></td>
         </tr>`;
       })
@@ -1339,6 +1353,50 @@
     return state.equipment.righthand ? "lefthand" : "righthand";
   }
 
+  function applyInventoryEquipToggle(index, checked) {
+    const entry = state.inventory[index];
+    if (!entry) return { changed: false, message: "That inventory row is no longer available." };
+
+    const itemName = String(entry.name || "").trim();
+    if (!itemName) {
+      entry.equipped = false;
+      return { changed: false, message: "Enter an item name before marking it equipped." };
+    }
+
+    if (!checked) {
+      entry.equipped = false;
+      let removedFromSlot = false;
+      data.equipmentSlots.forEach((slot) => {
+        if (state.equipment[slot.id] === itemName) {
+          state.equipment[slot.id] = "";
+          removedFromSlot = true;
+        }
+      });
+      return {
+        changed: true,
+        message: removedFromSlot ? `${itemName} unequipped.` : `${itemName} marked as not equipped.`,
+      };
+    }
+
+    const item = data.items.find((candidate) => candidate.name === itemName);
+    if (!item) {
+      entry.equipped = false;
+      return { changed: false, message: `${itemName} isn't a catalogue item and can't be equipped.` };
+    }
+
+    const slot = chooseEquipmentSlot(item);
+    const previousItemName = state.equipment[slot];
+    if (previousItemName && previousItemName !== item.name) {
+      state.inventory.forEach((otherEntry) => {
+        if (otherEntry !== entry && otherEntry.name === previousItemName) otherEntry.equipped = false;
+      });
+    }
+    state.equipment[slot] = item.name;
+    entry.equipped = true;
+    const label = data.equipmentSlots.find((slotDef) => slotDef.id === slot)?.label || titleCase(slot);
+    return { changed: true, message: `${item.name} equipped in ${label}.` };
+  }
+
   function handleRouteAction(event) {
     const routeButton = event.target.closest("[data-route]");
     if (routeButton) {
@@ -1423,7 +1481,16 @@
       const item = data.items.find((entry) => entry.name === button.dataset.name);
       if (item) {
         const slot = chooseEquipmentSlot(item);
+        const previousItemName = state.equipment[slot];
+        if (previousItemName && previousItemName !== item.name) {
+          state.inventory.forEach((entry) => {
+            if (entry.name === previousItemName) entry.equipped = false;
+          });
+        }
         state.equipment[slot] = item.name;
+        state.inventory.forEach((entry) => {
+          if (entry.name === item.name) entry.equipped = true;
+        });
         changed = true;
         const label = data.equipmentSlots.find((entry) => entry.id === slot)?.label || titleCase(slot);
         message = `${item.name} equipped in ${label}.`;
