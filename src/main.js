@@ -8,9 +8,17 @@ import {
   catalogueSingular,
   cloneDefaultCharacterState,
 } from "./workbook.js";
+import {
+  clearPortalLocation,
+  isNewerCharacterRecord,
+  loadPortalLocation,
+  savePortalLocation,
+  shouldSynchronizeForAuthChange,
+} from "./session-state.js";
 
 const root = document.getElementById("app");
 const toastRegion = document.getElementById("toast-region");
+const characterSelect = "id,owner_id,name,state,created_at,updated_at,updated_by";
 const application = {
   loading: true,
   session: null,
@@ -30,7 +38,15 @@ const application = {
   catalogueLimit: 80,
   pendingSave: null,
   saveTimer: null,
+  savePromise: null,
   loadVersion: 0,
+  portalLocationRestored: false,
+  authSyncTimer: null,
+  checkingForUpdates: false,
+  updateCheckPromise: null,
+  remoteUpdate: null,
+  sheetFlushSequence: 0,
+  sheetFlushRequests: new Map(),
 };
 
 root.addEventListener("click", handleClick);
@@ -38,6 +54,8 @@ root.addEventListener("submit", handleSubmit);
 root.addEventListener("change", handleChange);
 root.addEventListener("input", handleInput);
 window.addEventListener("message", handleSheetMessage);
+document.addEventListener("visibilitychange", handleVisibilityChange);
+window.addEventListener("pagehide", handlePageHide);
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && application.modal) {
     application.modal = null;
@@ -53,20 +71,50 @@ async function initialize() {
   application.session = data.session;
   await synchronizeSession();
 
-  supabase.auth.onAuthStateChange((event, session) => {
-    application.session = session;
-    // Recovery links fire PASSWORD_RECOVERY; invite links fire SIGNED_IN with
-    // the token in the URL. In both cases the user must set a password, so
-    // route them to the password-setup screen rather than the app.
-    if (event === "PASSWORD_RECOVERY") application.passwordFlow = true;
-    if (
-      event === "SIGNED_IN" &&
-      (initialAuthType === "invite" || initialAuthType === "recovery")
-    ) {
-      application.passwordFlow = true;
-    }
-    window.setTimeout(() => synchronizeSession(), 0);
-  });
+  supabase.auth.onAuthStateChange(handleAuthStateChange);
+}
+
+function handleAuthStateChange(event, session) {
+  const previousUserId = application.session?.user?.id || null;
+  const nextUserId = session?.user?.id || null;
+  const wasPasswordFlow = application.passwordFlow;
+  application.session = session;
+
+  // Recovery links fire PASSWORD_RECOVERY; invite links fire SIGNED_IN with
+  // the token in the URL. Both require the password-setup screen.
+  if (event === "PASSWORD_RECOVERY") application.passwordFlow = true;
+  if (
+    event === "SIGNED_IN" &&
+    (initialAuthType === "invite" || initialAuthType === "recovery")
+  ) {
+    application.passwordFlow = true;
+  }
+
+  const passwordFlowStarted = !wasPasswordFlow && application.passwordFlow;
+  if (
+    !shouldSynchronizeForAuthChange({
+      event,
+      previousUserId,
+      nextUserId,
+      passwordFlowStarted,
+    })
+  ) {
+    return;
+  }
+
+  if (previousUserId !== nextUserId) {
+    application.portalLocationRestored = false;
+    application.activeCharacterId = null;
+    application.view = "characters";
+    application.remoteUpdate = null;
+  }
+  if (event === "SIGNED_OUT") clearPortalLocation(window.sessionStorage, previousUserId);
+  requestSessionSynchronization();
+}
+
+function requestSessionSynchronization() {
+  window.clearTimeout(application.authSyncTimer);
+  application.authSyncTimer = window.setTimeout(() => synchronizeSession(), 0);
 }
 
 async function synchronizeSession() {
@@ -78,8 +126,10 @@ async function synchronizeSession() {
   if (!application.session) {
     application.profile = null;
     application.profiles = [];
+    application.campaign = null;
     application.characters = [];
     application.catalogues = [];
+    application.remoteUpdate = null;
     application.loading = false;
     render();
     return;
@@ -117,7 +167,7 @@ async function loadCampaignData(version = application.loadVersion) {
     supabase.from("campaign_settings").select("id,name,description,updated_at").eq("id", 1).single(),
     supabase
       .from("characters")
-      .select("id,owner_id,name,state,created_at,updated_at")
+      .select(characterSelect)
       .order("updated_at", { ascending: false }),
     supabase
       .from("catalogue_entries")
@@ -146,13 +196,37 @@ async function loadCampaignData(version = application.loadVersion) {
   application.catalogues = catalogueResult.data || [];
   application.profiles = isDm() ? profilesResult.data || [] : [application.profile];
 
+  restorePortalLocation();
+
   if (
     application.activeCharacterId &&
     !application.characters.some((character) => character.id === application.activeCharacterId)
   ) {
     application.activeCharacterId = null;
     application.view = "characters";
+    application.remoteUpdate = null;
+    rememberPortalLocation();
   }
+}
+
+function restorePortalLocation() {
+  if (application.portalLocationRestored) return;
+  application.portalLocationRestored = true;
+  const userId = application.session?.user?.id;
+  const saved = loadPortalLocation(window.sessionStorage, userId);
+  if (!saved) return;
+  if (!application.characters.some((character) => character.id === saved.activeCharacterId)) return;
+  application.activeCharacterId = saved.activeCharacterId;
+  application.view = "editor";
+}
+
+function rememberPortalLocation() {
+  savePortalLocation(
+    window.sessionStorage,
+    application.session?.user?.id,
+    application.view,
+    application.activeCharacterId,
+  );
 }
 
 function isDm() {
@@ -357,10 +431,33 @@ function renderEditor() {
       <div class="editor-toolbar">
         <button class="button button-quiet" type="button" data-view="characters">← Characters</button>
         <div class="editor-context"><strong>${escapeHtml(character.name)}</strong><span id="online-save-state" role="status">Saved online</span></div>
+        <div class="editor-sync-actions">
+          <button class="button button-quiet button-compact" type="button" data-action="check-character-updates" ${application.checkingForUpdates ? "disabled" : ""}>${application.checkingForUpdates ? "Checking…" : "Check for updates"}</button>
+        </div>
         ${ownerSelect}
       </div>
-      <iframe class="sheet-frame" id="sheet-frame" src="/sheet/index.html?embedded=1" title="${escapeHtml(character.name)} character sheet"></iframe>
+      <div class="editor-update-region" id="editor-update-region" aria-live="polite">${renderRemoteUpdateNotice()}</div>
+      <iframe class="sheet-frame" id="sheet-frame" src="/sheet/index.html?embedded=1&amp;characterId=${encodeURIComponent(character.id)}" title="${escapeHtml(character.name)} character sheet"></iframe>
     </section>`;
+}
+
+function renderRemoteUpdateNotice() {
+  const remote = application.remoteUpdate;
+  if (!remote || remote.id !== application.activeCharacterId) return "";
+  return `<div class="editor-update-banner" role="status">
+    <div><strong>Newer character changes are available</strong><span>Changed elsewhere ${escapeHtml(formatDate(remote.updated_at))}. Your current page and scroll position will be preserved.</span></div>
+    <button class="button button-primary button-compact" type="button" data-action="load-remote-update">Load changes</button>
+  </div>`;
+}
+
+function updateRemoteUpdateInterface() {
+  const region = document.getElementById("editor-update-region");
+  if (region) region.innerHTML = renderRemoteUpdateNotice();
+  const button = root.querySelector('[data-action="check-character-updates"]');
+  if (button) {
+    button.disabled = application.checkingForUpdates;
+    button.textContent = application.checkingForUpdates ? "Checking…" : "Check for updates";
+  }
 }
 
 function renderCatalogues() {
@@ -514,8 +611,12 @@ async function handleClick(event) {
 
   const viewButton = event.target.closest("[data-view]");
   if (viewButton) {
-    application.view = viewButton.dataset.view;
+    const nextView = viewButton.dataset.view;
+    if (application.view === "editor" && nextView !== "editor") await flushOpenCharacterSave();
+    application.view = nextView;
     application.modal = null;
+    if (nextView !== "editor") application.remoteUpdate = null;
+    rememberPortalLocation();
     render();
     return;
   }
@@ -525,12 +626,20 @@ async function handleClick(event) {
   const action = button.dataset.action;
 
   if (action === "sign-out") {
-    await flushPendingSave();
+    await flushOpenCharacterSave();
     await supabase.auth.signOut();
     return;
   }
   if (action === "retry-setup") {
     await synchronizeSession();
+    return;
+  }
+  if (action === "check-character-updates") {
+    await checkForRemoteCharacterUpdate({ announce: true });
+    return;
+  }
+  if (action === "load-remote-update") {
+    await loadRemoteCharacterUpdate();
     return;
   }
   if (action === "reset-password") {
@@ -541,6 +650,7 @@ async function handleClick(event) {
     if (isDm() && !application.profiles.some((profile) => profile.role === "player")) {
       showToast("Invite a player before assigning a character.", "error");
       application.view = "players";
+      rememberPortalLocation();
       render();
       return;
     }
@@ -549,9 +659,11 @@ async function handleClick(event) {
     return;
   }
   if (action === "open-character") {
-    await flushPendingSave();
+    await flushOpenCharacterSave();
     application.activeCharacterId = button.dataset.characterId;
     application.view = "editor";
+    application.remoteUpdate = null;
+    rememberPortalLocation();
     render();
     return;
   }
@@ -687,7 +799,7 @@ async function createCharacter(form) {
       created_by: application.session.user.id,
       updated_by: application.session.user.id,
     })
-    .select("id,owner_id,name,state,created_at,updated_at")
+    .select(characterSelect)
     .single();
   setFormBusy(form, false);
   if (error) {
@@ -698,6 +810,8 @@ async function createCharacter(form) {
   application.modal = null;
   application.activeCharacterId = data.id;
   application.view = "editor";
+  application.remoteUpdate = null;
+  rememberPortalLocation();
   render();
   showToast(`${name} created.`, "success");
 }
@@ -718,7 +832,9 @@ async function deleteCharacter(characterId) {
   if (application.activeCharacterId === characterId) {
     application.activeCharacterId = null;
     application.view = "characters";
+    application.remoteUpdate = null;
   }
+  rememberPortalLocation();
   render();
   showToast(`${character.name} was permanently deleted.`, "success");
 }
@@ -728,7 +844,7 @@ async function changeCharacterOwner(characterId, ownerId) {
     .from("characters")
     .update({ owner_id: ownerId, updated_by: application.session.user.id })
     .eq("id", characterId)
-    .select("id,owner_id,name,state,created_at,updated_at")
+    .select(characterSelect)
     .single();
   if (error) {
     showToast(error.message, "error");
@@ -865,6 +981,10 @@ function handleSheetMessage(event) {
   if (event.data?.type === "amutsu:state-change" && event.data.state) {
     scheduleCharacterSave(event.data.state);
   }
+  if (event.data?.type === "amutsu:flush-complete") {
+    const request = application.sheetFlushRequests.get(event.data.requestId);
+    if (request) request();
+  }
 }
 
 function sendCharacterToSheet() {
@@ -893,33 +1013,241 @@ function scheduleCharacterSave(state) {
   application.saveTimer = window.setTimeout(flushPendingSave, 500);
 }
 
+function requestSheetSaveFlush() {
+  const frame = document.getElementById("sheet-frame");
+  if (!application.sheetReady || !frame?.contentWindow) return Promise.resolve(false);
+  const requestId = ++application.sheetFlushSequence;
+  return new Promise((resolve) => {
+    const finish = (flushed) => {
+      const request = application.sheetFlushRequests.get(requestId);
+      if (!request) return;
+      window.clearTimeout(request.timeout);
+      application.sheetFlushRequests.delete(requestId);
+      resolve(flushed);
+    };
+    const timeout = window.setTimeout(() => finish(false), 500);
+    const request = () => finish(true);
+    request.timeout = timeout;
+    application.sheetFlushRequests.set(requestId, request);
+    frame.contentWindow.postMessage(
+      { type: "amutsu:flush-request", requestId },
+      window.location.origin,
+    );
+  });
+}
+
+async function flushOpenCharacterSave() {
+  await requestSheetSaveFlush();
+  return flushPendingSave();
+}
+
 async function flushPendingSave() {
   window.clearTimeout(application.saveTimer);
-  if (!application.pendingSave || !application.session) return;
+  if (application.savePromise) {
+    const saved = await application.savePromise;
+    if (saved && application.pendingSave) return flushPendingSave();
+    return saved;
+  }
+  if (!application.pendingSave) return true;
+  if (!application.session) return false;
+
   const pending = application.pendingSave;
   application.pendingSave = null;
+  const savePromise = saveCharacterState(pending);
+  application.savePromise = savePromise;
+  let saved = false;
+  try {
+    saved = await savePromise;
+  } finally {
+    if (application.savePromise === savePromise) application.savePromise = null;
+  }
+  if (saved && application.pendingSave) return flushPendingSave();
+  return saved;
+}
+
+async function saveCharacterState(pending) {
   const name = String(pending.state?.character?.name || "").trim() || "Unnamed Character";
-  const { data, error } = await supabase
-    .from("characters")
-    .update({
-      name,
-      state: pending.state,
-      updated_by: application.session.user.id,
-    })
-    .eq("id", pending.characterId)
-    .select("id,owner_id,name,state,created_at,updated_at")
-    .single();
+  let data;
+  let error;
+  try {
+    ({ data, error } = await supabase
+      .from("characters")
+      .update({
+        name,
+        state: pending.state,
+        updated_by: application.session.user.id,
+      })
+      .eq("id", pending.characterId)
+      .select(characterSelect)
+      .single());
+  } catch (caughtError) {
+    error = caughtError;
+  }
 
   if (error) {
-    application.pendingSave = pending;
+    if (!application.pendingSave) application.pendingSave = pending;
     updateSaveStatus("Online save failed", "error");
     sendSheetSaveStatus("error", "Online save failed");
     showToast(error.message, "error");
-    return;
+    return false;
   }
   replaceCharacter(data);
   updateSaveStatus("Saved online", "saved");
   sendSheetSaveStatus("saved", "Saved online");
+  return true;
+}
+
+function handleVisibilityChange() {
+  rememberPortalLocation();
+  if (document.visibilityState === "hidden") {
+    void flushOpenCharacterSave();
+    return;
+  }
+  if (document.visibilityState === "visible") void checkForRemoteCharacterUpdate();
+}
+
+function handlePageHide() {
+  rememberPortalLocation();
+  void flushOpenCharacterSave();
+}
+
+async function fetchLatestCharacterVersion(characterId) {
+  return supabase
+    .from("characters")
+    .select("id,updated_at,updated_by")
+    .eq("id", characterId)
+    .maybeSingle();
+}
+
+async function fetchLatestCharacterRecord(characterId) {
+  return supabase
+    .from("characters")
+    .select(characterSelect)
+    .eq("id", characterId)
+    .maybeSingle();
+}
+
+async function checkForRemoteCharacterUpdate({ announce = false } = {}) {
+  if (application.updateCheckPromise) {
+    const existingResult = await application.updateCheckPromise;
+    if (announce) announceUpdateCheckResult(existingResult);
+    return existingResult;
+  }
+  if (application.view !== "editor" || !application.session || !activeCharacter()) {
+    const skipped = { status: "skipped" };
+    if (announce) announceUpdateCheckResult(skipped);
+    return skipped;
+  }
+
+  application.checkingForUpdates = true;
+  updateRemoteUpdateInterface();
+  const checkPromise = performRemoteCharacterUpdateCheck().catch((error) => ({
+    status: "error",
+    error,
+  }));
+  application.updateCheckPromise = checkPromise;
+  let result;
+  try {
+    result = await checkPromise;
+  } finally {
+    if (application.updateCheckPromise === checkPromise) application.updateCheckPromise = null;
+    application.checkingForUpdates = false;
+    updateRemoteUpdateInterface();
+  }
+  if (announce) announceUpdateCheckResult(result);
+  return result;
+}
+
+async function performRemoteCharacterUpdateCheck() {
+  const saved = await flushOpenCharacterSave();
+  if (!saved) return { status: "save-error" };
+  const local = activeCharacter();
+  if (!local) return { status: "skipped" };
+
+  const { data, error } = await fetchLatestCharacterVersion(local.id);
+  if (error) return { status: "error", error };
+  if (!data) return { status: "unavailable" };
+
+  if (isNewerCharacterRecord(data, local)) {
+    application.remoteUpdate = data;
+    updateRemoteUpdateInterface();
+    return { status: "updated", character: data };
+  }
+
+  if (application.remoteUpdate?.id === local.id) application.remoteUpdate = null;
+  updateRemoteUpdateInterface();
+  return { status: "current" };
+}
+
+function announceUpdateCheckResult(result) {
+  if (result?.status === "updated") {
+    showToast("Newer character changes are available.");
+    return;
+  }
+  if (result?.status === "current") {
+    showToast("This character is up to date.");
+    return;
+  }
+  if (result?.status === "save-error") {
+    showToast("Your pending changes could not be saved, so updates were not checked.", "error");
+    return;
+  }
+  if (result?.status === "unavailable") {
+    showToast("This character is no longer available to this account.", "error");
+    return;
+  }
+  if (result?.status === "error") {
+    showToast(result.error?.message || "Updates could not be checked.", "error");
+  }
+}
+
+async function loadRemoteCharacterUpdate() {
+  const result = await checkForRemoteCharacterUpdate();
+  if (result.status !== "updated" || !application.remoteUpdate) {
+    if (result.status === "current") showToast("This character is already up to date.");
+    else if (result.status !== "skipped") announceUpdateCheckResult(result);
+    return;
+  }
+
+  const local = activeCharacter();
+  let remote;
+  let error;
+  try {
+    ({ data: remote, error } = await fetchLatestCharacterRecord(application.remoteUpdate.id));
+  } catch (caughtError) {
+    error = caughtError;
+  }
+  if (error) {
+    showToast(error.message || "The newer character could not be loaded.", "error");
+    return;
+  }
+  if (!remote) {
+    showToast("This character is no longer available to this account.", "error");
+    return;
+  }
+  if (!isNewerCharacterRecord(remote, local)) {
+    application.remoteUpdate = null;
+    updateRemoteUpdateInterface();
+    showToast("This character is already up to date.");
+    return;
+  }
+
+  replaceCharacter(remote);
+  application.remoteUpdate = null;
+  updateRemoteUpdateInterface();
+  updateEditorCharacterLabels(remote);
+  sendCharacterToSheet();
+  updateSaveStatus("Saved online", "saved");
+  showToast("Newer character changes loaded.");
+}
+
+function updateEditorCharacterLabels(character) {
+  const contextName = root.querySelector(".editor-context strong");
+  const pageTitle = root.querySelector(".portal-header h1");
+  const frame = document.getElementById("sheet-frame");
+  if (contextName) contextName.textContent = character.name;
+  if (pageTitle) pageTitle.textContent = character.name;
+  if (frame) frame.title = `${character.name} character sheet`;
 }
 
 function sendSheetSaveStatus(status, message) {

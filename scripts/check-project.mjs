@@ -3,12 +3,20 @@ import fs from "node:fs";
 import path from "node:path";
 import vm from "node:vm";
 import { fileURLToPath } from "node:url";
+import {
+  clearPortalLocation,
+  isNewerCharacterRecord,
+  loadPortalLocation,
+  savePortalLocation,
+  shouldSynchronizeForAuthChange,
+} from "../src/session-state.js";
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const requiredFiles = [
   "index.html",
   "src/main.js",
   "src/styles.css",
+  "src/session-state.js",
   "src/workbook-defaults.json",
   "public/sheet/index.html",
   "public/sheet/data.js",
@@ -57,6 +65,15 @@ assert.match(
   /new Set\(engine\.availableInventoryItemNames\(state\)\)/,
   "Equipment dropdowns must use positive-quantity inventory items",
 );
+assert.match(bridge, /window\.sessionStorage/, "Per-character sheet location storage is missing");
+assert.match(bridge, /scrollPositions/, "Per-route scroll restoration is missing");
+assert.match(bridge, /amutsu:flush-request/, "The embedded sheet save-flush request handler is missing");
+assert.match(bridge, /amutsu:flush-complete/, "The embedded sheet save-flush acknowledgement is missing");
+assert.match(
+  bridge,
+  /renderRoute\(\{ restoreStoredScroll: true \}\)/,
+  "Sheet reloads must restore the saved route scroll position",
+);
 assert.doesNotMatch(
   bridge,
   /The source stores these eight item names|Parity mode retains|source row 12 anomaly|source rows/,
@@ -74,6 +91,18 @@ assert.match(stylesheet, /\.metric-icon\s*{/, "Primary-stat icon styling is miss
 assert.match(stylesheet, /\.personality-compact\s*{/, "Compact trait styling is missing");
 assert.match(stylesheet, /\.equipment-slot-icon\s*{/, "Equipment icon styling is missing");
 assert.match(stylesheet, /\.equipment-stat-badge\s*{/, "Equipment bonus badge styling is missing");
+
+const portalSource = fs.readFileSync(path.join(root, "src/main.js"), "utf8");
+const portalStylesheet = fs.readFileSync(path.join(root, "src/styles.css"), "utf8");
+assert.match(portalSource, /handleAuthStateChange/, "Auth-event gating is missing");
+assert.match(portalSource, /document\.addEventListener\("visibilitychange"/, "Return-to-tab update checks are missing");
+assert.match(portalSource, /data-action="check-character-updates"/, "Manual update check is missing");
+assert.match(portalSource, /data-action="load-remote-update"/, "Remote update loading control is missing");
+assert.match(portalSource, /requestSheetSaveFlush/, "Pending iframe edits must flush before update checks");
+assert.match(portalSource, /select\("id,updated_at,updated_by"\)/, "Lightweight character version query is missing");
+assert.match(portalSource, /characterId=\$\{encodeURIComponent\(character\.id\)\}/, "Character-specific iframe location is missing");
+assert.match(portalStylesheet, /\.editor-update-banner\s*{/, "Remote update banner styling is missing");
+assert.match(portalStylesheet, /\.sheet-frame\s*{[^}]*grid-row:\s*3/s, "The iframe must retain the flexible editor grid row");
 
 const sheetHtml = fs.readFileSync(path.join(root, "public/sheet/index.html"), "utf8");
 assert.doesNotMatch(
@@ -276,13 +305,110 @@ assert.equal(mealEditResult.reason, "missing-day");
 assert.equal(missingDay.hearth.log[0].eaten, false);
 
 const browserSources = [
-  fs.readFileSync(path.join(root, "src/main.js"), "utf8"),
+  portalSource,
   fs.readFileSync(path.join(root, "src/config.js"), "utf8"),
 ].join("\n");
 assert.doesNotMatch(
   browserSources,
   /service[_-]?role/i,
   "A service-role reference must never be present in browser code",
+);
+
+function createMemoryStorage() {
+  const entries = new Map();
+  return {
+    getItem: (key) => entries.get(key) ?? null,
+    setItem: (key, value) => entries.set(key, String(value)),
+    removeItem: (key) => entries.delete(key),
+  };
+}
+
+const portalStorage = createMemoryStorage();
+assert.equal(savePortalLocation(portalStorage, "player-1", "editor", "character-9"), true);
+assert.deepEqual(loadPortalLocation(portalStorage, "player-1"), {
+  view: "editor",
+  activeCharacterId: "character-9",
+});
+assert.equal(loadPortalLocation(portalStorage, "player-2"), null);
+assert.equal(savePortalLocation(portalStorage, "player-1", "characters", "character-9"), true);
+assert.equal(loadPortalLocation(portalStorage, "player-1"), null);
+savePortalLocation(portalStorage, "player-1", "editor", "character-9");
+assert.equal(clearPortalLocation(portalStorage, "player-2"), false);
+assert.ok(loadPortalLocation(portalStorage, "player-1"));
+assert.equal(clearPortalLocation(portalStorage, "player-1"), true);
+assert.equal(loadPortalLocation(portalStorage, "player-1"), null);
+
+assert.equal(
+  shouldSynchronizeForAuthChange({
+    event: "TOKEN_REFRESHED",
+    previousUserId: "player-1",
+    nextUserId: "player-1",
+  }),
+  false,
+  "Token refreshes for the same user must not rebuild the editor",
+);
+assert.equal(
+  shouldSynchronizeForAuthChange({
+    event: "SIGNED_IN",
+    previousUserId: "player-1",
+    nextUserId: "player-1",
+  }),
+  false,
+  "Repeated same-user sign-in events must not rebuild the editor",
+);
+assert.equal(
+  shouldSynchronizeForAuthChange({
+    event: "SIGNED_IN",
+    previousUserId: null,
+    nextUserId: "player-1",
+  }),
+  true,
+);
+assert.equal(
+  shouldSynchronizeForAuthChange({
+    event: "SIGNED_IN",
+    previousUserId: "player-1",
+    nextUserId: "dm-1",
+  }),
+  true,
+);
+assert.equal(
+  shouldSynchronizeForAuthChange({
+    event: "SIGNED_OUT",
+    previousUserId: "player-1",
+    nextUserId: null,
+  }),
+  true,
+);
+assert.equal(
+  shouldSynchronizeForAuthChange({
+    event: "PASSWORD_RECOVERY",
+    previousUserId: "player-1",
+    nextUserId: "player-1",
+  }),
+  true,
+);
+assert.equal(
+  isNewerCharacterRecord(
+    { updated_at: "2026-07-20T10:00:01.000Z" },
+    { updated_at: "2026-07-20T10:00:00.000Z" },
+  ),
+  true,
+);
+assert.equal(
+  isNewerCharacterRecord(
+    { updated_at: "2026-07-20T10:00:00.000Z" },
+    { updated_at: "2026-07-20T10:00:00.000Z" },
+  ),
+  false,
+);
+assert.equal(
+  isNewerCharacterRecord(
+    { updated_at: "2026-07-20T10:00:00.123456+00:00" },
+    { updated_at: "2026-07-20T10:00:00.123111+00:00" },
+  ),
+  true,
+  "Sub-millisecond database updates must be compared without losing precision",
 );
 
 const schema = fs.readFileSync(

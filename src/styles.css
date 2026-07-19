@@ -708,7 +708,7 @@ button:disabled {
   height: 100%;
   min-height: 34rem;
   display: grid;
-  grid-template-rows: auto minmax(0, 1fr);
+  grid-template-rows: auto auto minmax(0, 1fr);
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 0.9rem;
@@ -717,6 +717,7 @@ button:disabled {
 }
 
 .editor-toolbar {
+  grid-row: 1;
   display: flex;
   align-items: center;
   gap: 1rem;
@@ -749,6 +750,53 @@ button:disabled {
   color: var(--red);
 }
 
+.editor-sync-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.button-compact {
+  min-height: 2.35rem;
+  padding: 0.45rem 0.7rem;
+  font-size: 0.72rem;
+}
+
+.editor-update-region:empty {
+  display: none;
+}
+
+.editor-update-region {
+  grid-row: 2;
+}
+
+.editor-update-banner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.7rem 0.8rem;
+  border-bottom: 1px solid #d5a83b;
+  background: #fff2c8;
+  color: #5f4613;
+}
+
+.editor-update-banner > div {
+  min-width: 0;
+  display: grid;
+  gap: 0.12rem;
+}
+
+.editor-update-banner strong {
+  color: #4d3608;
+  font-size: 0.82rem;
+}
+
+.editor-update-banner span {
+  font-size: 0.72rem;
+  line-height: 1.4;
+}
+
 .compact-field {
   min-width: min(14rem, 28vw);
   grid-template-columns: auto minmax(8rem, 1fr);
@@ -760,6 +808,7 @@ button:disabled {
 }
 
 .sheet-frame {
+  grid-row: 3;
   width: 100%;
   height: 100%;
   border: 0;
@@ -1220,6 +1269,17 @@ button:disabled {
   .compact-field {
     min-width: 0;
     grid-template-columns: 1fr;
+  }
+
+  .editor-sync-actions,
+  .editor-sync-actions .button,
+  .editor-update-banner .button {
+    width: 100%;
+  }
+
+  .editor-update-banner {
+    align-items: stretch;
+    flex-direction: column;
   }
 
   .catalogue-tabs {
