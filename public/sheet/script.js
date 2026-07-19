@@ -42,6 +42,7 @@
   };
 
   let state = loadState();
+  engine.reconcileEquipmentWithInventory(state);
   let derived = engine.calculate(state, data);
 
   const root = document.getElementById("route-root");
@@ -202,6 +203,7 @@
   }
 
   function recalculate() {
+    engine.reconcileEquipmentWithInventory(state);
     derived = engine.calculate(state, data);
   }
 
@@ -435,6 +437,10 @@
       element.textContent = formatOutput(value, element.dataset.format);
     });
 
+    root.querySelectorAll("[data-metric-note]").forEach((element) => {
+      element.textContent = metricNoteText(element.dataset.metricNote);
+    });
+
     root.querySelectorAll("[data-equipment-index]").forEach((element) => {
       const item = derived.equippedItems[Number(element.dataset.equipmentIndex)];
       element.innerHTML = equipmentDetailsMarkup(item);
@@ -446,6 +452,11 @@
       const meta = inventoryRowMeta(row);
       const field = element.dataset.inventoryField;
       element.innerHTML = meta[field] ?? "";
+    });
+
+    root.querySelectorAll("[data-inventory-equip]").forEach((checkbox) => {
+      const entry = state.inventory[Number(checkbox.dataset.inventoryEquip)];
+      checkbox.checked = entry?.equipped === true;
     });
 
     root.querySelectorAll("[data-roll-result]").forEach((element) => {
@@ -683,8 +694,20 @@
     return `<span class="metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">${paths[name]}</svg></span>`;
   }
 
-  function metricCard(label, path, className, format, note, icon) {
-    return `<article class="metric-card ${className || ""} ${icon ? "has-icon" : ""}">${metricIcon(icon)}<div class="metric-card-copy"><span class="metric-label">${escapeHtml(label)}</span><strong data-output="${escapeHtml(path)}" ${format ? `data-format="${format}"` : ""}>${escapeHtml(formatOutput(getPath(derived, path), format))}</strong>${note ? `<small>${escapeHtml(note)}</small>` : ""}</div></article>`;
+  function metricNoteText(noteKey) {
+    if (noteKey === "health") {
+      return `Current ${state.character.currentHitPoints} + ${state.character.temporaryHitPoints} temporary`;
+    }
+    if (noteKey === "mana") return `Current ${state.character.currentMana}`;
+    return "";
+  }
+
+  function metricCard(label, path, className, format, note, icon, noteKey) {
+    const noteText = noteKey ? metricNoteText(noteKey) : note;
+    const noteAttribute = noteKey
+      ? ` data-metric-note="${escapeHtml(noteKey)}" aria-live="polite"`
+      : "";
+    return `<article class="metric-card ${className || ""} ${icon ? "has-icon" : ""}">${metricIcon(icon)}<div class="metric-card-copy"><span class="metric-label">${escapeHtml(label)}</span><strong data-output="${escapeHtml(path)}" ${format ? `data-format="${format}"` : ""}>${escapeHtml(formatOutput(getPath(derived, path), format))}</strong>${noteText ? `<small${noteAttribute}>${escapeHtml(noteText)}</small>` : ""}</div></article>`;
   }
 
   function renderCharacterPage() {
@@ -768,8 +791,8 @@
       <section class="panel character-ability-panel"><div class="panel-heading blue"><h2>Ability Scores</h2><span class="heading-note">Primary scores · modifier · cost</span></div><div class="panel-body"><div class="ability-grid">${abilityCards}</div></div></section>
 
       <section class="metric-strip section-gap" aria-label="Primary calculated statistics">
-        ${metricCard("Max Health", "stats.maxHealth", "is-hp", "integer", `Current ${character.currentHitPoints} + ${character.temporaryHitPoints} temporary`, "health")}
-        ${metricCard("Max Mana", "stats.maxMana", "is-mana", "integer", `Current ${character.currentMana}`, "mana")}
+        ${metricCard("Max Health", "stats.maxHealth", "is-hp", "integer", "", "health", "health")}
+        ${metricCard("Max Mana", "stats.maxMana", "is-mana", "integer", "", "mana", "mana")}
         ${metricCard("Armor", "stats.armor", "is-armor", "integer", "", "armor")}
         ${metricCard("Resistance", "stats.resistance", "is-resistance", "integer", "", "resistance")}
         ${metricCard("Evasion", "stats.evasion", "is-evasion", "integer", "", "evasion")}
@@ -1388,9 +1411,10 @@
   function equipmentOptionsForSlot(slotId) {
     const seen = new Set();
     const names = [];
+    const available = new Set(engine.availableInventoryItemNames(state));
     state.inventory.forEach((entry) => {
       const name = String(entry?.name || "").trim();
-      if (!name || seen.has(name)) return;
+      if (!name || !available.has(name) || seen.has(name)) return;
       const item = data.items.find((candidate) => candidate.name === name);
       if (item && slotAcceptsItem(slotId, item)) {
         seen.add(name);
@@ -1408,6 +1432,11 @@
     if (!itemName) {
       entry.equipped = false;
       return { changed: false, message: "Enter an item name before marking it equipped." };
+    }
+
+    if (checked && engine.numberValue(entry.quantity) <= 0) {
+      entry.equipped = false;
+      return { changed: false, message: `Add at least one ${itemName} before equipping it.` };
     }
 
     if (!checked) {
@@ -1526,7 +1555,8 @@
     }
     if (action === "equip-item") {
       const item = data.items.find((entry) => entry.name === button.dataset.name);
-      if (item) {
+      const availableItems = engine.availableInventoryItemNames(state);
+      if (item && availableItems.includes(item.name)) {
         const slot = chooseEquipmentSlot(item);
         const previousItemName = state.equipment[slot];
         if (previousItemName && previousItemName !== item.name) {
@@ -1541,6 +1571,8 @@
         changed = true;
         const label = data.equipmentSlots.find((entry) => entry.id === slot)?.label || titleCase(slot);
         message = `${item.name} equipped in ${label}.`;
+      } else if (item) {
+        message = `Add ${item.name} to the inventory before equipping it.`;
       }
     }
     if (action === "add-trait") {
