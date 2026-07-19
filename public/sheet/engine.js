@@ -332,6 +332,50 @@
     return true;
   }
 
+  function availableInventoryItemNames(state) {
+    const seen = new Set();
+    const inventory = Array.isArray(state?.inventory) ? state.inventory : [];
+    return inventory.reduce((names, entry) => {
+      const name = String(entry?.name || "").trim();
+      if (!name || numberValue(entry?.quantity) <= 0 || seen.has(name)) return names;
+      seen.add(name);
+      names.push(name);
+      return names;
+    }, []);
+  }
+
+  function reconcileEquipmentWithInventory(state) {
+    const availableNames = availableInventoryItemNames(state);
+    const available = new Set(availableNames);
+    const clearedSlots = [];
+    const equipment = state?.equipment;
+
+    if (!equipment || typeof equipment !== "object") {
+      return { availableNames, clearedSlots };
+    }
+
+    Object.entries(equipment).forEach(([slot, value]) => {
+      const name = String(value || "").trim();
+      if (!name || available.has(name)) return;
+      equipment[slot] = "";
+      clearedSlots.push({ slot, name });
+    });
+
+    const equippedNames = new Set(
+      Object.values(equipment)
+        .map((value) => String(value || "").trim())
+        .filter(Boolean),
+    );
+    if (Array.isArray(state.inventory)) {
+      state.inventory.forEach((entry) => {
+        const name = String(entry?.name || "").trim();
+        entry.equipped = Boolean(name && available.has(name) && equippedNames.has(name));
+      });
+    }
+
+    return { availableNames, clearedSlots };
+  }
+
   function mergePersonalitySlots(defaultPersonality, suppliedPersonality) {
     const source = Array.isArray(suppliedPersonality)
       ? suppliedPersonality
@@ -754,6 +798,8 @@
     addInventorySlot,
     removeInventorySlot,
     addInventoryItem,
+    availableInventoryItemNames,
+    reconcileEquipmentWithInventory,
     mergePersonalitySlots,
     calculatePersonality,
     addPersonalityTrait,
