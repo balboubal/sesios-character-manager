@@ -115,6 +115,14 @@ The committed `vercel.json` supplies the build settings and security headers.
 4. The player creates their character, or the DM creates one and assigns it to them.
 5. Open **Catalogues** to edit any catalogue record. Changes apply to all sheets when reopened or refreshed.
 
+## Non-disruptive character updates
+
+- Supabase token refreshes do not rebuild an open character sheet.
+- The active character, current sheet section, and each section's scroll position are kept in `sessionStorage` for the lifetime of the browser tab.
+- Returning to the tab saves pending edits and checks only the active character's update timestamp.
+- If a newer version exists, the open sheet stays in place and displays a **Load changes** banner. Remote state is never applied automatically.
+- Use **Check for updates** in the character toolbar to run the same check manually.
+
 ## Security rules
 
 | Action | Player | DM |
