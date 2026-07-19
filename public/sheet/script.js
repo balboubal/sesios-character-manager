@@ -689,7 +689,6 @@
 
   function renderCharacterPage() {
     const character = state.character;
-    const equipmentNames = data.items.map((item) => item.name);
     const personality = derived.personality;
 
     const abilityCards = data.abilityDefinitions
@@ -728,7 +727,11 @@
       .map((slot, index) => {
         const selected = state.equipment[slot.id];
         const item = derived.equippedItems[index];
-        return `<div class="equipment-row"><div class="equipment-slot">${equipmentSlotIcon(slot.id)}<label for="equipment-${slot.id}">${escapeHtml(slot.label)}</label></div><div class="equipment-row-main"><select class="table-input" id="equipment-${slot.id}" data-bind="equipment.${slot.id}">${renderOptions(equipmentNames, selected, "Empty slot")}</select><div class="equipment-details" data-equipment-index="${index}">${equipmentDetailsMarkup(item)}</div></div></div>`;
+        const slotOptions = equipmentOptionsForSlot(slot.id);
+        const hint = slotOptions.length
+          ? ""
+          : `<small class="field-hint">No matching items in inventory yet.</small>`;
+        return `<div class="equipment-row"><div class="equipment-slot">${equipmentSlotIcon(slot.id)}<label for="equipment-${slot.id}">${escapeHtml(slot.label)}</label></div><div class="equipment-row-main"><select class="table-input" id="equipment-${slot.id}" data-bind="equipment.${slot.id}">${renderOptions(slotOptions, selected, "Empty slot")}</select>${hint}<div class="equipment-details" data-equipment-index="${index}">${equipmentDetailsMarkup(item)}</div></div></div>`;
       })
       .join("");
 
@@ -1351,6 +1354,50 @@
     }
     if (type.includes("neck")) return "necklace";
     return state.equipment.righthand ? "lefthand" : "righthand";
+  }
+
+  // Mirrors chooseEquipmentSlot's type-matching rules, but the other way
+  // round: given a slot, does this catalogue item belong there? Used to
+  // filter the equipment dropdowns down to items that actually fit.
+  function slotAcceptsItem(slotId, item) {
+    const type = String(item?.type || "").toLowerCase();
+    switch (slotId) {
+      case "headgear":
+        return type.includes("head");
+      case "plate":
+        return type.includes("torso") || type === "outfit";
+      case "footwear":
+        return type.includes("feet");
+      case "necklace":
+        return type.includes("neck");
+      case "trinket":
+      case "secondarytrinket":
+        return type.includes("trinket") || type.includes("focus") || type === "item";
+      case "lefthand":
+        return type.includes("shield") || item.type === "Melee" || item.type === "Ranged";
+      case "righthand":
+        return item.type === "Melee" || item.type === "Ranged";
+      default:
+        return true;
+    }
+  }
+
+  // Returns the distinct item names currently in the character's inventory
+  // that fit the given equipment slot, so each slot's dropdown only offers
+  // relevant, owned items instead of the entire item catalogue.
+  function equipmentOptionsForSlot(slotId) {
+    const seen = new Set();
+    const names = [];
+    state.inventory.forEach((entry) => {
+      const name = String(entry?.name || "").trim();
+      if (!name || seen.has(name)) return;
+      const item = data.items.find((candidate) => candidate.name === name);
+      if (item && slotAcceptsItem(slotId, item)) {
+        seen.add(name);
+        names.push(name);
+      }
+    });
+    return names;
   }
 
   function applyInventoryEquipToggle(index, checked) {
