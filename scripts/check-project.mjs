@@ -44,6 +44,13 @@ assert.match(bridge, /metric-icon/, "Primary-stat icons are missing");
 assert.match(bridge, /personality-chip/, "Compact personality-trait display is missing");
 assert.match(bridge, /remove-trait/, "Personality-trait removal control is missing");
 assert.match(bridge, /path === "personality"/, "Dynamic personality persistence hook is missing");
+assert.match(bridge, /equipmentSlotIcon/, "Equipment slot icons are missing");
+assert.match(bridge, /equipmentDetailsMarkup/, "Clear equipment bonus details are missing");
+assert.doesNotMatch(
+  bridge,
+  /The source stores these eight item names|Parity mode retains|source row 12 anomaly|source rows/,
+  "Developer-only conversion notes must not be shown to players",
+);
 assert.doesNotMatch(
   bridge,
   /data-bind="personality\.\$\{index\}\.cost"/,
@@ -54,6 +61,15 @@ const stylesheet = fs.readFileSync(path.join(root, "public/sheet/styles.css"), "
 assert.match(stylesheet, /\.ability-grid\s*{[^}]*repeat\(6,/s, "Ability scores are not full-width");
 assert.match(stylesheet, /\.metric-icon\s*{/, "Primary-stat icon styling is missing");
 assert.match(stylesheet, /\.personality-compact\s*{/, "Compact trait styling is missing");
+assert.match(stylesheet, /\.equipment-slot-icon\s*{/, "Equipment icon styling is missing");
+assert.match(stylesheet, /\.equipment-stat-badge\s*{/, "Equipment bonus badge styling is missing");
+
+const sheetHtml = fs.readFileSync(path.join(root, "public/sheet/index.html"), "utf8");
+assert.doesNotMatch(
+  sheetHtml,
+  /Source workbook:|Workbook logic preserved|Restore original workbook values/,
+  "Developer-only workbook notes must not appear in the player shell",
+);
 
 const inventoryEngine = context.window.AmutsuEngine;
 const defaultInventory = workbook.defaultState.inventory;
@@ -88,6 +104,39 @@ assert.equal(dynamicInventoryState.inventory.length, 3);
 assert.ok(inventoryEngine.removeInventorySlot(dynamicInventoryState, 1));
 assert.equal(dynamicInventoryState.inventory.length, 2);
 assert.equal(dynamicInventoryState.inventory.some((entry) => entry.name === "Forgery Kit"), false);
+
+const baseDefenseState = JSON.parse(JSON.stringify(workbook.defaultState));
+const baseDefense = inventoryEngine.calculate(baseDefenseState, workbook);
+assert.equal(baseDefense.stats.goldMultiplierText, "0%", "Gold multiplier should use whole-percent display");
+
+const armorBonusState = JSON.parse(JSON.stringify(baseDefenseState));
+armorBonusState.bonuses.armor = 1;
+const armorBonusResult = inventoryEngine.calculate(armorBonusState, workbook);
+assert.equal(armorBonusResult.stats.armor, baseDefense.stats.armor + 1);
+assert.equal(
+  armorBonusResult.stats.resistance,
+  baseDefense.stats.resistance,
+  "Armor bonus must not change resistance",
+);
+
+const resistanceBonusState = JSON.parse(JSON.stringify(baseDefenseState));
+resistanceBonusState.bonuses.resistance = 1;
+const resistanceBonusResult = inventoryEngine.calculate(resistanceBonusState, workbook);
+assert.equal(resistanceBonusResult.stats.armor, baseDefense.stats.armor);
+assert.equal(resistanceBonusResult.stats.resistance, baseDefense.stats.resistance + 1);
+
+const splitDefenseState = JSON.parse(JSON.stringify(baseDefenseState));
+Object.keys(splitDefenseState.equipment).forEach((slot) => {
+  splitDefenseState.equipment[slot] = "";
+});
+splitDefenseState.equipment.headgear = "Asuran Guard Visor";
+const splitDefenseResult = inventoryEngine.calculate(splitDefenseState, workbook);
+assert.equal(splitDefenseResult.stats.armor, 2);
+assert.equal(
+  splitDefenseResult.stats.resistance,
+  1,
+  "Rogue resistance must use equipment resistance rather than equipment armor",
+);
 
 const personalityEngine = context.window.AmutsuEngine;
 const personalityState = JSON.parse(JSON.stringify(workbook.defaultState));
