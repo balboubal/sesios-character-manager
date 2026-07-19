@@ -85,7 +85,6 @@
       manaRate: 0,
       manaBase: 0,
       spellDamage: "equipmentOnly",
-      rogueResistanceBug: true,
     },
   };
 
@@ -195,9 +194,7 @@
       1,
     );
     const armor = equipmentSums.armor + bonuses.armor + rule.armorBonus;
-    const resistance = rule.rogueResistanceBug
-      ? equipmentSums.armor + bonuses.armor
-      : equipmentSums.resistance + bonuses.resistance + rule.resistanceBonus;
+    const resistance = equipmentSums.resistance + bonuses.resistance + rule.resistanceBonus;
     const evasion =
       excelRoundDown(
         equipmentSums.evasion + speedModifier + (rule.includeBonusEvasion ? bonuses.evasion : 0),
@@ -583,8 +580,11 @@
     const physicalDamage = level + bonuses.physicalDamage + equipmentSums.physicalDamage;
     const spellDamage = classStats.spellDamage + bonuses.spellDamage;
     const evasion = (classStats.evasion > 0 ? classStats.evasion : 0) + bonuses.evasion;
-    const armor = classStats.armor + bonuses.armor;
-    const resistance = classStats.resistance + bonuses.resistance;
+    // Armor and resistance bonuses are already included by calculateClassProfile.
+    // Re-adding them here doubled the selected bonus, while Rogue resistance also
+    // inherited armor. Keep these as the finalized, independent class totals.
+    const armor = classStats.armor;
+    const resistance = classStats.resistance;
     const maxMana = classStats.maxMana + bonuses.mana;
     const focus = 4 + equipmentSums.focus + bonuses.focus;
     const criticalChance = 0.05 + equipmentSums.criticalChance + bonuses.criticalChance;
@@ -712,8 +712,8 @@
         criticalChance,
         spellSave: classStats.spellSave,
         moveSpeed,
-        goldMultiplierText: `${equipmentSums.goldMultiplier}%`,
-        xpMultiplierText: `${equipmentSums.xpMultiplier}%`,
+        goldMultiplierText: `${formatNumber(equipmentSums.goldMultiplier, 0)}%`,
+        xpMultiplierText: `${formatNumber(equipmentSums.xpMultiplier, 0)}%`,
       },
       inventory: {
         rows: inventoryRows,
