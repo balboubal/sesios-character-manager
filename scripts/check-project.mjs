@@ -40,6 +40,20 @@ assert.match(bridge, /data-hearth-eat/, "Hearth meal checkbox handler is missing
 assert.match(bridge, /add-inventory-slot/, "Add inventory slot control is missing");
 assert.match(bridge, /remove-inventory-slot/, "Remove inventory slot control is missing");
 assert.match(bridge, /path === "inventory"/, "Dynamic inventory persistence hook is missing");
+assert.match(bridge, /metric-icon/, "Primary-stat icons are missing");
+assert.match(bridge, /personality-chip/, "Compact personality-trait display is missing");
+assert.match(bridge, /remove-trait/, "Personality-trait removal control is missing");
+assert.match(bridge, /path === "personality"/, "Dynamic personality persistence hook is missing");
+assert.doesNotMatch(
+  bridge,
+  /data-bind="personality\.\$\{index\}\.cost"/,
+  "Personality costs should remain hidden on the character sheet",
+);
+
+const stylesheet = fs.readFileSync(path.join(root, "public/sheet/styles.css"), "utf8");
+assert.match(stylesheet, /\.ability-grid\s*{[^}]*repeat\(6,/s, "Ability scores are not full-width");
+assert.match(stylesheet, /\.metric-icon\s*{/, "Primary-stat icon styling is missing");
+assert.match(stylesheet, /\.personality-compact\s*{/, "Compact trait styling is missing");
 
 const inventoryEngine = context.window.AmutsuEngine;
 const defaultInventory = workbook.defaultState.inventory;
@@ -74,6 +88,57 @@ assert.equal(dynamicInventoryState.inventory.length, 3);
 assert.ok(inventoryEngine.removeInventorySlot(dynamicInventoryState, 1));
 assert.equal(dynamicInventoryState.inventory.length, 2);
 assert.equal(dynamicInventoryState.inventory.some((entry) => entry.name === "Forgery Kit"), false);
+
+const personalityEngine = context.window.AmutsuEngine;
+const personalityState = JSON.parse(JSON.stringify(workbook.defaultState));
+let personalityResult = personalityEngine.calculatePersonality(personalityState, workbook);
+assert.equal(personalityResult.total, 70, "Default personality budget must retain workbook costs");
+assert.equal(personalityResult.limit, 70);
+assert.equal(personalityResult.atLimit, true);
+assert.equal(personalityResult.overLimit, false);
+
+let traitEditResult = personalityEngine.addPersonalityTrait(personalityState, workbook, "Brave");
+assert.equal(traitEditResult.added, false);
+assert.equal(traitEditResult.reason, "limit");
+traitEditResult = personalityEngine.removePersonalityTrait(personalityState, 0);
+assert.equal(traitEditResult.removed, true);
+assert.equal(traitEditResult.name, "Greedy");
+traitEditResult = personalityEngine.addPersonalityTrait(personalityState, workbook, "Chaste");
+assert.equal(traitEditResult.added, true);
+assert.equal(traitEditResult.total, 65);
+traitEditResult = personalityEngine.addPersonalityTrait(
+  personalityState,
+  workbook,
+  "Master Manipulator",
+);
+assert.equal(traitEditResult.added, false);
+assert.equal(traitEditResult.reason, "duplicate");
+
+const sixLowCostTraits = ["Chaste", "Content", "Fickle", "Humble", "Patient", "Temperate"];
+const dynamicPersonalityState = {
+  personality: sixLowCostTraits.map((name) => ({ name, cost: 5 })),
+};
+traitEditResult = personalityEngine.addPersonalityTrait(
+  dynamicPersonalityState,
+  workbook,
+  "Trusting",
+);
+assert.equal(traitEditResult.added, true, "Trait budget, not six fixed slots, should set the limit");
+assert.equal(dynamicPersonalityState.personality.length, 7);
+assert.equal(traitEditResult.total, 35);
+assert.equal(
+  personalityEngine.mergePersonalitySlots(workbook.defaultState.personality, []).length,
+  0,
+  "Removing every personality trait must persist",
+);
+assert.equal(
+  personalityEngine.mergePersonalitySlots(
+    workbook.defaultState.personality,
+    dynamicPersonalityState.personality,
+  ).length,
+  7,
+  "Expanded personality selections must persist",
+);
 
 const applyHearthMealEdit = context.window.AmutsuEngine.applyHearthMealEdit;
 const mealState = () => ({

@@ -80,6 +80,9 @@
       if (path === "inventory") {
         return engine.mergeInventorySlots(defaultValue, suppliedValue);
       }
+      if (path === "personality") {
+        return engine.mergePersonalitySlots(defaultValue, suppliedValue);
+      }
       const supplied = Array.isArray(suppliedValue) ? suppliedValue : [];
       return defaultValue.map((item, index) =>
         mergeWithDefaults(item, supplied[index], `${path}.${index}`),
@@ -562,15 +565,27 @@
     return `<span class="rarity rarity-${slug(rarity)}">${escapeHtml(rarity)}</span>`;
   }
 
-  function metricCard(label, path, className, format, note) {
-    return `<article class="metric-card ${className || ""}"><span>${escapeHtml(label)}</span><strong data-output="${escapeHtml(path)}" ${format ? `data-format="${format}"` : ""}>${escapeHtml(formatOutput(getPath(derived, path), format))}</strong>${note ? `<small>${escapeHtml(note)}</small>` : ""}</article>`;
+  function metricIcon(name) {
+    const paths = {
+      health: `<path d="M12 20.5 4.4 13A5.3 5.3 0 0 1 12 5.6 5.3 5.3 0 0 1 19.6 13Z" />`,
+      mana: `<path d="M12 2.7s6.7 7.5 6.7 12.1a6.7 6.7 0 1 1-13.4 0C5.3 10.2 12 2.7 12 2.7Z" /><path d="M9 16.2c.5 1.2 1.5 1.8 3 1.8" />`,
+      armor: `<path d="M12 2.8 19.5 6v5.4c0 4.7-3 8.2-7.5 9.8-4.5-1.6-7.5-5.1-7.5-9.8V6Z" /><path d="M12 6.5v10.3" />`,
+      resistance: `<path d="m12 2.8 7.7 4.4v9.6L12 21.2l-7.7-4.4V7.2Z" /><path d="m12 7 1.4 2.8 3.1.5-2.2 2.2.5 3.1-2.8-1.5-2.8 1.5.5-3.1-2.2-2.2 3.1-.5Z" />`,
+      evasion: `<path d="M20.2 3.8C13 4.8 8 8.6 5.8 15.4L4 20l4.6-1.8C15.4 16 19.2 11 20.2 3.8Z" /><path d="M7 17c2.2-3.1 5.1-5.8 9-8" /><path d="M10 14.1h4.2" />`,
+      movement: `<path d="M7.2 3v9.4L4 15.8V20h16v-1.5c0-2-1.8-3.2-4.2-3.2h-2.5l-2.1-3.8V3Z" /><path d="M4 17.2h15.2" />`,
+    };
+    if (!paths[name]) return "";
+    return `<span class="metric-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">${paths[name]}</svg></span>`;
+  }
+
+  function metricCard(label, path, className, format, note, icon) {
+    return `<article class="metric-card ${className || ""} ${icon ? "has-icon" : ""}">${metricIcon(icon)}<div class="metric-card-copy"><span class="metric-label">${escapeHtml(label)}</span><strong data-output="${escapeHtml(path)}" ${format ? `data-format="${format}"` : ""}>${escapeHtml(formatOutput(getPath(derived, path), format))}</strong>${note ? `<small>${escapeHtml(note)}</small>` : ""}</div></article>`;
   }
 
   function renderCharacterPage() {
     const character = state.character;
-    const traitNames = data.traits.map((trait) => trait.name);
     const equipmentNames = data.items.map((item) => item.name);
-    const personalityTotal = state.personality.reduce((sum, trait) => sum + engine.numberValue(trait.cost), 0);
+    const personality = derived.personality;
 
     const abilityCards = data.abilityDefinitions
       .map((ability) => {
@@ -581,12 +596,24 @@
       })
       .join("");
 
-    const personalityRows = state.personality
-      .map(
-        (trait, index) =>
-          `<div class="personality-row"><label class="visually-hidden" for="trait-${index}">Personality trait ${index + 1}</label><select class="table-input" id="trait-${index}" data-bind="personality.${index}.name">${renderOptions(traitNames, trait.name, "Choose trait")}</select><label class="visually-hidden" for="trait-cost-${index}">Trait ${index + 1} cost</label><input class="table-input number-input" id="trait-cost-${index}" type="number" step="1" data-value-type="number" data-bind="personality.${index}.cost" value="${escapeHtml(trait.cost)}" /></div>`,
-      )
-      .join("");
+    const personalityRows = personality.rows.length
+      ? personality.rows
+          .map(
+            (trait) =>
+              `<div class="personality-chip" role="listitem"><span>${escapeHtml(trait.name)}</span><button class="personality-remove" type="button" data-action="remove-trait" data-index="${trait.index}" aria-label="Remove ${escapeHtml(trait.name)}">×</button></div>`,
+          )
+          .join("")
+      : `<div class="personality-empty"><strong>No traits assigned</strong><span>Add traits from the Personality Traits catalogue.</span></div>`;
+    const personalityBudgetMessage = personality.overLimit
+      ? "Maximum exceeded"
+      : personality.atLimit
+        ? "Maximum reached"
+        : "More traits available";
+    const personalityBudgetClass = personality.overLimit
+      ? "is-over"
+      : personality.atLimit
+        ? "is-full"
+        : "";
 
     const bonusFields = Object.entries(state.bonuses)
       .map(([key, value]) => field(titleCase(key), `bonuses.${key}`, value, { type: "number", step: key === "criticalChance" ? 0.01 : 1 }))
@@ -629,19 +656,18 @@
         ${field("Height (cm)", "character.height", character.height, { type: "number", min: 0, step: 0.1 })}
       </div></div></section>
 
-      <section class="metric-strip" aria-label="Primary calculated statistics">
-        ${metricCard("Max Health", "stats.maxHealth", "is-hp", "integer", `Current ${character.currentHitPoints} + ${character.temporaryHitPoints} temporary`)}
-        ${metricCard("Max Mana", "stats.maxMana", "is-mana", "integer", `Current ${character.currentMana}`)}
-        ${metricCard("Armor", "stats.armor", "is-armor", "integer")}
-        ${metricCard("Resistance", "stats.resistance", "is-resistance", "integer")}
-        ${metricCard("Evasion", "stats.evasion", "is-evasion", "integer")}
-        ${metricCard("Movement", "stats.moveSpeed", "is-move", "feet", derived.inventory.encumbranceLevel)}
+      <section class="panel character-ability-panel"><div class="panel-heading blue"><h2>Ability Scores</h2><span class="heading-note">Primary scores · modifier · cost</span></div><div class="panel-body"><div class="ability-grid">${abilityCards}</div></div></section>
+
+      <section class="metric-strip section-gap" aria-label="Primary calculated statistics">
+        ${metricCard("Max Health", "stats.maxHealth", "is-hp", "integer", `Current ${character.currentHitPoints} + ${character.temporaryHitPoints} temporary`, "health")}
+        ${metricCard("Max Mana", "stats.maxMana", "is-mana", "integer", `Current ${character.currentMana}`, "mana")}
+        ${metricCard("Armor", "stats.armor", "is-armor", "integer", "", "armor")}
+        ${metricCard("Resistance", "stats.resistance", "is-resistance", "integer", "", "resistance")}
+        ${metricCard("Evasion", "stats.evasion", "is-evasion", "integer", "", "evasion")}
+        ${metricCard("Movement", "stats.moveSpeed", "is-move", "feet", derived.inventory.encumbranceLevel, "movement")}
       </section>
 
-      <div class="layout-grid sidebar-main">
-        <section class="panel"><div class="panel-heading blue"><h2>Ability Scores</h2><span class="heading-note">Score · modifier · cost</span></div><div class="panel-body"><div class="ability-grid">${abilityCards}</div></div></section>
-        <section class="panel"><div class="panel-heading amber"><h2>Personality Traits</h2><span class="heading-note">Workbook total</span></div><div class="panel-body"><div class="personality-rows">${personalityRows}</div><div class="personality-total"><span>Total personality cost</span><strong>${engine.formatNumber(personalityTotal, 0)}</strong></div><p class="field-hint">Trait costs remain editable because the source cells are independent inputs.</p></div></section>
-      </div>
+      <section class="panel personality-panel"><div class="panel-heading amber"><h2>Personality Traits</h2><span class="heading-note">Character profile</span></div><div class="panel-body"><div class="personality-compact"><div class="personality-chip-list" role="list" aria-label="Assigned personality traits">${personalityRows}</div><aside class="personality-controls ${personalityBudgetClass}" aria-label="Personality trait controls" aria-live="polite"><span class="personality-limit-status">${escapeHtml(personalityBudgetMessage)}</span><button class="button button-small button-quiet" type="button" data-route="traits">Browse catalogue</button></aside></div></div></section>
 
       <div class="layout-grid two section-gap">
         <section class="panel"><div class="panel-heading"><h2>Core Statistics</h2><span class="heading-note">Calculated fields</span></div><div class="panel-body"><dl class="key-value-list">
@@ -1311,16 +1337,24 @@
       }
     }
     if (action === "add-trait") {
-      const trait = data.traits.find((entry) => entry.name === button.dataset.name);
-      const empty = state.personality.find((entry) => !String(entry.name || "").trim());
-      if (trait && empty) {
-        empty.name = trait.name;
-        empty.cost = trait.cost;
-        changed = true;
-        message = `${trait.name} added to the character.`;
+      const result = engine.addPersonalityTrait(state, data, button.dataset.name);
+      changed = result.added;
+      if (result.added) {
+        message = `${button.dataset.name} added to the character.`;
+      } else if (result.reason === "limit") {
+        message = "Personality trait maximum reached. Remove a trait before adding another.";
+      } else if (result.reason === "duplicate") {
+        message = `${button.dataset.name} is already assigned to this character.`;
       } else {
-        message = "All six personality trait slots are occupied.";
+        message = "That personality trait could not be added.";
       }
+    }
+    if (action === "remove-trait") {
+      const result = engine.removePersonalityTrait(state, Number(button.dataset.index));
+      changed = result.removed;
+      message = result.removed
+        ? `${result.name} removed from the character.`
+        : "That personality trait could not be removed.";
     }
     if (action === "add-condition") {
       const empty = state.activeEffects.find((entry) => !String(entry.ailment || "").trim());

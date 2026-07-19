@@ -764,8 +764,45 @@ p {
   box-shadow: 0 4px 12px rgba(17, 26, 32, 0.045);
 }
 
+.metric-card.has-icon {
+  display: grid;
+  grid-template-columns: 38px minmax(0, 1fr);
+  align-items: center;
+  gap: 10px;
+}
+
+.metric-card-copy {
+  min-width: 0;
+}
+
+.metric-icon {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  color: var(--blue);
+  background: var(--blue-pale);
+  border: 1px solid currentColor;
+  border-radius: 50%;
+}
+
+.metric-icon svg {
+  width: 23px;
+  height: 23px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 1.8;
+}
+
 .metric-card.is-hp {
   border-top-color: var(--red);
+}
+
+.metric-card.is-hp .metric-icon {
+  color: var(--red);
+  background: var(--red-pale);
 }
 
 .metric-card.is-mana {
@@ -776,19 +813,39 @@ p {
   border-top-color: #6b7378;
 }
 
+.metric-card.is-armor .metric-icon {
+  color: #59666d;
+  background: #edf0f1;
+}
+
 .metric-card.is-resistance {
   border-top-color: var(--purple);
+}
+
+.metric-card.is-resistance .metric-icon {
+  color: var(--purple);
+  background: var(--plum-pale);
 }
 
 .metric-card.is-evasion {
   border-top-color: var(--green);
 }
 
+.metric-card.is-evasion .metric-icon {
+  color: var(--green);
+  background: var(--green-pale);
+}
+
 .metric-card.is-move {
   border-top-color: var(--amber);
 }
 
-.metric-card span {
+.metric-card.is-move .metric-icon {
+  color: #946c0d;
+  background: var(--amber-pale);
+}
+
+.metric-card .metric-label {
   display: block;
   overflow: hidden;
   color: #66767e;
@@ -818,8 +875,21 @@ p {
 
 .ability-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 10px;
+}
+
+.character-ability-panel {
+  border-color: #7899ac;
+  box-shadow: 0 10px 24px rgba(17, 76, 111, 0.1);
+}
+
+.character-ability-panel .panel-heading {
+  min-height: 48px;
+}
+
+.character-ability-panel .panel-body {
+  padding: 16px;
 }
 
 .ability-card {
@@ -1003,33 +1073,113 @@ p {
   background: var(--line);
 }
 
-.personality-rows,
 .equipment-rows,
 .save-rows {
   display: grid;
   gap: 8px;
 }
 
-.personality-row {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) 90px;
-  gap: 8px;
+.personality-panel .panel-body {
+  padding: 14px;
 }
 
-.personality-total {
+.personality-compact {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 16px;
+}
+
+.personality-chip-list {
+  display: flex;
+  flex-wrap: wrap;
+  align-content: flex-start;
+  gap: 8px;
+  min-height: 50px;
+}
+
+.personality-chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 34px;
+  padding: 4px 5px 4px 11px;
+  color: #394a52;
+  background: #fffaf0;
+  border: 1px solid #ceb66d;
+  border-radius: 999px;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.personality-remove {
+  display: grid;
+  width: 24px;
+  height: 24px;
+  place-items: center;
+  padding: 0;
+  color: #a13535;
+  background: white;
+  border: 1px solid #d8a7a7;
+  border-radius: 50%;
+  cursor: pointer;
+  font-size: 17px;
+  line-height: 1;
+}
+
+.personality-remove:hover {
+  color: white;
+  background: var(--red);
+  border-color: var(--red);
+}
+
+.personality-empty {
+  display: grid;
+  align-content: center;
+  min-height: 50px;
+  padding: 8px 12px;
+  color: #687981;
+  background: #f6f7f7;
+  border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-small);
+  font-size: 11px;
+}
+
+.personality-empty strong {
+  color: #44555d;
+  font-size: 12px;
+}
+
+.personality-controls {
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  margin-top: 12px;
-  padding: 10px 12px;
-  background: var(--amber-pale);
-  border: 1px solid #c8a445;
-  border-radius: var(--radius-small);
+  gap: 10px;
 }
 
-.personality-total strong {
-  font-size: 20px;
-  font-variant-numeric: tabular-nums;
+.personality-limit-status {
+  display: inline-flex;
+  align-items: center;
+  min-height: 28px;
+  padding: 4px 9px;
+  color: #557064;
+  background: var(--green-pale);
+  border: 1px solid #9db9aa;
+  border-radius: 999px;
+  font-size: 10px;
+  font-weight: 850;
+  white-space: nowrap;
+}
+
+.personality-controls.is-full .personality-limit-status {
+  color: #795406;
+  background: var(--amber-pale);
+  border-color: #c8a445;
+}
+
+.personality-controls.is-over .personality-limit-status {
+  color: #902e2e;
+  background: var(--red-pale);
+  border-color: #c46b6b;
 }
 
 .equipment-row,
@@ -2344,7 +2494,7 @@ input[type="checkbox"] {
   }
 
   .ability-grid {
-    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    grid-template-columns: repeat(3, minmax(0, 1fr));
   }
 
   .damage-roll-grid {
@@ -2464,13 +2614,24 @@ input[type="checkbox"] {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 
-  .ability-grid,
   .form-grid,
   .form-grid.three,
   .form-grid.four,
   .identity-fields,
   .effect-grid {
     grid-template-columns: 1fr;
+  }
+
+  .ability-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .personality-compact {
+    grid-template-columns: 1fr;
+  }
+
+  .personality-controls {
+    justify-content: space-between;
   }
 
   .field-span-2 {
@@ -2635,8 +2796,20 @@ input[type="checkbox"] {
     font-size: 24px;
   }
 
-  .personality-row {
-    grid-template-columns: 1fr 76px;
+  .metric-card.has-icon {
+    grid-template-columns: 32px minmax(0, 1fr);
+    gap: 8px;
+    padding-inline: 10px;
+  }
+
+  .metric-icon {
+    width: 32px;
+    height: 32px;
+  }
+
+  .metric-icon svg {
+    width: 19px;
+    height: 19px;
   }
 
   .filters {
