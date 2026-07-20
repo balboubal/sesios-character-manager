@@ -4,6 +4,13 @@ import path from "node:path";
 import vm from "node:vm";
 import { fileURLToPath } from "node:url";
 import {
+  buildItemImportPlan,
+  createBulkImportPayload,
+  ITEM_IMPORT_FIELDS,
+  ITEM_IMPORT_HEADER,
+  parseSpreadsheetItems,
+} from "../src/catalogue-import.js";
+import {
   clearPortalLocation,
   isNewerCharacterRecord,
   loadPortalLocation,
@@ -15,6 +22,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), "..");
 const requiredFiles = [
   "index.html",
   "src/main.js",
+  "src/catalogue-import.js",
   "src/styles.css",
   "src/session-state.js",
   "src/workbook-defaults.json",
@@ -25,6 +33,7 @@ const requiredFiles = [
   "supabase/migrations/20260717000000_initial_schema.sql",
   "supabase/migrations/20260717001000_seed_catalogues.sql",
   "supabase/migrations/20260720000000_enable_character_realtime.sql",
+  "supabase/migrations/20260720001000_bulk_import_catalogue_items.sql",
   "supabase/functions/invite-player/index.ts",
   "README.md",
 ];
@@ -148,6 +157,10 @@ assert.match(stylesheet, /\.ailment-mark-stepper\s*{/, "Ailment mark stepper sty
 assert.match(stylesheet, /\.reset-days-button/, "Reset days button styling is missing");
 
 const portalSource = fs.readFileSync(path.join(root, "src/main.js"), "utf8");
+assert.match(portalSource, /data-action="bulk-import-items"/, "Item bulk-import action is missing");
+assert.match(portalSource, /id="bulk-item-form"/, "Item bulk-import form is missing");
+assert.match(portalSource, /bulk_import_catalogue_items/, "Atomic bulk-import RPC call is missing");
+assert.match(portalSource, /Copy supported header row/, "Spreadsheet header helper is missing");
 const portalStylesheet = fs.readFileSync(path.join(root, "src/styles.css"), "utf8");
 assert.match(portalSource, /handleAuthStateChange/, "Auth-event gating is missing");
 assert.match(portalSource, /document\.addEventListener\("visibilitychange"/, "Return-to-tab update checks are missing");
@@ -612,6 +625,54 @@ survivalResult = survivalEngine.editSurvivalHistoryEntry(dynamicJourneyState, fi
 assert.equal(survivalResult.accepted, true);
 assert.equal(dynamicJourneyState.hunger.days[0].foodGained, 5, "DM history edits must update source data");
 
+
+const spreadsheetPaste = [
+  "Item\tRarity\tType\tPhys Dmg\tMag Dmg\tCR%\tSTR\tSPD\tWeight\tValue\tGoldMulti\tTags",
+  "Club\tCommon\tMelee\t1d4 Bludgeoning\t-\t0%\t1\t-\t1.2\t10\t0%\tLight, Bludgeoning",
+  "Dagger of the Viper\tUncommon\tMelee\t1d4 Piercing\t1d6 Poison\t5%\t-\t1\t0.5\t1,200\t10%\tFinesse, Light",
+].join("\n");
+const parsedItems = parseSpreadsheetItems(spreadsheetPaste);
+assert.equal(parsedItems.globalErrors.length, 0, "Valid spreadsheet paste must parse without global errors");
+assert.equal(parsedItems.rows.length, 2, "Spreadsheet rows were not detected");
+assert.equal(parsedItems.rows[1].values.criticalChance, 0.05, "Critical percentages must convert to decimals");
+assert.equal(parsedItems.rows[1].values.goldMultiplier, 0.1, "Multiplier percentages must convert to decimals");
+assert.equal(parsedItems.rows[1].values.value, 1200, "Formatted numeric values must be normalized");
+assert.equal(parsedItems.rows[0].values.speed, "–", "Dash statistics must remain no-bonus markers");
+assert.match(ITEM_IMPORT_HEADER, /Phys Dmg\tMag Dmg\tCR%/, "Supported spreadsheet header is incomplete");
+
+const importPlan = buildItemImportPlan(
+  parsedItems,
+  [{ id: "existing-club", sort_order: 0, data: { name: "Club", type: "Melee", durability: 60 } }],
+  "upsert",
+);
+assert.equal(importPlan.counts.update, 1, "Matching names must be prepared as updates");
+assert.equal(importPlan.counts.insert, 1, "New names must be prepared as inserts");
+assert.equal(importPlan.entries[0].data.durability, 60, "Unmapped existing fields must survive partial spreadsheet updates");
+const bulkPayload = createBulkImportPayload(importPlan);
+assert.equal(bulkPayload.length, 2, "Bulk payload must contain every actionable row");
+assert.equal(bulkPayload[0].id, "existing-club", "Update payload must retain the existing item id");
+
+const completeWorkbookPaste = [
+  ITEM_IMPORT_HEADER,
+  ...workbook.items.map((item) => ITEM_IMPORT_FIELDS.map((field) => {
+    const value = item[field.key];
+    if (value == null) return "";
+    if (field.kind === "percent" && typeof value === "number") return `${value * 100}%`;
+    return String(value);
+  }).join("\t")),
+].join("\n");
+const completeWorkbookParse = parseSpreadsheetItems(completeWorkbookPaste);
+assert.equal(completeWorkbookParse.rows.length, workbook.items.length, "The full item catalogue must paste without losing rows");
+assert.equal(completeWorkbookParse.globalErrors.length, 0, "The full item catalogue paste must have no global errors");
+assert.equal(completeWorkbookParse.rows.filter((row) => row.errors.length).length, 0, "Every workbook item field must be accepted by the importer");
+
+const duplicatePaste = parseSpreadsheetItems("Item\tType\nEcho Blade\tMelee\nEcho Blade\tMelee");
+const duplicatePlan = buildItemImportPlan(duplicatePaste, [], "upsert");
+assert.equal(duplicatePlan.counts.skip, 1, "Earlier duplicate pasted names must be skipped in update mode");
+assert.equal(duplicatePlan.counts.insert, 1, "The final duplicate pasted row must remain actionable");
+const createAllPlan = buildItemImportPlan(duplicatePaste, [], "create-all");
+assert.equal(createAllPlan.counts.insert, 2, "Create-all mode must preserve intentional duplicate names");
+
 const browserSources = [
   portalSource,
   fs.readFileSync(path.join(root, "src/config.js"), "utf8"),
@@ -735,5 +796,15 @@ const realtimeMigration = fs.readFileSync(
 );
 assert.match(realtimeMigration, /alter publication supabase_realtime add table public\.characters/i);
 assert.match(realtimeMigration, /pg_publication_tables/i);
+
+const bulkImportMigration = fs.readFileSync(
+  path.join(root, "supabase/migrations/20260720001000_bulk_import_catalogue_items.sql"),
+  "utf8",
+);
+assert.match(bulkImportMigration, /create or replace function public\.bulk_import_catalogue_items/i);
+assert.match(bulkImportMigration, /security definer/i);
+assert.match(bulkImportMigration, /not public\.is_dm\(\)/i);
+assert.match(bulkImportMigration, /jsonb_array_length\(p_rows\) > 1000/i);
+assert.match(bulkImportMigration, /grant execute on function public\.bulk_import_catalogue_items\(jsonb\) to authenticated/i);
 
 console.log("Project checks passed.");
