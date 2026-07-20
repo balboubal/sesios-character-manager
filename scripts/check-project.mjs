@@ -55,6 +55,14 @@ assert.match(bridge, /path === "personality"/, "Dynamic personality persistence 
 assert.match(bridge, /equipmentSlotIcon/, "Equipment slot icons are missing");
 assert.match(bridge, /equipmentDetailsMarkup/, "Clear equipment bonus details are missing");
 assert.match(bridge, /data-metric-note/, "Live resource-caption bindings are missing");
+assert.match(bridge, /function abilityScoreBand\(value\)/, "Ability score color-band logic is missing");
+assert.match(bridge, /if \(score < 55\) return "low";/, "Scores below 55 must use the low band");
+assert.match(bridge, /if \(score <= 70\) return "mid";/, "Scores from 55 through 70 must use the middle band");
+assert.match(
+  bridge,
+  /element\.dataset\.scoreBand = abilityScoreBand\(value\)/,
+  "Ability score colors must refresh when calculated values change",
+);
 assert.match(
   bridge,
   /availableItems\.includes\(item\.name\)/,
@@ -87,6 +95,9 @@ assert.doesNotMatch(
 
 const stylesheet = fs.readFileSync(path.join(root, "public/sheet/styles.css"), "utf8");
 assert.match(stylesheet, /\.ability-grid\s*{[^}]*repeat\(6,/s, "Ability scores are not full-width");
+assert.match(stylesheet, /\.ability-score\[data-score-band="low"\]\s*{/, "Low-score styling is missing");
+assert.match(stylesheet, /\.ability-score\[data-score-band="mid"\]\s*{/, "Middle-score styling is missing");
+assert.match(stylesheet, /\.ability-score\[data-score-band="high"\]\s*{/, "High-score styling is missing");
 assert.match(stylesheet, /\.metric-icon\s*{/, "Primary-stat icon styling is missing");
 assert.match(stylesheet, /\.personality-compact\s*{/, "Compact trait styling is missing");
 assert.match(stylesheet, /\.equipment-slot-icon\s*{/, "Equipment icon styling is missing");
