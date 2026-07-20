@@ -9,6 +9,12 @@ import {
   cloneDefaultCharacterState,
 } from "./workbook.js";
 import {
+  buildItemImportPlan,
+  createBulkImportPayload,
+  ITEM_IMPORT_HEADER,
+  parseSpreadsheetItems,
+} from "./catalogue-import.js";
+import {
   clearPortalLocation,
   isNewerCharacterRecord,
   loadPortalLocation,
@@ -376,7 +382,7 @@ function renderSetupError() {
         <span class="warning-symbol" aria-hidden="true">!</span>
         <p class="eyebrow">One-time setup required</p>
         <h1>The application is built, but its database tables are not ready.</h1>
-        <p>Run the two SQL files in <code>supabase/migrations</code> in filename order, then reload this page.</p>
+        <p>Run the SQL files in <code>supabase/migrations</code> in filename order, then reload this page.</p>
         <details><summary>Technical message</summary><pre>${escapeHtml(friendlyError(application.setupError))}</pre></details>
         <div class="button-row">
           <button class="button button-primary" type="button" data-action="retry-setup">Try again</button>
@@ -505,7 +511,10 @@ function renderCatalogues() {
   return `
     <section class="page-intro">
       <div><p class="eyebrow">DM controls</p><h2>Edit every catalogue field</h2><p>Changes are visible in every character sheet as soon as it is reopened or refreshed.</p></div>
-      <button class="button button-primary" type="button" data-action="new-catalogue-entry">Add ${escapeHtml(catalogueSingular(application.catalogueCategory))}</button>
+      <div class="page-intro-actions">
+        ${application.catalogueCategory === "items" ? `<button class="button button-quiet" type="button" data-action="bulk-import-items">Bulk import</button>` : ""}
+        <button class="button button-primary" type="button" data-action="new-catalogue-entry">Add ${escapeHtml(catalogueSingular(application.catalogueCategory))}</button>
+      </div>
     </section>
     <div class="catalogue-layout">
       <nav class="catalogue-tabs" aria-label="Catalogue categories">
@@ -579,6 +588,7 @@ function renderModal() {
   if (!application.modal) return "";
   if (application.modal.type === "character") return renderCharacterModal();
   if (application.modal.type === "catalogue") return renderCatalogueModal();
+  if (application.modal.type === "bulk-items") return renderBulkItemsModal();
   return "";
 }
 
@@ -613,6 +623,123 @@ function renderCatalogueModal() {
         </form>
       </section>
     </div>`;
+}
+
+function renderBulkItemsModal() {
+  const modal = application.modal;
+  const rawText = modal.rawText || "";
+  const duplicateMode = modal.duplicateMode || "upsert";
+  const parsed = modal.parsed || null;
+  const itemRows = application.catalogues.filter((row) => row.category === "items");
+  const plan = parsed ? buildItemImportPlan(parsed, itemRows, duplicateMode) : null;
+  const importCount = plan ? plan.counts.insert + plan.counts.update : 0;
+
+  return `
+    <div class="modal-backdrop" data-action="close-modal">
+      <section class="modal-card modal-import" role="dialog" aria-modal="true" aria-labelledby="bulk-item-modal-title" data-modal-panel>
+        <button class="modal-close" type="button" data-action="close-modal" aria-label="Close">×</button>
+        <p class="eyebrow">Spreadsheet workflow</p>
+        <h2 id="bulk-item-modal-title">Bulk import items</h2>
+        <p class="modal-lead">Copy the header row and item rows from Excel or Google Sheets, then paste them below. Tabs separate columns and each spreadsheet row becomes one item.</p>
+        <form id="bulk-item-form" class="bulk-import-form">
+          <div class="bulk-import-toolbar">
+            <label>Duplicate handling
+              <select name="duplicateMode">
+                <option value="upsert" ${duplicateMode === "upsert" ? "selected" : ""}>Add new and update matching names</option>
+                <option value="add-only" ${duplicateMode === "add-only" ? "selected" : ""}>Add new only and skip existing names</option>
+                <option value="create-all" ${duplicateMode === "create-all" ? "selected" : ""}>Create every row as a new item</option>
+              </select>
+            </label>
+            <div class="bulk-import-help">
+              <strong>Matching rule</strong>
+              <span>Names are compared case-insensitively after trimming extra spaces.</span>
+            </div>
+          </div>
+          <label class="bulk-paste-field">Paste spreadsheet cells
+            <textarea name="pasteData" rows="11" spellcheck="false" placeholder="Item&#9;Rarity&#9;Type&#9;Phys Dmg&#9;...">${escapeHtml(rawText)}</textarea>
+          </label>
+          <div class="bulk-import-actions">
+            <button class="button button-quiet" type="button" data-action="copy-item-import-headers">Copy supported header row</button>
+            <button class="button button-quiet" type="submit" name="intent" value="preview">Preview data</button>
+          </div>
+          ${parsed ? renderBulkItemPreview(parsed, plan) : renderBulkItemInstructions()}
+          <div class="button-row bulk-import-footer">
+            <button class="button button-quiet" type="button" data-action="close-modal">Cancel</button>
+            ${parsed ? `<button class="button button-primary" type="submit" name="intent" value="import" ${importCount ? "" : "disabled"}>Import ${importCount} item${importCount === 1 ? "" : "s"}</button>` : ""}
+          </div>
+        </form>
+      </section>
+    </div>`;
+}
+
+function renderBulkItemInstructions() {
+  return `<section class="bulk-import-instructions">
+    <strong>Your existing sheet format is supported</strong>
+    <p>Recognized columns include Item, Rarity, Type, Phys Dmg, Mag Dmg, CR%, STR, SPD, VIT, INT, AWR, TAL, LUCK, AC, RES, Evasion, Durability, Dmg Ref, HP Regen, Focus, Weight, Value, GoldMulti, XpMulti, and Tags.</p>
+    <ul>
+      <li>Percentage cells such as 5% are stored as 0.05.</li>
+      <li>Dashes and blank statistic cells are treated as no bonus.</li>
+      <li>Commas inside Tags or damage descriptions remain inside the same cell.</li>
+      <li>Unknown columns are ignored and listed in the preview.</li>
+    </ul>
+    <details class="bulk-header-details"><summary>View the supported header row</summary><code>${escapeHtml(ITEM_IMPORT_HEADER)}</code></details>
+  </section>`;
+}
+
+function renderBulkItemPreview(parsed, plan) {
+  const notices = [...parsed.globalErrors, ...parsed.globalWarnings];
+  if (parsed.unknownHeaders.length) notices.push(`Ignored columns: ${parsed.unknownHeaders.join(", ")}.`);
+  if (parsed.duplicateHeaders.length) notices.push(`Duplicate columns ignored: ${parsed.duplicateHeaders.join(", ")}.`);
+  const prioritized = [...plan.entries].sort((left, right) => {
+    const rank = { error: 0, skip: 1, update: 2, insert: 3 };
+    return rank[left.action] - rank[right.action] || left.sourceRow - right.sourceRow;
+  });
+  const visibleEntries = prioritized.slice(0, 120);
+  const hiddenCount = Math.max(0, plan.entries.length - visibleEntries.length);
+
+  return `<section class="bulk-preview" aria-live="polite">
+    <div class="bulk-summary" aria-label="Import summary">
+      ${bulkSummaryMetric("Rows", plan.counts.total, "neutral")}
+      ${bulkSummaryMetric("New", plan.counts.insert, "insert")}
+      ${bulkSummaryMetric("Updates", plan.counts.update, "update")}
+      ${bulkSummaryMetric("Skipped", plan.counts.skip, "skip")}
+      ${bulkSummaryMetric("Errors", plan.counts.error, "error")}
+    </div>
+    ${notices.length ? `<div class="bulk-notices">${notices.map((notice) => `<p>${escapeHtml(notice)}</p>`).join("")}</div>` : ""}
+    <div class="bulk-preview-table-wrap">
+      <table class="bulk-preview-table">
+        <thead><tr><th>Sheet row</th><th>Status</th><th>Item</th><th>Rarity</th><th>Type</th><th>Physical damage</th><th>Weight</th><th>Value</th><th>Notes</th></tr></thead>
+        <tbody>${visibleEntries.map(renderBulkItemPreviewRow).join("")}</tbody>
+      </table>
+    </div>
+    ${hiddenCount ? `<p class="bulk-preview-limit">${hiddenCount} additional ready row${hiddenCount === 1 ? " is" : "s are"} not shown. All valid rows will still be imported.</p>` : ""}
+  </section>`;
+}
+
+function bulkSummaryMetric(label, value, tone) {
+  return `<div class="bulk-summary-metric is-${tone}"><span>${escapeHtml(label)}</span><strong>${escapeHtml(value)}</strong></div>`;
+}
+
+function renderBulkItemPreviewRow(entry) {
+  const data = entry.data || entry.values || {};
+  const status = {
+    insert: "Add",
+    update: "Update",
+    skip: "Skip",
+    error: "Error",
+  }[entry.action] || entry.action;
+  const notes = [...entry.errors, ...entry.warnings].join(" ") || (entry.action === "update" ? "Matches an existing item name." : "Ready.");
+  return `<tr class="bulk-row is-${escapeHtml(entry.action)}">
+    <td>${escapeHtml(entry.sourceRow)}</td>
+    <td><span class="bulk-status is-${escapeHtml(entry.action)}">${escapeHtml(status)}</span></td>
+    <td>${escapeHtml(data.name || "Unnamed")}</td>
+    <td>${escapeHtml(data.rarity || "-")}</td>
+    <td>${escapeHtml(data.type || "-")}</td>
+    <td>${escapeHtml(data.physicalDamage || "-")}</td>
+    <td>${escapeHtml(data.weight ?? "-")}</td>
+    <td>${escapeHtml(data.value ?? "-")}</td>
+    <td>${escapeHtml(notes)}</td>
+  </tr>`;
 }
 
 function renderCatalogueField(key, value) {
@@ -732,6 +859,25 @@ async function handleClick(event) {
     }
     return;
   }
+  if (action === "bulk-import-items") {
+    application.modal = {
+      type: "bulk-items",
+      rawText: "",
+      duplicateMode: "upsert",
+      parsed: null,
+    };
+    render();
+    return;
+  }
+  if (action === "copy-item-import-headers") {
+    try {
+      await copyTextToClipboard(ITEM_IMPORT_HEADER);
+      showToast("Supported item headers copied.", "success");
+    } catch (error) {
+      showToast("The header row could not be copied. Select and copy it from the import instructions instead.", "error");
+    }
+    return;
+  }
   if (action === "new-catalogue-entry") {
     const reference = application.catalogues.find((row) => row.category === application.catalogueCategory)?.data;
     application.modal = {
@@ -766,6 +912,7 @@ async function handleSubmit(event) {
   if (form.id === "password-form") await setPassword(form);
   if (form.id === "character-form") await createCharacter(form);
   if (form.id === "catalogue-form") await saveCatalogueEntry(form);
+  if (form.id === "bulk-item-form") await handleBulkItemForm(form, event.submitter);
   if (form.id === "invite-form") await invitePlayer(form);
   if (form.id === "campaign-form") await saveCampaign(form);
 }
@@ -903,6 +1050,84 @@ async function changeCharacterOwner(characterId, ownerId) {
   }
   replaceCharacter(data);
   showToast("Character owner updated.", "success");
+}
+
+
+async function handleBulkItemForm(form, submitter) {
+  if (application.modal?.type !== "bulk-items") return;
+  const values = new FormData(form);
+  const rawText = String(values.get("pasteData") || "");
+  const duplicateMode = String(values.get("duplicateMode") || "upsert");
+  const parsed = parseSpreadsheetItems(rawText);
+  const itemRows = application.catalogues.filter((row) => row.category === "items");
+  const plan = buildItemImportPlan(parsed, itemRows, duplicateMode);
+  application.modal.rawText = rawText;
+  application.modal.duplicateMode = duplicateMode;
+  application.modal.parsed = parsed;
+
+  if (submitter?.value !== "import") {
+    render();
+    const firstProblem = root.querySelector(".bulk-row.is-error, .bulk-row.is-skip");
+    firstProblem?.scrollIntoView({ block: "nearest" });
+    return;
+  }
+
+  const payload = createBulkImportPayload(plan);
+  if (!payload.length) {
+    render();
+    showToast("There are no valid item rows to import.", "error");
+    return;
+  }
+
+  setBulkImportBusy(form, submitter, true);
+  const { data, error } = await supabase.rpc("bulk_import_catalogue_items", { p_rows: payload });
+  setBulkImportBusy(form, submitter, false);
+  if (error) {
+    const missingFunction = /bulk_import_catalogue_items|schema cache|PGRST202/i.test(error.message || "");
+    showToast(
+      missingFunction
+        ? "Bulk import is not enabled in Supabase yet. Run the latest bulk-import migration, then try again."
+        : error.message,
+      "error",
+    );
+    return;
+  }
+
+  const changedRows = Array.isArray(data) ? data : [];
+  const changedById = new Map(changedRows.map((row) => [row.id, row]));
+  application.catalogues = application.catalogues
+    .map((row) => changedById.get(row.id) || row)
+    .concat(changedRows.filter((row) => !application.catalogues.some((existing) => existing.id === row.id)))
+    .sort((left, right) => left.category.localeCompare(right.category) || left.sort_order - right.sort_order);
+  application.modal = null;
+  render();
+  showToast(`Imported ${plan.counts.insert} new item${plan.counts.insert === 1 ? "" : "s"} and updated ${plan.counts.update}.`, "success");
+}
+
+function setBulkImportBusy(form, submitter, busy) {
+  form.querySelectorAll("input,select,textarea,button").forEach((control) => {
+    control.disabled = busy;
+  });
+  if (!submitter) return;
+  if (!submitter.dataset.originalText) submitter.dataset.originalText = submitter.textContent;
+  submitter.textContent = busy ? "Importing items…" : submitter.dataset.originalText;
+}
+
+async function copyTextToClipboard(text) {
+  if (navigator.clipboard?.writeText) {
+    await navigator.clipboard.writeText(text);
+    return;
+  }
+  const textarea = document.createElement("textarea");
+  textarea.value = text;
+  textarea.setAttribute("readonly", "");
+  textarea.style.position = "fixed";
+  textarea.style.opacity = "0";
+  document.body.appendChild(textarea);
+  textarea.select();
+  const copied = document.execCommand("copy");
+  textarea.remove();
+  if (!copied) throw new Error("Clipboard copy was blocked.");
 }
 
 async function saveCatalogueEntry(form) {
