@@ -24,6 +24,7 @@ const requiredFiles = [
   "public/sheet/script.js",
   "supabase/migrations/20260717000000_initial_schema.sql",
   "supabase/migrations/20260717001000_seed_catalogues.sql",
+  "supabase/migrations/20260720000000_enable_character_realtime.sql",
   "supabase/functions/invite-player/index.ts",
   "README.md",
 ];
@@ -150,13 +151,26 @@ const portalSource = fs.readFileSync(path.join(root, "src/main.js"), "utf8");
 const portalStylesheet = fs.readFileSync(path.join(root, "src/styles.css"), "utf8");
 assert.match(portalSource, /handleAuthStateChange/, "Auth-event gating is missing");
 assert.match(portalSource, /document\.addEventListener\("visibilitychange"/, "Return-to-tab update checks are missing");
+assert.match(portalSource, /window\.addEventListener\("focus"/, "Window-focus update checks are missing");
 assert.match(portalSource, /data-action="check-character-updates"/, "Manual update check is missing");
 assert.match(portalSource, /data-action="load-remote-update"/, "Remote update loading control is missing");
-assert.match(portalSource, /requestSheetSaveFlush/, "Pending iframe edits must flush before update checks");
+assert.match(portalSource, /requestSheetSaveFlush/, "Pending iframe edits must support explicit flush and conflict capture");
 assert.match(portalSource, /select\("id,updated_at,updated_by"\)/, "Lightweight character version query is missing");
+assert.match(portalSource, /\.channel\(`character-updates:\$\{characterId\}`\)/, "Character Realtime channel is missing");
+assert.match(portalSource, /"postgres_changes"/, "Postgres Changes subscription is missing");
+assert.match(portalSource, /pollingIntervalMs:\s*60_000/, "The 60-second polling fallback is missing");
+assert.match(portalSource, /lastToastedRemoteVersions:\s*new Map\(\)/, "Per-version toast deduplication is missing");
+assert.match(portalSource, /\.eq\("updated_at", expectedUpdatedAt\)/, "Optimistic save conflict detection is missing");
+assert.match(portalSource, /Save paused: newer changes available/, "Conflict-paused save status is missing");
+assert.doesNotMatch(
+  portalSource.match(/async function performRemoteCharacterUpdateCheck\(reason\)[\s\S]*?\n}/)?.[0] || "",
+  /flushOpenCharacterSave/,
+  "Remote version checks must not flush stale local edits before comparing versions",
+);
 assert.match(portalSource, /characterId=\$\{encodeURIComponent\(character\.id\)\}/, "Character-specific iframe location is missing");
 assert.match(portalSource, /viewerRole=\$\{isDm\(\) \? "dm" : "player"\}/, "DM history role bridge is missing");
 assert.match(portalStylesheet, /\.editor-update-banner\s*{/, "Remote update banner styling is missing");
+assert.match(portalStylesheet, /\.editor-live-state\s*{/, "Realtime connection-state styling is missing");
 assert.match(portalStylesheet, /\.sheet-frame\s*{[^}]*grid-row:\s*3/s, "The iframe must retain the flexible editor grid row");
 
 const sheetHtml = fs.readFileSync(path.join(root, "public/sheet/index.html"), "utf8");
@@ -714,5 +728,12 @@ for (const table of ["profiles", "characters", "catalogue_entries", "campaign_se
 }
 assert.match(schema, /characters_select_owner_or_dm/i);
 assert.match(schema, /characters_delete_owner_or_dm/i);
+
+const realtimeMigration = fs.readFileSync(
+  path.join(root, "supabase/migrations/20260720000000_enable_character_realtime.sql"),
+  "utf8",
+);
+assert.match(realtimeMigration, /alter publication supabase_realtime add table public\.characters/i);
+assert.match(realtimeMigration, /pg_publication_tables/i);
 
 console.log("Project checks passed.");
