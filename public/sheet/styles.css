@@ -3697,3 +3697,279 @@ input[type="checkbox"] {
     box-shadow: none;
   }
 }
+
+/* Effects, ailments, and revised ration accounting */
+.effects-overview-grid {
+  align-items: stretch;
+}
+
+.effects-overview-grid > .panel {
+  min-width: 0;
+}
+
+.ailment-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.ailment-tracker-card {
+  min-width: 0;
+  overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--line-strong);
+  border-left: 4px solid var(--plum);
+  border-radius: var(--radius-small);
+  box-shadow: 0 3px 10px rgba(17, 26, 32, 0.045);
+}
+
+.ailment-tracker-card.is-empty {
+  border-left-color: #9aa8ae;
+}
+
+.ailment-tracker-header {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  align-items: end;
+  padding: 12px;
+  background: linear-gradient(145deg, #fff, #f4f6f7);
+  border-bottom: 1px solid #d7dfe2;
+}
+
+.ailment-selector {
+  display: grid;
+  gap: 5px;
+}
+
+.ailment-selector label {
+  color: #52636b;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.075em;
+  text-transform: uppercase;
+}
+
+.ailment-selector select {
+  width: 100%;
+  min-height: 38px;
+  padding: 7px 34px 7px 10px;
+  background: #f8ecdf;
+  border: 1px solid #c8b29c;
+  border-radius: var(--radius-small);
+}
+
+.ailment-mark-stepper {
+  display: grid;
+  grid-template-columns: 34px minmax(76px, auto) 34px;
+  gap: 6px;
+  align-items: center;
+}
+
+.ailment-mark-stepper > strong {
+  min-height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0 9px;
+  color: #fff;
+  background: var(--plum);
+  border-radius: var(--radius-small);
+  font-size: 11px;
+  white-space: nowrap;
+}
+
+.ailment-tracker-card.is-empty .ailment-mark-stepper > strong {
+  color: #5f6d73;
+  background: #e6ebed;
+}
+
+.mark-step-button {
+  width: 34px;
+  height: 34px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  color: var(--ink);
+  background: #fff;
+  border: 1px solid #aebbc1;
+  border-radius: var(--radius-small);
+  font-size: 20px;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.mark-step-button:not(:disabled):hover {
+  background: var(--amber-pale);
+  border-color: #b9912f;
+}
+
+.mark-step-button:disabled {
+  opacity: 0.38;
+  cursor: not-allowed;
+}
+
+.ailment-summary {
+  display: grid;
+  gap: 11px;
+  padding: 12px;
+}
+
+.ailment-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ailment-meta span {
+  padding: 4px 7px;
+  color: #41545d;
+  background: #eef2f3;
+  border: 1px solid #d2dadd;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 750;
+}
+
+.ailment-mark-effects {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.ailment-mark-effect {
+  min-width: 0;
+  padding: 10px;
+  background: #f7f8f8;
+  border: 1px solid #d7dfe2;
+  border-radius: var(--radius-small);
+}
+
+.ailment-mark-effect.is-current {
+  background: #f4e9f0;
+  border-color: var(--plum);
+  box-shadow: inset 0 0 0 1px var(--plum);
+}
+
+.ailment-mark-effect span {
+  color: var(--plum);
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.ailment-mark-effect p,
+.ailment-notes p {
+  margin: 5px 0 0;
+  color: #53656d;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.ailment-notes {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.ailment-notes > div {
+  padding: 9px 10px;
+  background: #fff8e6;
+  border-left: 3px solid var(--amber);
+}
+
+.ailment-notes > div:last-child {
+  background: #edf5f8;
+  border-left-color: var(--blue);
+}
+
+.ailment-notes strong {
+  color: #43555e;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.065em;
+  text-transform: uppercase;
+}
+
+.ailment-empty-copy {
+  min-height: 70px;
+  display: flex;
+  align-items: center;
+  padding: 12px;
+  color: #75838a;
+  font-size: 10px;
+}
+
+.survival-section-heading {
+  padding: 15px 17px;
+  color: #eaf4f8;
+  background: linear-gradient(135deg, #10202b, #1b3e52);
+  border-radius: var(--radius-small);
+}
+
+.survival-section-heading span {
+  color: #9fc9dc;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.085em;
+  text-transform: uppercase;
+}
+
+.survival-section-heading h2 {
+  margin: 3px 0 4px;
+  font-family: var(--font-display);
+  font-size: 25px;
+}
+
+.survival-section-heading p {
+  margin: 0;
+  color: #c8dbe4;
+  font-size: 11px;
+}
+
+.current-day-card .reset-days-button {
+  width: fit-content;
+  margin-top: 10px;
+}
+
+.history-marker[data-history-type="day-reset"] {
+  background: var(--plum);
+}
+
+@media (max-width: 1180px) {
+  .ailment-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 900px) {
+  .effects-overview-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 680px) {
+  .ailment-tracker-header {
+    grid-template-columns: 1fr;
+    align-items: stretch;
+  }
+
+  .ailment-mark-stepper {
+    grid-template-columns: 40px minmax(0, 1fr) 40px;
+  }
+
+  .mark-step-button {
+    width: 40px;
+  }
+
+  .ailment-mark-effects,
+  .ailment-notes {
+    grid-template-columns: 1fr;
+  }
+
+  .current-day-card .reset-days-button {
+    width: 100%;
+  }
+}
