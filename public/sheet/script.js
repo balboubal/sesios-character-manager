@@ -535,11 +535,6 @@
       element.textContent = formatOutput(value, element.dataset.format);
     });
 
-    root.querySelectorAll(".ability-score[data-output]").forEach((element) => {
-      const value = getPath(derived, element.dataset.output);
-      element.dataset.scoreBand = abilityScoreBand(value);
-    });
-
     root.querySelectorAll("[data-metric-note]").forEach((element) => {
       element.textContent = metricNoteText(element.dataset.metricNote);
     });
@@ -805,14 +800,6 @@
     return "";
   }
 
-  function abilityScoreBand(value) {
-    const score = Number(value);
-    if (!Number.isFinite(score)) return "unrated";
-    if (score < 55) return "low";
-    if (score <= 70) return "mid";
-    return "high";
-  }
-
   function metricCard(label, path, className, format, note, icon, noteKey) {
     const noteText = noteKey ? metricNoteText(noteKey) : note;
     const noteAttribute = noteKey
@@ -830,7 +817,7 @@
         const score = derived.abilityScores[ability.id];
         const modifier = derived.abilityModifiers[ability.id];
         const cost = derived.abilityCosts[ability.id];
-        return `<article class="ability-card"><div class="ability-top"><span class="ability-abbr">${ability.abbr}</span><strong class="ability-score" data-output="abilityScores.${ability.id}" data-score-band="${abilityScoreBand(score)}">${formatOutput(score, "integer")}</strong></div><h3>${escapeHtml(ability.label)}</h3><div class="ability-meta"><div class="field"><label for="ability-${ability.id}">Bonus</label><input id="ability-${ability.id}" class="number-input" type="number" step="1" data-value-type="number" data-bind="abilityBonuses.${ability.id}" value="${escapeHtml(state.abilityBonuses[ability.id])}" /></div><div class="ability-modifier"><small>Mod</small><strong data-output="abilityModifiers.${ability.id}" data-format="signed">${formatOutput(modifier, "signed")}</strong></div></div><small class="field-hint">Base ${ability.base} · Cost ${Number.isNaN(cost) ? "#N/A" : cost}</small></article>`;
+        return `<article class="ability-card"><div class="ability-top"><span class="ability-abbr">${ability.abbr}</span><strong class="ability-score" data-output="abilityScores.${ability.id}">${formatOutput(score, "integer")}</strong></div><h3>${escapeHtml(ability.label)}</h3><div class="ability-meta"><div class="field"><label for="ability-${ability.id}">Bonus</label><input id="ability-${ability.id}" class="number-input" type="number" step="1" data-value-type="number" data-bind="abilityBonuses.${ability.id}" value="${escapeHtml(state.abilityBonuses[ability.id])}" /></div><div class="ability-modifier"><small>Mod</small><strong data-output="abilityModifiers.${ability.id}" data-format="signed">${formatOutput(modifier, "signed")}</strong></div></div><small class="field-hint">Base ${ability.base} · Cost ${Number.isNaN(cost) ? "#N/A" : cost}</small></article>`;
       })
       .join("");
 
