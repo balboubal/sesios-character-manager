@@ -1,6 +1,6 @@
 {
   "defaultState": {
-    "schemaVersion": 2,
+    "schemaVersion": 3,
     "character": {
       "name": "Zele Kopsffmann",
       "race": "Human (Sesian)",
@@ -2552,7 +2552,8 @@
           "foodGained": "",
           "rationsEaten": ""
         }
-      ]
+      ],
+      "hearthMealsEatenToday": 0
     },
     "hearth": {
       "restCycle": 1,
@@ -2717,6 +2718,36 @@
       }
     },
     "survivalHistory": [],
-    "survivalHistorySequence": 0
+    "survivalHistorySequence": 0,
+    "activeAilments": [
+      {
+        "name": "",
+        "mark": 0
+      },
+      {
+        "name": "",
+        "mark": 0
+      },
+      {
+        "name": "",
+        "mark": 0
+      },
+      {
+        "name": "",
+        "mark": 0
+      },
+      {
+        "name": "",
+        "mark": 0
+      },
+      {
+        "name": "",
+        "mark": 0
+      },
+      {
+        "name": "",
+        "mark": 0
+      }
+    ]
   }
 }
