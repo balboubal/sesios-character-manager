@@ -13630,10 +13630,6 @@ window.AMUTSU_DATA = {
         "name": "",
         "mark": 0
       },
-      {
-        "name": "",
-        "mark": 0
-      }
     ]
   }
 };
