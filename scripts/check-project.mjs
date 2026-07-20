@@ -56,6 +56,11 @@ assert.match(bridge, /equipmentSlotIcon/, "Equipment slot icons are missing");
 assert.match(bridge, /equipmentDetailsMarkup/, "Clear equipment bonus details are missing");
 assert.match(bridge, /data-metric-note/, "Live resource-caption bindings are missing");
 assert.match(bridge, /function abilityScoreBand\(value\)/, "Ability score color-band logic is missing");
+assert.match(bridge, /function abilityIcon\(name\)/, "Ability score icon renderer is missing");
+for (const ability of ["strength", "speed", "vitality", "intelligence", "awareness", "talent"]) {
+  assert.ok(bridge.includes(`${ability}: \`<`), `Missing ${ability} ability icon`);
+}
+assert.match(bridge, /data-ability-icon=/, "Ability icon hooks are missing");
 assert.match(bridge, /if \(score < 55\) return "low";/, "Scores below 55 must use the low band");
 assert.match(bridge, /if \(score <= 70\) return "mid";/, "Scores from 55 through 70 must use the middle band");
 assert.match(
@@ -98,6 +103,9 @@ assert.match(stylesheet, /\.ability-grid\s*{[^}]*repeat\(6,/s, "Ability scores a
 assert.match(stylesheet, /\.ability-score\[data-score-band="low"\]\s*{/, "Low-score styling is missing");
 assert.match(stylesheet, /\.ability-score\[data-score-band="mid"\]\s*{/, "Middle-score styling is missing");
 assert.match(stylesheet, /\.ability-score\[data-score-band="high"\]\s*{/, "High-score styling is missing");
+assert.match(stylesheet, /--score-mid:\s*#f3ed40;/i, "Middle scores must use the requested bright yellow");
+assert.match(stylesheet, /\.ability-icon\s*{/, "Ability icon shield styling is missing");
+assert.match(stylesheet, /\.ability-icon svg\s*{/, "Ability icon artwork styling is missing");
 assert.match(stylesheet, /\.metric-icon\s*{/, "Primary-stat icon styling is missing");
 assert.match(stylesheet, /\.personality-compact\s*{/, "Compact trait styling is missing");
 assert.match(stylesheet, /\.equipment-slot-icon\s*{/, "Equipment icon styling is missing");

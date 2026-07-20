@@ -813,6 +813,19 @@
     return "high";
   }
 
+  function abilityIcon(name) {
+    const icons = {
+      strength: `<path d="M5.3 17.6c2.2-1.8 3.3-4.1 3.4-7l2.5 1.6 2.1-4.7 2.6 1.1-1.2 3.8 2.8.5c1.7.3 2.7 1.7 2.2 3.3-.7 2.5-3.3 4.1-7.2 4.1H8.2c-1.4 0-2.6-1.1-2.9-2.7Z" /><path d="m8.7 10.6-2.5-1.3-1.6 2.8" />`,
+      speed: `<path d="m14.1 3.4-8 10.4h5.5l-1.5 6.8 8-10.4h-5.5Z" /><path d="M4 7.3h4.1M3 11h3.2M4.5 16.7h3.1" />`,
+      vitality: `<path d="M12 20.5 4.7 13.3A5 5 0 0 1 12 6.5a5 5 0 0 1 7.3 6.8Z" /><path d="M6.8 13h3l1.4-3 2 6 1.3-3h2.7" />`,
+      intelligence: `<path d="M9.4 4.1A3.2 3.2 0 0 0 6.3 7.3 3.5 3.5 0 0 0 5 13.8 3.3 3.3 0 0 0 8.2 18a3.2 3.2 0 0 0 3.8 2.1V6.8a2.7 2.7 0 0 0-2.6-2.7Z" /><path d="M14.6 4.1a3.2 3.2 0 0 1 3.1 3.2 3.5 3.5 0 0 1 1.3 6.5 3.3 3.3 0 0 1-3.2 4.2 3.2 3.2 0 0 1-3.8 2.1V6.8a2.7 2.7 0 0 1 2.6-2.7Z" /><path d="M7.1 9.2c1.1-.2 2 .1 2.7 1M16.9 9.2c-1.1-.2-2 .1-2.7 1M7.5 15.2c1-.5 1.8-.5 2.7.1M16.5 15.2c-1-.5-1.8-.5-2.7.1" />`,
+      awareness: `<path d="M2.8 12s3.4-5.2 9.2-5.2 9.2 5.2 9.2 5.2-3.4 5.2-9.2 5.2S2.8 12 2.8 12Z" /><circle cx="12" cy="12" r="3.2" /><path d="M12 8.8V12l2.1 1.4" />`,
+      talent: `<circle cx="12" cy="8" r="2.2" /><path d="M7.4 19.5v-3.1c0-2.1 1.8-3.8 4-3.8h1.2c2.2 0 4 1.7 4 3.8v3.1M9.1 14.1 6.3 17M14.9 14.1l2.8 2.9" /><path d="m5.3 5.2.5 1.1 1.1.5-1.1.5-.5 1.1-.5-1.1-1.1-.5 1.1-.5Zm12.8.8.6 1.2 1.3.6-1.3.6-.6 1.2-.6-1.2-1.3-.6 1.3-.6Z" />`,
+    };
+    if (!icons[name]) return "";
+    return `<span class="ability-icon ability-icon-${escapeHtml(name)}" data-ability-icon="${escapeHtml(name)}" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">${icons[name]}</svg></span>`;
+  }
+
   function metricCard(label, path, className, format, note, icon, noteKey) {
     const noteText = noteKey ? metricNoteText(noteKey) : note;
     const noteAttribute = noteKey
@@ -830,7 +843,7 @@
         const score = derived.abilityScores[ability.id];
         const modifier = derived.abilityModifiers[ability.id];
         const cost = derived.abilityCosts[ability.id];
-        return `<article class="ability-card"><div class="ability-top"><span class="ability-abbr">${ability.abbr}</span><strong class="ability-score" data-output="abilityScores.${ability.id}" data-score-band="${abilityScoreBand(score)}">${formatOutput(score, "integer")}</strong></div><h3>${escapeHtml(ability.label)}</h3><div class="ability-meta"><div class="field"><label for="ability-${ability.id}">Bonus</label><input id="ability-${ability.id}" class="number-input" type="number" step="1" data-value-type="number" data-bind="abilityBonuses.${ability.id}" value="${escapeHtml(state.abilityBonuses[ability.id])}" /></div><div class="ability-modifier"><small>Mod</small><strong data-output="abilityModifiers.${ability.id}" data-format="signed">${formatOutput(modifier, "signed")}</strong></div></div><small class="field-hint">Base ${ability.base} · Cost ${Number.isNaN(cost) ? "#N/A" : cost}</small></article>`;
+        return `<article class="ability-card"><div class="ability-top"><div class="ability-identity">${abilityIcon(ability.id)}<div class="ability-name"><span class="ability-abbr">${escapeHtml(ability.abbr)}</span><h3>${escapeHtml(ability.label)}</h3></div></div><strong class="ability-score" data-output="abilityScores.${ability.id}" data-score-band="${abilityScoreBand(score)}">${formatOutput(score, "integer")}</strong></div><div class="ability-meta"><div class="field"><label for="ability-${ability.id}">Bonus</label><input id="ability-${ability.id}" class="number-input" type="number" step="1" data-value-type="number" data-bind="abilityBonuses.${ability.id}" value="${escapeHtml(state.abilityBonuses[ability.id])}" /></div><div class="ability-modifier"><small>Mod</small><strong data-output="abilityModifiers.${ability.id}" data-format="signed">${formatOutput(modifier, "signed")}</strong></div></div><small class="field-hint">Base ${ability.base} · Cost ${Number.isNaN(cost) ? "#N/A" : cost}</small></article>`;
       })
       .join("");
 
