@@ -45,6 +45,16 @@ const application = {
   checkingForUpdates: false,
   updateCheckPromise: null,
   remoteUpdate: null,
+  saveConflict: null,
+  realtimeChannel: null,
+  realtimeCharacterId: null,
+  realtimeStatus: "idle",
+  realtimeGeneration: 0,
+  pollingTimer: null,
+  pollingIntervalMs: 60_000,
+  lastAutomaticUpdateCheckAt: 0,
+  lastToastedRemoteVersions: new Map(),
+  activeSave: null,
   sheetFlushSequence: 0,
   sheetFlushRequests: new Map(),
 };
@@ -55,6 +65,7 @@ root.addEventListener("change", handleChange);
 root.addEventListener("input", handleInput);
 window.addEventListener("message", handleSheetMessage);
 document.addEventListener("visibilitychange", handleVisibilityChange);
+window.addEventListener("focus", handleWindowFocus);
 window.addEventListener("pagehide", handlePageHide);
 document.addEventListener("keydown", (event) => {
   if (event.key === "Escape" && application.modal) {
@@ -107,6 +118,8 @@ function handleAuthStateChange(event, session) {
     application.activeCharacterId = null;
     application.view = "characters";
     application.remoteUpdate = null;
+    application.saveConflict = null;
+    application.lastToastedRemoteVersions.clear();
   }
   if (event === "SIGNED_OUT") clearPortalLocation(window.sessionStorage, previousUserId);
   requestSessionSynchronization();
@@ -130,6 +143,7 @@ async function synchronizeSession() {
     application.characters = [];
     application.catalogues = [];
     application.remoteUpdate = null;
+    application.saveConflict = null;
     application.loading = false;
     render();
     return;
@@ -205,6 +219,7 @@ async function loadCampaignData(version = application.loadVersion) {
     application.activeCharacterId = null;
     application.view = "characters";
     application.remoteUpdate = null;
+    application.saveConflict = null;
     rememberPortalLocation();
   }
 }
@@ -240,18 +255,22 @@ function render() {
         <span class="spinner" aria-hidden="true"></span>
         <p>Opening the campaign…</p>
       </div>`;
+    synchronizeCharacterMonitoring();
     return;
   }
   if (!application.session) {
     renderLogin();
+    synchronizeCharacterMonitoring();
     return;
   }
   if (application.passwordFlow) {
     renderPasswordSetup();
+    synchronizeCharacterMonitoring();
     return;
   }
   if (application.setupError) {
     renderSetupError();
+    synchronizeCharacterMonitoring();
     return;
   }
 
@@ -297,6 +316,7 @@ function render() {
   if (application.view === "editor") {
     application.sheetReady = false;
   }
+  synchronizeCharacterMonitoring();
 }
 
 function renderLogin() {
@@ -432,6 +452,7 @@ function renderEditor() {
         <button class="button button-quiet" type="button" data-view="characters">← Characters</button>
         <div class="editor-context"><strong>${escapeHtml(character.name)}</strong><span id="online-save-state" role="status">Saved online</span></div>
         <div class="editor-sync-actions">
+          <span class="editor-live-state" data-realtime-status="${escapeHtml(application.realtimeStatus)}"><span class="editor-live-dot" aria-hidden="true"></span><span data-realtime-label>${escapeHtml(realtimeStatusLabel())}</span></span>
           <button class="button button-quiet button-compact" type="button" data-action="check-character-updates" ${application.checkingForUpdates ? "disabled" : ""}>${application.checkingForUpdates ? "Checking…" : "Check for updates"}</button>
         </div>
         ${ownerSelect}
@@ -444,8 +465,15 @@ function renderEditor() {
 function renderRemoteUpdateNotice() {
   const remote = application.remoteUpdate;
   if (!remote || remote.id !== application.activeCharacterId) return "";
+  const conflicted = hasPendingLocalChanges(remote.id) || application.saveConflict?.characterId === remote.id;
+  const heading = conflicted
+    ? "Newer changes conflict with local edits"
+    : "Newer character changes are available";
+  const detail = conflicted
+    ? `Changed elsewhere ${formatDate(remote.updated_at)}. Autosave is paused so your local edits cannot overwrite the newer version.`
+    : `Changed elsewhere ${formatDate(remote.updated_at)}. Your current page and scroll position will be preserved.`;
   return `<div class="editor-update-banner" role="status">
-    <div><strong>Newer character changes are available</strong><span>Changed elsewhere ${escapeHtml(formatDate(remote.updated_at))}. Your current page and scroll position will be preserved.</span></div>
+    <div><strong>${escapeHtml(heading)}</strong><span>${escapeHtml(detail)}</span></div>
     <button class="button button-primary button-compact" type="button" data-action="load-remote-update">Load changes</button>
   </div>`;
 }
@@ -457,6 +485,12 @@ function updateRemoteUpdateInterface() {
   if (button) {
     button.disabled = application.checkingForUpdates;
     button.textContent = application.checkingForUpdates ? "Checking…" : "Check for updates";
+  }
+  const liveState = root.querySelector("[data-realtime-status]");
+  if (liveState) {
+    liveState.dataset.realtimeStatus = application.realtimeStatus;
+    const label = liveState.querySelector("[data-realtime-label]");
+    if (label) label.textContent = realtimeStatusLabel();
   }
 }
 
@@ -612,10 +646,19 @@ async function handleClick(event) {
   const viewButton = event.target.closest("[data-view]");
   if (viewButton) {
     const nextView = viewButton.dataset.view;
-    if (application.view === "editor" && nextView !== "editor") await flushOpenCharacterSave();
+    if (application.view === "editor" && nextView !== "editor") {
+      const saved = await flushOpenCharacterSave();
+      if (!saved && hasPendingLocalChanges(application.activeCharacterId)) {
+        showToast("Resolve the newer character changes before leaving this sheet.", "error");
+        return;
+      }
+    }
     application.view = nextView;
     application.modal = null;
-    if (nextView !== "editor") application.remoteUpdate = null;
+    if (nextView !== "editor") {
+      application.remoteUpdate = null;
+      application.saveConflict = null;
+    }
     rememberPortalLocation();
     render();
     return;
@@ -626,7 +669,11 @@ async function handleClick(event) {
   const action = button.dataset.action;
 
   if (action === "sign-out") {
-    await flushOpenCharacterSave();
+    const saved = await flushOpenCharacterSave();
+    if (!saved && hasPendingLocalChanges(application.activeCharacterId)) {
+      showToast("Resolve the newer character changes before signing out.", "error");
+      return;
+    }
     await supabase.auth.signOut();
     return;
   }
@@ -635,7 +682,7 @@ async function handleClick(event) {
     return;
   }
   if (action === "check-character-updates") {
-    await checkForRemoteCharacterUpdate({ announce: true });
+    await checkForRemoteCharacterUpdate({ announce: true, force: true, reason: "manual" });
     return;
   }
   if (action === "load-remote-update") {
@@ -663,6 +710,7 @@ async function handleClick(event) {
     application.activeCharacterId = button.dataset.characterId;
     application.view = "editor";
     application.remoteUpdate = null;
+    application.saveConflict = null;
     rememberPortalLocation();
     render();
     return;
@@ -811,6 +859,7 @@ async function createCharacter(form) {
   application.activeCharacterId = data.id;
   application.view = "editor";
   application.remoteUpdate = null;
+  application.saveConflict = null;
   rememberPortalLocation();
   render();
   showToast(`${name} created.`, "success");
@@ -833,6 +882,7 @@ async function deleteCharacter(characterId) {
     application.activeCharacterId = null;
     application.view = "characters";
     application.remoteUpdate = null;
+    application.saveConflict = null;
   }
   rememberPortalLocation();
   render();
@@ -1001,6 +1051,32 @@ function sendCharacterToSheet() {
   );
 }
 
+function hasPendingLocalChanges(characterId = application.activeCharacterId) {
+  if (!characterId) return false;
+  return (
+    application.pendingSave?.characterId === characterId ||
+    application.activeSave?.characterId === characterId
+  );
+}
+
+function hasBlockingRemoteUpdate(characterId = application.activeCharacterId) {
+  if (!characterId || application.remoteUpdate?.id !== characterId) return false;
+  const local = application.characters.find((character) => character.id === characterId);
+  return Boolean(local && isNewerCharacterRecord(application.remoteUpdate, local));
+}
+
+function pauseCharacterSaveForConflict(remote = application.remoteUpdate) {
+  if (!remote || remote.id !== application.activeCharacterId) return;
+  application.saveConflict = {
+    characterId: remote.id,
+    remoteUpdatedAt: remote.updated_at,
+  };
+  window.clearTimeout(application.saveTimer);
+  updateSaveStatus("Save paused: newer changes available", "conflict");
+  sendSheetSaveStatus("conflict", "Save paused: newer changes available");
+  updateRemoteUpdateInterface();
+}
+
 function scheduleCharacterSave(state) {
   const character = activeCharacter();
   if (!character) return;
@@ -1008,8 +1084,15 @@ function scheduleCharacterSave(state) {
     characterId: character.id,
     state: structuredClone(state),
   };
-  updateSaveStatus("Saving online…", "saving");
   window.clearTimeout(application.saveTimer);
+
+  if (hasBlockingRemoteUpdate(character.id)) {
+    pauseCharacterSaveForConflict();
+    return;
+  }
+
+  application.saveConflict = null;
+  updateSaveStatus("Saving online…", "saving");
   application.saveTimer = window.setTimeout(flushPendingSave, 500);
 }
 
@@ -1036,6 +1119,12 @@ function requestSheetSaveFlush() {
   });
 }
 
+async function capturePendingSheetStateForConflict(characterId) {
+  await requestSheetSaveFlush();
+  if (application.activeCharacterId !== characterId || !hasBlockingRemoteUpdate(characterId)) return;
+  if (application.pendingSave?.characterId === characterId) pauseCharacterSaveForConflict();
+}
+
 async function flushOpenCharacterSave() {
   await requestSheetSaveFlush();
   return flushPendingSave();
@@ -1052,20 +1141,37 @@ async function flushPendingSave() {
   if (!application.session) return false;
 
   const pending = application.pendingSave;
+  if (hasBlockingRemoteUpdate(pending.characterId)) {
+    pauseCharacterSaveForConflict();
+    return false;
+  }
+
+  const local = application.characters.find((character) => character.id === pending.characterId);
+  if (!local?.updated_at) {
+    updateSaveStatus("Online save failed", "error");
+    sendSheetSaveStatus("error", "Online save failed");
+    return false;
+  }
+
   application.pendingSave = null;
-  const savePromise = saveCharacterState(pending);
+  application.activeSave = {
+    characterId: pending.characterId,
+    expectedUpdatedAt: local.updated_at,
+  };
+  const savePromise = saveCharacterState(pending, local.updated_at);
   application.savePromise = savePromise;
   let saved = false;
   try {
     saved = await savePromise;
   } finally {
     if (application.savePromise === savePromise) application.savePromise = null;
+    if (application.activeSave?.characterId === pending.characterId) application.activeSave = null;
   }
   if (saved && application.pendingSave) return flushPendingSave();
   return saved;
 }
 
-async function saveCharacterState(pending) {
+async function saveCharacterState(pending, expectedUpdatedAt) {
   const name = String(pending.state?.character?.name || "").trim() || "Unnamed Character";
   let data;
   let error;
@@ -1078,8 +1184,9 @@ async function saveCharacterState(pending) {
         updated_by: application.session.user.id,
       })
       .eq("id", pending.characterId)
+      .eq("updated_at", expectedUpdatedAt)
       .select(characterSelect)
-      .single());
+      .maybeSingle());
   } catch (caughtError) {
     error = caughtError;
   }
@@ -1091,9 +1198,156 @@ async function saveCharacterState(pending) {
     showToast(error.message, "error");
     return false;
   }
+
+  if (!data) {
+    const { data: latest, error: versionError } = await fetchLatestCharacterVersion(pending.characterId);
+    if (!application.pendingSave) application.pendingSave = pending;
+    if (versionError) {
+      updateSaveStatus("Online save failed", "error");
+      sendSheetSaveStatus("error", "Online save failed");
+      showToast(versionError.message, "error");
+      return false;
+    }
+    if (latest && isNewerCharacterRecord(latest, { updated_at: expectedUpdatedAt })) {
+      registerRemoteCharacterUpdate(latest, { source: "save-conflict" });
+      pauseCharacterSaveForConflict(latest);
+      return false;
+    }
+    updateSaveStatus("Character is no longer editable", "error");
+    sendSheetSaveStatus("error", "Character is no longer editable");
+    showToast("The character changed or is no longer editable. Reload the campaign before saving again.", "error");
+    return false;
+  }
+
   replaceCharacter(data);
+  if (!hasBlockingRemoteUpdate(data.id)) {
+    application.remoteUpdate = null;
+    application.saveConflict = null;
+  }
+  updateRemoteUpdateInterface();
   updateSaveStatus("Saved online", "saved");
   sendSheetSaveStatus("saved", "Saved online");
+  return true;
+}
+
+function realtimeStatusLabel() {
+  return {
+    connecting: "Live updates connecting",
+    connected: "Live updates connected",
+    error: "Live updates reconnecting",
+    closed: "Live updates offline",
+    idle: "Live updates idle",
+  }[application.realtimeStatus] || "Live updates connecting";
+}
+
+function synchronizeCharacterMonitoring() {
+  const characterId =
+    !application.loading &&
+    application.session &&
+    !application.passwordFlow &&
+    !application.setupError &&
+    application.view === "editor"
+      ? application.activeCharacterId
+      : null;
+
+  if (!characterId) {
+    stopCharacterMonitoring();
+    return;
+  }
+
+  if (application.realtimeCharacterId === characterId && application.realtimeChannel) {
+    startCharacterPolling();
+    updateRemoteUpdateInterface();
+    return;
+  }
+
+  stopCharacterMonitoring();
+  startCharacterPolling();
+
+  const generation = ++application.realtimeGeneration;
+  application.realtimeCharacterId = characterId;
+  application.realtimeStatus = "connecting";
+  const channel = supabase
+    .channel(`character-updates:${characterId}`)
+    .on(
+      "postgres_changes",
+      {
+        event: "UPDATE",
+        schema: "public",
+        table: "characters",
+        filter: `id=eq.${characterId}`,
+      },
+      handleRealtimeCharacterUpdate,
+    )
+    .subscribe((status) => {
+      if (generation !== application.realtimeGeneration || characterId !== application.realtimeCharacterId) return;
+      application.realtimeStatus = {
+        SUBSCRIBED: "connected",
+        CHANNEL_ERROR: "error",
+        TIMED_OUT: "error",
+        CLOSED: "closed",
+      }[status] || "connecting";
+      updateRemoteUpdateInterface();
+      if (status === "SUBSCRIBED") {
+        void checkForRemoteCharacterUpdate({ force: true, reason: "realtime-connected" });
+      }
+    });
+  application.realtimeChannel = channel;
+  updateRemoteUpdateInterface();
+}
+
+function stopCharacterMonitoring() {
+  window.clearInterval(application.pollingTimer);
+  application.pollingTimer = null;
+  application.lastAutomaticUpdateCheckAt = 0;
+  application.realtimeGeneration += 1;
+  const channel = application.realtimeChannel;
+  application.realtimeChannel = null;
+  application.realtimeCharacterId = null;
+  application.realtimeStatus = "idle";
+  if (channel) void supabase.removeChannel(channel);
+  updateRemoteUpdateInterface();
+}
+
+function startCharacterPolling() {
+  if (application.pollingTimer) return;
+  application.pollingTimer = window.setInterval(() => {
+    if (document.visibilityState !== "visible") return;
+    void checkForRemoteCharacterUpdate({ reason: "poll" });
+  }, application.pollingIntervalMs);
+}
+
+function handleRealtimeCharacterUpdate(payload) {
+  const remote = payload?.new;
+  if (!remote?.id || remote.id !== application.activeCharacterId) return;
+  if (
+    application.activeSave?.characterId === remote.id &&
+    remote.updated_by === application.session?.user?.id
+  ) {
+    return;
+  }
+  registerRemoteCharacterUpdate(remote, { source: "realtime" });
+}
+
+function registerRemoteCharacterUpdate(remote, { source = "unknown" } = {}) {
+  const local = activeCharacter();
+  if (!remote?.id || !local || remote.id !== local.id || !isNewerCharacterRecord(remote, local)) {
+    return false;
+  }
+
+  if (!application.remoteUpdate || isNewerCharacterRecord(remote, application.remoteUpdate)) {
+    application.remoteUpdate = remote;
+  }
+
+  const version = String(application.remoteUpdate.updated_at || "");
+  if (application.lastToastedRemoteVersions.get(remote.id) !== version) {
+    application.lastToastedRemoteVersions.set(remote.id, version);
+    showToast("Newer character changes are available.");
+  }
+
+  if (hasPendingLocalChanges(remote.id)) pauseCharacterSaveForConflict(application.remoteUpdate);
+  updateRemoteUpdateInterface();
+  if (source !== "save-conflict") void capturePendingSheetStateForConflict(remote.id);
   return true;
 }
 
@@ -1103,7 +1357,14 @@ function handleVisibilityChange() {
     void flushOpenCharacterSave();
     return;
   }
-  if (document.visibilityState === "visible") void checkForRemoteCharacterUpdate();
+  if (document.visibilityState === "visible") {
+    void checkForRemoteCharacterUpdate({ force: true, reason: "visibility" });
+  }
+}
+
+function handleWindowFocus() {
+  if (document.visibilityState !== "visible") return;
+  void checkForRemoteCharacterUpdate({ reason: "focus" });
 }
 
 function handlePageHide() {
@@ -1127,7 +1388,7 @@ async function fetchLatestCharacterRecord(characterId) {
     .maybeSingle();
 }
 
-async function checkForRemoteCharacterUpdate({ announce = false } = {}) {
+async function checkForRemoteCharacterUpdate({ announce = false, force = false, reason = "automatic" } = {}) {
   if (application.updateCheckPromise) {
     const existingResult = await application.updateCheckPromise;
     if (announce) announceUpdateCheckResult(existingResult);
@@ -1139,9 +1400,14 @@ async function checkForRemoteCharacterUpdate({ announce = false } = {}) {
     return skipped;
   }
 
+  const now = Date.now();
+  if (!force && now - application.lastAutomaticUpdateCheckAt < 2_000) {
+    return { status: "throttled" };
+  }
+  application.lastAutomaticUpdateCheckAt = now;
   application.checkingForUpdates = true;
   updateRemoteUpdateInterface();
-  const checkPromise = performRemoteCharacterUpdateCheck().catch((error) => ({
+  const checkPromise = performRemoteCharacterUpdateCheck(reason).catch((error) => ({
     status: "error",
     error,
   }));
@@ -1158,9 +1424,7 @@ async function checkForRemoteCharacterUpdate({ announce = false } = {}) {
   return result;
 }
 
-async function performRemoteCharacterUpdateCheck() {
-  const saved = await flushOpenCharacterSave();
-  if (!saved) return { status: "save-error" };
+async function performRemoteCharacterUpdateCheck(reason) {
   const local = activeCharacter();
   if (!local) return { status: "skipped" };
 
@@ -1169,27 +1433,22 @@ async function performRemoteCharacterUpdateCheck() {
   if (!data) return { status: "unavailable" };
 
   if (isNewerCharacterRecord(data, local)) {
-    application.remoteUpdate = data;
-    updateRemoteUpdateInterface();
+    registerRemoteCharacterUpdate(data, { source: reason });
     return { status: "updated", character: data };
   }
 
-  if (application.remoteUpdate?.id === local.id) application.remoteUpdate = null;
+  if (application.remoteUpdate?.id === local.id) {
+    application.remoteUpdate = null;
+    application.saveConflict = null;
+  }
   updateRemoteUpdateInterface();
   return { status: "current" };
 }
 
 function announceUpdateCheckResult(result) {
-  if (result?.status === "updated") {
-    showToast("Newer character changes are available.");
-    return;
-  }
+  if (result?.status === "updated" || result?.status === "throttled") return;
   if (result?.status === "current") {
     showToast("This character is up to date.");
-    return;
-  }
-  if (result?.status === "save-error") {
-    showToast("Your pending changes could not be saved, so updates were not checked.", "error");
     return;
   }
   if (result?.status === "unavailable") {
@@ -1201,19 +1460,31 @@ function announceUpdateCheckResult(result) {
   }
 }
 
+function discardPendingCharacterSave(characterId) {
+  window.clearTimeout(application.saveTimer);
+  if (application.pendingSave?.characterId === characterId) application.pendingSave = null;
+  application.saveConflict = null;
+}
+
 async function loadRemoteCharacterUpdate() {
-  const result = await checkForRemoteCharacterUpdate();
+  const result = await checkForRemoteCharacterUpdate({ force: true, reason: "load-request" });
   if (result.status !== "updated" || !application.remoteUpdate) {
     if (result.status === "current") showToast("This character is already up to date.");
     else if (result.status !== "skipped") announceUpdateCheckResult(result);
     return;
   }
 
+  const remoteId = application.remoteUpdate.id;
+  await requestSheetSaveFlush();
+  if (application.savePromise) await application.savePromise;
+
+  if (application.activeCharacterId !== remoteId) return;
+
   const local = activeCharacter();
   let remote;
   let error;
   try {
-    ({ data: remote, error } = await fetchLatestCharacterRecord(application.remoteUpdate.id));
+    ({ data: remote, error } = await fetchLatestCharacterRecord(remoteId));
   } catch (caughtError) {
     error = caughtError;
   }
@@ -1227,17 +1498,31 @@ async function loadRemoteCharacterUpdate() {
   }
   if (!isNewerCharacterRecord(remote, local)) {
     application.remoteUpdate = null;
+    application.saveConflict = null;
     updateRemoteUpdateInterface();
     showToast("This character is already up to date.");
     return;
   }
 
+  if (hasPendingLocalChanges(remote.id)) {
+    const confirmed = window.confirm(
+      "Loading the newer character will discard the unsaved edits currently paused in this tab. Continue?",
+    );
+    if (!confirmed) {
+      pauseCharacterSaveForConflict(remote);
+      return;
+    }
+    discardPendingCharacterSave(remote.id);
+  }
+
   replaceCharacter(remote);
   application.remoteUpdate = null;
+  application.saveConflict = null;
   updateRemoteUpdateInterface();
   updateEditorCharacterLabels(remote);
   sendCharacterToSheet();
   updateSaveStatus("Saved online", "saved");
+  sendSheetSaveStatus("saved", "Saved online");
   showToast("Newer character changes loaded.");
 }
 

@@ -750,10 +750,44 @@ button:disabled {
   color: var(--red);
 }
 
+.editor-context span[data-state="conflict"] {
+  color: #9b691b;
+  font-weight: 800;
+}
+
 .editor-sync-actions {
   display: flex;
   align-items: center;
   gap: 0.5rem;
+}
+
+.editor-live-state {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.42rem;
+  color: #64727a;
+  font-size: 0.68rem;
+  font-weight: 800;
+  white-space: nowrap;
+}
+
+.editor-live-dot {
+  width: 0.48rem;
+  aspect-ratio: 1;
+  border-radius: 50%;
+  background: #ad8a3c;
+  box-shadow: 0 0 0 3px rgba(173, 138, 60, 0.12);
+}
+
+.editor-live-state[data-realtime-status="connected"] .editor-live-dot {
+  background: #4e9782;
+  box-shadow: 0 0 0 3px rgba(78, 151, 130, 0.14);
+}
+
+.editor-live-state[data-realtime-status="error"] .editor-live-dot,
+.editor-live-state[data-realtime-status="closed"] .editor-live-dot {
+  background: #a33f35;
+  box-shadow: 0 0 0 3px rgba(163, 63, 53, 0.12);
 }
 
 .button-compact {
