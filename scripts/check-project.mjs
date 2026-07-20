@@ -46,7 +46,21 @@ assert.match(bridge, /amutsu:state-change/, "Online character save bridge is mis
 assert.match(bridge, /amutsu:load/, "Online character load bridge is missing");
 assert.match(bridge, /request-long-rest/, "Character Sheet Long Rest control is missing");
 assert.match(bridge, /request-advance-day/, "Advance Day control is missing");
+assert.match(bridge, /request-reset-days/, "Reset days control is missing");
 assert.match(bridge, /request-selected-hearth-meal/, "Hearth Boon activation control is missing");
+assert.match(bridge, /data-ailment-select/, "Dedicated ailment selectors are missing");
+assert.match(
+  bridge,
+  /path === "activeAilments" && !Array\.isArray\(suppliedValue\)/,
+  "Legacy combined effect and ailment rows must survive default-state merging",
+);
+assert.match(bridge, /change-ailment-mark/, "Ailment mark controls are missing");
+assert.match(bridge, /ailment-mark-effects/, "Ailment mark descriptions are missing");
+assert.match(bridge, /Eat one standard ration/, "Standard-ration-only control is missing");
+assert.ok(
+  bridge.indexOf('h2>Active Effects') < bridge.indexOf('h2>Survival & Food'),
+  "Effects and ailments must appear before survival and food",
+);
 assert.match(bridge, /undo-survival/, "Survival history undo control is missing");
 assert.match(bridge, /<details class="history-disclosure"/, "Journey history must be collapsible");
 assert.match(bridge, /path === "hunger\.days"/, "Dynamic journey-day persistence hook is missing");
@@ -128,6 +142,9 @@ assert.match(stylesheet, /\.survival-status-grid\s*{/, "Survival dashboard styli
 assert.match(stylesheet, /\.pantry-grid\s*{/, "Owned pantry card styling is missing");
 assert.match(stylesheet, /\.history-list\s*{/, "Journey history styling is missing");
 assert.match(stylesheet, /\.current-pools-panel \.long-rest-button/, "Mobile Long Rest styling is missing");
+assert.match(stylesheet, /\.ailment-grid\s*{/, "Dedicated ailment layout styling is missing");
+assert.match(stylesheet, /\.ailment-mark-stepper\s*{/, "Ailment mark stepper styling is missing");
+assert.match(stylesheet, /\.reset-days-button/, "Reset days button styling is missing");
 
 const portalSource = fs.readFileSync(path.join(root, "src/main.js"), "utf8");
 const portalStylesheet = fs.readFileSync(path.join(root, "src/styles.css"), "utf8");
@@ -351,19 +368,26 @@ legacySurvivalState.schemaVersion = 1;
 delete legacySurvivalState.hunger.currentDay;
 delete legacySurvivalState.hunger.foodGainedToday;
 delete legacySurvivalState.hunger.eatRationToday;
+delete legacySurvivalState.hunger.hearthMealsEatenToday;
 delete legacySurvivalState.hearth.selectedDish;
+delete legacySurvivalState.activeAilments;
+legacySurvivalState.activeEffects[1].ailment = "Fittoan Ash-Sickness";
+legacySurvivalState.activeEffects[1].mark = "Mark 2";
 delete legacySurvivalState.survivalHistory;
 delete legacySurvivalState.survivalHistorySequence;
 survivalEngine.normalizeSurvivalState(legacySurvivalState);
-assert.equal(legacySurvivalState.schemaVersion, 2, "Legacy survival state must migrate to schema 2");
+assert.equal(legacySurvivalState.schemaVersion, 3, "Legacy survival state must migrate to schema 3");
 assert.equal(legacySurvivalState.hunger.days.length, 1, "Blank legacy hunger rows must be removed");
 assert.equal(legacySurvivalState.hearth.log.length, 1, "Blank legacy meal rows must be removed");
 assert.equal(legacySurvivalState.hunger.currentDay, 2);
+assert.equal(legacySurvivalState.hunger.hearthMealsEatenToday, 0);
+assert.equal(legacySurvivalState.activeAilments[1].name, "Fittoan Ash-Sickness");
+assert.equal(legacySurvivalState.activeAilments[1].mark, 2);
 assert.equal(legacySurvivalState.survivalHistory.length, 3, "Legacy day, meal, and used-boon events must migrate");
 
 function createActionState() {
   const state = JSON.parse(JSON.stringify(workbook.defaultState));
-  state.schemaVersion = 2;
+  state.schemaVersion = 3;
   state.character.className = "Wizard";
   state.character.currentHitPoints = 12;
   state.character.temporaryHitPoints = 9;
@@ -374,6 +398,7 @@ function createActionState() {
     currentDay: 12,
     foodGainedToday: 2,
     eatRationToday: true,
+    hearthMealsEatenToday: 0,
     days: [],
   };
   state.hearth = {
@@ -396,10 +421,17 @@ assert.deepEqual(
     currentDay: 12,
     nextDay: 13,
     currentFood: 7,
+    standardRations: 7,
+    hearthRations: 2,
+    totalRations: 9,
     foodGained: 2,
     availableFood: 9,
+    availableStandardFood: 9,
     rationEaten: 1,
+    hearthMealsEaten: 0,
+    ateToday: true,
     foodAfter: 8,
+    totalAfter: 10,
     hungerBefore: 0,
     hungerAfter: 0,
     condition: "Fed",
@@ -417,7 +449,14 @@ assert.equal(survivalResult.accepted, true);
 assert.equal(dayActionState.hunger.days.length, 1);
 assert.equal(dayActionState.hunger.currentDay, 13);
 assert.equal(dayActionState.hunger.foodGainedToday, 0);
+assert.equal(dayActionState.hunger.hearthMealsEatenToday, 0);
 assert.equal(survivalEngine.calculate(dayActionState, workbook).hunger.currentFood, 8);
+assert.equal(survivalEngine.calculate(dayActionState, workbook).hunger.totalRations, 10);
+assert.equal(
+  survivalEngine.calculate(dayActionState, workbook).hearth.pantry.find((dish) => dish.name === "Hushback Silver-Reed Broth").left,
+  2,
+  "Eating one standard ration must not consume a Hearth meal",
+);
 assert.deepEqual(
   {
     hp: dayActionState.character.currentHitPoints,
@@ -433,6 +472,18 @@ assert.equal(survivalResult.accepted, true);
 assert.equal(dayActionState.hunger.days.length, 0);
 assert.equal(dayActionState.hunger.currentDay, 12);
 assert.equal(dayActionState.hunger.foodGainedToday, 2);
+assert.equal(dayActionState.hunger.hearthMealsEatenToday, 0);
+
+const resetDayState = createActionState();
+const resetBefore = survivalEngine.calculate(resetDayState, workbook);
+survivalResult = survivalEngine.resetDayCounter(resetDayState);
+assert.equal(survivalResult.accepted, true);
+assert.equal(resetDayState.hunger.currentDay, 1);
+assert.equal(survivalEngine.calculate(resetDayState, workbook).hunger.totalRations, resetBefore.hunger.totalRations);
+assert.equal(survivalEngine.calculate(resetDayState, workbook).hunger.hunger, resetBefore.hunger.hunger);
+assert.equal(resetDayState.survivalHistory.at(-1).type, "day-reset");
+survivalEngine.undoLastSurvivalAction(resetDayState);
+assert.equal(resetDayState.hunger.currentDay, 12);
 
 const restActionState = createActionState();
 const calculatedBeforeRest = survivalEngine.calculate(restActionState, workbook);
@@ -477,6 +528,13 @@ assert.equal(survivalResult.grantsBoon, true);
 let boonDerived = survivalEngine.calculate(boonActionState, workbook);
 assert.equal(boonDerived.hearth.status, "ACTIVE");
 assert.equal(boonDerived.hearth.pantry.find((dish) => dish.name === "Hushback Silver-Reed Broth").left, 1);
+assert.equal(boonDerived.hunger.standardRations, 7, "Eating a Hearth meal must not consume a standard ration");
+assert.equal(boonDerived.hunger.hearthRations, 1);
+assert.equal(boonDerived.hunger.totalRations, 8);
+assert.equal(boonActionState.hunger.hearthMealsEatenToday, 1);
+assert.equal(boonActionState.hunger.eatRationToday, false);
+assert.equal(survivalEngine.previewHungerDay(boonActionState).rationEaten, 0);
+assert.equal(survivalEngine.previewHungerDay(boonActionState).condition, "Fed");
 survivalResult = survivalEngine.markHearthBoonUsed(boonActionState, workbook);
 assert.equal(survivalResult.accepted, true);
 assert.equal(survivalEngine.calculate(boonActionState, workbook).hearth.status, "USED");
@@ -499,6 +557,29 @@ survivalEngine.completeLongRest(boonActionState, workbook);
 boonDerived = survivalEngine.calculate(boonActionState, workbook);
 assert.equal(boonDerived.hearth.status, "AVAILABLE", "Long Rest must reset Hearth Boon availability");
 assert.equal(boonDerived.hearth.activeMeal, "None", "Long Rest must clear the active meal display");
+
+const ailmentState = createActionState();
+let ailmentResult = survivalEngine.setTrackedAilment(ailmentState, 0, "Fittoan Ash-Sickness");
+assert.equal(ailmentResult.accepted, true);
+assert.equal(ailmentState.activeAilments[0].mark, 1, "New ailments must begin at Mark 1");
+ailmentResult = survivalEngine.changeTrackedAilmentMark(ailmentState, 0, 1);
+assert.equal(ailmentState.activeAilments[0].mark, 2);
+ailmentResult = survivalEngine.changeTrackedAilmentMark(ailmentState, 0, -1);
+assert.equal(ailmentState.activeAilments[0].mark, 1);
+ailmentResult = survivalEngine.changeTrackedAilmentMark(ailmentState, 0, -1);
+assert.equal(ailmentResult.resolved, true);
+assert.equal(ailmentState.activeAilments[0].name, "");
+assert.equal(ailmentState.activeAilments[0].mark, 0);
+
+const hearthOnlyState = createActionState();
+hearthOnlyState.hunger.startingRations = 0;
+hearthOnlyState.hunger.foodGainedToday = 0;
+hearthOnlyState.hunger.eatRationToday = true;
+survivalEngine.normalizeSurvivalState(hearthOnlyState);
+assert.equal(survivalEngine.previewHungerDay(hearthOnlyState).rationEaten, 0);
+survivalEngine.eatHearthMeal(hearthOnlyState, workbook, "Hushback Silver-Reed Broth");
+assert.equal(survivalEngine.previewHungerDay(hearthOnlyState).condition, "Fed");
+assert.equal(survivalEngine.calculate(hearthOnlyState, workbook).hunger.standardRations, 0);
 
 const dynamicJourneyState = createActionState();
 dynamicJourneyState.hunger.startingRations = 100;

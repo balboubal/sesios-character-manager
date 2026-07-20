@@ -249,15 +249,24 @@
       populatedCount += 1;
       const gained = Math.max(0, numberValue(day.foodGained));
       const requestedRations = Math.max(0, numberValue(day.rationsEaten));
+      const hearthMealsEaten = Math.max(0, numberValue(day.hearthMealsEaten));
       const availableFood = Math.max(0, previousFood + gained);
       const eaten = Math.min(requestedRations, availableFood);
       const foodLeft = Math.max(0, availableFood - eaten);
-      const hunger = eaten >= 1 ? 0 : previousHunger + 1;
+      const ateToday = eaten >= 1 || hearthMealsEaten >= 1;
+      const hunger = ateToday ? 0 : previousHunger + 1;
       const condition = hungerCondition(hunger);
 
       previousFood = foodLeft;
       previousHunger = hunger;
-      return { foodLeft, hunger, condition, foodGained: gained, rationsEaten: eaten };
+      return {
+        foodLeft,
+        hunger,
+        condition,
+        foodGained: gained,
+        rationsEaten: eaten,
+        hearthMealsEaten,
+      };
     });
 
     const currentFood = populatedCount ? previousFood : numberValue(state.hunger?.startingRations);
@@ -271,22 +280,50 @@
     };
   }
 
+  function countHearthRations(state) {
+    const acquired = state.hearth?.acquired || {};
+    const consumedByDish = new Map();
+    (state.hearth?.log || []).forEach((entry) => {
+      const name = String(entry?.dish || "").trim();
+      if (!name || entry?.eaten !== true) return;
+      consumedByDish.set(name, (consumedByDish.get(name) || 0) + 1);
+    });
+    return Object.entries(acquired).reduce((total, [name, quantity]) => {
+      const acquiredCount = Math.max(0, Math.floor(numberValue(quantity)));
+      const consumedCount = consumedByDish.get(name) || 0;
+      return total + Math.max(0, acquiredCount - consumedCount);
+    }, 0);
+  }
+
   function previewHungerDay(state) {
     const hunger = calculateHunger(state);
     const currentDay = Math.max(1, Math.floor(numberValue(state.hunger?.currentDay) || 1));
     const foodGained = Math.max(0, Math.floor(numberValue(state.hunger?.foodGainedToday)));
     const availableFood = Math.max(0, hunger.currentFood + foodGained);
+    const hearthMealsEaten = Math.max(
+      0,
+      Math.floor(numberValue(state.hunger?.hearthMealsEatenToday)),
+    );
+    const hearthRations = countHearthRations(state);
     const rationEaten = state.hunger?.eatRationToday === true && availableFood >= 1 ? 1 : 0;
     const foodAfter = Math.max(0, availableFood - rationEaten);
-    const hungerAfter = rationEaten ? 0 : hunger.hunger + 1;
+    const ateToday = rationEaten >= 1 || hearthMealsEaten >= 1;
+    const hungerAfter = ateToday ? 0 : hunger.hunger + 1;
     return {
       currentDay,
       nextDay: currentDay + 1,
       currentFood: hunger.currentFood,
+      standardRations: hunger.currentFood,
+      hearthRations,
+      totalRations: hunger.currentFood + hearthRations,
       foodGained,
       availableFood,
+      availableStandardFood: availableFood,
       rationEaten,
+      hearthMealsEaten,
+      ateToday,
       foodAfter,
+      totalAfter: foodAfter + hearthRations,
       hungerBefore: hunger.hunger,
       hungerAfter,
       condition: hungerCondition(hungerAfter),
@@ -580,6 +617,70 @@
     );
   }
 
+  function normalizeTrackedConditions(state) {
+    if (!Array.isArray(state.activeEffects)) state.activeEffects = [];
+    const legacyAilments = state.activeEffects.map((entry) => ({
+      name: String(entry?.ailment || "").trim(),
+      mark: entry?.mark,
+    }));
+    const suppliedAilments = Array.isArray(state.activeAilments)
+      ? state.activeAilments
+      : legacyAilments;
+
+    state.activeEffects = Array.from({ length: 7 }, (_, index) => {
+      const entry = state.activeEffects[index] || {};
+      return {
+        ...entry,
+        status: String(entry.status || ""),
+        duration: String(entry.duration || ""),
+      };
+    });
+
+    state.activeAilments = Array.from({ length: 7 }, (_, index) => {
+      const entry = suppliedAilments[index] || {};
+      const name = String(entry.name || entry.ailment || "").trim();
+      const parsedMark = Math.floor(numberValue(String(entry.mark || "").match(/\d+/)?.[0]));
+      return {
+        name,
+        mark: name ? Math.min(3, Math.max(1, parsedMark || 1)) : 0,
+      };
+    });
+    return state.activeAilments;
+  }
+
+  function setTrackedAilment(state, index, ailmentName) {
+    normalizeTrackedConditions(state);
+    const position = Number(index);
+    if (!Number.isInteger(position) || position < 0 || position >= state.activeAilments.length) {
+      return { accepted: false, reason: "missing-slot" };
+    }
+    const name = String(ailmentName || "").trim();
+    state.activeAilments[position] = { name, mark: name ? 1 : 0 };
+    return { accepted: true, resolved: !name, ailment: state.activeAilments[position] };
+  }
+
+  function changeTrackedAilmentMark(state, index, change) {
+    normalizeTrackedConditions(state);
+    const position = Number(index);
+    if (!Number.isInteger(position) || position < 0 || position >= state.activeAilments.length) {
+      return { accepted: false, reason: "missing-slot" };
+    }
+    const ailment = state.activeAilments[position];
+    if (!ailment.name) return { accepted: false, reason: "missing-ailment" };
+    const delta = Number(change);
+    if (!Number.isFinite(delta) || delta === 0) {
+      return { accepted: false, reason: "invalid-change" };
+    }
+    const nextMark = ailment.mark + Math.sign(delta);
+    if (nextMark <= 0) {
+      const resolvedName = ailment.name;
+      state.activeAilments[position] = { name: "", mark: 0 };
+      return { accepted: true, resolved: true, resolvedName, mark: 0 };
+    }
+    ailment.mark = Math.min(3, nextMark);
+    return { accepted: true, resolved: false, ailment, mark: ailment.mark };
+  }
+
   function nextSurvivalId(state, prefix) {
     ensureSurvivalContainers(state);
     state.survivalHistorySequence += 1;
@@ -618,6 +719,19 @@
         day: Math.max(1, Math.floor(numberValue(day.day) || 1)),
         foodGained: Math.max(0, Math.floor(numberValue(day.foodGained))),
         rationsEaten: Math.max(0, Math.floor(numberValue(day.rationsEaten))),
+        hearthMealsEaten: Math.max(0, Math.floor(numberValue(day.hearthMealsEaten))),
+        standardRationsRemaining:
+          day.standardRationsRemaining === undefined
+            ? undefined
+            : Math.max(0, Math.floor(numberValue(day.standardRationsRemaining))),
+        hearthRationsRemaining:
+          day.hearthRationsRemaining === undefined
+            ? undefined
+            : Math.max(0, Math.floor(numberValue(day.hearthRationsRemaining))),
+        totalRationsRemaining:
+          day.totalRationsRemaining === undefined
+            ? undefined
+            : Math.max(0, Math.floor(numberValue(day.totalRationsRemaining))),
       }));
 
     const restsWithBoon = new Set();
@@ -645,16 +759,33 @@
       0,
     );
     const suppliedCurrentDay = Math.floor(numberValue(state.hunger.currentDay));
-    state.hunger.currentDay = Math.max(1, suppliedCurrentDay, lastLoggedDay + 1);
+    state.hunger.currentDay = suppliedCurrentDay >= 1
+      ? suppliedCurrentDay
+      : Math.max(1, lastLoggedDay + 1);
     state.hunger.foodGainedToday = Math.max(
       0,
       Math.floor(numberValue(state.hunger.foodGainedToday)),
     );
+    const suppliedHearthMealsEatenToday = state.hunger.hearthMealsEatenToday;
+    state.hunger.hearthMealsEatenToday =
+      suppliedHearthMealsEatenToday === undefined ||
+      suppliedHearthMealsEatenToday === null ||
+      suppliedHearthMealsEatenToday === ""
+        ? state.hearth.log.filter(
+            (entry) =>
+              entry.eaten === true &&
+              Math.floor(numberValue(entry.day)) === state.hunger.currentDay,
+          ).length
+        : Math.max(0, Math.floor(numberValue(suppliedHearthMealsEatenToday)));
     if (typeof state.hunger.eatRationToday !== "boolean") {
       state.hunger.eatRationToday = calculateHunger(state).currentFood > 0;
     }
+    if (state.hunger.hearthMealsEatenToday > 0) {
+      state.hunger.eatRationToday = false;
+    }
     state.hearth.restCycle = Math.max(1, Math.floor(numberValue(state.hearth.restCycle) || 1));
     state.hearth.selectedDish = String(state.hearth.selectedDish || "");
+    normalizeTrackedConditions(state);
 
     if (state.survivalHistory.length === 0) {
       state.hunger.days.forEach((day) => {
@@ -672,7 +803,7 @@
       });
     }
 
-    state.schemaVersion = Math.max(2, Math.floor(numberValue(state.schemaVersion)));
+    state.schemaVersion = Math.max(3, Math.floor(numberValue(state.schemaVersion)));
     return state;
   }
 
@@ -684,13 +815,31 @@
       day: preview.currentDay,
       foodGained: preview.foodGained,
       rationsEaten: preview.rationEaten,
+      hearthMealsEaten: preview.hearthMealsEaten,
+      standardRationsRemaining: preview.foodAfter,
+      hearthRationsRemaining: preview.hearthRations,
+      totalRationsRemaining: preview.totalAfter,
     };
     state.hunger.days.push(dayEntry);
     state.hunger.currentDay = preview.nextDay;
     state.hunger.foodGainedToday = 0;
+    state.hunger.hearthMealsEatenToday = 0;
     state.hunger.eatRationToday = preview.foodAfter > 0;
     const historyEvent = appendSurvivalEvent(state, { type: "day", sourceId: dayEntry.id });
     return { accepted: true, dayEntry, historyEvent, ...preview };
+  }
+
+  function resetDayCounter(state) {
+    normalizeSurvivalState(state);
+    const previousDay = state.hunger.currentDay;
+    if (previousDay === 1) return { accepted: false, reason: "already-reset" };
+    state.hunger.currentDay = 1;
+    const historyEvent = appendSurvivalEvent(state, {
+      type: "day-reset",
+      previousDay,
+      currentDay: 1,
+    });
+    return { accepted: true, previousDay, currentDay: 1, historyEvent };
   }
 
   function eatHearthMeal(state, data, dishName) {
@@ -713,6 +862,8 @@
     };
     state.hearth.log.push(mealEntry);
     state.hearth.selectedDish = "";
+    state.hunger.hearthMealsEatenToday += 1;
+    state.hunger.eatRationToday = false;
     const historyEvent = appendSurvivalEvent(state, {
       type: "hearth-meal",
       sourceId: mealEntry.id,
@@ -781,11 +932,21 @@
       const [day] = state.hunger.days.splice(index, 1);
       state.hunger.currentDay = day.day;
       state.hunger.foodGainedToday = day.foodGained;
+      state.hunger.hearthMealsEatenToday = Math.max(
+        0,
+        Math.floor(numberValue(day.hearthMealsEaten)),
+      );
       state.hunger.eatRationToday = numberValue(day.rationsEaten) >= 1;
     } else if (event.type === "hearth-meal") {
       const index = state.hearth.log.findIndex((entry) => entry.id === event.sourceId);
       if (index < 0) return { accepted: false, reason: "missing-source" };
       state.hearth.log.splice(index, 1);
+      state.hunger.hearthMealsEatenToday = Math.max(
+        0,
+        Math.floor(numberValue(state.hunger.hearthMealsEatenToday)) - 1,
+      );
+    } else if (event.type === "day-reset") {
+      state.hunger.currentDay = Math.max(1, Math.floor(numberValue(event.previousDay) || 1));
     } else if (event.type === "boon-used") {
       const meal = state.hearth.log.find((entry) => entry.id === event.sourceId);
       if (!meal) return { accepted: false, reason: "missing-source" };
@@ -814,6 +975,12 @@
       day.day = Math.max(1, Math.floor(numberValue(changes.day) || 1));
       day.foodGained = Math.max(0, Math.floor(numberValue(changes.foodGained)));
       day.rationsEaten = Math.max(0, Math.floor(numberValue(changes.rationsEaten)));
+      if (changes.hearthMealsEaten !== undefined) {
+        day.hearthMealsEaten = Math.max(
+          0,
+          Math.floor(numberValue(changes.hearthMealsEaten)),
+        );
+      }
       return { accepted: true, event, source: day };
     }
     if (event.type === "hearth-meal") {
@@ -842,9 +1009,20 @@
       if (event.type === "day") {
         const source = hungerRowsById.get(event.sourceId);
         if (source) {
-          const eaten = numberValue(source.result?.rationsEaten ?? source.entry.rationsEaten);
+          const standardEaten = numberValue(source.result?.rationsEaten ?? source.entry.rationsEaten);
+          const hearthEaten = numberValue(
+            source.result?.hearthMealsEaten ?? source.entry.hearthMealsEaten,
+          );
+          const remaining = source.entry.totalRationsRemaining ?? source.result?.foodLeft;
+          const eatenParts = [];
+          if (standardEaten) {
+            eatenParts.push(`${standardEaten} standard ration${standardEaten === 1 ? "" : "s"}`);
+          }
+          if (hearthEaten) {
+            eatenParts.push(`${hearthEaten} Hearth meal${hearthEaten === 1 ? "" : "s"}`);
+          }
           title = `Day ${source.entry.day}`;
-          detail = `Gained ${numberValue(source.entry.foodGained)} food, ate ${eaten} ration${eaten === 1 ? "" : "s"}, ${numberValue(source.result?.foodLeft)} remaining, ${source.result?.condition || "Unknown"}`;
+          detail = `Gained ${numberValue(source.entry.foodGained)} standard ration${numberValue(source.entry.foodGained) === 1 ? "" : "s"}, ate ${eatenParts.join(" and ") || "nothing"}, ${numberValue(remaining)} total remaining, ${source.result?.condition || "Unknown"}`;
           editable = true;
         }
       } else if (event.type === "hearth-meal") {
@@ -863,6 +1041,9 @@
       } else if (event.type === "long-rest") {
         title = `Long Rest ${event.restCycle}`;
         detail = `HP restored to ${formatNumber(event.restoredHitPoints, 0)}, Mana restored to ${formatNumber(event.restoredMana, 0)}`;
+      } else if (event.type === "day-reset") {
+        title = "Day counter reset";
+        detail = `Journey day changed from Day ${formatNumber(event.previousDay, 0)} to Day 1. Rations, hunger, and history were preserved.`;
       }
       return { ...event, title, detail, editable };
     });
@@ -1061,6 +1242,9 @@
     const personality = calculatePersonality(state, data);
     const hunger = calculateHunger(state);
     const hearth = calculateHearth(state, data);
+    hunger.standardRations = hunger.currentFood;
+    hunger.hearthRations = hearth.pantry.reduce((sum, dish) => sum + numberValue(dish.left), 0);
+    hunger.totalRations = hunger.standardRations + hunger.hearthRations;
     const survivalHistory = calculateSurvivalHistory(state, hunger, hearth);
 
     return {
@@ -1138,9 +1322,13 @@
     addPersonalityTrait,
     removePersonalityTrait,
     applyHearthMealEdit,
+    normalizeTrackedConditions,
+    setTrackedAilment,
+    changeTrackedAilmentMark,
     normalizeSurvivalState,
     previewHungerDay,
     advanceHungerDay,
+    resetDayCounter,
     eatHearthMeal,
     markHearthBoonUsed,
     completeLongRest,
