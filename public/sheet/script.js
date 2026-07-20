@@ -1401,6 +1401,7 @@
       .join("");
 
     const ailmentCards = state.activeAilments
+      .slice(0, 6)
       .map((ailment, index) => {
         const condition = conditionsByName.get(ailment.name);
         const mark = condition ? Math.min(3, Math.max(1, engine.numberValue(ailment.mark) || 1)) : 0;
