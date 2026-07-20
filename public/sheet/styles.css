@@ -22,9 +22,12 @@
   --green-pale: #d9eadf;
   --red: #9a2f2f;
   --red-pale: #f5d6d6;
-  --score-low: #b42318;
-  --score-mid: #f3ed40;
-  --score-high: #18734f;
+  --score-low: #ff5757;
+  --score-mid: #ffde59;
+  --score-high: #00bf63;
+  --score-low-ink: #c8323f;
+  --score-mid-ink: #8b6a00;
+  --score-high-ink: #007d49;
   --purple: #68518d;
   --purple-pale: #e7def3;
   --shadow: 0 10px 30px rgba(17, 26, 32, 0.08);
@@ -923,53 +926,50 @@ p {
 
 .ability-icon {
   display: grid;
-  flex: 0 0 43px;
-  width: 43px;
-  height: 46px;
-  padding: 2px;
+  flex: 0 0 42px;
+  width: 42px;
+  height: 42px;
   place-items: center;
-  color: #f5efdc;
-  background: linear-gradient(145deg, #9aa8ae, #4f6068);
-  clip-path: polygon(25% 3%, 75% 3%, 97% 24%, 97% 76%, 75% 97%, 25% 97%, 3% 76%, 3% 24%);
-  filter: drop-shadow(0 2px 2px rgba(17, 26, 32, 0.22));
+  color: #155a78;
+  background: linear-gradient(145deg, #f7fbfc, #e4f0f4);
+  border: 1px solid #b4ccd6;
+  border-radius: 12px;
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    0 3px 8px rgba(17, 76, 111, 0.1);
 }
 
 .ability-icon svg {
-  width: 100%;
-  height: 100%;
-  padding: 8px;
-  background: linear-gradient(145deg, #26343c, #111a20);
-  clip-path: inherit;
+  width: 25px;
+  height: 25px;
   fill: none;
   stroke: currentColor;
-  stroke-width: 1.65;
+  stroke-width: 1.8;
   stroke-linecap: round;
   stroke-linejoin: round;
 }
 
 .ability-name {
   min-width: 0;
+  overflow: hidden;
 }
 
 .ability-abbr {
-  display: inline-grid;
-  min-width: 34px;
-  height: 25px;
-  place-items: center;
-  color: white;
-  background: var(--ink);
-  border-radius: 4px;
-  font-size: 11px;
+  display: block;
+  color: #54717e;
+  font-size: 10px;
   font-weight: 900;
-  letter-spacing: 0.05em;
+  letter-spacing: 0.09em;
 }
 
 .ability-score {
   display: inline-grid;
-  min-width: 50px;
-  min-height: 42px;
-  padding: 4px 7px;
+  width: 58px;
+  min-width: 58px;
+  min-height: 46px;
+  padding: 3px 6px;
   place-items: center;
+  text-align: center;
   font-family: var(--font-display);
   font-size: 31px;
   font-weight: 900;
@@ -978,27 +978,27 @@ p {
   letter-spacing: -0.025em;
   background: transparent;
   border: 1px solid transparent;
-  border-radius: 7px;
+  border-radius: 8px;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.72);
   transition: color 120ms ease, background-color 120ms ease, border-color 120ms ease;
 }
 
 .ability-score[data-score-band="low"] {
-  color: var(--score-low);
-  background: #fff2ef;
-  border-color: #efc4bd;
+  color: var(--score-low-ink);
+  background: color-mix(in srgb, var(--score-low) 11%, white);
+  border-color: color-mix(in srgb, var(--score-low) 35%, white);
 }
 
 .ability-score[data-score-band="mid"] {
-  color: var(--score-mid);
-  background: #303727;
-  border-color: #c8c630;
-  text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
+  color: var(--score-mid-ink);
+  background: color-mix(in srgb, var(--score-mid) 18%, white);
+  border-color: color-mix(in srgb, var(--score-mid) 56%, white);
 }
 
 .ability-score[data-score-band="high"] {
-  color: var(--score-high);
-  background: #eff9f3;
-  border-color: #b9ddca;
+  color: var(--score-high-ink);
+  background: color-mix(in srgb, var(--score-high) 10%, white);
+  border-color: color-mix(in srgb, var(--score-high) 32%, white);
 }
 
 .ability-card h3 {
@@ -1007,6 +1007,7 @@ p {
   font-size: 13px;
   line-height: 1.15;
   text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 .ability-meta {

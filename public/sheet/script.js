@@ -808,19 +808,19 @@
   function abilityScoreBand(value) {
     const score = Number(value);
     if (!Number.isFinite(score)) return "unrated";
-    if (score < 55) return "low";
-    if (score <= 70) return "mid";
+    if (score <= 55) return "low";
+    if (score <= 69) return "mid";
     return "high";
   }
 
   function abilityIcon(name) {
     const icons = {
-      strength: `<path d="M5.3 17.6c2.2-1.8 3.3-4.1 3.4-7l2.5 1.6 2.1-4.7 2.6 1.1-1.2 3.8 2.8.5c1.7.3 2.7 1.7 2.2 3.3-.7 2.5-3.3 4.1-7.2 4.1H8.2c-1.4 0-2.6-1.1-2.9-2.7Z" /><path d="m8.7 10.6-2.5-1.3-1.6 2.8" />`,
-      speed: `<path d="m14.1 3.4-8 10.4h5.5l-1.5 6.8 8-10.4h-5.5Z" /><path d="M4 7.3h4.1M3 11h3.2M4.5 16.7h3.1" />`,
-      vitality: `<path d="M12 20.5 4.7 13.3A5 5 0 0 1 12 6.5a5 5 0 0 1 7.3 6.8Z" /><path d="M6.8 13h3l1.4-3 2 6 1.3-3h2.7" />`,
-      intelligence: `<path d="M9.4 4.1A3.2 3.2 0 0 0 6.3 7.3 3.5 3.5 0 0 0 5 13.8 3.3 3.3 0 0 0 8.2 18a3.2 3.2 0 0 0 3.8 2.1V6.8a2.7 2.7 0 0 0-2.6-2.7Z" /><path d="M14.6 4.1a3.2 3.2 0 0 1 3.1 3.2 3.5 3.5 0 0 1 1.3 6.5 3.3 3.3 0 0 1-3.2 4.2 3.2 3.2 0 0 1-3.8 2.1V6.8a2.7 2.7 0 0 1 2.6-2.7Z" /><path d="M7.1 9.2c1.1-.2 2 .1 2.7 1M16.9 9.2c-1.1-.2-2 .1-2.7 1M7.5 15.2c1-.5 1.8-.5 2.7.1M16.5 15.2c-1-.5-1.8-.5-2.7.1" />`,
-      awareness: `<path d="M2.8 12s3.4-5.2 9.2-5.2 9.2 5.2 9.2 5.2-3.4 5.2-9.2 5.2S2.8 12 2.8 12Z" /><circle cx="12" cy="12" r="3.2" /><path d="M12 8.8V12l2.1 1.4" />`,
-      talent: `<circle cx="12" cy="8" r="2.2" /><path d="M7.4 19.5v-3.1c0-2.1 1.8-3.8 4-3.8h1.2c2.2 0 4 1.7 4 3.8v3.1M9.1 14.1 6.3 17M14.9 14.1l2.8 2.9" /><path d="m5.3 5.2.5 1.1 1.1.5-1.1.5-.5 1.1-.5-1.1-1.1-.5 1.1-.5Zm12.8.8.6 1.2 1.3.6-1.3.6-.6 1.2-.6-1.2-1.3-.6 1.3-.6Z" />`,
+      strength: `<path d="M7 7.5v9M4.5 9.5v5M2.5 11v2M17 7.5v9M19.5 9.5v5M21.5 11v2M7 12h10" />`,
+      speed: `<path d="M4.5 18a8 8 0 1 1 15 0" /><path d="m12 14 4.2-4.2" /><circle cx="12" cy="14" r="1.5" /><path d="M7.1 9.1 5.7 7.7M16.9 9.1l1.4-1.4M12 6V4" />`,
+      vitality: `<path d="M12 20.2 4.8 13.1A5 5 0 0 1 12 6.3a5 5 0 0 1 7.2 6.8Z" /><path d="M6.8 12.9h3l1.4-3 2 6 1.4-3h2.7" />`,
+      intelligence: `<path d="M8.6 15.8a6.1 6.1 0 1 1 6.8 0c-.9.6-1.4 1.5-1.4 2.4h-4c0-.9-.5-1.8-1.4-2.4Z" /><path d="M9.7 21h4.6M10 18.2h4M12 2V.8M5.4 4.4 4.2 3.2M18.6 4.4l1.2-1.2M3.2 10H1.5M22.5 10h-1.7" />`,
+      awareness: `<path d="M2.7 12s3.5-5.1 9.3-5.1 9.3 5.1 9.3 5.1-3.5 5.1-9.3 5.1S2.7 12 2.7 12Z" /><circle cx="12" cy="12" r="3.1" /><circle cx="12" cy="12" r="1" />`,
+      talent: `<path d="m12 3 1.8 4.4L18 9.2l-4.2 1.8-1.8 4.4-1.8-4.4L6 9.2l4.2-1.8Z" /><path d="m19 14 .8 2 2 .8-2 .8-.8 2-.8-2-2-.8 2-.8ZM5 15l.6 1.4L7 17l-1.4.6L5 19l-.6-1.4L3 17l1.4-.6Z" />`,
     };
     if (!icons[name]) return "";
     return `<span class="ability-icon ability-icon-${escapeHtml(name)}" data-ability-icon="${escapeHtml(name)}" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false">${icons[name]}</svg></span>`;
