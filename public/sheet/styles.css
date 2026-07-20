@@ -22,9 +22,6 @@
   --green-pale: #d9eadf;
   --red: #9a2f2f;
   --red-pale: #f5d6d6;
-  --score-low: #b42318;
-  --score-mid: #8a5b00;
-  --score-high: #18734f;
   --purple: #68518d;
   --purple-pale: #e7def3;
   --shadow: 0 10px 30px rgba(17, 26, 32, 0.08);
@@ -897,14 +894,20 @@ p {
 
 .ability-card {
   position: relative;
-  overflow: hidden;
   padding: 14px;
-  background: linear-gradient(155deg, #fffdf9 0%, #f3f7f8 100%);
-  border: 1px solid #9fb2bc;
+  background: linear-gradient(145deg, #fff, var(--blue-pale));
+  border: 1px solid #8eabbc;
   border-radius: var(--radius-small);
-  box-shadow:
-    inset 0 3px 0 rgba(20, 106, 163, 0.24),
-    0 4px 12px rgba(17, 76, 111, 0.07);
+}
+
+.ability-card:nth-child(3n + 1) {
+  background: linear-gradient(145deg, #fff, var(--peach));
+  border-color: #c7a17b;
+}
+
+.ability-card:nth-child(3n) {
+  background: linear-gradient(145deg, #fff, var(--plum-pale));
+  border-color: #b494a4;
 }
 
 .ability-top {
@@ -930,23 +933,9 @@ p {
 .ability-score {
   font-family: var(--font-display);
   font-size: 31px;
-  font-weight: 900;
+  font-weight: 800;
   line-height: 1;
   font-variant-numeric: tabular-nums;
-  letter-spacing: -0.025em;
-  transition: color 120ms ease;
-}
-
-.ability-score[data-score-band="low"] {
-  color: var(--score-low);
-}
-
-.ability-score[data-score-band="mid"] {
-  color: var(--score-mid);
-}
-
-.ability-score[data-score-band="high"] {
-  color: var(--score-high);
 }
 
 .ability-card h3 {
