@@ -146,6 +146,55 @@
       </div>
     </dialog>
 
+    <dialog class="confirm-dialog" id="long-rest-dialog" aria-labelledby="long-rest-dialog-title">
+      <div class="confirm-dialog-body">
+        <p class="page-kicker">Character recovery</p>
+        <h2 id="long-rest-dialog-title">Complete Long Rest?</h2>
+        <div id="long-rest-preview"></div>
+        <div class="confirm-dialog-actions">
+          <button class="button button-quiet" type="button" data-survival-dialog-close>Cancel</button>
+          <button class="button button-primary" type="button" id="confirm-long-rest-button">Complete Long Rest</button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog class="confirm-dialog" id="advance-day-dialog" aria-labelledby="advance-day-dialog-title">
+      <div class="confirm-dialog-body">
+        <p class="page-kicker">Journey progression</p>
+        <h2 id="advance-day-dialog-title">Advance day?</h2>
+        <div id="advance-day-preview"></div>
+        <div class="confirm-dialog-actions">
+          <button class="button button-quiet" type="button" data-survival-dialog-close>Cancel</button>
+          <button class="button button-primary" type="button" id="confirm-advance-day-button">Advance Day</button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog class="confirm-dialog" id="hearth-meal-dialog" aria-labelledby="hearth-meal-dialog-title">
+      <div class="confirm-dialog-body">
+        <p class="page-kicker">Pantry action</p>
+        <h2 id="hearth-meal-dialog-title">Eat Hearth meal?</h2>
+        <div id="hearth-meal-preview"></div>
+        <div class="confirm-dialog-actions">
+          <button class="button button-quiet" type="button" data-survival-dialog-close>Cancel</button>
+          <button class="button button-primary" type="button" id="confirm-hearth-meal-button">Eat meal</button>
+        </div>
+      </div>
+    </dialog>
+
+    <dialog class="confirm-dialog history-edit-dialog" id="history-edit-dialog" aria-labelledby="history-edit-dialog-title">
+      <div class="confirm-dialog-body">
+        <p class="page-kicker">DM history controls</p>
+        <h2 id="history-edit-dialog-title">Edit history entry</h2>
+        <p>Changes update the underlying day or meal record and recalculate later entries.</p>
+        <div id="history-edit-fields"></div>
+        <div class="confirm-dialog-actions">
+          <button class="button button-quiet" type="button" data-survival-dialog-close>Cancel</button>
+          <button class="button button-primary" type="button" id="save-history-edit-button">Save changes</button>
+        </div>
+      </div>
+    </dialog>
+
     <noscript>
       <div class="noscript-message">This character sheet requires JavaScript to calculate character statistics.</div>
     </noscript>

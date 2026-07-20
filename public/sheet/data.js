@@ -10886,7 +10886,7 @@ window.AMUTSU_DATA = {
     "Crafting Catalogue": []
   },
   "defaultState": {
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "character": {
       "name": "Zele Kopsffmann",
       "race": "Human (Sesian)",
@@ -13284,6 +13284,9 @@ window.AMUTSU_DATA = {
     },
     "hunger": {
       "startingRations": 1.0,
+      "currentDay": 2.0,
+      "foodGainedToday": 0,
+      "eatRationToday": true,
       "days": [
         {
           "day": 1.0,
@@ -13439,6 +13442,7 @@ window.AMUTSU_DATA = {
     },
     "hearth": {
       "restCycle": 1.0,
+      "selectedDish": "",
       "log": [
         {
           "rest": 1.0,
@@ -13597,6 +13601,8 @@ window.AMUTSU_DATA = {
         "Gorak Ash-Roast": 0,
         "Iril Candle-Pear ✦": 0
       }
-    }
+    },
+    "survivalHistory": [],
+    "survivalHistorySequence": 0
   }
 };

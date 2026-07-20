@@ -7,6 +7,8 @@
   const query = new URLSearchParams(window.location.search);
   const embedded = query.get("embedded") === "1" && window.parent !== window;
   const characterId = String(query.get("characterId") || "").trim();
+  const viewerRole = query.get("viewerRole") === "dm" ? "dm" : "player";
+  const canEditHistory = viewerRole === "dm";
   const sheetLocationKey = characterId
     ? `sesios-character-manager:sheet-location:v1:${characterId}`
     : "";
@@ -46,9 +48,14 @@
     filterTimer: null,
     saveTimer: null,
     locationTimer: null,
+    showPantryManager: false,
+    showAllSurvivalHistory: false,
+    pendingMeal: "",
+    editingHistoryId: "",
   };
 
   let state = loadState();
+  engine.normalizeSurvivalState(state);
   engine.reconcileEquipmentWithInventory(state);
   let derived = engine.calculate(state, data);
 
@@ -61,6 +68,10 @@
   const importFile = document.getElementById("import-file");
   const imageDialog = document.getElementById("image-dialog");
   const resetDialog = document.getElementById("reset-dialog");
+  const longRestDialog = document.getElementById("long-rest-dialog");
+  const advanceDayDialog = document.getElementById("advance-day-dialog");
+  const hearthMealDialog = document.getElementById("hearth-meal-dialog");
+  const historyEditDialog = document.getElementById("history-edit-dialog");
 
   if (!data || !engine || !root) {
     throw new Error("The workbook data or calculation engine failed to load.");
@@ -152,6 +163,9 @@
       if (path === "personality") {
         return engine.mergePersonalitySlots(defaultValue, suppliedValue);
       }
+      if (path === "hunger.days" || path === "hearth.log" || path === "survivalHistory") {
+        return clone(Array.isArray(suppliedValue) ? suppliedValue : defaultValue);
+      }
       const supplied = Array.isArray(suppliedValue) ? suppliedValue : [];
       return defaultValue.map((item, index) =>
         mergeWithDefaults(item, supplied[index], `${path}.${index}`),
@@ -164,6 +178,15 @@
         const childPath = path ? `${path}.${key}` : key;
         merged[key] = mergeWithDefaults(defaultValue[key], supplied[key], childPath);
       });
+      if (path === "hearth.acquired") {
+        Object.keys(supplied).forEach((key) => {
+          if (!(key in merged)) merged[key] = supplied[key];
+        });
+      }
+      if (path === "hunger") {
+        if (!Object.hasOwn(supplied, "currentDay")) merged.currentDay = "";
+        if (!Object.hasOwn(supplied, "eatRationToday")) delete merged.eatRationToday;
+      }
       return merged;
     }
     return suppliedValue === undefined ? defaultValue : suppliedValue;
@@ -227,6 +250,7 @@
         captureSheetLocation();
         applyCataloguePayload(event.data.catalogues);
         state = mergeWithDefaults(clone(data.defaultState), event.data.state || {});
+        engine.normalizeSurvivalState(state);
         recalculate();
         saveIndicator.classList.remove("is-saving");
         saveText.textContent = "Saved online";
@@ -285,6 +309,7 @@
   }
 
   function recalculate() {
+    engine.normalizeSurvivalState(state);
     engine.reconcileEquipmentWithInventory(state);
     derived = engine.calculate(state, data);
   }
@@ -309,6 +334,13 @@
     document.getElementById("confirm-reset-button").addEventListener("click", () => {
       resetDialog.close();
       resetState();
+    });
+    document.getElementById("confirm-long-rest-button").addEventListener("click", confirmLongRest);
+    document.getElementById("confirm-advance-day-button").addEventListener("click", confirmAdvanceDay);
+    document.getElementById("confirm-hearth-meal-button").addEventListener("click", confirmHearthMeal);
+    document.getElementById("save-history-edit-button").addEventListener("click", saveHistoryEdit);
+    document.querySelectorAll("[data-survival-dialog-close]").forEach((button) => {
+      button.addEventListener("click", () => button.closest("dialog")?.close());
     });
     importFile.addEventListener("change", importState);
 
@@ -340,28 +372,6 @@
         return;
       }
 
-      const hearthMealCheckbox = event.target.closest("[data-hearth-eat]");
-      if (hearthMealCheckbox) {
-        const result = engine.applyHearthMealEdit(
-          state,
-          Number(hearthMealCheckbox.dataset.hearthEat),
-          hearthMealCheckbox.checked,
-        );
-        recalculate();
-        scheduleSave();
-        renderRoute({ preserveScroll: true });
-
-        if (!result.accepted) {
-          const message = {
-            "missing-dish": "Choose a dish before marking this meal eaten.",
-            "missing-day": "Enter a valid travel day in the Hunger Tracker before logging a meal.",
-            "missing-row": "That meal row is no longer available. Refresh and try again.",
-          }[result.reason];
-          showToast(message || "The meal could not be logged.", "error");
-        }
-        return;
-      }
-
       const input = event.target.closest("[data-bind]");
       if (input) {
         setPath(state, input.dataset.bind, inputValue(input));
@@ -390,6 +400,11 @@
     });
     resetDialog.addEventListener("click", (event) => {
       if (event.target === resetDialog) resetDialog.close();
+    });
+    [longRestDialog, advanceDayDialog, hearthMealDialog, historyEditDialog].forEach((dialog) => {
+      dialog.addEventListener("click", (event) => {
+        if (event.target === dialog) dialog.close();
+      });
     });
 
     window.addEventListener("hashchange", () => {
@@ -585,6 +600,30 @@
       element.classList.remove("status-available", "status-active", "status-used");
       element.classList.add(`status-${derived.hearth.status.toLowerCase()}`);
       element.textContent = derived.hearth.status;
+    });
+
+    const dayPreview = engine.previewHungerDay(state);
+    root.querySelectorAll("[data-day-preview-equation]").forEach((element) => {
+      element.textContent = `${dayPreview.currentFood} existing + ${dayPreview.foodGained} gained − ${dayPreview.rationEaten} eaten = ${dayPreview.foodAfter} rations remaining`;
+    });
+    root.querySelectorAll("[data-day-preview-condition]").forEach((element) => {
+      element.textContent = `${dayPreview.condition} — ${dayPreview.effect}`;
+    });
+    root.querySelectorAll("[data-day-advance-label]").forEach((element) => {
+      element.textContent = `Advance to Day ${dayPreview.nextDay}`;
+    });
+    root.querySelectorAll("[data-ration-toggle]").forEach((element) => {
+      element.disabled = dayPreview.availableFood < 1;
+    });
+    root.querySelectorAll("[data-hearth-selected-preview]").forEach((element) => {
+      const selected = data.food.dishes.find((dish) => dish.name === state.hearth.selectedDish);
+      element.textContent = selected?.effect || "Choose an owned meal to preview its effect.";
+    });
+    root.querySelectorAll("[data-eat-selected-meal]").forEach((element) => {
+      const selected = derived.hearth.pantry.find(
+        (dish) => dish.name === state.hearth.selectedDish && dish.left > 0,
+      );
+      element.disabled = !selected;
     });
 
     headerCharacterName.textContent = state.character.name || "Unnamed Character";
@@ -939,7 +978,7 @@
           <div class="key-value-row"><dt>Gold Multiplier</dt><dd>${output("stats.goldMultiplierText")}</dd></div>
           <div class="key-value-row"><dt>XP Multiplier</dt><dd>${output("stats.xpMultiplierText")}</dd></div>
         </dl></div></section>
-        <section class="panel"><div class="panel-heading plum"><h2>Current Pools & Bonuses</h2><span class="heading-note">Editable inputs</span></div><div class="panel-body"><div class="form-grid four">
+        <section class="panel current-pools-panel"><div class="panel-heading plum"><h2>Current Pools & Bonuses</h2><div class="panel-heading-actions"><span class="heading-note">Editable inputs</span><button class="button button-accent button-small long-rest-button" type="button" data-action="request-long-rest">Long Rest</button></div></div><div class="panel-body"><div class="form-grid four">
           ${field("Current HP", "character.currentHitPoints", character.currentHitPoints, { type: "number", step: 1 })}
           ${field("Temporary HP", "character.temporaryHitPoints", character.temporaryHitPoints, { type: "number", step: 1 })}
           ${field("Current Mana", "character.currentMana", character.currentMana, { type: "number", step: 1 })}
@@ -1152,6 +1191,154 @@
     </section>`;
   }
 
+  function openDialog(dialog) {
+    if (typeof dialog.showModal === "function") dialog.showModal();
+    else dialog.setAttribute("open", "");
+  }
+
+  function commitSurvivalChange(message) {
+    recalculate();
+    scheduleSave();
+    renderRoute({ preserveScroll: true });
+    showToast(message, "success");
+  }
+
+  function requestLongRest() {
+    recalculate();
+    const preview = document.getElementById("long-rest-preview");
+    const activeBoon = derived.hearth.status === "ACTIVE";
+    preview.innerHTML = `<dl class="action-preview-list">
+      <div><dt>Current HP</dt><dd>${escapeHtml(state.character.currentHitPoints)} → <strong>${escapeHtml(formatOutput(derived.stats.maxHealth, "integer"))}</strong></dd></div>
+      <div><dt>Current Mana</dt><dd>${escapeHtml(state.character.currentMana)} → <strong>${escapeHtml(formatOutput(derived.stats.maxMana, "integer"))}</strong></dd></div>
+      <div><dt>Hearth Boon</dt><dd>${escapeHtml(derived.hearth.status)} → <strong>AVAILABLE</strong></dd></div>
+    </dl>
+    <p class="dialog-callout ${activeBoon ? "is-warning" : ""}">${activeBoon ? `Your active ${escapeHtml(derived.hearth.activeMeal)} boon will expire.` : "Temporary HP, Focus, rations, hunger, and the current day will not change."}</p>`;
+    openDialog(longRestDialog);
+  }
+
+  function confirmLongRest() {
+    const result = engine.completeLongRest(state, data);
+    longRestDialog.close();
+    if (!result.accepted) {
+      showToast("The Long Rest could not be completed.", "error");
+      return;
+    }
+    commitSurvivalChange(
+      `Long Rest complete. HP restored to ${formatOutput(result.restoredHitPoints, "integer")} and Mana to ${formatOutput(result.restoredMana, "integer")}.`,
+    );
+  }
+
+  function requestAdvanceDay() {
+    const preview = engine.previewHungerDay(state);
+    document.getElementById("advance-day-dialog-title").textContent = `Advance to Day ${preview.nextDay}?`;
+    document.getElementById("advance-day-preview").innerHTML = `<dl class="action-preview-list">
+      <div><dt>Rations</dt><dd>${preview.currentFood} + ${preview.foodGained} − ${preview.rationEaten} = <strong>${preview.foodAfter}</strong></dd></div>
+      <div><dt>Hunger</dt><dd>${escapeHtml(derived.hunger.condition)} → <strong>${escapeHtml(preview.condition)}</strong></dd></div>
+      <div><dt>Penalty</dt><dd>${escapeHtml(preview.effect)}</dd></div>
+    </dl><p class="dialog-callout">HP, Mana, Focus, and Hearth Boon availability will not change.</p>`;
+    openDialog(advanceDayDialog);
+  }
+
+  function confirmAdvanceDay() {
+    const result = engine.advanceHungerDay(state);
+    advanceDayDialog.close();
+    if (!result.accepted) {
+      showToast("The day could not be advanced.", "error");
+      return;
+    }
+    commitSurvivalChange(`Day ${result.currentDay} recorded. The journey is now on Day ${result.nextDay}.`);
+  }
+
+  function requestHearthMeal(dishName) {
+    recalculate();
+    const name = String(dishName || state.hearth.selectedDish || "").trim();
+    const dish = derived.hearth.pantry.find((entry) => entry.name === name);
+    if (!dish || dish.left < 1) {
+      showToast("Choose an owned meal with at least one serving remaining.", "error");
+      return;
+    }
+    ui.pendingMeal = name;
+    const willActivate = derived.hearth.status === "AVAILABLE";
+    document.getElementById("hearth-meal-dialog-title").textContent = willActivate
+      ? "Eat and activate Hearth Boon?"
+      : "Eat Hearth meal?";
+    document.getElementById("hearth-meal-preview").innerHTML = `<div class="meal-confirmation">
+      <span class="pantry-region">${escapeHtml(dish.region)}</span>
+      <h3>${escapeHtml(dish.name)}</h3>
+      <p>${escapeHtml(dish.effect)}</p>
+      <strong>${escapeHtml(dish.left)} serving${dish.left === 1 ? "" : "s"} → ${escapeHtml(dish.left - 1)} remaining</strong>
+      <p class="dialog-callout ${willActivate ? "" : "is-warning"}">${willActivate ? "This meal will activate its Hearth Boon." : `Your boon is already ${escapeHtml(derived.hearth.status.toLowerCase())}; this serving will be eaten without granting another boon.`}</p>
+    </div>`;
+    document.getElementById("confirm-hearth-meal-button").textContent = willActivate
+      ? "Eat and activate"
+      : "Eat meal";
+    openDialog(hearthMealDialog);
+  }
+
+  function confirmHearthMeal() {
+    const result = engine.eatHearthMeal(state, data, ui.pendingMeal);
+    hearthMealDialog.close();
+    ui.pendingMeal = "";
+    if (!result.accepted) {
+      const message = result.reason === "no-serving"
+        ? "That meal no longer has a serving available."
+        : "The meal could not be eaten.";
+      showToast(message, "error");
+      return;
+    }
+    commitSurvivalChange(
+      result.grantsBoon
+        ? `${result.dish.name} eaten and its Hearth Boon activated.`
+        : `${result.dish.name} eaten. No new Hearth Boon was granted this rest.`,
+    );
+  }
+
+  function requestHistoryEdit(eventId) {
+    if (!canEditHistory) return;
+    const historyEvent = state.survivalHistory.find((entry) => entry.id === eventId);
+    if (!historyEvent) return;
+    const fields = document.getElementById("history-edit-fields");
+    ui.editingHistoryId = eventId;
+    if (historyEvent.type === "day") {
+      const source = state.hunger.days.find((entry) => entry.id === historyEvent.sourceId);
+      if (!source) return;
+      fields.innerHTML = `<div class="form-grid three">
+        <div class="field"><label for="history-edit-day">Day</label><input id="history-edit-day" name="day" type="number" min="1" step="1" value="${escapeHtml(source.day)}" /></div>
+        <div class="field"><label for="history-edit-food">Food gained</label><input id="history-edit-food" name="foodGained" type="number" min="0" step="1" value="${escapeHtml(source.foodGained)}" /></div>
+        <div class="field"><label for="history-edit-rations">Rations eaten</label><input id="history-edit-rations" name="rationsEaten" type="number" min="0" step="1" value="${escapeHtml(source.rationsEaten)}" /></div>
+      </div>`;
+    } else if (historyEvent.type === "hearth-meal") {
+      const source = state.hearth.log.find((entry) => entry.id === historyEvent.sourceId);
+      if (!source) return;
+      fields.innerHTML = `<div class="form-grid two">
+        <div class="field"><label for="history-edit-rest">Rest cycle</label><input id="history-edit-rest" name="rest" type="number" min="1" step="1" value="${escapeHtml(source.rest)}" /></div>
+        <div class="field"><label for="history-edit-day">Day</label><input id="history-edit-day" name="day" type="number" min="1" step="1" value="${escapeHtml(source.day)}" /></div>
+        <div class="field field-wide"><label for="history-edit-dish">Dish</label><select id="history-edit-dish" name="dish">${renderOptions(data.food.dishes.map((dish) => dish.name), source.dish)}</select></div>
+        <label class="check-row field-wide"><input type="checkbox" name="boonUsed" ${source.boonUsed ? "checked" : ""} /><span>Boon has been used</span></label>
+      </div>`;
+    } else {
+      showToast("That system event is not editable.", "error");
+      return;
+    }
+    openDialog(historyEditDialog);
+  }
+
+  function saveHistoryEdit() {
+    if (!canEditHistory || !ui.editingHistoryId) return;
+    const values = {};
+    historyEditDialog.querySelectorAll("[name]").forEach((input) => {
+      values[input.name] = input.type === "checkbox" ? input.checked : input.value;
+    });
+    const result = engine.editSurvivalHistoryEntry(state, ui.editingHistoryId, values);
+    if (!result.accepted) {
+      showToast("That history entry could not be updated.", "error");
+      return;
+    }
+    historyEditDialog.close();
+    ui.editingHistoryId = "";
+    commitSurvivalChange("Journey history entry updated.");
+  }
+
   function renderSurvivalPage() {
     const conditionNames = data.conditions.map((condition) => condition.name);
     const activeEffectRows = state.activeEffects
@@ -1162,63 +1349,87 @@
         <td data-label="Mark"><label class="visually-hidden" for="effect-mark-${index}">Mark ${index + 1}</label><input class="table-input" id="effect-mark-${index}" type="text" data-bind="activeEffects.${index}.mark" value="${escapeHtml(effect.mark)}" /></td>
       </tr>`)
       .join("");
+    const dayPreview = engine.previewHungerDay(state);
+    const ownedMeals = derived.hearth.pantry.filter((dish) => dish.left > 0);
+    const ownedMealNames = ownedMeals.map((dish) => dish.name);
+    const selectedMeal = ownedMeals.find((dish) => dish.name === state.hearth.selectedDish);
+    const boonStatusClass = `status-${derived.hearth.status.toLowerCase()}`;
 
-    const hungerRows = state.hunger.days
-      .map((day, index) => `<tr>
-        <td data-label="Day"><input class="table-input" type="number" min="0" step="1" data-value-type="number" data-bind="hunger.days.${index}.day" value="${escapeHtml(day.day)}" aria-label="Hunger day ${index + 1}" /></td>
-        <td data-label="Food Gained"><input class="table-input" type="number" step="1" data-value-type="number" data-bind="hunger.days.${index}.foodGained" value="${escapeHtml(day.foodGained)}" aria-label="Food gained on hunger row ${index + 1}" /></td>
-        <td data-label="Rations Eaten"><input class="table-input" type="number" min="0" step="1" data-value-type="number" data-bind="hunger.days.${index}.rationsEaten" value="${escapeHtml(day.rationsEaten)}" aria-label="Rations eaten on hunger row ${index + 1}" /></td>
-        <td class="cell-number" data-label="Food Left"><output data-output="hunger.rows.${index}.foodLeft">${escapeHtml(formatOutput(derived.hunger.rows[index]?.foodLeft))}</output></td>
-        <td class="cell-number" data-label="Hunger"><output data-output="hunger.rows.${index}.hunger">${escapeHtml(formatOutput(derived.hunger.rows[index]?.hunger))}</output></td>
-        <td data-label="Condition"><output data-output="hunger.rows.${index}.condition">${escapeHtml(formatOutput(derived.hunger.rows[index]?.condition))}</output></td>
-      </tr>`)
+    let boonBody;
+    if (derived.hearth.status === "AVAILABLE") {
+      boonBody = `<div class="boon-state-copy"><span class="condition-chip status-available">Available</span><h3>Hearth Boon Available</h3><p>Select an owned meal to activate its effect. Hearth meals remain separate from standard rations.</p></div>
+        <div class="boon-activation-controls">
+          <label for="owned-hearth-meal">Choose owned meal</label>
+          <select id="owned-hearth-meal" data-bind="hearth.selectedDish" ${ownedMeals.length ? "" : "disabled"}>${renderOptions(ownedMealNames, selectedMeal?.name || "", ownedMeals.length ? "Choose a meal" : "No servings available")}</select>
+          <p class="boon-effect-preview" data-hearth-selected-preview>${escapeHtml(selectedMeal?.effect || "Choose an owned meal to preview its effect.")}</p>
+          <button class="button button-primary" type="button" data-action="request-selected-hearth-meal" data-eat-selected-meal ${selectedMeal ? "" : "disabled"}>Eat and activate</button>
+        </div>`;
+    } else if (derived.hearth.status === "ACTIVE") {
+      boonBody = `<div class="boon-state-copy"><span class="condition-chip status-active">Active</span><h3>${escapeHtml(derived.hearth.activeMeal)}</h3><p>${escapeHtml(derived.hearth.activeEffect)}</p><small>Expires when used or when the next Long Rest is completed.</small></div>
+        <div class="boon-state-action"><button class="button button-accent" type="button" data-action="use-hearth-boon">Mark boon as used</button></div>`;
+    } else {
+      boonBody = `<div class="boon-state-copy"><span class="condition-chip status-used">Used</span><h3>Hearth Boon Used</h3><p>You cannot activate another Hearth Boon until completing a Long Rest.</p></div>`;
+    }
+
+    const pantryCards = ownedMeals
+      .map((dish) => `<article class="pantry-card">
+        <div class="pantry-card-main"><span class="pantry-region">${escapeHtml(dish.region)}</span><h3>${escapeHtml(dish.name)}</h3><p>${escapeHtml(dish.effect)}</p></div>
+        <div class="pantry-card-actions"><strong><span>${escapeHtml(dish.left)}</span> serving${dish.left === 1 ? "" : "s"}</strong><button class="button button-quiet button-small" type="button" data-action="request-hearth-meal" data-name="${escapeHtml(dish.name)}">Eat</button></div>
+      </article>`)
       .join("");
 
-    const pantryRows = derived.hearth.pantry
-      .map((dish, index) => `<tr>
-        <td data-label="Dish">${escapeHtml(dish.name)}</td>
-        <td data-label="Region">${escapeHtml(dish.region)}</td>
-        <td class="cell-number" data-label="Acquired"><input class="table-input" type="number" min="0" step="1" data-value-type="number" data-bind="hearth.acquired.${escapeHtml(dish.name)}" value="${escapeHtml(state.hearth.acquired[dish.name])}" aria-label="Servings acquired for ${escapeHtml(dish.name)}" /></td>
-        <td class="cell-number" data-label="Eaten"><output data-output="hearth.pantry.${index}.eaten" data-format="integer">${escapeHtml(formatOutput(dish.eaten, "integer"))}</output></td>
-        <td class="cell-number" data-label="Left"><output data-output="hearth.pantry.${index}.left" data-format="integer">${escapeHtml(formatOutput(dish.left, "integer"))}</output></td>
-      </tr>`)
-      .join("");
+    const pantryManager = ui.showPantryManager
+      ? `<section class="pantry-manager" aria-label="Add acquired servings"><header><div><h3>Manage Pantry</h3><p>Add newly acquired servings. Existing meal history is preserved.</p></div><button class="button button-quiet button-small" type="button" data-action="toggle-pantry-manager">Done</button></header><div class="pantry-manager-grid">${data.food.dishes
+          .map((dish) => {
+            const pantryDish = derived.hearth.pantry.find((entry) => entry.name === dish.name);
+            return `<div class="pantry-manager-row"><div><strong>${escapeHtml(dish.name)}</strong><span>${escapeHtml(dish.region)} · ${escapeHtml(pantryDish?.left || 0)} owned</span></div><button class="button button-small" type="button" data-action="add-pantry-serving" data-name="${escapeHtml(dish.name)}">+ Add serving</button></div>`;
+          })
+          .join("")}</div></section>`
+      : "";
 
-    const hearthRows = state.hearth.log
-      .map((entry, index) => `<tr>
-        <td data-label="Rest"><input class="table-input" type="number" min="0" step="1" data-value-type="number" data-bind="hearth.log.${index}.rest" value="${escapeHtml(entry.rest)}" aria-label="Rest cycle for meal row ${index + 1}" /></td>
-        <td data-label="Day"><input class="table-input" type="number" min="0" step="1" data-value-type="number" data-bind="hearth.log.${index}.day" value="${escapeHtml(entry.day)}" aria-label="Day for meal row ${index + 1}" /></td>
-        <td data-label="Dish"><select class="table-input" data-bind="hearth.log.${index}.dish" aria-label="Dish for meal row ${index + 1}">${renderOptions(data.food.dishes.map((dish) => dish.name), entry.dish, "None")}</select></td>
-        <td data-label="Eaten"><input type="checkbox" data-hearth-eat="${index}" ${entry.eaten ? "checked" : ""} aria-label="Meal eaten for row ${index + 1}" /></td>
-        <td data-label="Boon Used"><input type="checkbox" data-bind="hearth.log.${index}.boonUsed" ${entry.boonUsed ? "checked" : ""} aria-label="Hearth boon used for row ${index + 1}" /></td>
-        <td class="cell-description" data-label="Resolved Effect"><output data-output="hearth.rows.${index}.effect">${escapeHtml(formatOutput(derived.hearth.rows[index]?.effect))}</output></td>
-      </tr>`)
+    const allHistory = [...derived.survivalHistory].reverse();
+    const visibleHistory = ui.showAllSurvivalHistory ? allHistory : allHistory.slice(0, 5);
+    const historyItems = visibleHistory
+      .map((entry) => `<li class="history-entry"><span class="history-marker" data-history-type="${escapeHtml(entry.type)}" aria-hidden="true"></span><div><strong>${escapeHtml(entry.title)}</strong><p>${escapeHtml(entry.detail)}</p></div>${canEditHistory && entry.editable ? `<button class="button button-quiet button-small" type="button" data-action="edit-history" data-id="${escapeHtml(entry.id)}">Edit</button>` : ""}</li>`)
       .join("");
 
     return `<section class="page" data-page="survival">${pageHeading(
       "Character status",
       "Effects & Survival",
-      "Active conditions, hunger progression, regional meals, serving limits, and Hearth Boon state.",
+      "Resolve one travel day at a time, manage owned meals, and keep a compact journey history.",
     )}
-      <section class="summary-band" aria-label="Survival summary">
-        <article class="summary-band-card"><span>Food remaining</span><strong>${output("hunger.currentFood", "integer")}</strong></article>
-        <article class="summary-band-card"><span>Hunger effect</span><strong>${output("hunger.effect")}</strong></article>
-        <article class="summary-band-card"><span>Hearth Boon</span><strong class="condition-chip" data-hearth-status>${escapeHtml(derived.hearth.status)}</strong></article>
+      <section class="survival-status-grid" aria-label="Current survival status">
+        <article class="survival-status-card"><span>Current day</span><strong>${escapeHtml(state.hunger.currentDay)}</strong><small>Journey day</small></article>
+        <article class="survival-status-card"><span>Rations</span><strong>${escapeHtml(formatOutput(derived.hunger.currentFood, "integer"))}</strong><small>Resolved food on hand</small></article>
+        <article class="survival-status-card"><span>Hunger</span><strong>${escapeHtml(derived.hunger.condition)}</strong><small>${escapeHtml(derived.hunger.effect)}</small></article>
+        <article class="survival-status-card"><span>Hearth Boon</span><strong class="condition-chip ${boonStatusClass}" data-hearth-status>${escapeHtml(derived.hearth.status)}</strong><small>Rest cycle ${escapeHtml(state.hearth.restCycle)}</small></article>
       </section>
-      <div class="layout-grid two">
+
+      <div class="layout-grid survival-action-grid section-gap">
+        <section class="panel day-dashboard"><div class="panel-heading amber"><h2>Today’s Activity</h2><span class="heading-note">Day ${escapeHtml(dayPreview.currentDay)}</span></div><div class="panel-body">
+          <div class="today-controls">
+            ${field("Food gained today", "hunger.foodGainedToday", state.hunger.foodGainedToday, { type: "number", min: 0, step: 1, hint: "Added when the day is completed." })}
+            <label class="ration-toggle"><input type="checkbox" data-bind="hunger.eatRationToday" data-ration-toggle ${state.hunger.eatRationToday ? "checked" : ""} ${dayPreview.availableFood < 1 ? "disabled" : ""} /><span><strong>Eat one ration</strong><small>${dayPreview.availableFood < 1 ? "No ration is available." : "Enabled for today."}</small></span></label>
+          </div>
+          <div class="day-preview" aria-live="polite"><span>Before advancing</span><strong data-day-preview-equation>${dayPreview.currentFood} existing + ${dayPreview.foodGained} gained − ${dayPreview.rationEaten} eaten = ${dayPreview.foodAfter} rations remaining</strong><small data-day-preview-condition>${escapeHtml(dayPreview.condition)} — ${escapeHtml(dayPreview.effect)}</small></div>
+          <button class="button button-primary advance-day-button" type="button" data-action="request-advance-day"><span data-day-advance-label>Advance to Day ${escapeHtml(dayPreview.nextDay)}</span></button>
+        </div></section>
+
+        <section class="panel boon-card"><div class="panel-heading plum"><h2>Hearth Boon</h2><span class="heading-note">One per Long Rest</span></div><div class="panel-body">${boonBody}<button class="text-link-button" type="button" data-route="character">Complete Long Rest from the Character Sheet.</button></div></section>
+      </div>
+
+      <section class="panel section-gap pantry-panel"><div class="panel-heading blue"><h2>Pantry</h2><div class="panel-heading-actions"><span class="heading-note">Owned dishes only</span><button class="button button-small button-quiet" type="button" data-action="toggle-pantry-manager">${ui.showPantryManager ? "Close manager" : "Manage Pantry"}</button></div></div><div class="panel-body">${pantryCards ? `<div class="pantry-grid">${pantryCards}</div>` : `<div class="empty-state compact"><strong>Your pantry is empty</strong><span>Add an acquired serving with Manage Pantry.</span></div>`}${pantryManager}</div></section>
+
+      <section class="panel section-gap history-panel"><div class="panel-heading"><h2>Journey & Rest History</h2><span class="heading-note">${allHistory.length} recorded event${allHistory.length === 1 ? "" : "s"}</span></div><div class="panel-body">${historyItems ? `<details class="history-disclosure" ${ui.showAllSurvivalHistory ? "open" : ""}><summary><span>Show journey history</span><small>Latest: ${escapeHtml(allHistory[0]?.title || "No events")}</small></summary><ol class="history-list">${historyItems}</ol></details>` : `<div class="empty-state compact"><strong>No journey events yet</strong><span>Advance a day, eat a Hearth meal, or complete a Long Rest.</span></div>`}<div class="history-actions">${allHistory.length > 5 ? `<button class="button button-quiet button-small" type="button" data-action="toggle-history">${ui.showAllSurvivalHistory ? "Show recent" : "View all"}</button>` : ""}<button class="button button-danger button-small" type="button" data-action="undo-survival" ${allHistory.length ? "" : "disabled"}>Undo last action</button>${canEditHistory ? `<span class="history-dm-note">DM mode: day and meal records can be edited.</span>` : ""}</div></div></section>
+
+      <div class="layout-grid two section-gap">
         <section class="panel"><div class="panel-heading rust"><h2>Active Effects</h2><span class="heading-note">Up to seven tracked effects</span></div><div class="panel-body"><div class="data-table-wrap responsive-card-table"><table class="data-table"><thead><tr><th>Status</th><th>Duration</th><th>Ailment</th><th>Mark</th></tr></thead><tbody>${activeEffectRows}</tbody></table></div></div></section>
-        <section class="panel"><div class="panel-heading blue"><h2>Special Effects</h2><span class="heading-note">Free-form notes</span></div><div class="panel-body"><div class="effect-grid">
+        <section class="panel"><div class="panel-heading blue"><h2>Special Effects</h2><span class="heading-note">Character notes</span></div><div class="panel-body"><div class="effect-grid">
           ${field("Immunities", "specialEffects.immunities", state.specialEffects.immunities, { type: "textarea" })}
           ${field("Vulnerabilities", "specialEffects.vulnerabilities", state.specialEffects.vulnerabilities, { type: "textarea" })}
           ${field("Resistances", "specialEffects.resistances", state.specialEffects.resistances, { type: "textarea" })}
         </div></div></section>
       </div>
-      <section class="panel section-gap"><div class="panel-heading amber"><h2>Hunger Tracker</h2><span class="heading-note">Thirty-day journey log</span></div><div class="panel-body"><div class="inline-fields">${field("Starting Rations", "hunger.startingRations", state.hunger.startingRations, { type: "number", min: 0, step: 1 })}</div><div class="data-table-wrap responsive-card-table section-gap"><table class="data-table"><thead><tr><th>Day</th><th>Food Gained</th><th>Rations Eaten</th><th>Food Left</th><th>Hunger</th><th>Condition</th></tr></thead><tbody>${hungerRows}</tbody></table></div></div></section>
-      <section class="panel section-gap"><div class="panel-heading plum"><h2>Hearthcraft Tracker</h2><span class="heading-note">One boon per rest cycle</span></div><div class="panel-body"><div class="form-grid three">
-        ${field("Current Rest Cycle", "hearth.restCycle", state.hearth.restCycle, { type: "number", min: 0, step: 1 })}
-        <div class="field"><span class="field-label">Active Meal</span><output class="derived-output" data-output="hearth.activeMeal">${escapeHtml(derived.hearth.activeMeal)}</output></div>
-        <div class="field"><span class="field-label">Active Effect</span><output class="derived-output" data-output="hearth.activeEffect">${escapeHtml(derived.hearth.activeEffect)}</output></div>
-      </div><h3 class="subsection-title">Pantry</h3><div class="data-table-wrap responsive-card-table"><table class="data-table"><thead><tr><th>Dish</th><th>Region</th><th>Acquired</th><th>Eaten</th><th>Left</th></tr></thead><tbody>${pantryRows}</tbody></table></div><h3 class="subsection-title">Meal log</h3><div class="data-table-wrap responsive-card-table"><table class="data-table"><thead><tr><th>Rest</th><th>Day</th><th>Dish</th><th>Eaten</th><th>Boon Used</th><th>Resolved Effect</th></tr></thead><tbody>${hearthRows}</tbody></table></div></div></section>
     </section>`;
   }
 
@@ -1609,6 +1820,62 @@
     let changed = false;
     let message = "";
 
+    if (action === "request-long-rest") {
+      requestLongRest();
+      return;
+    }
+    if (action === "request-advance-day") {
+      requestAdvanceDay();
+      return;
+    }
+    if (action === "request-selected-hearth-meal") {
+      requestHearthMeal(state.hearth.selectedDish);
+      return;
+    }
+    if (action === "request-hearth-meal") {
+      requestHearthMeal(button.dataset.name);
+      return;
+    }
+    if (action === "toggle-pantry-manager") {
+      ui.showPantryManager = !ui.showPantryManager;
+      renderRoute({ preserveScroll: true });
+      return;
+    }
+    if (action === "toggle-history") {
+      ui.showAllSurvivalHistory = !ui.showAllSurvivalHistory;
+      renderRoute({ preserveScroll: true });
+      return;
+    }
+    if (action === "edit-history") {
+      requestHistoryEdit(button.dataset.id);
+      return;
+    }
+    if (action === "undo-survival") {
+      const latest = derived.survivalHistory.at(-1);
+      if (!latest || !window.confirm(`Undo “${latest.title}”?`)) return;
+      const result = engine.undoLastSurvivalAction(state);
+      if (!result.accepted) {
+        showToast("The latest action could not be undone.", "error");
+        return;
+      }
+      commitSurvivalChange(`${latest.title} undone.`);
+      return;
+    }
+    if (action === "use-hearth-boon") {
+      const result = engine.markHearthBoonUsed(state, data);
+      changed = result.accepted;
+      message = result.accepted
+        ? `${result.mealEntry.dish} boon marked as used.`
+        : "There is no active Hearth Boon to use.";
+    }
+    if (action === "add-pantry-serving") {
+      const name = button.dataset.name;
+      if (data.food.dishes.some((dish) => dish.name === name)) {
+        state.hearth.acquired[name] = engine.numberValue(state.hearth.acquired[name]) + 1;
+        changed = true;
+        message = `One serving of ${name} added to the pantry.`;
+      }
+    }
     if (action === "print") {
       window.print();
       return;
