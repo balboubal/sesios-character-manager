@@ -437,7 +437,7 @@ function renderEditor() {
         ${ownerSelect}
       </div>
       <div class="editor-update-region" id="editor-update-region" aria-live="polite">${renderRemoteUpdateNotice()}</div>
-      <iframe class="sheet-frame" id="sheet-frame" src="/sheet/index.html?embedded=1&amp;characterId=${encodeURIComponent(character.id)}" title="${escapeHtml(character.name)} character sheet"></iframe>
+      <iframe class="sheet-frame" id="sheet-frame" src="/sheet/index.html?embedded=1&amp;characterId=${encodeURIComponent(character.id)}&amp;viewerRole=${isDm() ? "dm" : "player"}" title="${escapeHtml(character.name)} character sheet"></iframe>
     </section>`;
 }
 

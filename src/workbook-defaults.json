@@ -1,6 +1,6 @@
 {
   "defaultState": {
-    "schemaVersion": 1,
+    "schemaVersion": 2,
     "character": {
       "name": "Zele Kopsffmann",
       "race": "Human (Sesian)",
@@ -2398,6 +2398,9 @@
     },
     "hunger": {
       "startingRations": 1,
+      "currentDay": 2,
+      "foodGainedToday": 0,
+      "eatRationToday": true,
       "days": [
         {
           "day": 1,
@@ -2553,6 +2556,7 @@
     },
     "hearth": {
       "restCycle": 1,
+      "selectedDish": "",
       "log": [
         {
           "rest": 1,
@@ -2711,6 +2715,8 @@
         "Gorak Ash-Roast": 0,
         "Iril Candle-Pear ✦": 0
       }
-    }
+    },
+    "survivalHistory": [],
+    "survivalHistorySequence": 0
   }
 }
