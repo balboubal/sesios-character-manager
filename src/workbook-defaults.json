@@ -1,6 +1,6 @@
 {
   "defaultState": {
-    "schemaVersion": 4,
+    "schemaVersion": 5,
     "character": {
       "name": "Zele Kopsffmann",
       "race": "Human (Sesian)",
@@ -2751,7 +2751,11 @@
       "history": [],
       "sequence": 0,
       "rerollUsedRest": 0,
-      "hearthwrightUsedRest": 0
+      "hearthwrightUsedRest": 0,
+      "homeRegion": "Asura",
+      "ingredientPantry": {},
+      "cookingKitOwned": false,
+      "ownedUtensils": []
     }
   }
 }
