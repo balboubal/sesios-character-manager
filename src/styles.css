@@ -1764,3 +1764,186 @@ button:disabled {
     grid-template-columns: repeat(2, minmax(0, 1fr));
   }
 }
+
+/* DM character experience controls */
+.xp-admin-panel {
+  display: grid;
+  gap: 1rem;
+}
+
+.xp-admin-note {
+  padding: 0.35rem 0.6rem;
+  color: #47645b;
+  background: #e9f4ef;
+  border: 1px solid #c8dfd5;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.xp-admin-list {
+  display: grid;
+  gap: 0.75rem;
+}
+
+.xp-admin-row {
+  display: grid;
+  grid-template-columns: minmax(12rem, 1.2fr) 5rem minmax(14rem, 1.4fr) minmax(18rem, 1fr);
+  gap: 1rem;
+  align-items: center;
+  padding: 0.9rem;
+  border: 1px solid var(--line);
+  border-radius: 0.8rem;
+  background: #fffdf9;
+}
+
+.xp-character-identity {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  min-width: 0;
+}
+
+.xp-character-identity .character-glyph {
+  flex: 0 0 auto;
+  width: 2.45rem;
+  height: 2.45rem;
+  font-size: 1rem;
+}
+
+.xp-character-identity div {
+  display: grid;
+  min-width: 0;
+}
+
+.xp-character-identity strong,
+.xp-character-identity small {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.xp-character-identity small {
+  color: #718086;
+}
+
+.xp-level-summary {
+  display: grid;
+  justify-items: center;
+  gap: 0.15rem;
+  padding: 0.45rem;
+  background: #eef3f5;
+  border-radius: 0.65rem;
+}
+
+.xp-level-summary span {
+  color: #6c7a80;
+  font-size: 0.65rem;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.xp-level-summary strong {
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.65rem;
+}
+
+.xp-progress-summary {
+  display: grid;
+  gap: 0.45rem;
+  min-width: 0;
+}
+
+.xp-progress-copy {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.65rem;
+  color: #5e6e73;
+  font-size: 0.72rem;
+  font-weight: 800;
+}
+
+.xp-progress-copy span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.xp-progress-track {
+  height: 0.7rem;
+  overflow: hidden;
+  background: #dfe7ea;
+  border: 1px solid #c4d1d6;
+  border-radius: 999px;
+}
+
+.xp-progress-track > span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, #bd8c1d, #f0c34c);
+  border-radius: inherit;
+  transition: width 180ms ease;
+}
+
+.xp-adjust-form {
+  display: grid;
+  grid-template-columns: minmax(6rem, 0.65fr) minmax(11rem, 1fr);
+  gap: 0.65rem;
+  align-items: end;
+}
+
+.xp-adjust-form label {
+  display: grid;
+  gap: 0.3rem;
+  color: #5b6a70;
+  font-size: 0.7rem;
+  font-weight: 800;
+}
+
+.xp-adjust-form input {
+  width: 100%;
+  min-height: 2.35rem;
+  text-align: center;
+  font-weight: 850;
+}
+
+.xp-adjust-actions {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.45rem;
+}
+
+.xp-adjust-actions .button {
+  width: 100%;
+  white-space: nowrap;
+}
+
+@media (max-width: 1180px) {
+  .xp-admin-row {
+    grid-template-columns: minmax(12rem, 1fr) 5rem minmax(14rem, 1.5fr);
+  }
+
+  .xp-adjust-form {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 760px) {
+  .xp-admin-row {
+    grid-template-columns: 1fr auto;
+  }
+
+  .xp-progress-summary,
+  .xp-adjust-form {
+    grid-column: 1 / -1;
+  }
+}
+
+@media (max-width: 520px) {
+  .xp-adjust-form,
+  .xp-adjust-actions {
+    grid-template-columns: 1fr;
+  }
+}

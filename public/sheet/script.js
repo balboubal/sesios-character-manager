@@ -100,6 +100,7 @@
   };
 
   let state = loadState();
+  engine.normalizeCharacterProgression(state);
   engine.normalizeSurvivalState(state);
   engine.reconcileEquipmentWithInventory(state);
   let derived = engine.calculate(state, data);
@@ -261,6 +262,7 @@
       }
       return merged;
     }
+    if (path === "character.experience" && suppliedValue === undefined) return undefined;
     return suppliedValue === undefined ? defaultValue : suppliedValue;
   }
 
@@ -322,6 +324,7 @@
         captureSheetLocation();
         applyCataloguePayload(event.data.catalogues);
         state = mergeWithDefaults(clone(data.defaultState), event.data.state || {});
+        engine.normalizeCharacterProgression(state);
         engine.normalizeSurvivalState(state);
         recalculate();
         saveIndicator.classList.remove("is-saving");
@@ -385,6 +388,7 @@
   }
 
   function recalculate() {
+    engine.normalizeCharacterProgression(state);
     engine.normalizeSurvivalState(state);
     engine.reconcileEquipmentWithInventory(state);
     derived = engine.calculate(state, data);
@@ -1107,6 +1111,20 @@
     return `<article class="metric-card ${className || ""} ${icon ? "has-icon" : ""}">${metricIcon(icon)}<div class="metric-card-copy"><span class="metric-label">${escapeHtml(label)}</span><strong data-output="${escapeHtml(path)}" ${format ? `data-format="${format}"` : ""}>${escapeHtml(formatOutput(getPath(derived, path), format))}</strong>${noteText ? `<small${noteAttribute}>${escapeHtml(noteText)}</small>` : ""}</div></article>`;
   }
 
+  function characterExperienceMarkup() {
+    const experience = derived.experience;
+    const progressLabel = experience.isMaxLevel
+      ? "Maximum level reached"
+      : `${experience.currentXp} / ${experience.requiredXp} XP to Level ${experience.nextLevel}`;
+    return `<div class="character-xp-summary">
+      <span class="character-level-badge" aria-label="Character level ${experience.level}">${experience.level}</span>
+      <div class="character-xp-progress">
+        <div class="character-xp-copy"><span>${escapeHtml(progressLabel)}</span><b>${Math.round(experience.percent)}%</b></div>
+        <div class="character-xp-track" role="progressbar" aria-label="Current level experience progress" aria-valuemin="0" aria-valuemax="${experience.requiredXp || 1}" aria-valuenow="${experience.isMaxLevel ? 1 : experience.currentXp}"><span style="width: ${experience.percent}%"></span></div>
+      </div>
+    </div>`;
+  }
+
   function renderCharacterPage() {
     const character = state.character;
     const personality = derived.personality;
@@ -1179,7 +1197,7 @@
       "Live character statistics, equipment, saving throws, resource pools, and combat tools.",
       `<button class="button button-primary" type="button" data-action="print">Print current page</button>`,
     )}
-      <section class="hero-record" aria-labelledby="identity-heading"><div class="hero-grid"><div class="identity-title"><p class="overline">Active Character</p><h2 id="identity-heading">${escapeHtml(character.name || "Unnamed Character")}</h2><p>${escapeHtml(character.race || "Unknown race")} · Level ${escapeHtml(character.level)} ${escapeHtml(character.className)}</p></div><div class="identity-fields">
+      <section class="hero-record" aria-labelledby="identity-heading"><div class="hero-grid"><div class="identity-title"><p class="overline">Active Character</p><h2 id="identity-heading">${escapeHtml(character.name || "Unnamed Character")}</h2><p>${escapeHtml(character.race || "Unknown race")} · Level ${escapeHtml(derived.experience.level)} ${escapeHtml(character.className)}</p></div><div class="identity-fields">
         ${field("Name", "character.name", character.name)}
         ${field("Race", "character.race", character.race)}
         ${field("Class", "character.className", character.className, { type: "select", options: data.classes.map((profile) => profile.name), placeholder: "Choose class" })}
@@ -1203,7 +1221,7 @@
 
       <div class="layout-grid two section-gap">
         <section class="panel"><div class="panel-heading"><h2>Core Statistics</h2><span class="heading-note">Calculated fields</span></div><div class="panel-body"><dl class="key-value-list">
-          <div class="key-value-row"><dt>Level</dt><dd>${field("", "character.level", character.level, { type: "number", min: 0, step: 1, ariaLabel: "Level" })}</dd></div>
+          <div class="key-value-row character-xp-row"><dt>Level</dt><dd>${characterExperienceMarkup()}</dd></div>
           <div class="key-value-row"><dt>Proficiency Bonus</dt><dd>${output("proficiency", "signed")}</dd></div>
           <div class="key-value-row"><dt>Physical Damage</dt><dd>${output("stats.physicalDamage", "integer")}</dd></div>
           <div class="key-value-row"><dt>Spell Damage</dt><dd>${output("stats.spellDamage", "integer")}</dd></div>
@@ -1312,7 +1330,7 @@
       "Track proficiencies, manual bonuses, ability dependencies, and passive scores.",
     )}
       <section class="metric-strip" aria-label="Skill summary">
-        ${metricCard("Proficiency", "proficiency", "is-mana", "signed", `Level ${state.character.level}`)}
+        ${metricCard("Proficiency", "proficiency", "is-mana", "signed", `Level ${derived.experience.level}`)}
         ${metricCard("Passive Perception", "passives.perception", "is-evasion", "integer")}
         ${metricCard("Passive Insight", "passives.insight", "is-armor", "integer")}
         ${metricCard("Passive Investigation", "passives.investigation", "is-resistance", "integer")}
@@ -2994,7 +3012,13 @@
       if (!supplied || typeof supplied !== "object" || !supplied.character) {
         throw new Error("This file does not contain an Amutsu character state.");
       }
+      const preservedExperience = engine.normalizeCharacterProgression(clone(state));
       state = mergeWithDefaults(clone(data.defaultState), supplied);
+      if (viewerRole !== "dm") {
+        if (!state.character || typeof state.character !== "object") state.character = {};
+        state.character.experience = preservedExperience.totalXp;
+        state.character.level = preservedExperience.level;
+      }
       recalculate();
       scheduleSave();
       renderRoute();
@@ -3011,11 +3035,12 @@
       resetDialog.showModal();
       return;
     }
-    if (window.confirm("Reset this character to its creation state? The name and original base ability rolls will be preserved.")) resetState();
+    if (window.confirm("Reset this character to its creation state? The name, original base ability rolls, and DM-controlled XP will be preserved.")) resetState();
   }
 
   function resetState() {
     const preservedName = String(state.character?.name || "").trim();
+    const preservedExperience = engine.normalizeCharacterProgression(clone(state));
     const preservedBaseScores = {};
     data.abilityDefinitions.forEach((ability) => {
       const hasStoredBase = state.abilityBaseScores && Object.hasOwn(state.abilityBaseScores, ability.id);
@@ -3026,6 +3051,8 @@
 
     state = clone(data.defaultState);
     state.character.name = preservedName;
+    state.character.experience = preservedExperience.totalXp;
+    state.character.level = preservedExperience.level;
     state.abilityBaseScores = preservedBaseScores;
     recalculate();
     if (!embedded) {
@@ -3037,7 +3064,7 @@
     }
     scheduleSave();
     renderRoute();
-    showToast("Character reset to the original name and base ability rolls.", "success");
+    showToast("Character reset. Name, original base ability rolls, and DM-controlled XP were preserved.", "success");
   }
 
   function showToast(message, type) {

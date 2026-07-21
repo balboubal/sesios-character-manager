@@ -19065,7 +19065,7 @@ window.AMUTSU_DATA = {
     "Crafting Catalogue": []
   },
   "defaultState": {
-    "schemaVersion": 6,
+    "schemaVersion": 7,
     "character": {
       "name": "",
       "race": "",
@@ -19079,6 +19079,7 @@ window.AMUTSU_DATA = {
       "hair": "",
       "features": "",
       "level": 0,
+      "experience": 0,
       "currentHitPoints": 0,
       "temporaryHitPoints": 0,
       "currentMana": 0,

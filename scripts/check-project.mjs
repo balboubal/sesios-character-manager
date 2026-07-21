@@ -11,6 +11,12 @@ import {
   parseSpreadsheetItems,
 } from "../src/catalogue-import.js";
 import {
+  adjustCharacterExperience,
+  CHARACTER_XP_LEVELS,
+  experienceProgress,
+  normalizeCharacterExperienceState,
+} from "../src/experience.js";
+import {
   clearPortalLocation,
   isNewerCharacterRecord,
   loadPortalLocation,
@@ -23,6 +29,7 @@ const requiredFiles = [
   "index.html",
   "src/main.js",
   "src/catalogue-import.js",
+  "src/experience.js",
   "src/styles.css",
   "src/session-state.js",
   "src/workbook-defaults.json",
@@ -46,6 +53,24 @@ requiredFiles.forEach((file) => {
   assert.ok(fs.existsSync(path.join(root, file)), `Missing ${file}`);
 });
 
+assert.equal(CHARACTER_XP_LEVELS.length, 21, "Character XP must define Levels 0-20");
+assert.deepEqual(
+  CHARACTER_XP_LEVELS.slice(0, 4).map((entry) => [entry.level, entry.totalXp, entry.xpToNext]),
+  [[0, 0, 25], [1, 25, 45], [2, 70, 60], [3, 130, 90]],
+  "Opening XP thresholds do not match the campaign table",
+);
+assert.deepEqual(
+  experienceProgress(96),
+  { totalXp: 96, level: 2, currentXp: 26, requiredXp: 60, nextLevel: 3, percent: 43.333333333333336, isMaxLevel: false },
+  "Current-level XP progress is incorrect",
+);
+const legacyXpState = { character: { level: 5 } };
+assert.equal(normalizeCharacterExperienceState(legacyXpState).totalXp, 350, "Legacy levels must migrate to their minimum cumulative XP");
+const adjustedXpState = { character: { level: 0, experience: 20 } };
+const adjustedXp = adjustCharacterExperience(adjustedXpState, 10);
+assert.equal(adjustedXp.after.level, 1, "XP additions must level characters automatically");
+assert.equal(adjustedXp.after.currentXp, 5, "XP overflow must carry into the next level");
+
 const context = { window: {} };
 vm.runInNewContext(fs.readFileSync(path.join(root, "public/sheet/data.js"), "utf8"), context);
 vm.runInNewContext(fs.readFileSync(path.join(root, "public/sheet/engine.js"), "utf8"), context);
@@ -59,9 +84,10 @@ assert.equal(workbook.food.cooking.levels.length, 6, "Cooking progression must i
 assert.equal(workbook.food.cooking.kit.bonus, 25, "Cooking Kit bonus must remain +25");
 assert.equal(workbook.food.cooking.kit.cost, 20, "Cooking Kit must cost 20 GP");
 assert.equal(workbook.food.cooking.kit.costUnit, "GP", "Cooking Kit price unit must be GP");
-assert.equal(workbook.defaultState.schemaVersion, 6, "The Crafter's Ledger requires schema 6");
+assert.equal(workbook.defaultState.schemaVersion, 7, "Character XP progression requires schema 7");
 assert.equal(workbook.defaultState.character.name, "", "Fresh character defaults must not contain the former test character name");
 assert.equal(workbook.defaultState.character.className, "", "Fresh characters must not begin with a test class");
+assert.equal(workbook.defaultState.character.experience, 0, "Fresh characters must begin with 0 XP");
 assert.equal(workbook.defaultState.inventory.length, 0, "Fresh characters must begin with an empty inventory");
 assert.equal(Object.values(workbook.defaultState.currency).every((value) => value === 0), true, "Fresh characters must begin with no test currency");
 assert.equal(Object.values(workbook.defaultState.skills).every((skill) => skill.proficient === false && skill.bonus === 0), true, "Fresh characters must begin without test proficiencies");
@@ -93,7 +119,10 @@ const bridge = fs.readFileSync(path.join(root, "public/sheet/script.js"), "utf8"
 assert.match(bridge, /amutsu:state-change/, "Online character save bridge is missing");
 assert.match(bridge, /amutsu:load/, "Online character load bridge is missing");
 assert.match(bridge, /abilityBaseScores/, "Per-character base ability score support is missing");
-assert.match(bridge, /Character reset to the original name and base ability rolls/, "Reset must preserve the creation identity and base rolls");
+assert.match(bridge, /characterExperienceMarkup/, "Character-level XP progress display is missing");
+assert.match(bridge, /DM-controlled XP/, "Reset and import handling must preserve DM-controlled XP");
+assert.doesNotMatch(bridge, /data-bind="character\.level"/, "Character level must not remain player-editable");
+assert.match(bridge, /Character reset\. Name, original base ability rolls, and DM-controlled XP were preserved\./, "Reset must preserve the creation identity, base rolls, and XP");
 assert.match(bridge, /amutsu-character-sheet:v2/, "Standalone test-character local storage must be retired");
 assert.match(bridge, /request-long-rest/, "Character Sheet Long Rest control is missing");
 assert.match(bridge, /request-advance-day/, "Advance Day control is missing");
@@ -249,6 +278,8 @@ assert.match(stylesheet, /\.crafting-recipe-grid[\s,]/, "Crafting recipe catalog
 assert.match(stylesheet, /\.crafting-recovery-grid\s*\{/, "Crafting recovery layout styling is missing");
 assert.match(stylesheet, /\.crafting-project-tracker\s*\{/, "Legendary project tracker styling is missing");
 assert.match(stylesheet, /\.crafting-project-stage-list\s*\{/, "Legendary project stage styling is missing");
+assert.match(stylesheet, /\.character-xp-summary\s*\{/, "Character XP progress styling is missing");
+assert.match(stylesheet, /\.character-xp-track\s*\{/, "Character XP bar styling is missing");
 
 const workbookSource = fs.readFileSync(path.join(root, "src/workbook.js"), "utf8");
 assert.match(workbookSource, /food_ingredients/, "DM-editable Hearthcraft Ingredients catalogue is missing");
@@ -265,6 +296,11 @@ for (const ability of ["strength", "speed", "vitality", "intelligence", "awarene
   assert.ok(portalSource.includes(`["${ability}"`), `Missing ${ability} creation definition`);
 }
 assert.match(portalSource, /cloneDefaultCharacterState\(name, baseAbilityScores\)/, "New character creation must store the supplied base rolls");
+assert.match(portalSource, /navigationButton\("experience", "Experience"/, "DM Experience navigation is missing");
+assert.match(portalSource, /function renderExperience\(/, "DM character XP section is missing");
+assert.match(portalSource, /adjustCharacterExperience\(/, "DM XP adjustment workflow is missing");
+assert.match(portalSource, /Players cannot edit these values/, "DM-only XP ownership copy is missing");
+assert.match(portalSource, /authoritativeExperience/, "Player sheet saves must preserve authoritative DM XP");
 assert.match(portalSource, /data-action="bulk-import-items"/, "Item bulk-import action is missing");
 assert.match(portalSource, /id="bulk-item-form"/, "Item bulk-import form is missing");
 assert.match(portalSource, /bulk_import_catalogue_items/, "Atomic bulk-import RPC call is missing");
@@ -301,6 +337,8 @@ assert.match(portalSource, /viewerRole=\$\{isDm\(\) \? "dm" : "player"\}/, "DM h
 assert.match(portalStylesheet, /\.editor-update-banner\s*{/, "Remote update banner styling is missing");
 assert.match(portalStylesheet, /\.editor-live-state\s*{/, "Realtime connection-state styling is missing");
 assert.match(portalStylesheet, /\.sheet-frame\s*{[^}]*grid-row:\s*3/s, "The iframe must retain the flexible editor grid row");
+assert.match(portalStylesheet, /\.xp-admin-row\s*\{/, "DM XP row styling is missing");
+assert.match(portalStylesheet, /\.xp-progress-track\s*\{/, "DM XP progress bar styling is missing");
 
 const sheetHtml = fs.readFileSync(path.join(root, "public/sheet/index.html"), "utf8");
 for (const dialogId of ["long-rest-dialog", "advance-day-dialog", "hearth-meal-dialog", "history-edit-dialog"]) {
@@ -527,7 +565,7 @@ legacySurvivalState.activeEffects[1].mark = "Mark 2";
 delete legacySurvivalState.survivalHistory;
 delete legacySurvivalState.survivalHistorySequence;
 survivalEngine.normalizeSurvivalState(legacySurvivalState);
-assert.equal(legacySurvivalState.schemaVersion, 6, "Legacy state must migrate to schema 6");
+assert.equal(legacySurvivalState.schemaVersion, 7, "Legacy state must migrate to schema 7");
 assert.equal(legacySurvivalState.hunger.days.length, 1, "Blank legacy hunger rows must be removed");
 assert.equal(legacySurvivalState.hearth.log.length, 1, "Blank legacy meal rows must be removed");
 assert.equal(legacySurvivalState.hunger.currentDay, 2);
@@ -538,7 +576,7 @@ assert.equal(legacySurvivalState.survivalHistory.length, 3, "Legacy day, meal, a
 
 function createActionState() {
   const state = JSON.parse(JSON.stringify(workbook.defaultState));
-  state.schemaVersion = 6;
+  state.schemaVersion = 7;
   state.abilityBaseScores = { strength: 60, speed: 60, vitality: 60, intelligence: 60, awareness: 60, talent: 60 };
   state.character.className = "Wizard";
   state.character.currentHitPoints = 12;
@@ -1038,7 +1076,7 @@ assert.equal(
 const craftingEngine = context.window.AmutsuEngine;
 const craftingState = JSON.parse(JSON.stringify(workbook.defaultState));
 craftingEngine.normalizeCraftingState(craftingState);
-assert.equal(craftingState.schemaVersion, 6);
+assert.equal(craftingState.schemaVersion, 7);
 craftingEngine.changeCraftingMaterial(craftingState, "MAT-001", 1);
 craftingEngine.changeCraftingMaterial(craftingState, "MAT-008", 1);
 craftingState.crafting.disciplineBonuses.Fieldcraft = 10;

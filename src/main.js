@@ -15,6 +15,11 @@ import {
   parseSpreadsheetItems,
 } from "./catalogue-import.js";
 import {
+  adjustCharacterExperience,
+  experienceProgress,
+  normalizeCharacterExperienceState,
+} from "./experience.js";
+import {
   clearPortalLocation,
   isNewerCharacterRecord,
   loadPortalLocation,
@@ -291,6 +296,7 @@ function render() {
         <nav class="portal-nav">
           ${navigationButton("characters", "Characters", "◈")}
           ${isDm() ? navigationButton("catalogues", "Catalogues", "◆") : ""}
+          ${isDm() ? navigationButton("experience", "Experience", "✦") : ""}
           ${isDm() ? navigationButton("players", "Players", "◇") : ""}
           ${isDm() ? navigationButton("settings", "Campaign", "⚑") : ""}
         </nav>
@@ -402,6 +408,7 @@ function viewTitle() {
   return {
     characters: isDm() ? "Campaign characters" : "My characters",
     catalogues: "Catalogue editor",
+    experience: "Character experience",
     players: "Players and invitations",
     settings: "Campaign settings",
   }[application.view] || "Characters";
@@ -410,6 +417,7 @@ function viewTitle() {
 function renderView() {
   if (application.view === "editor") return renderEditor();
   if (application.view === "catalogues") return isDm() ? renderCatalogues() : renderForbidden();
+  if (application.view === "experience") return isDm() ? renderExperience() : renderForbidden();
   if (application.view === "players") return isDm() ? renderPlayers() : renderForbidden();
   if (application.view === "settings") return isDm() ? renderSettings() : renderForbidden();
   return renderCharacters();
@@ -542,6 +550,45 @@ function renderCatalogueRow(row) {
         <button class="icon-button danger" type="button" data-action="delete-catalogue-entry" data-entry-id="${row.id}" aria-label="Delete ${escapeHtml(catalogueEntryTitle(row))}">×</button>
       </div>
     </article>`;
+}
+
+function renderExperience() {
+  const rows = application.characters.map((character) => {
+    const owner = ownerProfile(character.owner_id);
+    const experience = characterExperience(character);
+    const progressText = experience.isMaxLevel
+      ? "Maximum level"
+      : `${experience.currentXp} / ${experience.requiredXp} XP to Level ${experience.nextLevel}`;
+    return `<article class="xp-admin-row">
+      <div class="xp-character-identity">
+        <span class="character-glyph" aria-hidden="true">${escapeHtml((character.name || "?").slice(0, 1).toUpperCase())}</span>
+        <div><strong>${escapeHtml(character.name || "Unnamed Character")}</strong><small>${escapeHtml(owner?.display_name || owner?.email || "Unassigned")}</small></div>
+      </div>
+      <div class="xp-level-summary">
+        <span>Level</span><strong>${experience.level}</strong>
+      </div>
+      <div class="xp-progress-summary">
+        <div class="xp-progress-copy"><span>${escapeHtml(progressText)}</span><b>${Math.round(experience.percent)}%</b></div>
+        <div class="xp-progress-track" role="progressbar" aria-label="${escapeHtml(character.name)} experience progress" aria-valuemin="0" aria-valuemax="${experience.requiredXp || 1}" aria-valuenow="${experience.isMaxLevel ? 1 : experience.currentXp}"><span style="width: ${experience.percent}%"></span></div>
+      </div>
+      <form class="xp-adjust-form" data-character-id="${character.id}">
+        <label><span>XP adjustment</span><input name="amount" type="number" min="1" step="1" inputmode="numeric" value="1" required /></label>
+        <div class="xp-adjust-actions">
+          <button class="button button-primary button-compact" type="submit" name="intent" value="add">Add XP</button>
+          <button class="button button-quiet button-compact" type="submit" name="intent" value="remove">Remove XP</button>
+        </div>
+      </form>
+    </article>`;
+  }).join("");
+
+  return `
+    <section class="page-intro">
+      <div><p class="eyebrow">DM progression controls</p><h2>Character XP</h2><p>Add or remove experience for any campaign character. Levels update automatically from the campaign thresholds.</p></div>
+    </section>
+    <section class="panel-card xp-admin-panel">
+      <div class="section-heading"><div><p class="eyebrow">Campaign progression</p><h2>${application.characters.length} character${application.characters.length === 1 ? "" : "s"}</h2></div><span class="xp-admin-note">Players cannot edit these values</span></div>
+      <div class="xp-admin-list">${rows || `<div class="empty-panel compact"><h3>No characters yet</h3><p>Create a character before assigning experience.</p></div>`}</div>
+    </section>`;
 }
 
 function renderPlayers() {
@@ -1222,6 +1269,7 @@ async function handleSubmit(event) {
   if (form.id === "bulk-item-form") await handleBulkItemForm(form, event.submitter);
   if (form.id === "invite-form") await invitePlayer(form);
   if (form.id === "campaign-form") await saveCampaign(form);
+  if (form.matches(".xp-adjust-form")) await adjustCharacterXp(form, event.submitter);
 }
 
 async function handleChange(event) {
@@ -1599,6 +1647,73 @@ async function saveCampaign(form) {
   showToast("Campaign details saved.", "success");
 }
 
+async function adjustCharacterXp(form, submitter) {
+  if (!isDm()) {
+    showToast("DM access is required to change character XP.", "error");
+    return;
+  }
+  const characterId = String(form.dataset.characterId || "");
+  const character = application.characters.find((entry) => entry.id === characterId);
+  const amount = Math.floor(Number(new FormData(form).get("amount")));
+  const intent = submitter?.value === "remove" ? "remove" : "add";
+  if (!character) {
+    showToast("That character is no longer available.", "error");
+    return;
+  }
+  if (!Number.isInteger(amount) || amount < 1) {
+    showToast("Enter a whole XP amount of at least 1.", "error");
+    form.elements.amount?.focus();
+    return;
+  }
+
+  const nextState = structuredClone(character.state || {});
+  const result = adjustCharacterExperience(nextState, intent === "remove" ? -amount : amount);
+  if (result.applied === 0) {
+    showToast(result.after.isMaxLevel ? "This character is already Level 20." : "This character already has 0 XP.", "error");
+    return;
+  }
+
+  setFormBusy(form, true, intent === "remove" ? "Removing…" : "Adding…");
+  let data;
+  let error;
+  try {
+    ({ data, error } = await supabase
+      .from("characters")
+      .update({
+        state: nextState,
+        updated_by: application.session.user.id,
+      })
+      .eq("id", character.id)
+      .eq("updated_at", character.updated_at)
+      .select(characterSelect)
+      .maybeSingle());
+  } catch (caughtError) {
+    error = caughtError;
+  }
+
+  if (error) {
+    setFormBusy(form, false);
+    showToast(error.message || "Character XP could not be updated.", "error");
+    return;
+  }
+  if (!data) {
+    const latestResult = await fetchLatestCharacterRecord(character.id);
+    if (latestResult.data) replaceCharacter(latestResult.data);
+    render();
+    showToast("This character changed elsewhere. Review the refreshed XP value and try again.", "error");
+    return;
+  }
+
+  replaceCharacter(data);
+  render();
+  const direction = result.applied > 0 ? "added to" : "removed from";
+  const absolute = Math.abs(result.applied);
+  const levelChange = result.before.level === result.after.level
+    ? ""
+    : ` Level changed from ${result.before.level} to ${result.after.level}.`;
+  showToast(`${absolute} XP ${direction} ${character.name}.${levelChange}`, "success");
+}
+
 function handleSheetMessage(event) {
   if (event.origin !== window.location.origin || application.view !== "editor") return;
   const frame = document.getElementById("sheet-frame");
@@ -1608,7 +1723,17 @@ function handleSheetMessage(event) {
     sendCharacterToSheet();
   }
   if (event.data?.type === "amutsu:state-change" && event.data.state) {
-    scheduleCharacterSave(event.data.state);
+    const nextState = structuredClone(event.data.state);
+    if (!isDm()) {
+      const authoritativeState = structuredClone(activeCharacter()?.state || {});
+      const authoritativeExperience = normalizeCharacterExperienceState(authoritativeState);
+      if (!nextState.character || typeof nextState.character !== "object") nextState.character = {};
+      nextState.character.experience = authoritativeExperience.totalXp;
+      nextState.character.level = authoritativeExperience.level;
+    } else {
+      normalizeCharacterExperienceState(nextState);
+    }
+    scheduleCharacterSave(nextState);
   }
   if (event.data?.type === "amutsu:flush-complete") {
     const request = application.sheetFlushRequests.get(event.data.requestId);
@@ -2141,9 +2266,15 @@ function ownerProfile(ownerId) {
   return application.profiles.find((profile) => profile.id === ownerId) || null;
 }
 
+function characterExperience(character) {
+  const state = structuredClone(character?.state || {});
+  return normalizeCharacterExperienceState(state);
+}
+
 function characterDescription(character) {
   const details = character.state?.character || {};
-  return [details.race, details.className, details.level ? `Level ${details.level}` : ""].filter(Boolean).join(" · ") || "Amutsu character record";
+  const experience = characterExperience(character);
+  return [details.race, details.className, `Level ${experience.level}`].filter(Boolean).join(" · ") || "Amutsu character record";
 }
 
 function catalogueEntryTitle(row) {

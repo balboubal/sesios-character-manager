@@ -89,6 +89,31 @@
   };
 
   const PERSONALITY_TRAIT_LIMIT = 70;
+  const CHARACTER_XP_LEVELS = Object.freeze([
+    { level: 0, totalXp: 0, xpToNext: 25 },
+    { level: 1, totalXp: 25, xpToNext: 45 },
+    { level: 2, totalXp: 70, xpToNext: 60 },
+    { level: 3, totalXp: 130, xpToNext: 90 },
+    { level: 4, totalXp: 220, xpToNext: 130 },
+    { level: 5, totalXp: 350, xpToNext: 160 },
+    { level: 6, totalXp: 510, xpToNext: 210 },
+    { level: 7, totalXp: 720, xpToNext: 380 },
+    { level: 8, totalXp: 1100, xpToNext: 420 },
+    { level: 9, totalXp: 1520, xpToNext: 560 },
+    { level: 10, totalXp: 2080, xpToNext: 680 },
+    { level: 11, totalXp: 2760, xpToNext: 940 },
+    { level: 12, totalXp: 3700, xpToNext: 1260 },
+    { level: 13, totalXp: 4960, xpToNext: 1740 },
+    { level: 14, totalXp: 6700, xpToNext: 2260 },
+    { level: 15, totalXp: 8960, xpToNext: 2740 },
+    { level: 16, totalXp: 11700, xpToNext: 3360 },
+    { level: 17, totalXp: 15060, xpToNext: 4040 },
+    { level: 18, totalXp: 19100, xpToNext: 4860 },
+    { level: 19, totalXp: 23960, xpToNext: 5500 },
+    { level: 20, totalXp: 29460, xpToNext: 0 },
+  ]);
+  const MAX_CHARACTER_LEVEL = CHARACTER_XP_LEVELS[CHARACTER_XP_LEVELS.length - 1].level;
+  const MAX_CHARACTER_XP = CHARACTER_XP_LEVELS[CHARACTER_XP_LEVELS.length - 1].totalXp;
   const CENTRAL_COOKING_REGIONS = Object.freeze(["Asura", "Karrnath", "Fittoa", "Shirone", "Ronoa"]);
   const COOKING_LEVELS = Object.freeze([
     { level: 0, title: "Untrained", bonus: 0, threshold: 0, benefit: "Basic camp meals only." },
@@ -187,7 +212,7 @@
       const match = String(entry.id || "").match(/-(\d+)$/);
       if (match) state.crafting.sequence = Math.max(state.crafting.sequence, Number(match[1]));
     });
-    state.schemaVersion = Math.max(6, Math.floor(numberValue(state.schemaVersion)));
+    state.schemaVersion = Math.max(7, Math.floor(numberValue(state.schemaVersion)));
     return state.crafting;
   }
 
@@ -576,6 +601,49 @@
     if (typeof value !== "string" || value.trim() === "") return 0;
     const parsed = Number(value);
     return Number.isFinite(parsed) ? parsed : 0;
+  }
+
+  function experienceForLevel(level) {
+    const normalized = Math.max(0, Math.min(MAX_CHARACTER_LEVEL, Math.floor(numberValue(level))));
+    return CHARACTER_XP_LEVELS[normalized].totalXp;
+  }
+
+  function characterExperienceProgress(value) {
+    const totalXp = Math.max(0, Math.min(MAX_CHARACTER_XP, Math.floor(numberValue(value))));
+    let tier = CHARACTER_XP_LEVELS[0];
+    CHARACTER_XP_LEVELS.forEach((candidate) => {
+      if (candidate.totalXp <= totalXp) tier = candidate;
+    });
+    const isMaxLevel = tier.level >= MAX_CHARACTER_LEVEL;
+    const currentXp = isMaxLevel ? 0 : totalXp - tier.totalXp;
+    const requiredXp = isMaxLevel ? 0 : tier.xpToNext;
+    const percent = isMaxLevel
+      ? 100
+      : Math.max(0, Math.min(100, requiredXp ? (currentXp / requiredXp) * 100 : 0));
+    return {
+      totalXp,
+      level: tier.level,
+      currentXp,
+      requiredXp,
+      nextLevel: isMaxLevel ? null : tier.level + 1,
+      percent,
+      isMaxLevel,
+      levels: CHARACTER_XP_LEVELS,
+    };
+  }
+
+  function normalizeCharacterProgression(state) {
+    if (!state || typeof state !== "object") return characterExperienceProgress(0);
+    if (!state.character || typeof state.character !== "object") state.character = {};
+    const hasStoredExperience = Object.prototype.hasOwnProperty.call(state.character, "experience") &&
+      Number.isFinite(Number(state.character.experience));
+    const totalXp = hasStoredExperience
+      ? state.character.experience
+      : experienceForLevel(state.character.level);
+    const progress = characterExperienceProgress(totalXp);
+    state.character.experience = progress.totalXp;
+    state.character.level = progress.level;
+    return progress;
   }
 
   function isBlank(value) {
@@ -2083,6 +2151,7 @@
   }
 
   function calculate(state, data) {
+    const experience = normalizeCharacterProgression(state);
     const itemIndex = firstItemIndex(data.items);
     const equippedItems = equipmentItems(state, data, itemIndex);
     const equipmentSums = {
@@ -2131,7 +2200,7 @@
       abilityCosts[key] = abilityCost(value);
     });
 
-    const level = numberValue(state.character?.level);
+    const level = experience.level;
     const proficiency = level + 1;
     const spellAbility = String(state.character?.spellcastingAbility || "AWR").toLowerCase();
     const spellKey = {
@@ -2297,6 +2366,7 @@
       classStats,
       allClassStats,
       proficiency,
+      experience,
       spellcastingModifier,
       stats: {
         maxHealth: classStats.maxHealth,
@@ -2368,6 +2438,8 @@
     setTrackedAilment,
     changeTrackedAilmentMark,
     normalizeSurvivalState,
+    normalizeCharacterProgression,
+    characterExperienceProgress,
     normalizeCookingState,
     normalizeCraftingState,
     calculateCrafting,
