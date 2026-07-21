@@ -7,7 +7,9 @@ export const catalogueDefinitions = Object.freeze([
   { key: "food_dishes", label: "Hearthcraft Dishes", singular: "dish" },
   { key: "food_ingredients", label: "Hearthcraft Ingredients", singular: "ingredient" },
   { key: "food_rules", label: "Hearthcraft Rules", singular: "rule" },
-  { key: "crafting_sections", label: "Crafting Sections", singular: "section" },
+  { key: "crafting_materials", label: "Crafting Materials", singular: "material" },
+  { key: "crafting_recipes", label: "Crafting Recipes", singular: "recipe" },
+  { key: "crafting_sections", label: "Legacy Crafting Sections", singular: "section" },
 ]);
 
 export function cloneDefaultCharacterState(name = "New Character") {
@@ -43,12 +45,49 @@ export function buildWorkbookCataloguePayload(rows) {
       rules: grouped.food_rules.map((row) => row.data),
     },
     crafting: {
+      materials: grouped.crafting_materials.map((row) => row.data),
+      recipes: grouped.crafting_recipes.map((row) => row.data),
       sections: grouped.crafting_sections.map((row) => row.data),
     },
   };
 }
 
 export function blankCatalogueEntry(category, reference) {
+  if (category === "crafting_materials") {
+    return {
+      id: "",
+      name: "",
+      rarity: "Common",
+      categoryTags: [],
+      effectTags: [],
+      regions: [],
+      sourceType: "Other",
+      source: "",
+      description: "",
+      signatureEffect: "",
+      maxStack: 99,
+    };
+  }
+  if (category === "crafting_recipes") {
+    return {
+      id: "",
+      name: "",
+      category: "Basic",
+      rarity: "Common",
+      discipline: "Fieldcraft",
+      requirementsText: "",
+      requirements: [],
+      dc: 40,
+      time: "4 hours",
+      batchYield: 1,
+      effect: "",
+      saveDc: null,
+      blueprintRequired: false,
+      attunement: false,
+      permanent: false,
+      project: false,
+    };
+  }
   if (category === "crafting_sections") {
     return { name: "", headers: [], rows: [] };
   }
