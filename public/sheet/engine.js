@@ -743,7 +743,7 @@
         evasion: Math.max(0, excelRoundDown(equipmentSums.evasion + speedModifier + bonuses.evasion, 0)),
         spellSave: 0,
         maxMana: bonuses.mana,
-        spellDamage: equipmentSums.magicalDamage + bonuses.spellDamage,
+        spellDamage: level + equipmentSums.magicalDamage + bonuses.spellDamage,
       };
     }
     const rule = CLASS_RULES[className] || CLASS_RULES.Rogue;
@@ -763,18 +763,7 @@
     const maxMana =
       excelMround(rule.manaRate * level ** 1.09414 * 10, 10) + bonuses.mana + rule.manaBase;
 
-    const fullSpellDamage =
-      proficiency + spellcastingModifier + equipmentSums.magicalDamage + bonuses.spellDamage;
-    let spellDamage;
-    if (rule.spellDamage === "half") {
-      spellDamage = excelRoundDown(fullSpellDamage / 2, 0);
-    } else if (rule.spellDamage === "cleric") {
-      spellDamage = proficiency + equipmentSums.magicalDamage + bonuses.spellDamage + 1;
-    } else if (rule.spellDamage === "equipmentOnly") {
-      spellDamage = equipmentSums.magicalDamage + bonuses.spellDamage;
-    } else {
-      spellDamage = fullSpellDamage;
-    }
+    const spellDamage = level + equipmentSums.magicalDamage + bonuses.spellDamage;
 
     return { maxHealth, armor, resistance, evasion, spellSave, maxMana, spellDamage };
   }
@@ -2241,7 +2230,7 @@
     });
 
     const physicalDamage = level + bonuses.physicalDamage + equipmentSums.physicalDamage;
-    const spellDamage = classStats.spellDamage + bonuses.spellDamage;
+    const spellDamage = classStats.spellDamage;
     const evasion = (classStats.evasion > 0 ? classStats.evasion : 0) + bonuses.evasion;
     // Armor and resistance bonuses are already included by calculateClassProfile.
     // Re-adding them here doubled the selected bonus, while Rogue resistance also
