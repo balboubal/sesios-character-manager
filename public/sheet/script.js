@@ -215,6 +215,9 @@
       if (path === "personality") {
         return engine.mergePersonalitySlots(defaultValue, suppliedValue);
       }
+      if (path === "otherSkills") {
+        return clone(Array.isArray(suppliedValue) ? suppliedValue : defaultValue);
+      }
       if (
         path === "hunger.days" ||
         path === "hearth.log" ||
@@ -1172,6 +1175,24 @@
         ? "is-full"
         : "";
 
+    const automaticOtherSkills = personality.rows
+      .filter((trait) => trait.benefit || trait.drawback)
+      .map(
+        (trait) =>
+          `<article class="other-skill-card is-trait"><div class="other-skill-card-head"><strong>${escapeHtml(trait.name)}</strong><span class="other-skill-source">Trait</span></div>${trait.benefit ? `<p><b>Benefit</b>${escapeHtml(trait.benefit)}</p>` : ""}${trait.drawback ? `<p class="is-drawback"><b>Drawback</b>${escapeHtml(trait.drawback)}</p>` : ""}</article>`,
+      )
+      .join("");
+    const manualOtherSkills = (state.otherSkills || [])
+      .map(
+        (entry, index) =>
+          `<article class="other-skill-card is-custom"><div class="other-skill-custom-head"><label class="visually-hidden" for="other-skill-name-${index}">Other skill name ${index + 1}</label><input id="other-skill-name-${index}" type="text" data-bind="otherSkills.${index}.name" value="${escapeHtml(entry.name)}" placeholder="Skill, feature, or reminder" /><button class="other-skill-remove" type="button" data-action="remove-other-skill" data-index="${index}" aria-label="Remove other skill ${index + 1}">×</button></div><label class="visually-hidden" for="other-skill-effect-${index}">Other skill effect ${index + 1}</label><textarea id="other-skill-effect-${index}" rows="2" data-bind="otherSkills.${index}.effect" placeholder="Effect, limitation, or reminder">${escapeHtml(entry.effect)}</textarea></article>`,
+      )
+      .join("");
+    const otherSkillsCount = (state.otherSkills || []).length;
+    const otherSkillsMarkup = automaticOtherSkills || manualOtherSkills
+      ? `${automaticOtherSkills}${manualOtherSkills}`
+      : `<div class="other-skills-empty">Trait effects and custom reminders will appear here.</div>`;
+
     const bonusFields = Object.entries(state.bonuses)
       .map(([key, value]) => field(titleCase(key), `bonuses.${key}`, value, { type: "number", step: key === "criticalChance" ? 0.01 : 1 }))
       .join("");
@@ -1255,7 +1276,7 @@
 
       <div class="layout-grid main-sidebar section-gap">
         <section class="panel equipment-panel"><div class="panel-heading"><h2>Equipment</h2><span class="heading-note">Equipped item bonuses</span></div><div class="panel-body"><div class="equipment-rows">${equipmentRows}</div></div></section>
-        <section class="panel"><div class="panel-heading blue"><h2>Saving Throws & Passives</h2></div><div class="panel-body"><div class="save-rows">${saveRows}</div><h3 class="subsection-title">Passive proficiency</h3><dl class="key-value-list"><div class="key-value-row"><dt>Passive Perception</dt><dd>${output("passives.perception", "integer")}</dd></div><div class="key-value-row"><dt>Passive Insight</dt><dd>${output("passives.insight", "integer")}</dd></div><div class="key-value-row"><dt>Passive Investigation</dt><dd>${output("passives.investigation", "integer")}</dd></div></dl></div></section>
+        <section class="panel saves-passives-panel"><div class="panel-heading blue"><h2>Saving Throws & Passives</h2></div><div class="panel-body"><div class="save-rows">${saveRows}</div><h3 class="subsection-title">Passive proficiency</h3><dl class="key-value-list"><div class="key-value-row"><dt>Passive Perception</dt><dd>${output("passives.perception", "integer")}</dd></div><div class="key-value-row"><dt>Passive Insight</dt><dd>${output("passives.insight", "integer")}</dd></div><div class="key-value-row"><dt>Passive Investigation</dt><dd>${output("passives.investigation", "integer")}</dd></div></dl><section class="other-skills-section" aria-labelledby="other-skills-heading"><div class="other-skills-header"><div><h3 id="other-skills-heading">Other Skills</h3><small>Trait effects appear automatically. Add custom features or reminders below.</small></div><button class="button button-small button-quiet" type="button" data-action="add-other-skill" ${otherSkillsCount >= 15 ? "disabled" : ""}>Add</button></div><div class="other-skills-grid">${otherSkillsMarkup}</div><div class="other-skills-limit">${otherSkillsCount} of 15 custom entries</div></section></div></section>
       </div>
 
       <div class="layout-grid two section-gap">
@@ -2938,6 +2959,28 @@
         message = `${item.name} equipped in ${label}.`;
       } else if (item) {
         message = `Add ${item.name} to the inventory before equipping it.`;
+      }
+    }
+    if (action === "add-other-skill") {
+      if (!Array.isArray(state.otherSkills)) state.otherSkills = [];
+      if (state.otherSkills.length >= 15) {
+        message = "A maximum of 15 custom Other Skills can be stored.";
+      } else {
+        state.otherSkills.push({ name: "", effect: "" });
+        changed = true;
+        message = "Other Skill reminder added.";
+      }
+    }
+    if (action === "remove-other-skill") {
+      const index = Number(button.dataset.index);
+      if (Array.isArray(state.otherSkills) && Number.isInteger(index) && index >= 0 && index < state.otherSkills.length) {
+        const entry = state.otherSkills[index];
+        const label = String(entry?.name || "").trim() || `Other Skill ${index + 1}`;
+        state.otherSkills.splice(index, 1);
+        changed = true;
+        message = `${label} removed.`;
+      } else {
+        message = "That Other Skill could not be removed.";
       }
     }
     if (action === "add-trait") {

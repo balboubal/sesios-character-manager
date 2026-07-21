@@ -19065,7 +19065,7 @@ window.AMUTSU_DATA = {
     "Crafting Catalogue": []
   },
   "defaultState": {
-    "schemaVersion": 7,
+    "schemaVersion": 8,
     "character": {
       "name": "",
       "race": "",
@@ -19123,6 +19123,7 @@ window.AMUTSU_DATA = {
         "cost": 0
       }
     ],
+    "otherSkills": [],
     "bonuses": {
       "physicalDamage": 0,
       "hitPoints": 0,
