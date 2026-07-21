@@ -19067,51 +19067,51 @@ window.AMUTSU_DATA = {
   "defaultState": {
     "schemaVersion": 6,
     "character": {
-      "name": "Zele Kopsffmann",
-      "race": "Human (Sesian)",
-      "className": "Rogue",
-      "age": 20,
-      "weight": 72,
-      "height": 180,
-      "background": "Charlatan (A)",
+      "name": "",
+      "race": "",
+      "className": "",
+      "age": "",
+      "weight": "",
+      "height": "",
+      "background": "",
       "eyes": "",
       "skin": "",
       "hair": "",
-      "features": "Forgery kit proficiency\nThieve's kit proficiency\nGaming set (Playing Cards) proficiency\nSimple weapons proficiency\nMarital weapons that have the finesse or light property proficiency\nExpertise: Gambling, Pick Pocketing",
-      "level": 2,
-      "currentHitPoints": 16,
+      "features": "",
+      "level": 0,
+      "currentHitPoints": 0,
       "temporaryHitPoints": 0,
       "currentMana": 0,
-      "currentFocus": 1,
-      "alignment": "Chaotic Evil",
+      "currentFocus": 0,
+      "alignment": "Unaligned",
       "sanctum": "None",
       "faith": "None",
       "spellcastingAbility": "AWR"
     },
     "abilityBonuses": {
-      "strength": 1,
-      "speed": 2,
-      "vitality": 1,
-      "intelligence": 1,
-      "awareness": 1,
-      "talent": 9
+      "strength": 0,
+      "speed": 0,
+      "vitality": 0,
+      "intelligence": 0,
+      "awareness": 0,
+      "talent": 0
     },
     "personality": [
       {
-        "name": "Greedy",
-        "cost": 10
+        "name": "",
+        "cost": 0
       },
       {
-        "name": "Deceitful",
-        "cost": 10
+        "name": "",
+        "cost": 0
       },
       {
-        "name": "Cynical",
-        "cost": 15
+        "name": "",
+        "cost": 0
       },
       {
-        "name": "Master Manipulator",
-        "cost": 35
+        "name": "",
+        "cost": 0
       },
       {
         "name": "",
@@ -19135,106 +19135,21 @@ window.AMUTSU_DATA = {
       "moveSpeed": 0
     },
     "equipment": {
-      "righthand": "Dagger",
-      "lefthand": "Dagger of the Viper",
+      "righthand": "",
+      "lefthand": "",
       "headgear": "",
-      "plate": "Vest of the Black Hand",
+      "plate": "",
       "footwear": "",
-      "trinket": "Imani's Pendant",
+      "trinket": "",
       "secondarytrinket": "",
       "necklace": ""
     },
-    "inventory": [
-      {
-        "name": "Forgery Kit",
-        "quantity": 1,
-        "equipped": false,
-        "weightOverride": null
-      },
-      {
-        "name": "Costume",
-        "quantity": 1,
-        "equipped": false,
-        "weightOverride": null
-      },
-      {
-        "name": "Fine clothes",
-        "quantity": 1,
-        "equipped": false,
-        "weightOverride": null
-      },
-      {
-        "name": "Zele's Luggage Chest",
-        "quantity": 1,
-        "equipped": false,
-        "weightOverride": 20
-      },
-      {
-        "name": "Noble’s satchel",
-        "quantity": 1,
-        "equipped": false,
-        "weightOverride": null
-      },
-      {
-        "name": "Zele's Book",
-        "quantity": 1,
-        "equipped": false,
-        "weightOverride": null
-      },
-      {
-        "name": "Coin of Many Faces",
-        "quantity": 1,
-        "equipped": false,
-        "weightOverride": null
-      },
-      {
-        "name": "Dagger",
-        "quantity": 1,
-        "equipped": false,
-        "weightOverride": null
-      },
-      {
-        "name": "Imani's Pendant",
-        "quantity": 1,
-        "equipped": false,
-        "weightOverride": null
-      },
-      {
-        "name": "Vest of the Black Hand",
-        "quantity": 1,
-        "equipped": false,
-        "weightOverride": null
-      },
-      {
-        "name": "Thieve's Kit",
-        "quantity": 1,
-        "equipped": false,
-        "weightOverride": null
-      },
-      {
-        "name": "Teddy Bear",
-        "quantity": 1,
-        "equipped": false,
-        "weightOverride": null
-      },
-      {
-        "name": "Leather Mage Robe",
-        "quantity": 1,
-        "equipped": false,
-        "weightOverride": null
-      },
-      {
-        "name": "Dagger of the Viper",
-        "quantity": 1,
-        "equipped": false,
-        "weightOverride": null
-      }
-    ],
+    "inventory": [],
     "currency": {
       "copper": 0,
-      "silver": 200,
-      "gold": 67,
-      "platinum": 10
+      "silver": 0,
+      "gold": 0,
+      "platinum": 0
     },
     "jewelry": [
       "",
@@ -19250,8 +19165,8 @@ window.AMUTSU_DATA = {
     ],
     "activeEffects": [
       {
-        "status": "Blood Mark",
-        "duration": "Will not wear off",
+        "status": "",
+        "duration": "",
         "ailment": "",
         "mark": ""
       },
@@ -19319,11 +19234,11 @@ window.AMUTSU_DATA = {
         "bonus": 0
       },
       "34": {
-        "proficient": true,
+        "proficient": false,
         "bonus": 0
       },
       "35": {
-        "proficient": true,
+        "proficient": false,
         "bonus": 0
       },
       "36": {
@@ -19331,11 +19246,11 @@ window.AMUTSU_DATA = {
         "bonus": 0
       },
       "37": {
-        "proficient": true,
+        "proficient": false,
         "bonus": 0
       },
       "38": {
-        "proficient": true,
+        "proficient": false,
         "bonus": 0
       },
       "39": {
@@ -19347,7 +19262,7 @@ window.AMUTSU_DATA = {
         "bonus": 0
       },
       "41": {
-        "proficient": true,
+        "proficient": false,
         "bonus": 0
       },
       "42": {
@@ -19431,7 +19346,7 @@ window.AMUTSU_DATA = {
         "bonus": 0
       },
       "64": {
-        "proficient": true,
+        "proficient": false,
         "bonus": 0
       },
       "65": {
@@ -19487,7 +19402,7 @@ window.AMUTSU_DATA = {
         "bonus": 0
       },
       "79": {
-        "proficient": true,
+        "proficient": false,
         "bonus": 0
       },
       "80": {
@@ -19571,19 +19486,19 @@ window.AMUTSU_DATA = {
         "bonus": 0
       },
       "101": {
-        "proficient": true,
+        "proficient": false,
         "bonus": 0
       },
       "102": {
-        "proficient": true,
+        "proficient": false,
         "bonus": 0
       },
       "103": {
-        "proficient": true,
+        "proficient": false,
         "bonus": 0
       },
       "104": {
-        "proficient": true,
+        "proficient": false,
         "bonus": 0
       },
       "105": {
@@ -19615,7 +19530,7 @@ window.AMUTSU_DATA = {
         "bonus": 0
       },
       "112": {
-        "proficient": true,
+        "proficient": false,
         "bonus": 0
       },
       "113": {
@@ -19633,7 +19548,7 @@ window.AMUTSU_DATA = {
         "bonus": 0
       },
       "speed": {
-        "proficient": true,
+        "proficient": false,
         "bonus": 0
       },
       "vitality": {
@@ -19641,7 +19556,7 @@ window.AMUTSU_DATA = {
         "bonus": 0
       },
       "intelligence": {
-        "proficient": true,
+        "proficient": false,
         "bonus": 0
       },
       "awareness": {
@@ -21449,328 +21364,36 @@ window.AMUTSU_DATA = {
       "multiplier": 1,
       "accuracyAbility": "STR",
       "accuracyDebuff": 0,
-      "rollCount": 2,
+      "rollCount": 0,
       "rolls": [
-        50,
-        50,
+        "",
+        "",
         "",
         "",
         "",
         "",
         ""
       ],
-      "criticalRoll": 79
+      "criticalRoll": ""
     },
     "hunger": {
-      "startingRations": 1,
-      "currentDay": 2,
+      "startingRations": 0,
+      "currentDay": 1,
       "foodGainedToday": 0,
-      "eatRationToday": true,
-      "days": [
-        {
-          "day": 1,
-          "foodGained": 3,
-          "rationsEaten": 1
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        },
-        {
-          "day": "",
-          "foodGained": "",
-          "rationsEaten": ""
-        }
-      ],
+      "eatRationToday": false,
+      "days": [],
       "hearthMealsEatenToday": 0
     },
     "hearth": {
       "restCycle": 1,
       "selectedDish": "",
-      "log": [
-        {
-          "rest": 1,
-          "day": 1,
-          "dish": "Hushback Silver-Reed Broth",
-          "eaten": true,
-          "boonUsed": true
-        },
-        {
-          "rest": "",
-          "day": "",
-          "dish": "",
-          "eaten": false,
-          "boonUsed": false
-        },
-        {
-          "rest": "",
-          "day": "",
-          "dish": "",
-          "eaten": false,
-          "boonUsed": false
-        },
-        {
-          "rest": "",
-          "day": "",
-          "dish": "",
-          "eaten": false,
-          "boonUsed": false
-        },
-        {
-          "rest": "",
-          "day": "",
-          "dish": "",
-          "eaten": false,
-          "boonUsed": false
-        },
-        {
-          "rest": "",
-          "day": "",
-          "dish": "",
-          "eaten": false,
-          "boonUsed": false
-        },
-        {
-          "rest": "",
-          "day": "",
-          "dish": "",
-          "eaten": false,
-          "boonUsed": false
-        },
-        {
-          "rest": "",
-          "day": "",
-          "dish": "",
-          "eaten": false,
-          "boonUsed": false
-        },
-        {
-          "rest": "",
-          "day": "",
-          "dish": "",
-          "eaten": false,
-          "boonUsed": false
-        },
-        {
-          "rest": "",
-          "day": "",
-          "dish": "",
-          "eaten": false,
-          "boonUsed": false
-        },
-        {
-          "rest": "",
-          "day": "",
-          "dish": "",
-          "eaten": false,
-          "boonUsed": false
-        },
-        {
-          "rest": "",
-          "day": "",
-          "dish": "",
-          "eaten": false,
-          "boonUsed": false
-        },
-        {
-          "rest": "",
-          "day": "",
-          "dish": "",
-          "eaten": false,
-          "boonUsed": false
-        },
-        {
-          "rest": "",
-          "day": "",
-          "dish": "",
-          "eaten": false,
-          "boonUsed": false
-        },
-        {
-          "rest": "",
-          "day": "",
-          "dish": "",
-          "eaten": false,
-          "boonUsed": false
-        },
-        {
-          "rest": "",
-          "day": "",
-          "dish": "",
-          "eaten": false,
-          "boonUsed": false
-        },
-        {
-          "rest": "",
-          "day": "",
-          "dish": "",
-          "eaten": false,
-          "boonUsed": false
-        },
-        {
-          "rest": "",
-          "day": "",
-          "dish": "",
-          "eaten": false,
-          "boonUsed": false
-        },
-        {
-          "rest": "",
-          "day": "",
-          "dish": "",
-          "eaten": false,
-          "boonUsed": false
-        },
-        {
-          "rest": "",
-          "day": "",
-          "dish": "",
-          "eaten": false,
-          "boonUsed": false
-        }
-      ],
+      "log": [],
       "acquired": {
         "Lysael Glassfin Parcels": 0,
         "Vellhorn Cloud Curd": 0,
         "Brumox Winter Pot": 0,
         "Hrimchar Smoke-Cakes": 0,
-        "Hushback Silver-Reed Broth": 3,
+        "Hushback Silver-Reed Broth": 0,
         "Telleth Bellbread ⚠": 0,
         "Duskhide Marrow Tartine": 0,
         "Blackwake Vigil Soup": 0,
@@ -21851,6 +21474,14 @@ window.AMUTSU_DATA = {
         "awakeningComplete": false,
         "notes": ""
       }
+    },
+    "abilityBaseScores": {
+      "strength": 0,
+      "speed": 0,
+      "vitality": 0,
+      "intelligence": 0,
+      "awareness": 0,
+      "talent": 0
     }
   }
 };

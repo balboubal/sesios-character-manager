@@ -3,7 +3,7 @@
 
   const data = window.AMUTSU_DATA;
   const engine = window.AmutsuEngine;
-  const storageKey = "amutsu-character-sheet:v1";
+  const storageKey = "amutsu-character-sheet:v2";
   const query = new URLSearchParams(window.location.search);
   const embedded = query.get("embedded") === "1" && window.parent !== window;
   const characterId = String(query.get("characterId") || "").trim();
@@ -229,6 +229,14 @@
       );
     }
     if (defaultValue && typeof defaultValue === "object") {
+      if (
+        path === "abilityBaseScores" &&
+        (!suppliedValue || typeof suppliedValue !== "object" || Array.isArray(suppliedValue))
+      ) {
+        // Legacy online characters predate per-character base rolls. Leaving this
+        // undefined makes the engine use the original workbook bases for them.
+        return undefined;
+      }
       const supplied = suppliedValue && typeof suppliedValue === "object" ? suppliedValue : {};
       const merged = {};
       Object.keys(defaultValue).forEach((key) => {
@@ -1108,7 +1116,10 @@
         const score = derived.abilityScores[ability.id];
         const modifier = derived.abilityModifiers[ability.id];
         const cost = derived.abilityCosts[ability.id];
-        return `<article class="ability-card"><div class="ability-top"><div class="ability-identity">${abilityIcon(ability.id)}<div class="ability-name"><span class="ability-abbr">${escapeHtml(ability.abbr)}</span><h3>${escapeHtml(ability.label)}</h3></div></div><strong class="ability-score" data-output="abilityScores.${ability.id}" data-score-band="${abilityScoreBand(score)}">${formatOutput(score, "integer")}</strong></div><div class="ability-meta"><div class="field"><label for="ability-${ability.id}">Bonus</label><input id="ability-${ability.id}" class="number-input" type="number" step="1" data-value-type="number" data-bind="abilityBonuses.${ability.id}" value="${escapeHtml(state.abilityBonuses[ability.id])}" /></div><div class="ability-modifier"><small>Mod</small><strong data-output="abilityModifiers.${ability.id}" data-format="signed">${formatOutput(modifier, "signed")}</strong></div></div><small class="field-hint">Base ${ability.base} · Cost ${Number.isNaN(cost) ? "#N/A" : cost}</small></article>`;
+        const storedBase = state.abilityBaseScores && Object.hasOwn(state.abilityBaseScores, ability.id)
+          ? state.abilityBaseScores[ability.id]
+          : ability.base;
+        return `<article class="ability-card"><div class="ability-top"><div class="ability-identity">${abilityIcon(ability.id)}<div class="ability-name"><span class="ability-abbr">${escapeHtml(ability.abbr)}</span><h3>${escapeHtml(ability.label)}</h3></div></div><strong class="ability-score" data-output="abilityScores.${ability.id}" data-score-band="${abilityScoreBand(score)}">${formatOutput(score, "integer")}</strong></div><div class="ability-meta"><div class="field"><label for="ability-${ability.id}">Bonus</label><input id="ability-${ability.id}" class="number-input" type="number" step="1" data-value-type="number" data-bind="abilityBonuses.${ability.id}" value="${escapeHtml(state.abilityBonuses[ability.id])}" /></div><div class="ability-modifier"><small>Mod</small><strong data-output="abilityModifiers.${ability.id}" data-format="signed">${formatOutput(modifier, "signed")}</strong></div></div><small class="field-hint">Base ${escapeHtml(storedBase)} · Cost ${Number.isNaN(cost) ? "#N/A" : cost}</small></article>`;
       })
       .join("");
 
@@ -1171,7 +1182,7 @@
       <section class="hero-record" aria-labelledby="identity-heading"><div class="hero-grid"><div class="identity-title"><p class="overline">Active Character</p><h2 id="identity-heading">${escapeHtml(character.name || "Unnamed Character")}</h2><p>${escapeHtml(character.race || "Unknown race")} · Level ${escapeHtml(character.level)} ${escapeHtml(character.className)}</p></div><div class="identity-fields">
         ${field("Name", "character.name", character.name)}
         ${field("Race", "character.race", character.race)}
-        ${field("Class", "character.className", character.className, { type: "select", options: data.classes.map((profile) => profile.name) })}
+        ${field("Class", "character.className", character.className, { type: "select", options: data.classes.map((profile) => profile.name), placeholder: "Choose class" })}
         ${field("Age", "character.age", character.age, { type: "number", min: 0, step: 1 })}
         ${field("Weight (kg)", "character.weight", character.weight, { type: "number", min: 0, step: 0.1 })}
         ${field("Height (cm)", "character.height", character.height, { type: "number", min: 0, step: 0.1 })}
@@ -3000,11 +3011,22 @@
       resetDialog.showModal();
       return;
     }
-    if (window.confirm("Reset every editable field to the original character values?")) resetState();
+    if (window.confirm("Reset this character to its creation state? The name and original base ability rolls will be preserved.")) resetState();
   }
 
   function resetState() {
+    const preservedName = String(state.character?.name || "").trim();
+    const preservedBaseScores = {};
+    data.abilityDefinitions.forEach((ability) => {
+      const hasStoredBase = state.abilityBaseScores && Object.hasOwn(state.abilityBaseScores, ability.id);
+      preservedBaseScores[ability.id] = hasStoredBase
+        ? engine.numberValue(state.abilityBaseScores[ability.id])
+        : ability.base;
+    });
+
     state = clone(data.defaultState);
+    state.character.name = preservedName;
+    state.abilityBaseScores = preservedBaseScores;
     recalculate();
     if (!embedded) {
       try {
@@ -3015,7 +3037,7 @@
     }
     scheduleSave();
     renderRoute();
-    showToast("Original character values restored.", "success");
+    showToast("Character reset to the original name and base ability rolls.", "success");
   }
 
   function showToast(message, type) {
