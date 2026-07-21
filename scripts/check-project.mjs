@@ -37,6 +37,7 @@ const requiredFiles = [
   "supabase/migrations/20260721000000_hearthcraft_cooking_metadata.sql",
   "supabase/migrations/20260721001000_hearthcraft_ingredient_catalogue.sql",
   "supabase/migrations/20260721002000_hearthcraft_ingredient_pantry_and_region_rules.sql",
+  "supabase/migrations/20260721003000_crafters_ledger_overhaul.sql",
   "supabase/functions/invite-player/index.ts",
   "README.md",
 ];
@@ -58,7 +59,7 @@ assert.equal(workbook.food.cooking.levels.length, 6, "Cooking progression must i
 assert.equal(workbook.food.cooking.kit.bonus, 25, "Cooking Kit bonus must remain +25");
 assert.equal(workbook.food.cooking.kit.cost, 20, "Cooking Kit must cost 20 GP");
 assert.equal(workbook.food.cooking.kit.costUnit, "GP", "Cooking Kit price unit must be GP");
-assert.equal(workbook.defaultState.schemaVersion, 5, "Ingredient-pantry rules require schema 5");
+assert.equal(workbook.defaultState.schemaVersion, 6, "The Crafter's Ledger requires schema 6");
 assert.equal(workbook.defaultState.cooking.homeRegion, "Asura", "Cooking home region must have a valid default");
 assert.equal(Object.keys(workbook.defaultState.cooking.ingredientPantry).length, 0, "Ingredient pantry must start empty");
 assert.equal(workbook.defaultState.cooking.cookingKitOwned, false, "Cooking Kit ownership must start false");
@@ -69,6 +70,14 @@ assert.equal(workbook.food.ingredients.length, 115, "The complete Hearthcraft in
 assert.ok(workbook.food.ingredients.some((entry) => entry.name === "Charcoal Root" && entry.region === "Fittoa"), "Fittoan ingredient reference is missing");
 assert.ok(workbook.food.ingredients.some((entry) => entry.name === "Bellfin Salt" && entry.category === "Fishery Product"), "Fishery product reference is missing");
 assert.ok(workbook.food.dishes.every((dish) => Array.isArray(dish.ingredients) && dish.ingredients.length), "Every Hearthcraft dish must link to key ingredients");
+assert.equal(workbook.crafting.materials.length, 99, "The Crafter's Ledger must include 99 material records");
+assert.equal(workbook.crafting.recipes.length, 91, "The Crafter's Ledger must include 91 recipes");
+assert.equal(workbook.crafting.legendaryConcepts.length, 7, "The Crafter's Ledger must include seven Legendary concepts");
+assert.ok(workbook.defaultState.crafting, "Default crafting state is missing");
+assert.equal(Object.keys(workbook.defaultState.crafting.materialInventory).length, 0, "Crafting material inventory must start empty");
+assert.deepEqual(JSON.parse(JSON.stringify(workbook.defaultState.crafting.legendaryProject)), { conceptId: "", customName: "", designComplete: false, assemblyComplete: false, awakeningComplete: false, notes: "" }, "Legendary Project tracker defaults are incomplete");
+assert.equal(workbook.crafting.recipes.every((recipe) => Array.isArray(recipe.requirements) && recipe.requirements.length >= 1 && recipe.requirements.length <= 4), true, "Every recipe must use one to four concise material requirement lines");
+assert.ok(workbook.crafting.recipes.some((recipe) => recipe.blueprintRequired && recipe.rarity === "Rare"), "Rare recipe blueprint rules are missing");
 
 const bridge = fs.readFileSync(path.join(root, "public/sheet/script.js"), "utf8");
 assert.match(bridge, /amutsu:state-change/, "Online character save bridge is missing");
@@ -98,6 +107,21 @@ assert.match(bridge, /renderIngredientCard/, "Ingredient catalogue cards are mis
 assert.match(bridge, /data-action="show-ingredient"/, "Dish-to-ingredient navigation is missing");
 assert.match(bridge, /data-food-results="ingredients"/, "Ingredient filter results container is missing");
 assert.match(bridge, /path === "cooking\.history"/, "Dynamic Cooking history persistence hook is missing");
+assert.match(bridge, /The Crafter's Ledger/, "Interactive Crafter's Ledger page is missing");
+assert.match(bridge, /Crafting Station/, "Crafting Station is missing");
+assert.match(bridge, /Recover One Material/, "Material recovery workflow is missing");
+assert.match(bridge, /roll-crafting-check/, "Crafting Check action is missing");
+assert.match(bridge, /record-crafting-result/, "Crafting result recording is missing");
+assert.match(bridge, /record-crafting-recovery/, "Recovered material recording is missing");
+assert.match(bridge, /data-crafting-requirement/, "Recipe material selectors are missing");
+assert.match(bridge, /data-crafting-blueprint/, "Blueprint ownership controls are missing");
+assert.match(bridge, /undo-crafting/, "Crafting ledger undo is missing");
+assert.match(bridge, /path === "crafting\.materialInventory"/, "Dynamic crafting material inventory persistence hook is missing");
+assert.match(bridge, /path === "crafting\.knownBlueprints"/, "Dynamic blueprint persistence hook is missing");
+assert.match(bridge, /path === "crafting\.history"/, "Dynamic crafting history persistence hook is missing");
+assert.match(bridge, /Legendary Project Tracker/, "Legendary project tracker is missing");
+assert.match(bridge, /data-legendary-project-control/, "Legendary project stage controls are missing");
+assert.match(bridge, /clear-legendary-project/, "Legendary project reset control is missing");
 assert.match(bridge, /data-ailment-select/, "Dedicated ailment selectors are missing");
 assert.match(
   bridge,
@@ -205,10 +229,21 @@ assert.match(stylesheet, /\.ingredient-pantry-panel \.panel-body\s*\{/, "Ingredi
 assert.match(stylesheet, /\.utensil-checkbox-grid\s*\{/, "Specialty utensil ownership styling is missing");
 assert.match(stylesheet, /\.difficulty-rare\s*\{/, "Rare or dangerous purple styling is missing");
 assert.match(stylesheet, /\.difficulty-masterwork\s*\{/, "Legendary Masterchef gold styling is missing");
+assert.match(stylesheet, /\.crafting-tabs\s*\{/, "Crafter's Ledger tab styling is missing");
+assert.match(stylesheet, /\.crafting-station-grid\s*\{/, "Crafting Station layout styling is missing");
+assert.match(stylesheet, /\.crafting-material-grid[\s,]/, "Crafting material catalogue styling is missing");
+assert.match(stylesheet, /\.crafting-recipe-grid[\s,]/, "Crafting recipe catalogue styling is missing");
+assert.match(stylesheet, /\.crafting-recovery-grid\s*\{/, "Crafting recovery layout styling is missing");
+assert.match(stylesheet, /\.crafting-project-tracker\s*\{/, "Legendary project tracker styling is missing");
+assert.match(stylesheet, /\.crafting-project-stage-list\s*\{/, "Legendary project stage styling is missing");
 
 const workbookSource = fs.readFileSync(path.join(root, "src/workbook.js"), "utf8");
 assert.match(workbookSource, /food_ingredients/, "DM-editable Hearthcraft Ingredients catalogue is missing");
 assert.match(workbookSource, /ingredients: grouped\.food_ingredients/, "Ingredient catalogue payload bridge is missing");
+assert.match(workbookSource, /crafting_materials/, "DM-editable Crafting Materials catalogue is missing");
+assert.match(workbookSource, /crafting_recipes/, "DM-editable Crafting Recipes catalogue is missing");
+assert.match(workbookSource, /materials: grouped\.crafting_materials/, "Crafting material payload bridge is missing");
+assert.match(workbookSource, /recipes: grouped\.crafting_recipes/, "Crafting recipe payload bridge is missing");
 
 const portalSource = fs.readFileSync(path.join(root, "src/main.js"), "utf8");
 assert.match(portalSource, /data-action="bulk-import-items"/, "Item bulk-import action is missing");
@@ -219,6 +254,10 @@ assert.match(portalSource, /normalizeDishCatalogueData/, "Hearthcraft dish metad
 assert.match(portalSource, /Rare or Dangerous override/, "DM rare or dangerous checkbox is missing");
 assert.match(portalSource, /Masterchef Dish · Legendary/, "DM Legendary Masterchef checkbox is missing");
 assert.match(portalSource, /catalogueSelectField\(key, "Specialty Utensil"/, "Fixed Hearthcraft metadata must use dropdown controls");
+assert.match(portalSource, /normalizeCraftingMaterialData/, "Crafting Material editor normalization is missing");
+assert.match(portalSource, /normalizeCraftingRecipeData/, "Crafting Recipe editor normalization is missing");
+assert.match(portalSource, /parseCraftingRequirementsText/, "Simple recipe requirement parsing is missing");
+assert.match(portalSource, /Materials Required/, "Crafting Recipe material input is missing");
 const portalStylesheet = fs.readFileSync(path.join(root, "src/styles.css"), "utf8");
 assert.match(portalSource, /handleAuthStateChange/, "Auth-event gating is missing");
 assert.match(portalSource, /document\.addEventListener\("visibilitychange"/, "Return-to-tab update checks are missing");
@@ -461,7 +500,7 @@ legacySurvivalState.activeEffects[1].mark = "Mark 2";
 delete legacySurvivalState.survivalHistory;
 delete legacySurvivalState.survivalHistorySequence;
 survivalEngine.normalizeSurvivalState(legacySurvivalState);
-assert.equal(legacySurvivalState.schemaVersion, 5, "Legacy survival state must migrate to schema 5");
+assert.equal(legacySurvivalState.schemaVersion, 6, "Legacy state must migrate to schema 6");
 assert.equal(legacySurvivalState.hunger.days.length, 1, "Blank legacy hunger rows must be removed");
 assert.equal(legacySurvivalState.hearth.log.length, 1, "Blank legacy meal rows must be removed");
 assert.equal(legacySurvivalState.hunger.currentDay, 2);
@@ -472,7 +511,7 @@ assert.equal(legacySurvivalState.survivalHistory.length, 3, "Legacy day, meal, a
 
 function createActionState() {
   const state = JSON.parse(JSON.stringify(workbook.defaultState));
-  state.schemaVersion = 5;
+  state.schemaVersion = 6;
   state.character.className = "Wizard";
   state.character.currentHitPoints = 12;
   state.character.temporaryHitPoints = 9;
@@ -967,6 +1006,101 @@ assert.equal(
   "Master Cook cannot reroll twice in the same rest",
 );
 
+
+const craftingEngine = context.window.AmutsuEngine;
+const craftingState = JSON.parse(JSON.stringify(workbook.defaultState));
+craftingEngine.normalizeCraftingState(craftingState);
+assert.equal(craftingState.schemaVersion, 6);
+craftingEngine.changeCraftingMaterial(craftingState, "MAT-001", 1);
+craftingEngine.changeCraftingMaterial(craftingState, "MAT-008", 1);
+craftingState.crafting.disciplineBonuses.Fieldcraft = 10;
+craftingState.crafting.ownedToolKits.Fieldcraft = true;
+let craftingPreview = craftingEngine.previewCraftingCheck(craftingState, workbook, {
+  recipeId: "BSC-01",
+  selections: { 0: "MAT-001", 1: "MAT-008" },
+  assistant: false,
+  workshop: false,
+});
+assert.equal(craftingPreview.canAttempt, true, "Owned matching bundles must unlock a recipe");
+assert.equal(craftingPreview.dc, 40);
+assert.equal(craftingPreview.modifier, 35, "Discipline and correct tool kit bonuses must combine");
+let craftingRoll = craftingEngine.rollCraftingCheck(craftingState, workbook, craftingPreview.config, () => 0.49);
+assert.equal(craftingRoll.outcome, "strong-success");
+assert.equal(craftingRoll.outputQuantity, 2, "A strong consumable craft must create one extra unit");
+let craftingRecord = craftingEngine.recordCraftingResult(craftingState, workbook, craftingRoll);
+assert.equal(craftingRecord.accepted, true);
+assert.equal(craftingState.crafting.materialInventory["MAT-001"], undefined);
+assert.equal(craftingState.crafting.materialInventory["MAT-008"], undefined);
+assert.equal(craftingState.inventory.find((entry) => entry.name === "Ammunition Bundle")?.quantity, 2);
+assert.equal(craftingEngine.undoLastCraftingAction(craftingState).accepted, true);
+assert.equal(craftingState.crafting.materialInventory["MAT-001"], 1);
+assert.equal(craftingState.crafting.materialInventory["MAT-008"], 1);
+assert.equal(craftingState.inventory.some((entry) => entry.name === "Ammunition Bundle"), false);
+
+const normalFailureState = JSON.parse(JSON.stringify(workbook.defaultState));
+craftingEngine.changeCraftingMaterial(normalFailureState, "MAT-001", 1);
+craftingEngine.changeCraftingMaterial(normalFailureState, "MAT-008", 1);
+craftingRoll = craftingEngine.rollCraftingCheck(normalFailureState, workbook, {
+  recipeId: "BSC-01",
+  selections: { 0: "MAT-001", 1: "MAT-008" },
+}, () => 0.3);
+assert.equal(craftingRoll.outcome, "failure");
+craftingEngine.recordCraftingResult(normalFailureState, workbook, craftingRoll);
+assert.equal(normalFailureState.crafting.materialInventory["MAT-001"], 1, "Normal failure must preserve materials");
+assert.equal(normalFailureState.crafting.materialInventory["MAT-008"], 1, "Normal failure must preserve materials");
+
+const majorFailureState = JSON.parse(JSON.stringify(workbook.defaultState));
+craftingEngine.changeCraftingMaterial(majorFailureState, "MAT-001", 1);
+craftingEngine.changeCraftingMaterial(majorFailureState, "MAT-008", 1);
+craftingRoll = craftingEngine.rollCraftingCheck(majorFailureState, workbook, {
+  recipeId: "BSC-01",
+  selections: { 0: "MAT-001", 1: "MAT-008" },
+}, () => 0.1);
+assert.equal(craftingRoll.outcome, "major-failure");
+craftingEngine.recordCraftingResult(majorFailureState, workbook, craftingRoll);
+assert.equal(
+  Number(majorFailureState.crafting.materialInventory["MAT-001"] || 0) + Number(majorFailureState.crafting.materialInventory["MAT-008"] || 0),
+  1,
+  "Failure by 20+ must lose exactly one Common or Uncommon bundle",
+);
+
+const blueprintState = JSON.parse(JSON.stringify(workbook.defaultState));
+craftingEngine.changeCraftingMaterial(blueprintState, "MAT-001", 1);
+craftingEngine.changeCraftingMaterial(blueprintState, "MAT-029", 1);
+craftingPreview = craftingEngine.previewCraftingCheck(blueprintState, workbook, {
+  recipeId: "UTL-02",
+  selections: { 0: "MAT-001", 1: "MAT-029" },
+});
+assert.equal(craftingPreview.blueprintRequired, true);
+assert.equal(craftingPreview.canAttempt, false);
+assert.match(craftingPreview.lockReason, /blueprint/i);
+craftingEngine.setCraftingBlueprint(blueprintState, "UTL-02", true);
+craftingPreview = craftingEngine.previewCraftingCheck(blueprintState, workbook, {
+  recipeId: "UTL-02",
+  selections: { 0: "MAT-001", 1: "MAT-029" },
+});
+assert.equal(craftingPreview.canAttempt, true, "Known blueprint and sufficient cumulative bundles must unlock a Rare recipe");
+
+const projectState = JSON.parse(JSON.stringify(workbook.defaultState));
+craftingPreview = craftingEngine.previewCraftingCheck(projectState, workbook, { recipeId: "SCR-05" });
+assert.equal(craftingPreview.project, true);
+assert.equal(craftingPreview.canAttempt, false, "Legendary projects must not use a normal one-roll craft");
+
+const recoveryState = JSON.parse(JSON.stringify(workbook.defaultState));
+let recoveryRoll = craftingEngine.rollCraftingRecovery(recoveryState, {
+  bonus: 0,
+  help: false,
+  maximumRarity: "Rare",
+  sourceLabel: "Ruined laboratory",
+}, () => 0.99);
+assert.equal(recoveryRoll.rarity, "Rare", "Natural 96-100 must respect the source rarity cap");
+const uniqueRecoveryRoll = craftingEngine.rollCraftingRecovery(recoveryState, { bonus: 20, maximumRarity: "Unique", sourceLabel: "Named mythic creature" }, () => 0.99);
+assert.equal(uniqueRecoveryRoll.rarity, "Unique", "A 111+ result from a Unique source must support a Unique bundle");
+let recoveryRecord = craftingEngine.recordCraftingRecovery(recoveryState, workbook, recoveryRoll, "MAT-015");
+assert.equal(recoveryRecord.accepted, true);
+assert.equal(recoveryState.crafting.materialInventory["MAT-015"], 1);
+assert.equal(craftingEngine.undoLastCraftingAction(recoveryState).accepted, true);
+assert.equal(recoveryState.crafting.materialInventory["MAT-015"], undefined);
 
 const spreadsheetPaste = [
   "Item\tRarity\tType\tPhys Dmg\tMag Dmg\tCR%\tSTR\tSPD\tWeight\tValue\tGoldMulti\tTags",
