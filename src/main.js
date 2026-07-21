@@ -611,7 +611,11 @@ function renderCatalogueModal() {
   const row = application.modal.row;
   const data = application.catalogueCategory === "food_dishes"
     ? normalizeDishCatalogueData(application.modal.data)
-    : application.modal.data;
+    : application.catalogueCategory === "crafting_materials"
+      ? normalizeCraftingMaterialData(application.modal.data)
+      : application.catalogueCategory === "crafting_recipes"
+        ? normalizeCraftingRecipeData(application.modal.data)
+        : application.modal.data;
   const fields = Object.entries(data).map(([key, value]) => renderCatalogueField(key, value)).join("");
   return `
     <div class="modal-backdrop" data-action="close-modal">
@@ -765,12 +769,242 @@ function normalizeDishCatalogueData(value) {
   };
 }
 
+const CRAFTING_RARITIES = Object.freeze(["Common", "Uncommon", "Rare", "Very Rare", "Legendary", "Unique"]);
+const CRAFTING_CATEGORIES = Object.freeze(["Basic", "Bomb", "Potion", "Salve", "Coating", "Scroll", "Ink", "Weapon", "Armor", "Shield", "Utility", "Legendary"]);
+const CRAFTING_DISCIPLINES = Object.freeze(["Alchemy", "Forgecraft", "Runecraft", "Scribing", "Fieldcraft"]);
+const CRAFTING_TIMES = Object.freeze([
+  "Short rest",
+  "4 hr",
+  "4 hours",
+  "1 day",
+  "2 days",
+  "3 days",
+  "4 days",
+  "7 days",
+  "10 days",
+  "Project",
+  "Three narrative stages",
+]);
+const CRAFTING_PRIMARY_TAGS = Object.freeze(["Metal", "Hide", "Bone", "Wood", "Fiber", "Stone", "Glass", "Gem", "Organic", "Essence", "Ink", "Salvage"]);
+const CRAFTING_EFFECT_TAGS = Object.freeze(["Acid", "Air", "Arcane", "Ash", "Blood", "Cold", "Death", "Divine", "Elemental", "Fey", "Fire", "Force", "Illusion", "Life", "Lightning", "Memory", "Mind", "Necrotic", "Poison", "Radiant", "Resonance", "Shadow", "Soul", "Space", "Spirit", "Storm", "Time", "Venom", "Void", "Ward", "Water"]);
+
+function normalizeStringList(value) {
+  if (Array.isArray(value)) return [...new Set(value.map((entry) => String(entry || "").trim()).filter(Boolean))];
+  return [...new Set(String(value || "").split(/\n|,/).map((entry) => entry.trim()).filter(Boolean))];
+}
+
+function normalizeCraftingMaterialData(value) {
+  const data = value && typeof value === "object" ? structuredClone(value) : {};
+  return {
+    id: String(data.id || ""),
+    name: String(data.name || ""),
+    rarity: CRAFTING_RARITIES.includes(data.rarity) ? data.rarity : "Common",
+    categoryTags: normalizeStringList(data.categoryTags),
+    effectTags: normalizeStringList(data.effectTags),
+    regions: normalizeStringList(data.regions),
+    sourceType: String(data.sourceType || "Other"),
+    source: String(data.source || ""),
+    description: String(data.description || ""),
+    signatureEffect: String(data.signatureEffect || ""),
+    maxStack: Math.max(1, Math.floor(Number(data.maxStack || 99))),
+  };
+}
+
+function craftingCatalogueMaterials() {
+  return application.catalogues
+    .filter((row) => row.category === "crafting_materials")
+    .map((row) => row.data)
+    .filter((entry) => entry && typeof entry === "object");
+}
+
+function normalizeCraftingPhrase(value) {
+  return String(value || "")
+    .replace(/[–—]/g, "-")
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+function craftingRequirementAlternative(label, materials) {
+  let phrase = normalizeCraftingPhrase(label);
+  let minRarity = "Common";
+  for (const rarity of ["Very Rare", "Legendary", "Rare", "Uncommon"]) {
+    if (phrase.toLowerCase().startsWith(`${rarity.toLowerCase()} `)) {
+      minRarity = rarity;
+      phrase = phrase.slice(rarity.length).trim();
+      break;
+    }
+  }
+  phrase = phrase
+    .replace(/-tag\b/gi, "")
+    .replace(/\bdust\b/gi, "")
+    .replace(/\bchosen\b/gi, "")
+    .trim();
+
+  const normalized = phrase.toLowerCase();
+  const exact = materials.find((material) => {
+    const names = [material.id, material.name].map((entry) => String(entry || "").trim().toLowerCase());
+    return names.includes(normalized);
+  });
+  if (exact) {
+    return { minRarity, named: true, alternative: { materialIds: [exact.id], tags: [] } };
+  }
+
+  const aliasTags = {
+    "healing herb": ["Life", "Organic"],
+    "purifying material": ["Ward"],
+    "purifying salt": ["Ward"],
+    "spell catalyst": ["Arcane"],
+    "arcane catalyst": ["Arcane"],
+    "rare catalyst": [],
+    "mythic catalyst": [],
+    "celestial catalyst": ["Divine", "Radiant"],
+    "volatile material": ["Fire", "Lightning", "Force"],
+    "stimulant organic": ["Organic"],
+    "monster bile": ["Organic"],
+    "monster fang": ["Bone"],
+    "monster claw": ["Bone"],
+    "dragon scale": ["Hide"],
+    "stone powder": ["Stone"],
+    "writing surface": ["Fiber"],
+    "legendary writing surface": ["Fiber"],
+    "elemental material": ["Elemental"],
+    "chosen elemental material": ["Elemental"],
+  };
+  const aliased = aliasTags[normalized];
+  if (aliased) {
+    return {
+      minRarity,
+      named: false,
+      alternative: aliased.length === 1 ? { materialIds: [], tags: aliased } : { materialIds: [], tags: [], anyTags: aliased },
+    };
+  }
+
+  const words = normalized
+    .replace(/\b(material|catalyst|essence|organic|resin|glass|ink|fiber|hide|metal|stone|gem|bone|wood|salvage)\b/g, (word) => ` ${word} `)
+    .split(/[^a-z]+/)
+    .filter(Boolean);
+  const recognized = [...new Set([...CRAFTING_PRIMARY_TAGS, ...CRAFTING_EFFECT_TAGS]
+    .filter((tag) => words.includes(tag.toLowerCase()))
+  )];
+  if (recognized.length) {
+    return {
+      minRarity,
+      named: false,
+      alternative: recognized.length === 1
+        ? { materialIds: [], tags: recognized }
+        : { materialIds: [], tags: recognized },
+    };
+  }
+
+  return { minRarity, named: false, alternative: { materialIds: [], tags: [] } };
+}
+
+function parseCraftingRequirementsText(value) {
+  const materials = craftingCatalogueMaterials();
+  const source = String(value || "").trim();
+  if (!source) return [];
+  return source
+    .split(/\n|\s+\+\s+/)
+    .map((part) => part.trim())
+    .filter(Boolean)
+    .slice(0, 4)
+    .map((part) => {
+      const quantityMatch = part.match(/\bx\s*(\d+)\s*$/i);
+      const quantity = quantityMatch ? Math.max(1, Number(quantityMatch[1])) : 1;
+      const label = normalizeCraftingPhrase(part.replace(/\bx\s*\d+\s*$/i, ""));
+      const alternatives = label
+        .replace(/,\s*or\s+/gi, " or ")
+        .replace(/,/g, " or ")
+        .split(/\s+or\s+/i)
+        .map((entry) => entry.trim())
+        .filter(Boolean)
+        .map((entry) => craftingRequirementAlternative(entry, materials));
+      const minRarity = alternatives.reduce((best, entry) => {
+        const current = CRAFTING_RARITIES.indexOf(entry.minRarity);
+        return current > CRAFTING_RARITIES.indexOf(best) ? entry.minRarity : best;
+      }, "Common");
+      return {
+        label,
+        quantity,
+        minRarity,
+        named: alternatives.length > 0 && alternatives.every((entry) => entry.named),
+        alternatives: alternatives.map((entry) => entry.alternative),
+      };
+    });
+}
+
+function normalizeCraftingRecipeData(value, options = {}) {
+  const data = value && typeof value === "object" ? structuredClone(value) : {};
+  const rarity = CRAFTING_RARITIES.includes(data.rarity) ? data.rarity : "Common";
+  const project = data.project === true || rarity === "Legendary";
+  const requirementsText = String(data.requirementsText || "");
+  const suppliedRequirements = Array.isArray(data.requirements) ? data.requirements : [];
+  const requirements = options.reparseRequirements || !suppliedRequirements.length
+    ? parseCraftingRequirementsText(requirementsText)
+    : suppliedRequirements;
+  const defaultDc = { Common: 40, Uncommon: 55, Rare: 70, "Very Rare": 85, Legendary: 0, Unique: 0 }[rarity] ?? 40;
+  return {
+    id: String(data.id || ""),
+    name: String(data.name || ""),
+    category: CRAFTING_CATEGORIES.includes(data.category) ? data.category : "Basic",
+    rarity,
+    discipline: CRAFTING_DISCIPLINES.includes(data.discipline) ? data.discipline : "Fieldcraft",
+    requirementsText,
+    requirements,
+    dc: project ? 0 : Math.max(0, Math.floor(Number(data.dc ?? defaultDc))),
+    time: String(data.time || (project ? "Three narrative stages" : "4 hours")),
+    batchYield: Math.max(1, Math.floor(Number(data.batchYield || 1))),
+    effect: String(data.effect || ""),
+    saveDc: data.saveDc === "" || data.saveDc == null ? null : Number(data.saveDc),
+    blueprintRequired: data.blueprintRequired === true || ["Rare", "Very Rare", "Legendary", "Unique"].includes(rarity),
+    attunement: data.attunement === true,
+    permanent: data.permanent === true,
+    project,
+  };
+}
+
 function catalogueSelectField(key, label, value, options, hint = "") {
   return `<label>${escapeHtml(label)}<select data-catalogue-field="${escapeHtml(key)}" data-kind="string">${options.map(([optionValue, optionLabel]) => `<option value="${escapeHtml(optionValue)}" ${String(optionValue) === String(value) ? "selected" : ""}>${escapeHtml(optionLabel)}</option>`).join("")}</select>${hint ? `<small>${escapeHtml(hint)}</small>` : ""}</label>`;
 }
 
 function renderCatalogueField(key, value) {
   const label = titleCase(key);
+  if (application.catalogueCategory === "crafting_materials") {
+    if (key === "rarity") return catalogueSelectField(key, "Rarity", value, CRAFTING_RARITIES.map((entry) => [entry, entry]));
+    if (["categoryTags", "effectTags", "regions"].includes(key)) {
+      const descriptions = {
+        categoryTags: "One primary material tag per line, such as Metal, Bone, Gem, or Essence.",
+        effectTags: "One effect tag per line, such as Fire, Soul, Memory, or Radiant.",
+        regions: "One region or source area per line.",
+      };
+      return `<label class="form-span">${escapeHtml(label)}<textarea rows="5" data-catalogue-field="${escapeHtml(key)}" data-kind="string-list">${escapeHtml(normalizeStringList(value).join("\n"))}</textarea><small>${escapeHtml(descriptions[key])}</small></label>`;
+    }
+    if (key === "sourceType") {
+      return catalogueSelectField(key, "Source Type", value, ["Mine", "Monster", "Plant", "Battlefield", "Quest", "Ruin", "Trade", "Scavenged", "Salvage", "Unique", "Other"].map((entry) => [entry, entry]));
+    }
+  }
+  if (application.catalogueCategory === "crafting_recipes") {
+    if (key === "category") return catalogueSelectField(key, "Recipe Category", value, CRAFTING_CATEGORIES.map((entry) => [entry, entry]));
+    if (key === "rarity") return catalogueSelectField(key, "Item Rarity", value, CRAFTING_RARITIES.map((entry) => [entry, entry]));
+    if (key === "discipline") return catalogueSelectField(key, "Crafting Discipline", value, CRAFTING_DISCIPLINES.map((entry) => [entry, entry]));
+    if (key === "time") return catalogueSelectField(key, "Creation Time", value, CRAFTING_TIMES.map((entry) => [entry, entry]));
+    if (key === "dc") {
+      return `<label>Crafting DC<select data-catalogue-field="dc" data-kind="number">${[[40, "40 · Common"], [55, "55 · Uncommon"], [70, "70 · Rare"], [85, "85 · Very Rare"], [0, "Project · no single roll"]].map(([dc, text]) => `<option value="${dc}" ${Number(value) === dc ? "selected" : ""}>${escapeHtml(text)}</option>`).join("")}</select></label>`;
+    }
+    if (key === "requirementsText") {
+      return `<label class="form-span">Materials Required<textarea rows="6" spellcheck="false" data-catalogue-field="requirementsText" data-kind="string">${escapeHtml(String(value || ""))}</textarea><small>Use 1 to 4 components. Separate them with + or new lines, for example: Metal x2 + Fire or Lightning x1.</small></label>`;
+    }
+    if (key === "requirements") return "";
+    if (key === "saveDc") {
+      return `<label>Save DC<input type="number" min="0" step="1" value="${value == null ? "" : escapeHtml(value)}" data-catalogue-field="saveDc" data-kind="nullable-number" placeholder="Optional" /></label>`;
+    }
+    if (key === "project") {
+      return `<label class="checkbox-field"><input type="checkbox" data-catalogue-field="project" data-kind="boolean" ${value ? "checked" : ""} /><span>Legendary three-stage project</span></label>`;
+    }
+    if (key === "blueprintRequired") {
+      return `<label class="checkbox-field"><input type="checkbox" data-catalogue-field="blueprintRequired" data-kind="boolean" ${value ? "checked" : ""} /><span>Blueprint required</span></label>`;
+    }
+  }
   if (application.catalogueCategory === "food_dishes") {
     if (key === "region") {
       return catalogueSelectField(key, "Region", value, ["Asura", "Karrnath", "Fittoa", "Shirone", "Ronoa", "Milis", "Begaritt", "Demon Continent", "Heaven Continent"].map((entry) => [entry, entry]));
@@ -1193,6 +1427,7 @@ async function saveCatalogueEntry(form) {
       const key = control.dataset.catalogueField;
       if (control.dataset.kind === "boolean") data[key] = control.checked;
       else if (control.dataset.kind === "number") data[key] = Number(control.value || 0);
+      else if (control.dataset.kind === "nullable-number") data[key] = control.value === "" ? null : Number(control.value);
       else if (control.dataset.kind === "json") data[key] = JSON.parse(control.value || "null");
       else if (control.dataset.kind === "string-list") data[key] = [...new Set(control.value.split(/\n|,/).map((entry) => entry.trim()).filter(Boolean))];
       else data[key] = control.value;
@@ -1206,6 +1441,25 @@ async function saveCatalogueEntry(form) {
     const normalized = normalizeDishCatalogueData(data);
     Object.keys(data).forEach((key) => delete data[key]);
     Object.assign(data, normalized);
+  }
+  if (application.catalogueCategory === "crafting_materials") {
+    if (!data.id) data.id = `MAT-CUSTOM-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
+    const normalized = normalizeCraftingMaterialData(data);
+    Object.keys(data).forEach((key) => delete data[key]);
+    Object.assign(data, normalized);
+  }
+  if (application.catalogueCategory === "crafting_recipes") {
+    if (!data.id) data.id = `REC-CUSTOM-${crypto.randomUUID().slice(0, 8).toUpperCase()}`;
+    const previousText = String(application.modal.row?.data?.requirementsText || "");
+    const normalized = normalizeCraftingRecipeData(data, {
+      reparseRequirements: !application.modal.row || previousText !== String(data.requirementsText || ""),
+    });
+    Object.keys(data).forEach((key) => delete data[key]);
+    Object.assign(data, normalized);
+    if (data.requirements.length < 1 || data.requirements.length > 4) {
+      showToast("Crafting recipes require 1 to 4 material requirement lines.", "error");
+      return;
+    }
   }
 
   const existing = application.modal.row;

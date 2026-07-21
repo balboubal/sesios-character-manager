@@ -22,7 +22,7 @@
     conditions: { label: "Rules & Conditions", render: renderConditionsPage },
     items: { label: "Item Catalogue", render: renderItemsPage },
     food: { label: "Hearthcraft", render: renderFoodPage },
-    crafting: { label: "Crafting Catalogue", render: renderCraftingPage },
+    crafting: { label: "Crafter’s Ledger", render: renderCraftingPage },
   };
   const sheetLocation = loadSheetLocation();
 
@@ -50,6 +50,13 @@
       ingredientRegion: "All",
       ingredientCategory: "All",
       craftingQuery: "",
+      craftingMaterialQuery: "",
+      craftingMaterialRarity: "All",
+      craftingMaterialTag: "All",
+      craftingRecipeQuery: "",
+      craftingRecipeCategory: "All",
+      craftingRecipeRarity: "All",
+      craftingRecipeDiscipline: "All",
     },
     filterTimer: null,
     saveTimer: null,
@@ -60,6 +67,22 @@
     editingHistoryId: "",
     showCookingReference: false,
     showCookingHistory: false,
+    craftingView: "craft",
+    crafting: {
+      recipeId: "BSC-01",
+      selections: {},
+      assistant: false,
+      workshop: false,
+      lastResult: null,
+      recovery: {
+        sourceLabel: "Monster or searchable site",
+        bonus: 0,
+        help: false,
+        maximumRarity: "Very Rare",
+        materialId: "",
+        lastResult: null,
+      },
+    },
     cooking: {
       recipeKey: "__basic",
       customName: "",
@@ -194,7 +217,9 @@
         path === "survivalHistory" ||
         path === "cooking.history" ||
         path === "cooking.familiarRecipes" ||
-        path === "cooking.ownedUtensils"
+        path === "cooking.ownedUtensils" ||
+        path === "crafting.knownBlueprints" ||
+        path === "crafting.history"
       ) {
         return clone(Array.isArray(suppliedValue) ? suppliedValue : defaultValue);
       }
@@ -210,7 +235,11 @@
         const childPath = path ? `${path}.${key}` : key;
         merged[key] = mergeWithDefaults(defaultValue[key], supplied[key], childPath);
       });
-      if (path === "hearth.acquired" || path === "cooking.ingredientPantry") {
+      if (
+        path === "hearth.acquired" ||
+        path === "cooking.ingredientPantry" ||
+        path === "crafting.materialInventory"
+      ) {
         Object.keys(supplied).forEach((key) => {
           if (!(key in merged)) merged[key] = supplied[key];
         });
@@ -314,7 +343,11 @@
       data.food = { ...data.food, ...clone(payload.food) };
     }
     if (payload.crafting && typeof payload.crafting === "object") {
-      data.crafting = { ...data.crafting, ...clone(payload.crafting) };
+      const suppliedCrafting = clone(payload.crafting);
+      if (!Array.isArray(suppliedCrafting.materials) || !suppliedCrafting.materials.length) delete suppliedCrafting.materials;
+      if (!Array.isArray(suppliedCrafting.recipes) || !suppliedCrafting.recipes.length) delete suppliedCrafting.recipes;
+      if (!Array.isArray(suppliedCrafting.legendaryConcepts) || !suppliedCrafting.legendaryConcepts.length) delete suppliedCrafting.legendaryConcepts;
+      data.crafting = { ...data.crafting, ...suppliedCrafting };
     }
   }
 
@@ -436,6 +469,80 @@
         const value = cookingControl.type === "checkbox" ? cookingControl.checked : cookingControl.value;
         ui.cooking[key] = value;
         ui.cooking.lastResult = null;
+        renderRoute({ preserveScroll: true });
+        return;
+      }
+
+      const craftingBonus = event.target.closest("[data-crafting-bonus]");
+      if (craftingBonus) {
+        state.crafting.disciplineBonuses[craftingBonus.dataset.craftingBonus] = engine.numberValue(craftingBonus.value);
+        ui.crafting.lastResult = null;
+        recalculate();
+        scheduleSave();
+        renderRoute({ preserveScroll: true });
+        return;
+      }
+
+      const craftingTool = event.target.closest("[data-crafting-tool]");
+      if (craftingTool) {
+        state.crafting.ownedToolKits[craftingTool.dataset.craftingTool] = craftingTool.checked;
+        ui.crafting.lastResult = null;
+        ui.crafting.recovery.lastResult = null;
+        recalculate();
+        scheduleSave();
+        renderRoute({ preserveScroll: true });
+        return;
+      }
+
+      const craftingBlueprint = event.target.closest("[data-crafting-blueprint]");
+      if (craftingBlueprint) {
+        engine.setCraftingBlueprint(state, craftingBlueprint.dataset.craftingBlueprint, craftingBlueprint.checked);
+        ui.crafting.lastResult = null;
+        recalculate();
+        scheduleSave();
+        renderRoute({ preserveScroll: true });
+        return;
+      }
+
+      const craftingRequirement = event.target.closest("[data-crafting-requirement]");
+      if (craftingRequirement) {
+        ui.crafting.selections[Number(craftingRequirement.dataset.craftingRequirement)] = craftingRequirement.value;
+        ui.crafting.lastResult = null;
+        renderRoute({ preserveScroll: true });
+        return;
+      }
+
+      const craftingControl = event.target.closest("[data-crafting-control]");
+      if (craftingControl) {
+        const key = craftingControl.dataset.craftingControl;
+        ui.crafting[key] = craftingControl.type === "checkbox" ? craftingControl.checked : craftingControl.value;
+        if (key === "recipeId") ui.crafting.selections = {};
+        ui.crafting.lastResult = null;
+        renderRoute({ preserveScroll: true });
+        return;
+      }
+
+      const legendaryProjectControl = event.target.closest("[data-legendary-project-control]");
+      if (legendaryProjectControl) {
+        const key = legendaryProjectControl.dataset.legendaryProjectControl;
+        state.crafting.legendaryProject[key] = legendaryProjectControl.type === "checkbox"
+          ? legendaryProjectControl.checked
+          : legendaryProjectControl.value;
+        recalculate();
+        scheduleSave();
+        renderRoute({ preserveScroll: true });
+        return;
+      }
+
+      const recoveryControl = event.target.closest("[data-recovery-control]");
+      if (recoveryControl) {
+        const key = recoveryControl.dataset.recoveryControl;
+        ui.crafting.recovery[key] = recoveryControl.type === "checkbox"
+          ? recoveryControl.checked
+          : recoveryControl.type === "number"
+            ? engine.numberValue(recoveryControl.value)
+            : recoveryControl.value;
+        if (key !== "materialId") ui.crafting.recovery.lastResult = null;
         renderRoute({ preserveScroll: true });
         return;
       }
@@ -2015,53 +2122,199 @@
     return `<section class="page" data-page="food">${pageHeading("Regional cooking", "Hearthcraft", "Cook with owned ingredients or purchase an ingredient set, then advance through region-based culinary mastery.", `<button class="button button-primary" type="button" data-route="survival">Open survival tracker</button>`)}${profile}${navigation}<div id="hearthcraft-view-content">${renderCookingStation()}<div class="section-gap">${renderCookingReference()}</div><section class="panel section-gap"><div class="panel-heading blue"><h2>Campaign Hearthcraft Rules</h2><span class="heading-note">DM-editable catalogue notes</span></div><div class="panel-body"><div class="rule-grid">${data.food.rules.map((rule) => `<article class="rule-card"><strong>${escapeHtml(rule.rule)}</strong><span>${escapeHtml(rule.value ?? rule.detail ?? "")}</span></article>`).join("")}</div></div></section><div class="filters section-gap" role="search"><label class="visually-hidden" for="food-search">Search dishes</label><input class="filter-control" id="food-search" type="search" data-filter="foodQuery" value="${escapeHtml(ui.filters.foodQuery)}" placeholder="Search dish names, methods, effects, ingredients, or utensils" /><label class="visually-hidden" for="food-region">Filter region</label><select class="filter-control" id="food-region" data-filter="foodRegion">${renderOptions(["All", ...unique(data.food.dishes.map((dish) => dish.region))], selectedRegion)}</select><span class="filter-count" data-food-count="dishes">${dishes.length} of ${data.food.dishes.length} dishes</span></div><div class="catalog-grid" data-food-results="dishes">${cards || `<div class="empty-state"><strong>No matching dishes</strong><span>Change the search or region filter.</span></div>`}</div></div></section>`;
   }
 
-  function computeFilteredCraftingSections() {
-    const query = ui.filters.craftingQuery.trim().toLowerCase();
-    return data.crafting.sections
-      .map((section) => {
-        const rows = section.rows.filter((row) => !query || `${section.name} ${section.headers.join(" ")} ${row.join(" ")}`.toLowerCase().includes(query));
-        return { ...section, rows };
-      })
-      .filter((section) => section.rows.length || (!query && section.headers.length));
+  const CRAFTING_RARITY_ORDER = ["Common", "Uncommon", "Rare", "Very Rare", "Legendary", "Unique"];
+
+  function craftingRarityRank(rarity) {
+    const index = CRAFTING_RARITY_ORDER.indexOf(String(rarity || "Common"));
+    return index >= 0 ? index : 0;
   }
 
-  function renderCraftingSectionsMarkup(sections) {
-    return sections
-      .map((section) => `<section class="craft-section"><h2>${escapeHtml(section.name)}</h2><div class="craft-rows">
-        <div class="craft-row craft-headers" style="--craft-columns: ${section.headers.length}">${section.headers.map((header) => `<span>${escapeHtml(header)}</span>`).join("")}</div>
-        ${section.rows.map((row) => `<div class="craft-row" style="--craft-columns: ${section.headers.length}">${section.headers.map((header, index) => `<span data-label="${escapeHtml(header)}">${escapeHtml(row[index] ?? "")}</span>`).join("")}</div>`).join("")}
-      </div></section>`)
-      .join("");
+  function craftingOutcomeLabel(outcome) {
+    return {
+      "critical-failure": "Critical Failure",
+      "major-failure": "Failure by 20+",
+      failure: "Failure",
+      success: "Success",
+      "strong-success": "Strong Success",
+      "critical-success": "Critical Craft",
+    }[outcome] || titleCase(outcome || "Result");
   }
 
-  // Surgical update for the Crafting Catalogue filter: patches only the
-  // results container and match count instead of re-rendering the whole page.
-  function renderCraftingResults() {
-    const sections = computeFilteredCraftingSections();
-    const container = root.querySelector(".skill-groups");
-    const count = root.querySelector(".filter-count");
-    const matchedRows = sections.reduce((sum, section) => sum + section.rows.length, 0);
-    if (container) {
-      container.innerHTML = renderCraftingSectionsMarkup(sections) ||
-        `<div class="empty-state"><strong>No matching crafting records</strong><span>Change the search terms.</span></div>`;
+  function renderCraftingTabs() {
+    const tabs = [
+      ["craft", "Craft"],
+      ["materials", `Materials (${derived.crafting.totalBundles})`],
+      ["recipes", `Recipes (${data.crafting.recipes.length})`],
+      ["rules", "Quick Rules"],
+    ];
+    return `<nav class="crafting-tabs" aria-label="Crafting sections">${tabs.map(([value, label]) => `<button type="button" class="${ui.craftingView === value ? "is-active" : ""}" data-action="switch-crafting-view" data-view="${value}">${escapeHtml(label)}</button>`).join("")}</nav>`;
+  }
+
+  function renderCraftingSetup() {
+    const rows = derived.crafting.disciplines.map((discipline) => `<article class="crafting-discipline-card"><div><strong>${escapeHtml(discipline.id)}</strong><span>${escapeHtml(discipline.creates)}</span></div><label>Bonus<input type="number" step="1" value="${escapeHtml(discipline.bonus)}" data-crafting-bonus="${escapeHtml(discipline.id)}" /></label><label class="crafting-tool-toggle"><input type="checkbox" data-crafting-tool="${escapeHtml(discipline.id)}" ${discipline.toolOwned ? "checked" : ""} /><span>${escapeHtml(discipline.tool)}<small>${escapeHtml(discipline.costGp)} GP · +25 when owned</small></span></label></article>`).join("");
+    return `<section class="panel crafting-setup-panel"><div class="panel-heading"><h2>Crafter Setup</h2><span class="heading-note">One bonus and one tool toggle per discipline</span></div><div class="panel-body"><div class="crafting-discipline-grid">${rows}</div></div></section>`;
+  }
+
+  function groupedRecipeOptions(selectedId) {
+    const groups = unique(data.crafting.recipes.map((recipe) => recipe.category));
+    return groups.map((group) => `<optgroup label="${escapeHtml(group)}">${data.crafting.recipes.filter((recipe) => recipe.category === group).map((recipe) => `<option value="${escapeHtml(recipe.id)}" ${recipe.id === selectedId ? "selected" : ""}>${escapeHtml(recipe.name)} · ${escapeHtml(recipe.rarity)}</option>`).join("")}</optgroup>`).join("");
+  }
+
+  function renderCraftingRequirement(requirement) {
+    const options = requirement.options;
+    const select = options.length
+      ? `<select data-crafting-requirement="${requirement.index}">${options.map((material) => `<option value="${escapeHtml(material.id)}" ${material.id === requirement.selectedId ? "selected" : ""}>${escapeHtml(material.name)} · ${escapeHtml(material.rarity)} · ${escapeHtml(material.owned)} owned${material.lowerRarity ? " · +10 DC" : ""}</option>`).join("")}</select>`
+      : `<select disabled><option>Missing matching material</option></select>`;
+    return `<article class="crafting-requirement ${requirement.ready ? "is-ready" : "is-missing"}"><div><strong>${escapeHtml(requirement.label)} ×${escapeHtml(requirement.requiredQuantity)}</strong><span>${requirement.named ? "Named requirement" : `Tag requirement · ${escapeHtml(requirement.minRarity)} minimum`}</span></div>${select}<b>${requirement.ready ? "Ready" : "Missing"}</b></article>`;
+  }
+
+  function renderCraftingResult(result) {
+    if (!result) return "";
+    const label = craftingOutcomeLabel(result.outcome);
+    const className = result.success ? "is-success" : result.outcome === "critical-failure" ? "is-critical-failure" : "is-failure";
+    let outcome = "The item was not completed. Materials remain usable.";
+    if (result.outcome === "major-failure") outcome = "The item was not completed. One Common or Uncommon bundle will be lost.";
+    if (result.outcome === "critical-failure") outcome = "The item was not completed. One non-Unique bundle will be lost and the GM adds a complication.";
+    if (result.success) {
+      outcome = `${result.outputQuantity} ${result.recipe.name}${result.outputQuantity === 1 ? "" : "s"} will be created.`;
+      if (result.halfTime) outcome += " The project takes half the listed time.";
+      if (result.masterwork) outcome += " Add a narrative masterwork property with no extra combat power.";
     }
-    if (count) count.textContent = `${matchedRows} matching rows in ${sections.length} sections`;
+    const rolls = result.rolls.length > 1 ? `${result.rolls.join(" / ")} · kept ${result.naturalRoll}` : String(result.naturalRoll);
+    return `<article class="crafting-result ${className}"><div><span>${escapeHtml(label)}</span><strong>${escapeHtml(result.total)}</strong></div><p>${escapeHtml(result.recipe.name)} · Natural ${escapeHtml(rolls)} · Modifier ${result.modifier >= 0 ? "+" : ""}${escapeHtml(result.modifier)} · DC ${escapeHtml(result.dc)}</p><b>${escapeHtml(outcome)}</b><button class="button button-primary button-small" type="button" data-action="record-crafting-result" ${result.recorded ? "disabled" : ""}>${result.recorded ? "Result recorded" : "Record result"}</button></article>`;
+  }
+
+  function renderCraftingHistory() {
+    const history = derived.crafting.history.slice(0, 8);
+    if (!history.length) return `<div class="empty-state compact"><strong>No crafting history</strong><span>Recovered bundles and completed checks appear here.</span></div>`;
+    return `<ul class="crafting-history-list">${history.map((entry) => entry.type === "recovery"
+      ? `<li><span>+1</span><div><strong>${escapeHtml(entry.materialName)}</strong><p>${escapeHtml(entry.sourceLabel)} · Roll ${escapeHtml(entry.total)} · ${escapeHtml(entry.rarity)} award</p></div></li>`
+      : `<li><span>${escapeHtml(entry.naturalRoll)}</span><div><strong>${escapeHtml(entry.recipeName)} · ${escapeHtml(craftingOutcomeLabel(entry.outcome))}</strong><p>Total ${escapeHtml(entry.total)} vs DC ${escapeHtml(entry.dc)}${entry.outputQuantity ? ` · ${escapeHtml(entry.outputQuantity)} created` : ""}${entry.masterwork ? " · masterwork property" : ""}</p></div></li>`).join("")}</ul>`;
+  }
+
+  function renderCraftingStation() {
+    const preview = engine.previewCraftingCheck(state, data, ui.crafting);
+    const recipe = preview.recipe;
+    if (!recipe) return `<div class="empty-state"><strong>No crafting recipes</strong><span>Add recipes through the DM Catalogue Editor.</span></div>`;
+    const requirements = preview.requirements.map(renderCraftingRequirement).join("");
+    const status = preview.canAttempt ? "Ready to craft" : preview.lockReason;
+    const blueprintControl = preview.blueprintRequired
+      ? `<label class="crafting-blueprint-toggle"><input type="checkbox" data-crafting-blueprint="${escapeHtml(recipe.id)}" ${preview.blueprintKnown ? "checked" : ""} /><span>Blueprint known<small>Required for Rare and higher recipes</small></span></label>`
+      : `<div class="crafting-blueprint-note"><strong>Blueprint not required</strong><span>Common and Uncommon recipes are generally known.</span></div>`;
+    return `<section class="panel crafting-station"><div class="panel-heading rust"><h2>Crafting Station</h2><span class="heading-note">Choose, combine, roll once</span></div><div class="panel-body"><div class="crafting-station-grid"><div class="crafting-builder"><label class="field"><span>Recipe</span><select data-crafting-control="recipeId">${groupedRecipeOptions(recipe.id)}</select></label><article class="crafting-recipe-hero rarity-${slug(recipe.rarity)}"><div><span>${escapeHtml(recipe.category)} · ${escapeHtml(recipe.discipline)}</span><h3>${escapeHtml(recipe.name)}</h3></div><strong>${recipe.project ? "PROJECT" : `DC ${escapeHtml(preview.dc)}`}</strong><p>${escapeHtml(recipe.rarity)} · ${escapeHtml(recipe.time)} · Yield ${escapeHtml(recipe.batchYield)}</p><b>${escapeHtml(recipe.effect)}</b></article><div class="crafting-requirement-list">${requirements}</div>${blueprintControl}<div class="crafting-options"><label><input type="checkbox" data-crafting-control="assistant" ${ui.crafting.assistant ? "checked" : ""} /><span>Proficient assistant<small>+10</small></span></label><label><input type="checkbox" data-crafting-control="workshop" ${ui.crafting.workshop ? "checked" : ""} /><span>Proper workshop<small>Advantage</small></span></label></div><div class="crafting-check-summary"><div><span>Check modifier</span><strong>${preview.modifier >= 0 ? "+" : ""}${escapeHtml(preview.modifier)}</strong></div><p>${escapeHtml(recipe.discipline)} ${preview.disciplineBonus >= 0 ? "+" : ""}${escapeHtml(preview.disciplineBonus)} · Tool ${preview.toolOwned ? "+25" : "not owned"} · ${preview.workshop ? "Advantage" : "Normal roll"}${preview.lowerSubstitute ? " · Lower-rarity substitute +10 DC" : ""}</p></div><div class="crafting-readiness ${preview.canAttempt ? "is-ready" : "is-locked"}"><strong>${preview.canAttempt ? "Requirements met" : "Cannot craft this recipe"}</strong><span>${escapeHtml(status)}</span></div><button class="button button-primary crafting-roll-button" type="button" data-action="roll-crafting-check" ${preview.canAttempt ? "" : "disabled"}>Roll Crafting Check</button>${renderCraftingResult(ui.crafting.lastResult)}</div><aside class="crafting-history"><div class="subsection-heading"><div><h3>Recent Ledger</h3><span>Recovered materials and crafting results</span></div><button class="button button-danger button-small" type="button" data-action="undo-crafting" ${derived.crafting.history.length ? "" : "disabled"}>Undo last</button></div>${renderCraftingHistory()}</aside></div></div></section>`;
+  }
+
+  function computeFilteredCraftingMaterials() {
+    const query = ui.filters.craftingMaterialQuery.trim().toLowerCase();
+    const rarity = ui.filters.craftingMaterialRarity;
+    const tag = ui.filters.craftingMaterialTag;
+    return data.crafting.materials.filter((material) => {
+      const text = `${material.id} ${material.name} ${material.rarity} ${(material.categoryTags || []).join(" ")} ${(material.effectTags || []).join(" ")} ${material.source}`.toLowerCase();
+      const tags = [...(material.categoryTags || []), ...(material.effectTags || [])];
+      return (!query || text.includes(query)) && (rarity === "All" || material.rarity === rarity) && (tag === "All" || tags.includes(tag));
+    });
+  }
+
+  function renderCraftingMaterialCards(materials) {
+    return materials.map((material) => {
+      const quantity = Math.max(0, Math.floor(engine.numberValue(state.crafting.materialInventory[material.id])));
+      const tags = [...(material.categoryTags || []), ...(material.effectTags || [])];
+      return `<article class="crafting-material-card rarity-${slug(material.rarity)} ${quantity ? "is-owned" : ""}"><header><div><span>${escapeHtml(material.id)}</span><h3>${escapeHtml(material.name)}</h3></div><b>${escapeHtml(material.rarity)}</b></header><p>${escapeHtml(material.source)}</p><div class="crafting-tag-list">${tags.map((tag) => `<span>${escapeHtml(tag)}</span>`).join("")}</div><footer><button type="button" class="icon-button" data-action="change-crafting-material" data-material-id="${escapeHtml(material.id)}" data-change="-1" ${quantity ? "" : "disabled"}>−</button><strong>${escapeHtml(quantity)}</strong><button type="button" class="icon-button" data-action="change-crafting-material" data-material-id="${escapeHtml(material.id)}" data-change="1">+</button></footer></article>`;
+    }).join("");
+  }
+
+  function renderCraftingRecovery() {
+    const recovery = ui.crafting.recovery;
+    const result = recovery.lastResult;
+    const eligible = result && result.rarity !== "None"
+      ? data.crafting.materials.filter((material) => craftingRarityRank(material.rarity) <= craftingRarityRank(result.rarity))
+      : [];
+    return `<section class="panel crafting-recovery"><div class="panel-heading amber"><h2>Recover One Material</h2><span class="heading-note">The GM chooses a fitting bundle after the roll</span></div><div class="panel-body"><div class="crafting-recovery-grid"><label>Source<input type="text" value="${escapeHtml(recovery.sourceLabel)}" data-recovery-control="sourceLabel" placeholder="Ashbound Fiend, mine face, ruined workshop…" /></label><label>Survival, Medicine, Investigation, or equivalent bonus<input type="number" step="1" value="${escapeHtml(recovery.bonus)}" data-recovery-control="bonus" /></label><label>Maximum source rarity<select data-recovery-control="maximumRarity">${["Uncommon", "Rare", "Very Rare", "Legendary", "Unique"].map((rarity) => `<option value="${rarity}" ${recovery.maximumRarity === rarity ? "selected" : ""}>${rarity}</option>`).join("")}</select></label><label class="checkbox-field"><input type="checkbox" data-recovery-control="help" ${recovery.help ? "checked" : ""} /><span>Proficient help · +10</span></label><button class="button button-primary" type="button" data-action="roll-crafting-recovery">Roll Recovery</button></div>${result ? `<article class="crafting-recovery-result rarity-${slug(result.rarity)}"><div><span>Natural ${escapeHtml(result.naturalRoll)} · Total ${escapeHtml(result.total)}</span><strong>${escapeHtml(result.rarity === "None" ? "No usable material" : `${result.rarity} bundle`)}</strong></div>${result.rarity !== "None" ? `<label>GM-selected material<select data-recovery-control="materialId">${eligible.map((material) => `<option value="${escapeHtml(material.id)}" ${recovery.materialId === material.id ? "selected" : ""}>${escapeHtml(material.name)} · ${escapeHtml(material.rarity)}</option>`).join("")}</select></label><button class="button button-accent" type="button" data-action="record-crafting-recovery" ${result.recorded ? "disabled" : ""}>${result.recorded ? "Material recorded" : "Add one bundle"}</button>` : `<p>The source yields no useful crafting bundle.</p>`}</article>` : ""}</div></section>`;
+  }
+
+  function computeFilteredCraftingRecipes() {
+    const query = ui.filters.craftingRecipeQuery.trim().toLowerCase();
+    const category = ui.filters.craftingRecipeCategory;
+    const rarity = ui.filters.craftingRecipeRarity;
+    const discipline = ui.filters.craftingRecipeDiscipline;
+    return data.crafting.recipes.filter((recipe) => {
+      const text = `${recipe.id} ${recipe.name} ${recipe.category} ${recipe.rarity} ${recipe.discipline} ${recipe.requirementsText} ${recipe.effect}`.toLowerCase();
+      return (!query || text.includes(query)) && (category === "All" || recipe.category === category) && (rarity === "All" || recipe.rarity === rarity) && (discipline === "All" || recipe.discipline === discipline);
+    });
+  }
+
+  function renderCraftingRecipeCards(recipes) {
+    return recipes.map((recipe) => {
+      const known = state.crafting.knownBlueprints.includes(recipe.id);
+      return `<article class="crafting-recipe-card rarity-${slug(recipe.rarity)}"><header><div><span>${escapeHtml(recipe.id)} · ${escapeHtml(recipe.category)}</span><h3>${escapeHtml(recipe.name)}</h3></div><b>${escapeHtml(recipe.rarity)}</b></header><dl><div><dt>Discipline</dt><dd>${escapeHtml(recipe.discipline)}</dd></div><div><dt>DC / Time</dt><dd>${recipe.project ? "Legendary project" : `${escapeHtml(recipe.dc)} · ${escapeHtml(recipe.time)}`}</dd></div><div><dt>Yield</dt><dd>${escapeHtml(recipe.batchYield)}</dd></div></dl><p class="crafting-recipe-materials">${escapeHtml(recipe.requirementsText)}</p><p>${escapeHtml(recipe.effect)}</p><footer>${recipe.blueprintRequired ? `<label><input type="checkbox" data-crafting-blueprint="${escapeHtml(recipe.id)}" ${known ? "checked" : ""} /><span>Blueprint known</span></label>` : `<span class="pill">Generally known</span>`}<button class="button button-primary button-small" type="button" data-action="select-crafting-recipe" data-recipe-id="${escapeHtml(recipe.id)}" ${recipe.project ? "disabled" : ""}>Craft</button></footer></article>`;
+    }).join("");
+  }
+
+  function renderCraftingMaterialsView() {
+    const materials = computeFilteredCraftingMaterials();
+    const tags = unique(data.crafting.materials.flatMap((material) => [...(material.categoryTags || []), ...(material.effectTags || [])]));
+    return `${renderCraftingRecovery()}<div class="filters section-gap" role="search"><input class="filter-control" type="search" data-filter="craftingMaterialQuery" value="${escapeHtml(ui.filters.craftingMaterialQuery)}" placeholder="Search materials, sources, or tags" /><select class="filter-control" data-filter="craftingMaterialRarity">${renderOptions(["All", ...CRAFTING_RARITY_ORDER], ui.filters.craftingMaterialRarity)}</select><select class="filter-control" data-filter="craftingMaterialTag">${renderOptions(["All", ...tags], ui.filters.craftingMaterialTag)}</select><span class="filter-count">${materials.length} of ${data.crafting.materials.length} materials</span></div><div class="crafting-material-grid" data-crafting-results="materials">${renderCraftingMaterialCards(materials)}</div>`;
+  }
+
+  function renderCraftingRecipesView() {
+    const recipes = computeFilteredCraftingRecipes();
+    return `<div class="filters" role="search"><input class="filter-control" type="search" data-filter="craftingRecipeQuery" value="${escapeHtml(ui.filters.craftingRecipeQuery)}" placeholder="Search recipes, effects, or materials" /><select class="filter-control" data-filter="craftingRecipeCategory">${renderOptions(["All", ...unique(data.crafting.recipes.map((recipe) => recipe.category))], ui.filters.craftingRecipeCategory)}</select><select class="filter-control" data-filter="craftingRecipeRarity">${renderOptions(["All", ...CRAFTING_RARITY_ORDER.slice(0, 5)], ui.filters.craftingRecipeRarity)}</select><select class="filter-control" data-filter="craftingRecipeDiscipline">${renderOptions(["All", ...unique(data.crafting.recipes.map((recipe) => recipe.discipline))], ui.filters.craftingRecipeDiscipline)}</select><span class="filter-count">${recipes.length} of ${data.crafting.recipes.length} recipes</span></div><div class="crafting-recipe-grid" data-crafting-results="recipes">${renderCraftingRecipeCards(recipes)}</div>`;
+  }
+
+  function renderLegendaryProjectTracker() {
+    const project = derived.crafting.legendaryProject;
+    const concepts = data.crafting.legendaryConcepts || [];
+    const selected = concepts.find((concept) => concept.id === project.conceptId) || null;
+    const completed = [project.designComplete, project.assemblyComplete, project.awakeningComplete].filter(Boolean).length;
+    return `<section class="panel crafting-project-tracker"><div class="panel-heading plum"><h2>Legendary Project Tracker</h2><span class="heading-note">${completed}/3 stages complete</span></div><div class="panel-body"><div class="crafting-project-grid"><label>Concept<select data-legendary-project-control="conceptId"><option value="">Choose a concept</option>${concepts.map((concept) => `<option value="${escapeHtml(concept.id)}" ${project.conceptId === concept.id ? "selected" : ""}>${escapeHtml(concept.name)}</option>`).join("")}</select></label><label>Project Name<input type="text" value="${escapeHtml(project.customName)}" data-legendary-project-control="customName" placeholder="Optional custom name" /></label><div class="crafting-project-stage-list"><label class="${project.designComplete ? "is-complete" : ""}"><input type="checkbox" data-legendary-project-control="designComplete" ${project.designComplete ? "checked" : ""} /><span><strong>1. Design · DC 80</strong><small>Intelligence, Awareness, Arcana, or relevant lore.</small></span></label><label class="${project.assemblyComplete ? "is-complete" : ""}"><input type="checkbox" data-legendary-project-control="assemblyComplete" ${project.assemblyComplete ? "checked" : ""} /><span><strong>2. Forging / Assembly · DC 90</strong><small>Use the relevant crafting discipline.</small></span></label><label class="${project.awakeningComplete ? "is-complete" : ""}"><input type="checkbox" data-legendary-project-control="awakeningComplete" ${project.awakeningComplete ? "checked" : ""} /><span><strong>3. Awakening · DC 95</strong><small>Runecraft, Scribing, Religion, Talent, or another fitting check.</small></span></label></div><label class="form-span">Project Notes<textarea rows="4" data-legendary-project-control="notes" placeholder="Components, facility, complications, faction interest…">${escapeHtml(project.notes)}</textarea></label></div>${selected ? `<article class="crafting-project-concept"><span>${escapeHtml(selected.id)}</span><h3>${escapeHtml(selected.name)}</h3><p><strong>Requirements:</strong> ${escapeHtml(selected.requirements)}</p><p><strong>Possible function:</strong> ${escapeHtml(selected.function)}</p></article>` : `<p class="panel-intro">Legendary projects require a Legendary frame, Mythic catalyst, story-bound component, complete blueprint, and world-class facility.</p>`}<div class="button-row"><button class="button button-danger button-small" type="button" data-action="clear-legendary-project" ${project.conceptId || project.customName || project.notes || completed ? "" : "disabled"}>Clear project</button></div></div></section>`;
+  }
+
+  function renderCraftingRulesView() {
+    const resultRows = [
+      ["Natural 1-5", "Lose one non-Unique bundle and trigger a complication."],
+      ["Failure by 20+", "Lose one Common or Uncommon bundle."],
+      ["Normal failure", "Materials remain usable."],
+      ["Success", "Create the listed item."],
+      ["Beat DC by 20+", "Half time for permanent items, or +1 consumable."],
+      ["Natural 96-100", "+1 consumable, or a narrative masterwork property."],
+    ];
+    return `<div class="crafting-rules-grid"><section class="panel"><div class="panel-heading"><h2>Three-Step Loop</h2></div><div class="panel-body"><ol class="crafting-loop"><li><strong>Recover</strong><span>Roll once after a meaningful monster or site. Record one bundle.</span></li><li><strong>Combine</strong><span>Choose a recipe and select matching materials.</span></li><li><strong>Craft</strong><span>Roll the discipline once. The site resolves the result.</span></li></ol></div></section><section class="panel"><div class="panel-heading blue"><h2>Rarity and DC</h2></div><div class="panel-body"><div class="reference-table">${Object.entries(data.crafting.rules.rarityDcs).map(([rarity, dc]) => `<div><strong>${escapeHtml(rarity)} · DC ${escapeHtml(dc)}</strong><span>${rarity === "Common" ? "Short rest to 1 day" : rarity === "Uncommon" ? "4 hours to 2 days" : rarity === "Rare" ? "1 to 4 days" : "3 to 10 days"}</span></div>`).join("")}<div><strong>Legendary</strong><span>Three narrative stages, not a normal crafting check.</span></div></div></div></section><section class="panel"><div class="panel-heading rust"><h2>Results</h2></div><div class="panel-body"><div class="reference-table">${resultRows.map(([label, rule]) => `<div><strong>${escapeHtml(label)}</strong><span>${escapeHtml(rule)}</span></div>`).join("")}</div></div></section><section class="panel"><div class="panel-heading amber"><h2>Substitution</h2></div><div class="panel-body"><p>A matching tag and equal or higher rarity is valid. A lower-rarity substitute adds +10 DC. Named requirements remain specific unless the GM approves otherwise.</p><p>Common binders, fuel, wax, containers, and ordinary thread are treated as workshop supplies and are not tracked.</p></div></section><section class="panel crafting-legendary-panel"><div class="panel-heading plum"><h2>Legendary Projects</h2><span class="heading-note">Design DC 80 · Assembly DC 90 · Awakening DC 95</span></div><div class="panel-body"><div class="legendary-concept-grid">${data.crafting.legendaryConcepts.map((concept) => `<article><span>${escapeHtml(concept.id)}</span><h3>${escapeHtml(concept.name)}</h3><p>${escapeHtml(concept.requirements)}</p><b>${escapeHtml(concept.function)}</b></article>`).join("")}</div></div></section>${renderLegendaryProjectTracker()}</div>`;
+  }
+
+  function renderCraftingResults() {
+    if (ui.craftingView === "materials") {
+      const materials = computeFilteredCraftingMaterials();
+      const container = root.querySelector('[data-crafting-results="materials"]');
+      if (container) container.innerHTML = renderCraftingMaterialCards(materials);
+      const count = root.querySelector(".filter-count");
+      if (count) count.textContent = `${materials.length} of ${data.crafting.materials.length} materials`;
+      return;
+    }
+    if (ui.craftingView === "recipes") {
+      const recipes = computeFilteredCraftingRecipes();
+      const container = root.querySelector('[data-crafting-results="recipes"]');
+      if (container) container.innerHTML = renderCraftingRecipeCards(recipes);
+      const count = root.querySelector(".filter-count");
+      if (count) count.textContent = `${recipes.length} of ${data.crafting.recipes.length} recipes`;
+    }
   }
 
   function renderCraftingPage() {
-    const sections = computeFilteredCraftingSections();
-    const sectionMarkup = renderCraftingSectionsMarkup(sections);
-    const matchedRows = sections.reduce((sum, section) => sum + section.rows.length, 0);
+    const content = ui.craftingView === "materials"
+      ? renderCraftingMaterialsView()
+      : ui.craftingView === "recipes"
+        ? renderCraftingRecipesView()
+        : ui.craftingView === "rules"
+          ? renderCraftingRulesView()
+          : `${renderCraftingSetup()}<div class="section-gap">${renderCraftingStation()}</div>`;
     return `<section class="page" data-page="crafting">${pageHeading(
-      "Crafting reference",
-      "Crafting Catalogue",
-      "Browse structured recipes and the illustrated crafting reference.",
-    )}
-      <figure class="craft-reference"><img src="assets/craftable-equipment-catalogue.webp" alt="Craftable equipment, consumables, alchemy, recipe, and legendary crafting reference" /><button class="button button-primary" type="button" data-action="open-craft-image">View full size</button></figure>
-      <div class="filters" role="search"><label class="visually-hidden" for="crafting-search">Search crafting catalogue</label><input class="filter-control" id="crafting-search" type="search" data-filter="craftingQuery" value="${escapeHtml(ui.filters.craftingQuery)}" placeholder="Search materials, recipes, sources, or uses" /><span class="filter-count">${matchedRows} matching rows in ${sections.length} sections</span></div>
-      <div class="skill-groups">${sectionMarkup || `<div class="empty-state"><strong>No matching crafting records</strong><span>Change the search terms.</span></div>`}</div>
-    </section>`;
+      "Creation-only system",
+      "The Crafter's Ledger",
+      "Recover one material bundle, choose a recipe, and resolve the craft with one d100 check.",
+      `<button class="button button-primary" type="button" data-action="switch-crafting-view" data-view="materials">Open Materials</button>`,
+    )}${renderCraftingTabs()}<div id="crafting-view-content">${content}</div></section>`;
   }
+
 
   function chooseEquipmentSlot(item) {
     const type = String(item?.type || "").toLowerCase();
@@ -2182,6 +2435,127 @@
     let changed = false;
     let message = "";
 
+    if (action === "switch-crafting-view") {
+      ui.craftingView = ["craft", "materials", "recipes", "rules"].includes(button.dataset.view) ? button.dataset.view : "craft";
+      renderRoute({ preserveScroll: true });
+      window.requestAnimationFrame(() => document.getElementById("crafting-view-content")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+      return;
+    }
+    if (action === "change-crafting-material") {
+      const result = engine.changeCraftingMaterial(state, button.dataset.materialId, Number(button.dataset.change));
+      if (!result.accepted) {
+        showToast("That material quantity could not be changed.", "error");
+        return;
+      }
+      ui.crafting.lastResult = null;
+      recalculate();
+      scheduleSave();
+      renderRoute({ preserveScroll: true });
+      const material = data.crafting.materials.find((entry) => entry.id === result.materialId);
+      showToast(`${material?.name || result.materialId}: ${result.quantity} bundle${result.quantity === 1 ? "" : "s"}.`, "success");
+      return;
+    }
+    if (action === "select-crafting-recipe") {
+      ui.craftingView = "craft";
+      ui.crafting.recipeId = button.dataset.recipeId;
+      ui.crafting.selections = {};
+      ui.crafting.lastResult = null;
+      renderRoute({ preserveScroll: true });
+      window.requestAnimationFrame(() => document.querySelector(".crafting-station")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+      return;
+    }
+    if (action === "roll-crafting-check") {
+      const result = engine.rollCraftingCheck(state, data, ui.crafting);
+      if (!result.accepted) {
+        showToast(result.preview?.lockReason || "The crafting requirements are not met.", "error");
+        return;
+      }
+      ui.crafting.selections = { ...result.selections };
+      ui.crafting.lastResult = result;
+      renderRoute({ preserveScroll: true });
+      return;
+    }
+    if (action === "record-crafting-result") {
+      const result = engine.recordCraftingResult(state, data, ui.crafting.lastResult);
+      if (!result.accepted) {
+        const copy = result.reason === "missing-materials"
+          ? "The selected material bundles are no longer available."
+          : result.reason === "missing-blueprint"
+            ? "This recipe's blueprint is no longer marked as known."
+            : "That crafting result could not be recorded.";
+        showToast(copy, "error");
+        return;
+      }
+      ui.crafting.lastResult = { ...ui.crafting.lastResult, recorded: true };
+      recalculate();
+      scheduleSave();
+      renderRoute({ preserveScroll: true });
+      const entry = result.entry;
+      showToast(entry.inventoryAdded ? `${entry.inventoryAdded.quantity} ${entry.inventoryAdded.name}${entry.inventoryAdded.quantity === 1 ? "" : "s"} added to inventory.` : `${craftingOutcomeLabel(entry.outcome)} recorded.`, "success");
+      return;
+    }
+    if (action === "roll-crafting-recovery") {
+      ui.crafting.recovery.lastResult = engine.rollCraftingRecovery(state, ui.crafting.recovery);
+      ui.crafting.recovery.materialId = "";
+      renderRoute({ preserveScroll: true });
+      return;
+    }
+    if (action === "record-crafting-recovery") {
+      const recovery = ui.crafting.recovery;
+      const eligible = recovery.lastResult && recovery.lastResult.rarity !== "None"
+        ? data.crafting.materials.filter((material) => craftingRarityRank(material.rarity) <= craftingRarityRank(recovery.lastResult.rarity))
+        : [];
+      const materialId = recovery.materialId || eligible[0]?.id || "";
+      const result = engine.recordCraftingRecovery(state, data, recovery.lastResult, materialId);
+      if (!result.accepted) {
+        showToast(result.reason === "rarity-too-high" ? "That material exceeds the recovered rarity." : "The recovered material could not be recorded.", "error");
+        return;
+      }
+      recovery.lastResult = { ...recovery.lastResult, recorded: true };
+      recovery.materialId = materialId;
+      recalculate();
+      scheduleSave();
+      renderRoute({ preserveScroll: true });
+      showToast(`${result.entry.materialName} added as one material bundle.`, "success");
+      return;
+    }
+    if (action === "undo-crafting") {
+      const latest = derived.crafting.history[0];
+      if (!latest || !window.confirm(`Undo the latest crafting ledger entry?`)) return;
+      const result = engine.undoLastCraftingAction(state);
+      if (!result.accepted) {
+        const copy = result.reason === "crafted-item-used"
+          ? "The crafted inventory quantity has already been used or changed."
+          : result.reason === "material-used"
+            ? "The recovered material has already been used."
+            : "The latest crafting entry cannot be undone.";
+        showToast(copy, "error");
+        return;
+      }
+      ui.crafting.lastResult = null;
+      ui.crafting.recovery.lastResult = null;
+      recalculate();
+      scheduleSave();
+      renderRoute({ preserveScroll: true });
+      showToast("Latest crafting ledger entry undone.", "success");
+      return;
+    }
+    if (action === "clear-legendary-project") {
+      if (!window.confirm("Clear the active Legendary Project tracker?")) return;
+      state.crafting.legendaryProject = {
+        conceptId: "",
+        customName: "",
+        designComplete: false,
+        assemblyComplete: false,
+        awakeningComplete: false,
+        notes: "",
+      };
+      recalculate();
+      scheduleSave();
+      renderRoute({ preserveScroll: true });
+      showToast("Legendary Project tracker cleared.", "success");
+      return;
+    }
     if (action === "request-long-rest") {
       requestLongRest();
       return;

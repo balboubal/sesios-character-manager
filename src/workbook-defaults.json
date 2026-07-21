@@ -1,6 +1,6 @@
 {
   "defaultState": {
-    "schemaVersion": 5,
+    "schemaVersion": 6,
     "character": {
       "name": "Zele Kopsffmann",
       "race": "Human (Sesian)",
@@ -2756,6 +2756,36 @@
       "ingredientPantry": {},
       "cookingKitOwned": false,
       "ownedUtensils": []
+    },
+    "crafting": {
+      "materialInventory": {},
+      "disciplineBonuses": {
+        "Alchemy": 0,
+        "Forgecraft": 0,
+        "Runecraft": 0,
+        "Scribing": 0,
+        "Fieldcraft": 0,
+        "Harvesting": 0
+      },
+      "ownedToolKits": {
+        "Alchemy": false,
+        "Forgecraft": false,
+        "Runecraft": false,
+        "Scribing": false,
+        "Fieldcraft": false,
+        "Harvesting": false
+      },
+      "knownBlueprints": [],
+      "history": [],
+      "sequence": 0,
+      "legendaryProject": {
+        "conceptId": "",
+        "customName": "",
+        "designComplete": false,
+        "assemblyComplete": false,
+        "awakeningComplete": false,
+        "notes": ""
+      }
     }
   }
 }

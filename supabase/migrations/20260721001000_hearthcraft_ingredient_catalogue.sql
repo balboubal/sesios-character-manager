@@ -14,7 +14,9 @@ alter table public.catalogue_entries
       'food_dishes',
       'food_ingredients',
       'food_rules',
-      'crafting_sections'
+      'crafting_sections',
+      'crafting_materials',
+      'crafting_recipes'
     )
   );
 

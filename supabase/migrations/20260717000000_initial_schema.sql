@@ -44,7 +44,9 @@ create table if not exists public.catalogue_entries (
       'food_dishes',
       'food_ingredients',
       'food_rules',
-      'crafting_sections'
+      'crafting_sections',
+      'crafting_materials',
+      'crafting_recipes'
     )
   ),
   stable_key text not null,
