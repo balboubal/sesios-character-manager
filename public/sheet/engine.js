@@ -89,6 +89,21 @@
   };
 
   const PERSONALITY_TRAIT_LIMIT = 70;
+  const COOKING_LEVELS = Object.freeze([
+    { level: 0, title: "Untrained", bonus: 0, threshold: 0, benefit: "Basic meals only. Unfamiliar recipes have disadvantage." },
+    { level: 1, title: "Hearthhand", bonus: 5, threshold: 3, benefit: "Prepare familiar dishes without penalty." },
+    { level: 2, title: "Camp Cook", bonus: 10, threshold: 7, benefit: "Ignore one ordinary camp condition." },
+    { level: 3, title: "Journeyman", bonus: 15, threshold: 12, benefit: "A regional recipe becomes familiar after one success." },
+    { level: 4, title: "Hearthwright", bonus: 20, threshold: 18, benefit: "Strong success creates 2 extra servings once per long rest." },
+    { level: 5, title: "Master Cook", bonus: 25, threshold: 25, benefit: "Reroll one Cooking Check per long rest; use the new result." },
+  ]);
+  const COOKING_DIFFICULTIES = Object.freeze({
+    basic: { key: "basic", label: "Basic", dc: 20, time: "30 minutes" },
+    familiar: { key: "familiar", label: "Familiar", dc: 35, time: "30-60 minutes" },
+    regional: { key: "regional", label: "Regional", dc: 50, time: "1 hour" },
+    rare: { key: "rare", label: "Rare or Dangerous", dc: 70, time: "2 hours" },
+    masterwork: { key: "masterwork", label: "Masterwork or Unstable", dc: 85, time: "2-4 hours" },
+  });
 
   function numberValue(value) {
     if (typeof value === "number") return Number.isFinite(value) ? value : 0;
@@ -235,6 +250,384 @@
     if (value === 2) return "Starving: -5 Strength and Vitality checks";
     if (value === 3) return "Exhausted: -10 all checks, Speed halved";
     return "Collapse: Cannot travel until fed";
+  }
+
+
+  function nextCookingId(state, prefix) {
+    ensureCookingContainers(state);
+    state.cooking.sequence += 1;
+    return `${prefix}-${state.cooking.sequence}`;
+  }
+
+  function ensureCookingContainers(state) {
+    if (!state.cooking || typeof state.cooking !== "object") state.cooking = {};
+    if (!Array.isArray(state.cooking.familiarRecipes)) state.cooking.familiarRecipes = [];
+    if (!Array.isArray(state.cooking.history)) state.cooking.history = [];
+    state.cooking.xp = Math.max(0, Math.floor(numberValue(state.cooking.xp)));
+    state.cooking.sequence = Math.max(0, Math.floor(numberValue(state.cooking.sequence)));
+    state.cooking.rerollUsedRest = Math.max(0, Math.floor(numberValue(state.cooking.rerollUsedRest)));
+    state.cooking.hearthwrightUsedRest = Math.max(0, Math.floor(numberValue(state.cooking.hearthwrightUsedRest)));
+  }
+
+  function cookingLevelForXp(xp) {
+    const total = Math.max(0, Math.floor(numberValue(xp)));
+    return [...COOKING_LEVELS].reverse().find((entry) => total >= entry.threshold) || COOKING_LEVELS[0];
+  }
+
+  function normalizeCookingState(state) {
+    ensureCookingContainers(state);
+    const existingIds = state.cooking.history.map((entry) => entry?.id);
+    existingIds.forEach((id) => {
+      const match = String(id || "").match(/-(\d+)$/);
+      if (match) state.cooking.sequence = Math.max(state.cooking.sequence, Number(match[1]));
+    });
+    state.cooking.familiarRecipes = [...new Set(
+      state.cooking.familiarRecipes.map((name) => String(name || "").trim()).filter(Boolean),
+    )].sort((left, right) => left.localeCompare(right));
+    state.cooking.history = state.cooking.history
+      .filter((entry) => entry && typeof entry === "object")
+      .map((entry) => ({
+        ...entry,
+        id: entry.id || nextCookingId(state, "cook"),
+        createdAt: entry.createdAt || new Date().toISOString(),
+        restCycle: Math.max(1, Math.floor(numberValue(entry.restCycle) || 1)),
+        xpAwarded: Math.max(0, Math.floor(numberValue(entry.xpAwarded))),
+      }));
+    state.schemaVersion = Math.max(4, Math.floor(numberValue(state.schemaVersion)));
+    return state;
+  }
+
+  function calculateCooking(state, skillScores) {
+    normalizeCookingState(state);
+    const xp = state.cooking.xp;
+    const level = cookingLevelForXp(xp);
+    const nextLevel = COOKING_LEVELS[level.level + 1] || null;
+    const currentRest = Math.max(1, Math.floor(numberValue(state.hearth?.restCycle) || 1));
+    const xpThisRest = state.cooking.history
+      .filter((entry) => entry.restCycle === currentRest)
+      .reduce((sum, entry) => sum + Math.max(0, numberValue(entry.xpAwarded)), 0);
+    const skillBonus = numberValue(skillScores?.["95"]);
+    const progressionBonus = level.bonus;
+    return {
+      xp,
+      level: level.level,
+      title: level.title,
+      benefit: level.benefit,
+      progressionBonus,
+      skillBonus,
+      totalBonus: skillBonus + progressionBonus,
+      levels: COOKING_LEVELS,
+      nextLevel,
+      xpThisRest: Math.min(2, xpThisRest),
+      xpRemainingThisRest: Math.max(0, 2 - xpThisRest),
+      currentThreshold: level.threshold,
+      nextThreshold: nextLevel?.threshold ?? level.threshold,
+      progressCurrent: xp - level.threshold,
+      progressRequired: nextLevel ? nextLevel.threshold - level.threshold : 0,
+      progressPercent: nextLevel
+        ? Math.max(0, Math.min(100, ((xp - level.threshold) / (nextLevel.threshold - level.threshold)) * 100))
+        : 100,
+      familiarRecipes: [...state.cooking.familiarRecipes],
+      rerollAvailable: level.level >= 5 && state.cooking.rerollUsedRest !== currentRest,
+      hearthwrightAvailable: level.level >= 4 && state.cooking.hearthwrightUsedRest !== currentRest,
+      currentRest,
+      history: [...state.cooking.history].reverse(),
+    };
+  }
+
+  function inferRecipeDifficulty(dish) {
+    const explicitDc = Math.floor(numberValue(dish?.dc));
+    if (explicitDc >= 85) return COOKING_DIFFICULTIES.masterwork;
+    if (explicitDc >= 70) return COOKING_DIFFICULTIES.rare;
+    if (explicitDc >= 50) return COOKING_DIFFICULTIES.regional;
+    if (explicitDc >= 35) return COOKING_DIFFICULTIES.familiar;
+    if (explicitDc > 0) return COOKING_DIFFICULTIES.basic;
+    const label = String(dish?.difficulty || "").toLowerCase();
+    const name = String(dish?.name || "");
+    if (label.includes("master") || label.includes("unstable") || name.includes("✦")) return COOKING_DIFFICULTIES.masterwork;
+    if (label.includes("rare") || label.includes("danger") || name.includes("⚠")) return COOKING_DIFFICULTIES.rare;
+    return COOKING_DIFFICULTIES.regional;
+  }
+
+  function cookingRecipeFromConfig(state, data, config, cooking) {
+    const recipeKey = String(config?.recipeKey || "__basic");
+    const customName = String(config?.customName || "").trim();
+    const customRecipes = {
+      __basic: { name: customName || "Basic camp meal", difficulty: COOKING_DIFFICULTIES.basic, isHearthDish: false },
+      __familiar: { name: customName || "Familiar household dish", difficulty: COOKING_DIFFICULTIES.familiar, isHearthDish: false },
+      __rare: { name: customName || "Rare or dangerous dish", difficulty: COOKING_DIFFICULTIES.rare, isHearthDish: false },
+      __masterwork: { name: customName || "Masterwork or unstable dish", difficulty: COOKING_DIFFICULTIES.masterwork, isHearthDish: false },
+    };
+    if (customRecipes[recipeKey]) return { ...customRecipes[recipeKey], dish: null, specialtyUtensil: "" };
+    const dish = data.food?.dishes?.find((entry) => entry.name === recipeKey) || null;
+    if (!dish) return { ...customRecipes.__basic, name: customName || recipeKey || "Basic camp meal", dish: null, specialtyUtensil: "" };
+    return {
+      name: dish.name,
+      dish,
+      difficulty: inferRecipeDifficulty(dish),
+      isHearthDish: true,
+      specialtyUtensil: String(dish.specialtyUtensil || ""),
+    };
+  }
+
+  function previewCookingCheck(state, data, config, skillScores) {
+    const cooking = calculateCooking(state, skillScores);
+    const recipe = cookingRecipeFromConfig(state, data, config, cooking);
+    const familiar = cooking.familiarRecipes.includes(recipe.name);
+    const regionalNowFamiliar = familiar && recipe.difficulty.key === "regional";
+    const baseDc = regionalNowFamiliar ? COOKING_DIFFICULTIES.familiar.dc : recipe.difficulty.dc;
+    const servings = Math.max(1, Math.min(8, Math.floor(numberValue(config?.servings) || 4)));
+    const largeServingPenalty = servings > 4 ? 10 : 0;
+    const unfamiliar = recipe.difficulty.key !== "basic" && !familiar;
+    const writtenRecipe = config?.writtenRecipe === true;
+    const unfamiliarPenalty = unfamiliar && !writtenRecipe ? 10 : 0;
+    const hasCookingKit = config?.cookingKit !== false;
+    const assistant = config?.assistant === true;
+    const professionalKitchen = config?.professionalKitchen === true;
+    const poorConditions = config?.poorConditions === true;
+    const useCampCook = config?.useCampCook !== false && cooking.level >= 2 && poorConditions;
+    const specialtyPresent = !recipe.specialtyUtensil || config?.specialtyUtensil !== false;
+    const modifier = cooking.totalBonus + (hasCookingKit ? 25 : 0) + (assistant ? 10 : 0);
+    const advantageSources = professionalKitchen ? ["Professional kitchen"] : [];
+    const disadvantageSources = [];
+    if (poorConditions && !useCampCook) disadvantageSources.push("Poor fire, water, or weather");
+    if (!specialtyPresent) disadvantageSources.push(`Missing ${recipe.specialtyUtensil}`);
+    if (cooking.level === 0 && unfamiliar) disadvantageSources.push("Untrained with an unfamiliar recipe");
+    let rollMode = "normal";
+    if (advantageSources.length && !disadvantageSources.length) rollMode = "advantage";
+    if (disadvantageSources.length && !advantageSources.length) rollMode = "disadvantage";
+    return {
+      recipeKey: String(config?.recipeKey || "__basic"),
+      recipeName: recipe.name,
+      dish: recipe.dish,
+      isHearthDish: recipe.isHearthDish,
+      difficulty: regionalNowFamiliar ? COOKING_DIFFICULTIES.familiar : recipe.difficulty,
+      originalDifficulty: recipe.difficulty,
+      time: recipe.dish?.time || recipe.difficulty.time,
+      specialtyUtensil: recipe.specialtyUtensil,
+      specialtyPresent,
+      familiar,
+      unfamiliar,
+      writtenRecipe,
+      servings,
+      largeServingPenalty,
+      unfamiliarPenalty,
+      dc: baseDc + largeServingPenalty + unfamiliarPenalty,
+      baseDc,
+      modifier,
+      modifierBreakdown: {
+        cookingSkill: cooking.skillBonus,
+        levelBonus: cooking.progressionBonus,
+        cookingKit: hasCookingKit ? 25 : 0,
+        assistant: assistant ? 10 : 0,
+      },
+      rollMode,
+      advantageSources,
+      disadvantageSources,
+      campCookIgnoredCondition: useCampCook,
+      underPressure: config?.underPressure === true,
+      useHearthwright: config?.useHearthwright !== false,
+      cooking,
+      config: {
+        recipeKey: String(config?.recipeKey || "__basic"),
+        customName: String(config?.customName || "").trim(),
+        servings,
+        cookingKit: hasCookingKit,
+        assistant,
+        professionalKitchen,
+        writtenRecipe,
+        poorConditions,
+        specialtyUtensil: config?.specialtyUtensil !== false,
+        underPressure: config?.underPressure === true,
+        useCampCook: config?.useCampCook !== false,
+        useHearthwright: config?.useHearthwright !== false,
+      },
+    };
+  }
+
+  function randomD100(randomSource) {
+    const source = typeof randomSource === "function" ? randomSource : Math.random;
+    return Math.max(1, Math.min(100, Math.floor(source() * 100) + 1));
+  }
+
+  function rollCookingCheck(state, data, config, skillScores, randomSource) {
+    const preview = previewCookingCheck(state, data, config, skillScores);
+    const rolls = [randomD100(randomSource)];
+    if (preview.rollMode !== "normal") rolls.push(randomD100(randomSource));
+    const naturalRoll = preview.rollMode === "advantage"
+      ? Math.max(...rolls)
+      : preview.rollMode === "disadvantage"
+        ? Math.min(...rolls)
+        : rolls[0];
+    const total = naturalRoll + preview.modifier;
+    let outcome = "failure";
+    if (naturalRoll <= 5) outcome = "critical-failure";
+    else if (naturalRoll >= 96) outcome = "critical-success";
+    else if (total >= preview.dc + 20) outcome = "strong-success";
+    else if (total >= preview.dc) outcome = "success";
+    const success = ["success", "strong-success", "critical-success"].includes(outcome);
+    const useHearthwright =
+      outcome === "strong-success" &&
+      preview.cooking.hearthwrightAvailable &&
+      preview.useHearthwright;
+    const extraServings = outcome === "strong-success" ? (useHearthwright ? 2 : 1) : 0;
+    const preparedServings = outcome === "critical-failure" ? 0 : preview.servings + extraServings;
+    const bonusXpReason =
+      preview.underPressure ||
+      preview.unfamiliar ||
+      ["regional", "rare", "masterwork"].includes(preview.originalDifficulty.key);
+    const potentialXp = success && preview.dc >= 35 ? 1 + (bonusXpReason ? 1 : 0) : 0;
+    const xpAwarded = Math.min(preview.cooking.xpRemainingThisRest, potentialXp);
+    const becomesFamiliar =
+      success &&
+      preview.cooking.level >= 3 &&
+      preview.originalDifficulty.key === "regional" &&
+      !preview.familiar;
+    return {
+      ...preview,
+      checkId: `check-${Date.now()}-${Math.floor((typeof randomSource === "function" ? randomSource() : Math.random()) * 1000000)}`,
+      rolls,
+      naturalRoll,
+      total,
+      outcome,
+      success,
+      extraServings,
+      preparedServings,
+      extraBoonTargets: outcome === "critical-success" ? 1 : 0,
+      usedHearthwright: useHearthwright,
+      potentialXp,
+      xpAwarded,
+      becomesFamiliar,
+      rerolled: false,
+      recorded: false,
+    };
+  }
+
+  function rerollCookingCheck(state, data, previousResult, skillScores, randomSource) {
+    normalizeCookingState(state);
+    const cooking = calculateCooking(state, skillScores);
+    if (!previousResult || cooking.level < 5) return { accepted: false, reason: "unavailable" };
+    if (!cooking.rerollAvailable) return { accepted: false, reason: "already-used" };
+    state.cooking.rerollUsedRest = cooking.currentRest;
+    const result = rollCookingCheck(state, data, previousResult.config, skillScores, randomSource);
+    result.checkId = previousResult.checkId;
+    result.rerolled = true;
+    return { accepted: true, result };
+  }
+
+  function appendCookingHistory(state, entry) {
+    normalizeCookingState(state);
+    const historyEntry = {
+      id: nextCookingId(state, "cook"),
+      createdAt: new Date().toISOString(),
+      restCycle: Math.max(1, Math.floor(numberValue(state.hearth?.restCycle) || 1)),
+      day: Math.max(1, Math.floor(numberValue(state.hunger?.currentDay) || 1)),
+      ...entry,
+    };
+    state.cooking.history.push(historyEntry);
+    return historyEntry;
+  }
+
+  function recordCookingResult(state, data, result, skillScores) {
+    normalizeSurvivalState(state);
+    normalizeCookingState(state);
+    if (!result?.checkId || state.cooking.history.some((entry) => entry.checkId === result.checkId)) {
+      return { accepted: false, reason: "already-recorded" };
+    }
+    const cooking = calculateCooking(state, skillScores);
+    const previous = {
+      xp: state.cooking.xp,
+      foodGainedToday: state.hunger.foodGainedToday,
+      pantryQuantity: numberValue(state.hearth.acquired[result.recipeName]),
+      familiarRecipes: [...state.cooking.familiarRecipes],
+      hearthwrightUsedRest: state.cooking.hearthwrightUsedRest,
+    };
+    const actualXp = Math.min(cooking.xpRemainingThisRest, Math.max(0, Math.floor(numberValue(result.potentialXp))));
+    let pantryAdded = 0;
+    let standardFoodAdded = 0;
+    if (result.outcome !== "critical-failure") {
+      if (result.success && result.isHearthDish) {
+        pantryAdded = Math.max(0, Math.floor(numberValue(result.preparedServings)));
+        state.hearth.acquired[result.recipeName] = previous.pantryQuantity + pantryAdded;
+      } else {
+        standardFoodAdded = Math.max(0, Math.floor(numberValue(result.preparedServings)));
+        state.hunger.foodGainedToday = Math.max(0, Math.floor(numberValue(state.hunger.foodGainedToday))) + standardFoodAdded;
+      }
+    }
+    state.cooking.xp += actualXp;
+    if (result.becomesFamiliar && !state.cooking.familiarRecipes.includes(result.recipeName)) {
+      state.cooking.familiarRecipes.push(result.recipeName);
+      state.cooking.familiarRecipes.sort((left, right) => left.localeCompare(right));
+    }
+    if (result.usedHearthwright) state.cooking.hearthwrightUsedRest = cooking.currentRest;
+    const historyEntry = appendCookingHistory(state, {
+      type: "check",
+      checkId: result.checkId,
+      recipeName: result.recipeName,
+      dc: result.dc,
+      naturalRoll: result.naturalRoll,
+      rolls: [...result.rolls],
+      total: result.total,
+      outcome: result.outcome,
+      servingsRequested: result.servings,
+      servingsPrepared: result.preparedServings,
+      pantryAdded,
+      standardFoodAdded,
+      xpAwarded: actualXp,
+      becameFamiliar: result.becomesFamiliar,
+      usedHearthwright: result.usedHearthwright,
+      rerolled: result.rerolled === true,
+      previous,
+    });
+    return { accepted: true, historyEntry, actualXp, pantryAdded, standardFoodAdded };
+  }
+
+  function grantCookingTrainingXp(state, skillScores) {
+    normalizeCookingState(state);
+    const cooking = calculateCooking(state, skillScores);
+    if (cooking.xpRemainingThisRest < 1) return { accepted: false, reason: "rest-limit" };
+    const previous = { xp: state.cooking.xp };
+    state.cooking.xp += 1;
+    const historyEntry = appendCookingHistory(state, {
+      type: "training",
+      xpAwarded: 1,
+      previous,
+    });
+    return { accepted: true, historyEntry, xp: state.cooking.xp };
+  }
+
+  function undoLastCookingAction(state) {
+    normalizeCookingState(state);
+    const event = state.cooking.history.at(-1);
+    if (!event) return { accepted: false, reason: "empty-history" };
+    if (event.type === "check") {
+      if (numberValue(event.standardFoodAdded) > 0 && numberValue(state.hunger?.currentDay) !== numberValue(event.day)) {
+        return { accepted: false, reason: "day-advanced" };
+      }
+      if (numberValue(event.pantryAdded) > 0) {
+        const consumed = (state.hearth?.log || []).filter(
+          (entry) => entry?.eaten === true && entry?.dish === event.recipeName,
+        ).length;
+        if (consumed > numberValue(event.previous?.pantryQuantity)) {
+          return { accepted: false, reason: "servings-consumed" };
+        }
+      }
+      state.cooking.xp = Math.max(0, Math.floor(numberValue(event.previous?.xp)));
+      state.hunger.foodGainedToday = Math.max(0, Math.floor(numberValue(event.previous?.foodGainedToday)));
+      if (numberValue(event.pantryAdded) > 0) {
+        state.hearth.acquired[event.recipeName] = Math.max(0, Math.floor(numberValue(event.previous?.pantryQuantity)));
+      }
+      state.cooking.familiarRecipes = Array.isArray(event.previous?.familiarRecipes)
+        ? [...event.previous.familiarRecipes]
+        : state.cooking.familiarRecipes;
+      state.cooking.hearthwrightUsedRest = Math.max(0, Math.floor(numberValue(event.previous?.hearthwrightUsedRest)));
+    } else if (event.type === "training") {
+      state.cooking.xp = Math.max(0, Math.floor(numberValue(event.previous?.xp)));
+    } else {
+      return { accepted: false, reason: "unsupported" };
+    }
+    state.cooking.history.pop();
+    return { accepted: true, event };
   }
 
   function calculateHunger(state) {
@@ -700,6 +1093,7 @@
 
   function normalizeSurvivalState(state) {
     ensureSurvivalContainers(state);
+    normalizeCookingState(state);
 
     const existingIds = [
       ...state.survivalHistory.map((entry) => entry?.id),
@@ -1194,6 +1588,7 @@
       skillScores[String(skill.sourceRow)] =
         abilityModifiers[skill.ability] + (input.proficient ? proficiency : 0) + bonus;
     });
+    const cooking = calculateCooking(state, skillScores);
     const savingThrows = {};
     data.abilityDefinitions.forEach((ability) => {
       const input = state.savingThrows?.[ability.id] || {};
@@ -1302,6 +1697,7 @@
         criticalStrike,
       },
       personality,
+      cooking,
       hunger,
       hearth,
       survivalHistory,
@@ -1326,6 +1722,14 @@
     setTrackedAilment,
     changeTrackedAilmentMark,
     normalizeSurvivalState,
+    normalizeCookingState,
+    calculateCooking,
+    previewCookingCheck,
+    rollCookingCheck,
+    rerollCookingCheck,
+    recordCookingResult,
+    grantCookingTrainingXp,
+    undoLastCookingAction,
     previewHungerDay,
     advanceHungerDay,
     resetDayCounter,

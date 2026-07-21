@@ -5,6 +5,7 @@ export const catalogueDefinitions = Object.freeze([
   { key: "traits", label: "Personality Traits", singular: "trait" },
   { key: "conditions", label: "Conditions", singular: "condition" },
   { key: "food_dishes", label: "Hearthcraft Dishes", singular: "dish" },
+  { key: "food_ingredients", label: "Hearthcraft Ingredients", singular: "ingredient" },
   { key: "food_rules", label: "Hearthcraft Rules", singular: "rule" },
   { key: "crafting_sections", label: "Crafting Sections", singular: "section" },
 ]);
@@ -38,6 +39,7 @@ export function buildWorkbookCataloguePayload(rows) {
     items: grouped.items.map((row) => row.data),
     food: {
       dishes: grouped.food_dishes.map((row) => row.data),
+      ingredients: grouped.food_ingredients.map((row) => row.data),
       rules: grouped.food_rules.map((row) => row.data),
     },
     crafting: {
@@ -52,6 +54,19 @@ export function blankCatalogueEntry(category, reference) {
   }
   if (category === "food_rules") {
     return { rule: "", detail: "" };
+  }
+  if (category === "food_ingredients") {
+    return {
+      name: "",
+      category: "Herb & Plant",
+      region: "",
+      mainUse: "",
+      secondaryUse: "",
+      notes: "",
+      source: "",
+      marketStatus: "",
+      role: "",
+    };
   }
   if (!reference || typeof reference !== "object") return { name: "" };
 

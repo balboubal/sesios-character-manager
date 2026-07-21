@@ -3973,3 +3973,929 @@ input[type="checkbox"] {
     width: 100%;
   }
 }
+
+/* Hearthcraft cooking station */
+.cooking-station {
+  overflow: hidden;
+}
+
+.cooking-station-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.72fr) minmax(0, 1.6fr);
+  gap: 18px;
+  align-items: start;
+}
+
+.cooking-progression,
+.cooking-check-builder {
+  min-width: 0;
+  padding: 16px;
+  background: #fbfaf6;
+  border: 1px solid #d4cdc0;
+  border-radius: var(--radius);
+}
+
+.cooking-progression {
+  position: sticky;
+  top: 18px;
+}
+
+.cooking-level-heading {
+  display: flex;
+  justify-content: space-between;
+  gap: 14px;
+  align-items: center;
+  padding-bottom: 13px;
+  border-bottom: 1px solid #ddd4c5;
+}
+
+.cooking-level-heading span,
+.cooking-progression h4,
+.subsection-heading span {
+  color: #6f6251;
+  font-size: 10px;
+  font-weight: 850;
+  letter-spacing: 0.07em;
+  text-transform: uppercase;
+}
+
+.cooking-level-heading h3 {
+  margin: 2px 0 0;
+  font-family: var(--font-display);
+  font-size: 25px;
+}
+
+.cooking-level-heading > strong {
+  display: grid;
+  min-width: 64px;
+  min-height: 64px;
+  place-items: center;
+  color: white;
+  background: var(--rust);
+  border-radius: 50%;
+  font-size: 23px;
+}
+
+.cooking-progression > p {
+  margin: 13px 0;
+  color: #536169;
+}
+
+.cooking-bonus-breakdown {
+  display: grid;
+  gap: 6px;
+}
+
+.cooking-bonus-breakdown span {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 8px 10px;
+  background: white;
+  border: 1px solid #ded8cc;
+  border-radius: var(--radius-small);
+  font-size: 11px;
+}
+
+.cooking-xp-progress {
+  margin-top: 14px;
+}
+
+.cooking-xp-progress > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  margin-bottom: 6px;
+  color: #54636b;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.progress-track {
+  overflow: hidden;
+  height: 9px;
+  background: #e5dfd2;
+  border-radius: 999px;
+}
+
+.progress-track span {
+  display: block;
+  height: 100%;
+  background: linear-gradient(90deg, var(--rust), var(--amber));
+  border-radius: inherit;
+}
+
+.cooking-progression-actions,
+.cooking-result-actions,
+.subsection-heading {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  align-items: center;
+}
+
+.cooking-progression-actions {
+  margin: 14px 0 17px;
+}
+
+.familiar-recipe-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  min-height: 28px;
+}
+
+.muted-copy {
+  color: #7b878d;
+  font-size: 11px;
+}
+
+.cooking-level-table {
+  margin-top: 16px;
+  border-top: 1px solid #ddd4c5;
+}
+
+.cooking-level-table summary {
+  padding: 12px 0 0;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.cooking-level-table > div {
+  display: grid;
+  gap: 7px;
+  margin-top: 10px;
+}
+
+.cooking-level-table article {
+  padding: 9px 10px;
+  background: white;
+  border: 1px solid #ded8cc;
+  border-radius: var(--radius-small);
+}
+
+.cooking-level-table article.is-current {
+  background: var(--amber-pale);
+  border-color: #c79520;
+}
+
+.cooking-level-table article strong,
+.cooking-level-table article span {
+  display: block;
+  font-size: 10px;
+}
+
+.cooking-level-table article p {
+  margin: 4px 0 0;
+  color: #59686f;
+  font-size: 10px;
+}
+
+.cooking-recipe-summary {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  margin: 14px 0;
+  padding: 12px 14px;
+  background: #172b37;
+  color: white;
+  border-radius: var(--radius-small);
+}
+
+.cooking-recipe-summary > div {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.cooking-recipe-summary span {
+  color: #bed2dc;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.cooking-recipe-summary strong {
+  font-size: 22px;
+}
+
+.cooking-recipe-summary p {
+  margin: 0;
+  color: #dce8ed;
+  font-size: 11px;
+  text-align: right;
+}
+
+.cooking-options-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.cooking-options-grid label {
+  display: flex;
+  gap: 9px;
+  align-items: flex-start;
+  min-height: 50px;
+  padding: 10px;
+  background: white;
+  border: 1px solid #d8d3ca;
+  border-radius: var(--radius-small);
+}
+
+.cooking-options-grid input {
+  margin-top: 2px;
+}
+
+.cooking-options-grid span {
+  display: grid;
+  gap: 2px;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.cooking-options-grid small {
+  color: #748087;
+  font-size: 9px;
+  font-weight: 650;
+}
+
+.cooking-check-preview {
+  display: grid;
+  gap: 4px;
+  margin: 14px 0 10px;
+  padding: 12px 14px;
+  background: #fff5dc;
+  border: 1px solid #d8b86a;
+  border-radius: var(--radius-small);
+}
+
+.cooking-check-preview > div {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  align-items: baseline;
+}
+
+.cooking-check-preview > div span {
+  font-weight: 800;
+}
+
+.cooking-check-preview > div strong {
+  color: var(--rust);
+  font-size: 25px;
+}
+
+.cooking-check-preview p,
+.cooking-check-preview small {
+  margin: 0;
+  color: #655b4c;
+  font-size: 10px;
+}
+
+.cooking-roll-button {
+  width: 100%;
+  min-height: 44px;
+}
+
+.cooking-result {
+  display: grid;
+  gap: 10px;
+  margin-top: 12px;
+  padding: 14px;
+  background: white;
+  border: 1px solid #c9d0d4;
+  border-left: 5px solid var(--line-strong);
+  border-radius: var(--radius-small);
+}
+
+.cooking-result.is-empty {
+  color: #748188;
+  background: #f4f6f6;
+}
+
+.cooking-result.is-success {
+  background: #f2f8f4;
+  border-left-color: var(--green);
+}
+
+.cooking-result.is-failure {
+  background: #fff8ed;
+  border-left-color: #c98124;
+}
+
+.cooking-result.is-critical-failure {
+  background: var(--red-pale);
+  border-left-color: var(--red);
+}
+
+.cooking-result-heading,
+.cooking-result-breakdown {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.cooking-result-heading span {
+  color: #6b7b82;
+  font-size: 9px;
+  font-weight: 900;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.cooking-result-heading > div > strong {
+  display: block;
+  margin-top: 2px;
+  font-family: var(--font-display);
+  font-size: 20px;
+}
+
+.cooking-total {
+  font-size: 30px;
+}
+
+.cooking-result-breakdown {
+  margin: 0;
+}
+
+.cooking-result-breakdown div {
+  flex: 1;
+  padding: 8px;
+  background: rgba(255,255,255,0.72);
+  border: 1px solid rgba(96,112,119,0.18);
+  border-radius: 5px;
+}
+
+.cooking-result-breakdown dt {
+  color: #6d7b81;
+  font-size: 8px;
+  font-weight: 900;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.cooking-result-breakdown dd {
+  margin: 2px 0 0;
+  font-weight: 850;
+}
+
+.cooking-result p,
+.cooking-feature-note {
+  margin: 0;
+  color: #4e5e65;
+  font-size: 11px;
+}
+
+.cooking-feature-note {
+  display: block;
+  padding: 8px 9px;
+  background: var(--amber-pale);
+  border-radius: 5px;
+}
+
+.cooking-history {
+  margin-top: 20px;
+  padding-top: 18px;
+  border-top: 1px solid #d7dfe2;
+}
+
+.subsection-heading {
+  justify-content: space-between;
+  margin-bottom: 10px;
+}
+
+.subsection-heading h3 {
+  margin: 0;
+}
+
+.cooking-history-list {
+  display: grid;
+  gap: 8px;
+  margin: 0 0 10px;
+  padding: 0;
+  list-style: none;
+}
+
+.cooking-history-list li {
+  display: grid;
+  grid-template-columns: 38px 1fr;
+  gap: 10px;
+  align-items: center;
+  padding: 10px;
+  background: #f8f9f9;
+  border: 1px solid #d9e0e3;
+  border-radius: var(--radius-small);
+}
+
+.cooking-history-list .history-marker {
+  display: grid;
+  width: 38px;
+  height: 38px;
+  place-items: center;
+  color: white;
+  background: var(--rust);
+  border-radius: 50%;
+  font-size: 10px;
+  font-weight: 850;
+}
+
+.cooking-history-list strong,
+.cooking-history-list p {
+  display: block;
+  margin: 0;
+  font-size: 10px;
+}
+
+.cooking-history-list p {
+  margin-top: 3px;
+  color: #64747b;
+}
+
+.cooking-rule-callout {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  align-items: center;
+  padding: 15px 17px;
+  color: #fff;
+  background: linear-gradient(135deg, #7a1a26, #a22d34);
+  border-radius: var(--radius-small);
+}
+
+.cooking-rule-callout strong {
+  font-size: 16px;
+}
+
+.cooking-rule-callout span {
+  color: #f7d8d8;
+  font-size: 11px;
+}
+
+.cooking-reference-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.cooking-reference-grid section {
+  min-width: 0;
+}
+
+.cooking-reference-grid h3 {
+  margin-bottom: 8px;
+  font-family: var(--font-display);
+  font-size: 20px;
+}
+
+.reference-span {
+  grid-column: 1 / -1;
+}
+
+.reference-table {
+  display: grid;
+  border: 1px solid #d8d0c2;
+  border-radius: var(--radius-small);
+  overflow: hidden;
+}
+
+.reference-table > div {
+  display: grid;
+  grid-template-columns: minmax(120px, 0.38fr) 1fr;
+  gap: 12px;
+  padding: 9px 10px;
+  background: #fff;
+  border-bottom: 1px solid #e1dbd0;
+  font-size: 10px;
+}
+
+.reference-table > div:last-child {
+  border-bottom: 0;
+}
+
+.reference-table span {
+  color: #5e6b71;
+}
+
+.kit-summary {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  margin-bottom: 9px;
+  border: 1px solid #c4b47f;
+}
+
+.kit-summary span {
+  padding: 8px;
+  background: #eef0e7;
+  border-right: 1px solid #c4b47f;
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.kit-summary span:last-child {
+  border-right: 0;
+}
+
+.kit-columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.kit-columns > div {
+  padding: 9px;
+  background: white;
+  border: 1px solid #ddd7cb;
+  border-radius: var(--radius-small);
+}
+
+.kit-columns strong {
+  color: var(--rust);
+  font-size: 10px;
+}
+
+.kit-columns ul {
+  margin: 6px 0 0;
+  padding-left: 16px;
+  color: #5d696f;
+  font-size: 9px;
+}
+
+.specialty-utensil-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 8px;
+}
+
+.specialty-utensil-grid article {
+  padding: 10px;
+  background: white;
+  border: 1px solid #ddd7cb;
+  border-radius: var(--radius-small);
+}
+
+.specialty-utensil-grid strong,
+.specialty-utensil-grid span {
+  display: block;
+  font-size: 10px;
+}
+
+.specialty-utensil-grid span {
+  margin-top: 4px;
+  color: #647178;
+}
+
+.food-preparation-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 8px 0;
+}
+
+.food-preparation-meta span {
+  padding: 4px 7px;
+  color: #59676d;
+  background: #f2f4f4;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 700;
+}
+
+.empty-state.compact {
+  min-height: auto;
+  padding: 18px;
+}
+
+@media (max-width: 1040px) {
+  .cooking-station-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .cooking-progression {
+    position: static;
+  }
+}
+
+@media (max-width: 760px) {
+  .cooking-options-grid,
+  .cooking-reference-grid,
+  .specialty-utensil-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .reference-span {
+    grid-column: auto;
+  }
+
+  .cooking-rule-callout,
+  .cooking-recipe-summary,
+  .cooking-result-heading,
+  .cooking-result-breakdown {
+    align-items: stretch;
+    flex-direction: column;
+  }
+
+  .cooking-recipe-summary p {
+    text-align: left;
+  }
+
+  .cooking-result-breakdown {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .kit-columns,
+  .kit-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .kit-summary span {
+    border-right: 0;
+    border-bottom: 1px solid #c4b47f;
+  }
+
+  .kit-summary span:last-child {
+    border-bottom: 0;
+  }
+}
+
+
+/* Hearthcraft ingredient catalogue */
+.hearthcraft-view-tabs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0 0 16px;
+  padding: 7px;
+  background: rgba(255, 255, 255, 0.72);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+}
+
+.hearthcraft-view-tabs .tab-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 40px;
+}
+
+.hearthcraft-view-tabs .tab-button span {
+  min-width: 24px;
+  padding: 2px 6px;
+  color: inherit;
+  background: rgba(255, 255, 255, 0.18);
+  border-radius: 999px;
+  font-size: 9px;
+  text-align: center;
+}
+
+.food-ingredient-list {
+  margin-top: 10px;
+  padding: 9px 10px;
+  background: #f7f1e4;
+  border: 1px solid #e3d3ad;
+  border-radius: 5px;
+}
+
+.food-ingredient-list > strong,
+.ingredient-recipe-links > strong,
+.ingredient-main-use > strong {
+  display: block;
+  margin-bottom: 6px;
+  color: #5e4a20;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.food-ingredient-list > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.food-ingredient-list button {
+  padding: 4px 7px;
+  color: #40515a;
+  background: white;
+  border: 1px solid #d5c59f;
+  border-radius: 999px;
+  font-size: 9px;
+  font-weight: 750;
+}
+
+.food-ingredient-list button:hover {
+  color: var(--blue-dark);
+  border-color: var(--blue);
+}
+
+.ingredient-reference {
+  margin-bottom: 16px;
+}
+
+.ingredient-role-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 8px;
+}
+
+.ingredient-role-grid article {
+  display: grid;
+  gap: 5px;
+  padding: 11px;
+  background: #f6f3ea;
+  border: 1px solid #ddd3bd;
+  border-left: 4px solid var(--amber);
+  border-radius: 5px;
+}
+
+.ingredient-role-grid article strong {
+  color: #6a4516;
+  font-size: 12px;
+}
+
+.ingredient-role-grid article span {
+  color: #334750;
+  font-size: 11px;
+  font-weight: 750;
+}
+
+.ingredient-role-grid article small {
+  color: #68777d;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.regional-food-guide {
+  margin-top: 12px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.regional-food-guide summary {
+  padding: 11px 13px;
+  cursor: pointer;
+  background: #f4f6f7;
+  font-size: 11px;
+  font-weight: 850;
+}
+
+.regional-food-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 7px;
+  padding: 12px;
+}
+
+.regional-food-grid article {
+  display: grid;
+  gap: 3px;
+  padding: 9px;
+  background: white;
+  border-left: 3px solid var(--blue);
+}
+
+.regional-food-grid strong,
+.scene-ingredient-list strong {
+  font-size: 10px;
+}
+
+.regional-food-grid span,
+.scene-ingredient-list span {
+  color: #586970;
+  font-size: 10px;
+  line-height: 1.45;
+}
+
+.scene-ingredient-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 6px;
+  padding: 0 12px 12px;
+}
+
+.scene-ingredient-list div {
+  display: grid;
+  gap: 3px;
+  padding: 9px;
+  background: #fbfaf6;
+  border: 1px solid #e6e0d4;
+  border-radius: 4px;
+}
+
+.ingredient-design-rule {
+  margin: 0 12px 12px;
+  padding: 10px;
+  color: #59451d;
+  background: var(--amber-pale);
+  border-left: 4px solid var(--amber);
+  font-size: 10px;
+  font-weight: 750;
+}
+
+.ingredient-grid {
+  grid-template-columns: repeat(auto-fill, minmax(285px, 1fr));
+}
+
+.ingredient-card {
+  border-top-color: #77945b;
+}
+
+.ingredient-card[data-ingredient-category="Witness Fruit & Produce"] {
+  border-top-color: #a76386;
+}
+
+.ingredient-card[data-ingredient-category="Livestock"],
+.ingredient-card[data-ingredient-category="Livestock Product"] {
+  border-top-color: #8b684a;
+}
+
+.ingredient-card[data-ingredient-category="Fishery Catch"],
+.ingredient-card[data-ingredient-category="Fishery Product"] {
+  border-top-color: #3e82a8;
+}
+
+.ingredient-main-use {
+  padding: 9px 10px;
+  background: #f2f6ee;
+  border-radius: 5px;
+}
+
+.ingredient-main-use p {
+  margin: 0;
+  color: #30473a;
+}
+
+.ingredient-details {
+  display: grid;
+  gap: 5px;
+  margin: 10px 0 0;
+}
+
+.ingredient-details div {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 8px;
+  padding-bottom: 5px;
+  border-bottom: 1px solid #e8ecee;
+}
+
+.ingredient-details dt {
+  color: #68777d;
+  font-size: 9px;
+  font-weight: 850;
+  text-transform: uppercase;
+}
+
+.ingredient-details dd {
+  margin: 0;
+  color: #40515a;
+  font-size: 10px;
+}
+
+.ingredient-notes {
+  margin: 10px 0 0;
+  padding: 9px 10px;
+  color: #5d5a50 !important;
+  background: #fbfaf6;
+  border-left: 3px solid #c9b98f;
+  border-radius: 3px;
+  line-height: 1.5;
+}
+
+.ingredient-recipe-links {
+  margin-top: auto;
+  padding-top: 12px;
+}
+
+.ingredient-recipe-links > div {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.ingredient-recipe-links.is-empty span {
+  color: #7a878c;
+  font-size: 10px;
+}
+
+@media (max-width: 700px) {
+  .hearthcraft-view-tabs {
+    display: grid;
+    grid-template-columns: 1fr;
+  }
+
+  .hearthcraft-view-tabs .tab-button {
+    justify-content: space-between;
+    width: 100%;
+  }
+
+  .ingredient-details div {
+    grid-template-columns: 1fr;
+    gap: 2px;
+  }
+}
