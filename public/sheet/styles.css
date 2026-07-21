@@ -5597,3 +5597,87 @@ input[type="checkbox"] {
   .crafting-project-grid,
   .crafting-project-stage-list { grid-template-columns: 1fr; }
 }
+
+/* Character experience progression */
+.character-xp-row {
+  grid-template-columns: 70px minmax(0, 1fr);
+  align-items: center;
+  padding: 10px 0 14px;
+}
+
+.character-xp-row dd {
+  width: 100%;
+}
+
+.character-xp-summary {
+  display: grid;
+  grid-template-columns: 46px minmax(0, 1fr);
+  gap: 10px;
+  align-items: center;
+  width: 100%;
+}
+
+.character-level-badge {
+  display: grid;
+  width: 46px;
+  height: 42px;
+  place-items: center;
+  color: #fff;
+  background: var(--blue-dark);
+  border-radius: 8px;
+  box-shadow: inset 0 -3px rgba(0, 0, 0, 0.16);
+  font-family: var(--font-display);
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.character-xp-progress {
+  display: grid;
+  gap: 6px;
+  min-width: 0;
+}
+
+.character-xp-copy {
+  display: flex;
+  justify-content: space-between;
+  gap: 10px;
+  color: #52636c;
+  font-size: 11px;
+  font-weight: 800;
+}
+
+.character-xp-copy span {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.character-xp-copy b {
+  color: var(--blue-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+.character-xp-track {
+  position: relative;
+  height: 11px;
+  overflow: hidden;
+  background: #dfe8ed;
+  border: 1px solid #b9cbd5;
+  border-radius: 999px;
+}
+
+.character-xp-track > span {
+  display: block;
+  height: 100%;
+  min-width: 0;
+  background: linear-gradient(90deg, #d8a92d, #f3cd59);
+  border-radius: inherit;
+  transition: width 180ms ease;
+}
+
+@media (max-width: 680px) {
+  .character-xp-row {
+    grid-template-columns: 1fr;
+    gap: 6px;
+  }
+}
