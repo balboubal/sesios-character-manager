@@ -31,6 +31,8 @@
     spellLevel: "Cantrips",
     itemLimit: 48,
     foodView: "dishes",
+    pantryIngredient: "",
+    pantryAmount: 1,
     filters: {
       skillsQuery: "",
       skillsAbility: "All",
@@ -61,13 +63,12 @@
     cooking: {
       recipeKey: "__basic",
       customName: "",
-      servings: 4,
       cookingKit: true,
+      ingredientSource: "pantry",
       assistant: false,
       professionalKitchen: false,
       writtenRecipe: true,
       poorConditions: false,
-      specialtyUtensil: true,
       underPressure: false,
       useCampCook: true,
       useHearthwright: true,
@@ -192,7 +193,8 @@
         path === "hearth.log" ||
         path === "survivalHistory" ||
         path === "cooking.history" ||
-        path === "cooking.familiarRecipes"
+        path === "cooking.familiarRecipes" ||
+        path === "cooking.ownedUtensils"
       ) {
         return clone(Array.isArray(suppliedValue) ? suppliedValue : defaultValue);
       }
@@ -208,7 +210,7 @@
         const childPath = path ? `${path}.${key}` : key;
         merged[key] = mergeWithDefaults(defaultValue[key], supplied[key], childPath);
       });
-      if (path === "hearth.acquired") {
+      if (path === "hearth.acquired" || path === "cooking.ingredientPantry") {
         Object.keys(supplied).forEach((key) => {
           if (!(key in merged)) merged[key] = supplied[key];
         });
@@ -394,13 +396,44 @@
     });
 
     root.addEventListener("change", (event) => {
+      const cookingStateControl = event.target.closest("[data-cooking-state]");
+      if (cookingStateControl) {
+        const key = cookingStateControl.dataset.cookingState;
+        state.cooking[key] = cookingStateControl.value;
+        ui.cooking.lastResult = null;
+        recalculate();
+        scheduleSave();
+        renderRoute({ preserveScroll: true });
+        return;
+      }
+
+      const ownedUtensil = event.target.closest("[data-owned-utensil]");
+      if (ownedUtensil) {
+        const name = ownedUtensil.dataset.ownedUtensil;
+        const owned = new Set(state.cooking.ownedUtensils || []);
+        if (ownedUtensil.checked) owned.add(name);
+        else owned.delete(name);
+        state.cooking.ownedUtensils = [...owned].sort((left, right) => left.localeCompare(right));
+        ui.cooking.lastResult = null;
+        recalculate();
+        scheduleSave();
+        renderRoute({ preserveScroll: true });
+        return;
+      }
+
+      const pantryControl = event.target.closest("[data-pantry-control]");
+      if (pantryControl) {
+        const key = pantryControl.dataset.pantryControl;
+        ui[key] = pantryControl.dataset.valueType === "number"
+          ? Math.max(1, Math.floor(engine.numberValue(pantryControl.value) || 1))
+          : pantryControl.value;
+        return;
+      }
+
       const cookingControl = event.target.closest("[data-cooking-control]");
       if (cookingControl) {
         const key = cookingControl.dataset.cookingControl;
-        let value = cookingControl.type === "checkbox" ? cookingControl.checked : cookingControl.value;
-        if (cookingControl.dataset.valueType === "number") {
-          value = Math.max(1, Math.min(8, Math.floor(engine.numberValue(value) || 1)));
-        }
+        const value = cookingControl.type === "checkbox" ? cookingControl.checked : cookingControl.value;
         ui.cooking[key] = value;
         ui.cooking.lastResult = null;
         renderRoute({ preserveScroll: true });
@@ -1225,7 +1258,7 @@
       </div><div class="encumbrance-meter" aria-hidden="true"><span data-encumbrance-meter></span></div></div></section>
       <section class="section-gap" aria-labelledby="inventory-table-heading"><h2 class="visually-hidden" id="inventory-table-heading">Inventory entries</h2>${itemList}<div class="inventory-table-toolbar"><div class="inventory-slot-summary"><strong>${state.inventory.length} item ${state.inventory.length === 1 ? "slot" : "slots"}</strong><span>Add or remove slots whenever the character needs more or less space.</span></div><button class="button button-primary" type="button" data-action="add-inventory-slot">Add item slot</button></div>${inventoryTable}</section>
       <div class="layout-grid two section-gap">
-        <section class="panel"><div class="panel-heading plum"><h2>Currency</h2><span class="heading-note">1 PP = 1000 SP · 1 GP = 100 SP · 1 CP = 0.1 SP</span></div><div class="panel-body"><div class="currency-grid">
+        <section class="panel"><div class="panel-heading plum"><h2>Currency</h2><span class="heading-note">1 PP = 100 SP · 1 GP = 10 SP · 1 CP = 0.1 SP</span></div><div class="panel-body"><div class="currency-grid">
           ${field("Copper", "currency.copper", state.currency.copper, { type: "number", min: 0, step: 1 })}
           ${field("Silver", "currency.silver", state.currency.silver, { type: "number", min: 0, step: 1 })}
           ${field("Gold", "currency.gold", state.currency.gold, { type: "number", min: 0, step: 1 })}
@@ -1750,32 +1783,36 @@
   }
 
   function dishCookingMeta(dish) {
-    const explicitDc = Math.floor(engine.numberValue(dish?.dc));
-    if (explicitDc) {
-      return {
-        dc: explicitDc,
-        difficulty: dish.difficulty || (explicitDc >= 85 ? "Masterwork or Unstable" : explicitDc >= 70 ? "Rare or Dangerous" : "Regional"),
-        time: dish.time || (explicitDc >= 70 ? "2 hours" : "1 hour"),
-      };
-    }
-    if (String(dish?.name || "").includes("✦")) return { dc: 85, difficulty: "Masterwork or Unstable", time: "2-4 hours" };
-    if (String(dish?.name || "").includes("⚠")) return { dc: 70, difficulty: "Rare or Dangerous", time: "2 hours" };
-    return { dc: 50, difficulty: "Regional", time: "1 hour" };
+    return engine.previewCookingCheck(
+      state,
+      data,
+      { ...ui.cooking, recipeKey: dish.name, ingredientSource: "pantry" },
+      derived.skills,
+    );
+  }
+
+  function difficultyTone(key) {
+    if (key === "masterwork") return "masterwork";
+    if (key === "rare" || key === "dangerous") return "rare";
+    if (key === "regional") return "regional";
+    if (key === "familiar") return "familiar";
+    return "basic";
   }
 
   function renderFoodCard(dish) {
     const pantry = derived.hearth.pantry.find((entry) => entry.name === dish.name);
-    const cookingMeta = dishCookingMeta(dish);
-    const familiar = derived.cooking.familiarRecipes.includes(dish.name);
-    const displayedDc = familiar && cookingMeta.dc === 50 ? 35 : cookingMeta.dc;
+    const meta = dishCookingMeta(dish);
     const ingredientLinks = Array.isArray(dish.ingredients) && dish.ingredients.length
-      ? `<div class="food-ingredient-list"><strong>Key ingredients</strong><div>${dish.ingredients.map((name) => `<button type="button" data-action="show-ingredient" data-name="${escapeHtml(name)}">${escapeHtml(name)}</button>`).join("")}</div></div>`
+      ? `<div class="food-ingredient-list"><strong>Required ingredients</strong><div>${dish.ingredients.map((name) => {
+          const owned = Math.max(0, Math.floor(engine.numberValue(state.cooking.ingredientPantry?.[name])));
+          return `<button type="button" data-action="show-ingredient" data-name="${escapeHtml(name)}" class="${owned ? "is-owned" : "is-missing"}">${escapeHtml(name)} <small>${owned}</small></button>`;
+        }).join("")}</div></div>`
       : "";
-    return `<article class="catalog-card food-card"><div class="card-meta"><span class="pill pill-blue">${escapeHtml(dish.region)}</span><span class="pill pill-amber">${escapeHtml(dish.cost)} SP</span><span class="pill">DC ${displayedDc}${familiar ? " · Familiar" : ""}</span><span class="pill">${escapeHtml(pantry?.left || 0)} left</span></div><h2>${escapeHtml(dish.name)}</h2><p>${escapeHtml(dish.method)}</p>${ingredientLinks}<div class="food-preparation-meta"><span>${escapeHtml(cookingMeta.time)}</span>${dish.specialtyUtensil ? `<span>Requires ${escapeHtml(dish.specialtyUtensil)}</span>` : ""}</div><div class="food-effect"><strong>Hearth Boon</strong><p>${escapeHtml(dish.effect)}</p></div><div class="card-actions"><button class="button button-primary button-small" type="button" data-action="select-cooking-recipe" data-name="${escapeHtml(dish.name)}">Cook</button><button class="button button-quiet button-small" type="button" data-action="add-food" data-name="${escapeHtml(dish.name)}">Add serving</button></div></article>`;
+    const locked = !meta.levelUnlocked;
+    const tone = difficultyTone(meta.difficulty.key);
+    return `<article class="catalog-card food-card difficulty-card difficulty-${tone}"><div class="card-meta"><span class="pill pill-blue">${escapeHtml(dish.region)}</span><span class="pill pill-amber">${escapeHtml(dish.cost)} SP ingredients</span><span class="pill difficulty-pill">${escapeHtml(meta.difficulty.label)} · DC ${escapeHtml(meta.dc)}</span><span class="pill">${escapeHtml(pantry?.left || 0)} cooked</span></div><h2>${escapeHtml(dish.name)}${meta.difficulty.key === "masterwork" ? ` <span class="legendary-mark">Legendary</span>` : ""}</h2><p>${escapeHtml(dish.method)}</p>${ingredientLinks}<div class="food-preparation-meta"><span>${escapeHtml(meta.time)}</span><span>Yields ${escapeHtml(meta.baseServings)} serving${meta.baseServings === 1 ? "" : "s"}</span>${dish.specialtyUtensil ? `<span>Requires ${escapeHtml(dish.specialtyUtensil)}</span>` : ""}</div><div class="food-effect"><strong>Hearth Boon</strong><p>${escapeHtml(dish.effect)}</p></div><div class="card-actions"><button class="button button-primary button-small" type="button" data-action="select-cooking-recipe" data-name="${escapeHtml(dish.name)}">${locked ? `View · Level ${meta.requiredLevel}` : "Cook"}</button><button class="button button-quiet button-small" type="button" data-action="add-food" data-name="${escapeHtml(dish.name)}">Add cooked serving</button></div></article>`;
   }
 
-  // Surgical update for the Hearthcraft filters: patches only the
-  // catalogue grid and match count instead of re-rendering the whole page.
   function renderFoodResults() {
     const dishes = computeFilteredDishes();
     const grid = root.querySelector('[data-food-results="dishes"]');
@@ -1835,10 +1872,11 @@
 
   function renderIngredientCard(ingredient) {
     const dishes = dishesUsingIngredient(ingredient.name);
+    const owned = Math.max(0, Math.floor(engine.numberValue(state.cooking.ingredientPantry?.[ingredient.name])));
     const dishLinks = dishes.length
       ? `<div class="ingredient-recipe-links"><strong>Used in Hearthcraft</strong><div>${dishes.map((dish) => `<button class="button button-quiet button-small" type="button" data-action="select-cooking-recipe" data-name="${escapeHtml(dish.name)}">${escapeHtml(dish.name)}</button>`).join("")}</div></div>`
       : `<div class="ingredient-recipe-links is-empty"><strong>Hearthcraft use</strong><span>No listed recipe currently requires this ingredient.</span></div>`;
-    return `<article class="catalog-card ingredient-card" data-ingredient-category="${escapeHtml(ingredient.category)}"><div class="card-meta"><span class="pill pill-blue">${escapeHtml(ingredient.region)}</span><span class="pill pill-amber">${escapeHtml(ingredient.category)}</span></div><h2>${escapeHtml(ingredient.name)}</h2><div class="ingredient-main-use"><strong>Main use</strong><p>${escapeHtml(ingredient.mainUse || "Reference ingredient")}</p></div>${ingredientExtraRows(ingredient)}${ingredient.notes ? `<p class="ingredient-notes">${escapeHtml(ingredient.notes)}</p>` : ""}${dishLinks}</article>`;
+    return `<article class="catalog-card ingredient-card" data-ingredient-category="${escapeHtml(ingredient.category)}"><div class="card-meta"><span class="pill pill-blue">${escapeHtml(ingredient.region)}</span><span class="pill pill-amber">${escapeHtml(ingredient.category)}</span><span class="pill pantry-count-pill">${owned} owned</span></div><h2>${escapeHtml(ingredient.name)}</h2><div class="ingredient-main-use"><strong>Main use</strong><p>${escapeHtml(ingredient.mainUse || "Reference ingredient")}</p></div>${ingredientExtraRows(ingredient)}${ingredient.notes ? `<p class="ingredient-notes">${escapeHtml(ingredient.notes)}</p>` : ""}<div class="ingredient-quantity-actions"><button class="button button-primary button-small" type="button" data-action="add-ingredient" data-name="${escapeHtml(ingredient.name)}">Collect +1</button><button class="button button-quiet button-small" type="button" data-action="remove-ingredient" data-name="${escapeHtml(ingredient.name)}" ${owned ? "" : "disabled"}>Remove 1</button></div>${dishLinks}</article>`;
   }
 
   function renderIngredientResults() {
@@ -1854,7 +1892,16 @@
 
   function renderHearthcraftViewTabs() {
     const ingredientCount = (data.food.ingredients || []).length;
-    return `<div class="hearthcraft-view-tabs" role="tablist" aria-label="Hearthcraft sections"><button class="tab-button" type="button" role="tab" aria-selected="${ui.foodView === "dishes"}" data-action="switch-hearthcraft-view" data-view="dishes">Cooking & Dishes <span>${data.food.dishes.length}</span></button><button class="tab-button" type="button" role="tab" aria-selected="${ui.foodView === "ingredients"}" data-action="switch-hearthcraft-view" data-view="ingredients">Ingredient Catalogue <span>${ingredientCount}</span></button></div>`;
+    const pantryUnits = derived.cooking.ingredientUnits;
+    return `<div class="hearthcraft-view-tabs" role="tablist" aria-label="Hearthcraft sections"><button class="tab-button" type="button" role="tab" aria-selected="${ui.foodView === "dishes"}" data-action="switch-hearthcraft-view" data-view="dishes">Cooking & Dishes <span>${data.food.dishes.length}</span></button><button class="tab-button" type="button" role="tab" aria-selected="${ui.foodView === "pantry"}" data-action="switch-hearthcraft-view" data-view="pantry">Ingredient Pantry <span>${pantryUnits}</span></button><button class="tab-button" type="button" role="tab" aria-selected="${ui.foodView === "ingredients"}" data-action="switch-hearthcraft-view" data-view="ingredients">Ingredient Catalogue <span>${ingredientCount}</span></button></div>`;
+  }
+
+  function renderHearthcraftProfile() {
+    const regions = ["Asura", "Karrnath", "Fittoa", "Shirone", "Ronoa"];
+    const utensils = data.food.cooking?.specialtyUtensils || [];
+    const kitOwned = derived.cooking.cookingKitOwned;
+    const canBuyKit = derived.cooking.coinBalanceSp >= 200;
+    return `<section class="panel hearthcraft-profile"><div class="panel-heading blue"><h2>Cook Profile & Equipment</h2><span class="heading-note">Region determines familiarity and difficulty</span></div><div class="panel-body"><div class="hearthcraft-profile-grid"><label class="field"><span>Home Region</span><select data-cooking-state="homeRegion">${regions.map((region) => `<option value="${escapeHtml(region)}" ${state.cooking.homeRegion === region ? "selected" : ""}>${escapeHtml(region)}</option>`).join("")}</select><small>Home dishes are Familiar. Other Central regions are Regional.</small></label><article class="cooking-kit-card ${kitOwned ? "is-owned" : ""}"><div><span>Complete Cooking Kit</span><strong>${kitOwned ? "Owned · +25 Cooking" : "20 GP · 4 kg"}</strong></div>${kitOwned ? `<span class="status-badge status-available">Ready</span>` : `<button class="button button-primary button-small" type="button" data-action="buy-cooking-kit" ${canBuyKit ? "" : "disabled"}>Buy for 20 GP</button>`}</article><article class="coin-purse-card"><span>Available Coin</span><strong>${formatOutput(derived.cooking.coinBalanceSp, "sp")}</strong><small>${escapeHtml(state.currency.silver)} SP · ${escapeHtml(state.currency.gold)} GP · ${escapeHtml(state.currency.platinum)} PP · ${escapeHtml(state.currency.copper)} CP</small></article></div><div class="owned-utensils"><div><strong>Owned Specialty Utensils</strong><span>Tick owned equipment. Missing a required utensil imposes Disadvantage.</span></div><div class="utensil-checkbox-grid">${utensils.map((utensil) => `<label><input type="checkbox" data-owned-utensil="${escapeHtml(utensil.name)}" ${(state.cooking.ownedUtensils || []).includes(utensil.name) ? "checked" : ""} /><span>${escapeHtml(utensil.name)}<small>${escapeHtml(utensil.purpose)}</small></span></label>`).join("")}</div></div></div></section>`;
   }
 
   function renderIngredientReference() {
@@ -1871,6 +1918,16 @@
     return `<div id="ingredient-catalogue">${renderIngredientReference()}<div class="filters section-gap" role="search"><label class="visually-hidden" for="ingredient-search">Search ingredients</label><input class="filter-control" id="ingredient-search" type="search" data-filter="ingredientQuery" value="${escapeHtml(ui.filters.ingredientQuery)}" placeholder="Search ingredients, uses, sources, laws, or notes" /><label class="visually-hidden" for="ingredient-region">Filter ingredient region</label><select class="filter-control" id="ingredient-region" data-filter="ingredientRegion">${renderOptions(["All", ...allRegions], ui.filters.ingredientRegion)}</select><label class="visually-hidden" for="ingredient-category">Filter ingredient category</label><select class="filter-control" id="ingredient-category" data-filter="ingredientCategory">${renderOptions(["All", ...categories], ui.filters.ingredientCategory)}</select><span class="filter-count" data-food-count="ingredients">${ingredients.length} of ${(data.food.ingredients || []).length} ingredients</span></div><div class="catalog-grid ingredient-grid" data-food-results="ingredients">${ingredients.map(renderIngredientCard).join("") || `<div class="empty-state"><strong>No matching ingredients</strong><span>Change the search, region, or category filter.</span></div>`}</div></div>`;
   }
 
+  function renderIngredientPantry() {
+    const allIngredients = data.food.ingredients || [];
+    if (!ui.pantryIngredient && allIngredients.length) ui.pantryIngredient = allIngredients[0].name;
+    const owned = allIngredients
+      .map((ingredient) => ({ ...ingredient, quantity: Math.max(0, Math.floor(engine.numberValue(state.cooking.ingredientPantry?.[ingredient.name]))) }))
+      .filter((ingredient) => ingredient.quantity > 0)
+      .sort((left, right) => left.name.localeCompare(right.name));
+    return `<div id="ingredient-pantry"><section class="panel ingredient-pantry-panel"><div class="panel-heading plum"><h2>Ingredient Pantry</h2><span class="heading-note">Collected ingredients are consumed when a Cooking Check is recorded</span></div><div class="panel-body"><div class="ingredient-collect-form"><label class="field"><span>Collected ingredient</span><select data-pantry-control="pantryIngredient">${allIngredients.map((ingredient) => `<option value="${escapeHtml(ingredient.name)}" ${ui.pantryIngredient === ingredient.name ? "selected" : ""}>${escapeHtml(ingredient.name)} · ${escapeHtml(ingredient.region)}</option>`).join("")}</select></label><label class="field"><span>Quantity</span><input type="number" min="1" step="1" data-value-type="number" data-pantry-control="pantryAmount" value="${escapeHtml(ui.pantryAmount)}" /></label><button class="button button-primary" type="button" data-action="add-collected-ingredient">Add collected ingredients</button><button class="button button-quiet" type="button" data-action="switch-hearthcraft-view" data-view="ingredients">Browse catalogue</button></div>${owned.length ? `<div class="owned-ingredient-grid">${owned.map((ingredient) => `<article><div><span>${escapeHtml(ingredient.region)}</span><strong>${escapeHtml(ingredient.name)}</strong></div><div class="owned-ingredient-quantity"><button class="icon-button" type="button" data-action="remove-ingredient" data-name="${escapeHtml(ingredient.name)}" aria-label="Remove one ${escapeHtml(ingredient.name)}">−</button><strong>${ingredient.quantity}</strong><button class="icon-button" type="button" data-action="add-ingredient" data-name="${escapeHtml(ingredient.name)}" aria-label="Add one ${escapeHtml(ingredient.name)}">+</button></div></article>`).join("")}</div>` : `<div class="empty-state"><strong>No ingredients collected</strong><span>Add found ingredients here, or buy a recipe’s ingredient set directly from the Cooking Station.</span></div>`}</div></section></div>`;
+  }
+
   function cookingOutcomeLabel(outcome) {
     return {
       "critical-failure": "Critical Failure",
@@ -1882,48 +1939,39 @@
   }
 
   function cookingOutcomeCopy(result) {
-    if (result.outcome === "critical-failure") return "The ingredients are spoiled or unsafe. No servings are created.";
+    if (result.outcome === "critical-failure") return "The ingredient set is consumed and spoiled. No servings are created.";
     if (result.outcome === "failure") return `${result.preparedServings} ordinary serving${result.preparedServings === 1 ? "" : "s"} will be added as standard food. No Hearth Boon is created.`;
-    if (result.isHearthDish) {
-      const extraTarget = result.extraBoonTargets ? " One additional creature may gain the boon without consuming another serving." : "";
-      return `${result.preparedServings} serving${result.preparedServings === 1 ? "" : "s"} will be added to the Hearth pantry.${extraTarget}`;
-    }
+    if (result.isHearthDish) return `${result.preparedServings} cooked serving${result.preparedServings === 1 ? "" : "s"} will be added to the Hearth pantry.`;
     return `${result.preparedServings} ordinary serving${result.preparedServings === 1 ? "" : "s"} will be added as standard food.`;
   }
 
   function renderCookingResult(result) {
-    if (!result) return `<div class="cooking-result is-empty"><strong>No check rolled</strong><span>Configure the meal, then roll the Cooking Check.</span></div>`;
+    if (!result) return `<div class="cooking-result is-empty"><strong>No check rolled</strong><span>Select a recipe and ingredient source, then roll the Cooking Check.</span></div>`;
+    if (result.accepted === false) return `<div class="cooking-result is-failure"><strong>Cooking Check unavailable</strong><span>${escapeHtml(result.reason || "The requirements are not met.")}</span></div>`;
     const rollText = result.rolls.length > 1
       ? `${result.rolls.join(" / ")} (${result.rollMode}, kept ${result.naturalRoll})`
       : String(result.naturalRoll);
     const resultClass = result.success ? "is-success" : result.outcome === "critical-failure" ? "is-critical-failure" : "is-failure";
     const rerollAvailable = derived.cooking.rerollAvailable && !result.rerolled && !result.recorded;
-    return `<article class="cooking-result ${resultClass}">
-      <div class="cooking-result-heading"><div><span>${escapeHtml(cookingOutcomeLabel(result.outcome))}</span><strong>${escapeHtml(result.recipeName)}</strong></div><strong class="cooking-total">${escapeHtml(result.total)}</strong></div>
-      <dl class="cooking-result-breakdown"><div><dt>Natural roll</dt><dd>${escapeHtml(rollText)}</dd></div><div><dt>Modifier</dt><dd>${result.modifier >= 0 ? "+" : ""}${escapeHtml(result.modifier)}</dd></div><div><dt>Target DC</dt><dd>${escapeHtml(result.dc)}</dd></div><div><dt>Cooking XP</dt><dd>${result.xpAwarded || 0}${result.potentialXp > result.xpAwarded ? " (rest limit)" : ""}</dd></div></dl>
-      <p>${escapeHtml(cookingOutcomeCopy(result))}</p>
-      ${result.usedHearthwright ? `<small class="cooking-feature-note">Hearthwright used: this strong success creates 2 extra servings.</small>` : ""}
-      ${result.becomesFamiliar ? `<small class="cooking-feature-note">Journeyman: this regional recipe becomes familiar when recorded.</small>` : ""}
-      <div class="cooking-result-actions">
-        ${rerollAvailable ? `<button class="button button-accent button-small" type="button" data-action="reroll-cooking-check">Master Cook reroll</button>` : ""}
-        <button class="button button-primary button-small" type="button" data-action="record-cooking-result" ${result.recorded ? "disabled" : ""}>${result.recorded ? "Result recorded" : "Record result"}</button>
-      </div>
-    </article>`;
+    const sourceText = result.ingredientSource === "buy" ? `Buy ingredients for ${result.purchaseCost} SP` : "Use ingredient pantry";
+    return `<article class="cooking-result ${resultClass}"><div class="cooking-result-heading"><div><span>${escapeHtml(cookingOutcomeLabel(result.outcome))}</span><strong>${escapeHtml(result.recipeName)}</strong></div><strong class="cooking-total">${escapeHtml(result.total)}</strong></div><dl class="cooking-result-breakdown"><div><dt>Natural roll</dt><dd>${escapeHtml(rollText)}</dd></div><div><dt>Modifier</dt><dd>${result.modifier >= 0 ? "+" : ""}${escapeHtml(result.modifier)}</dd></div><div><dt>Target DC</dt><dd>${escapeHtml(result.dc)}</dd></div><div><dt>Cooking XP</dt><dd>${result.xpAwarded || 0}${result.potentialXp > result.xpAwarded ? " (rest limit)" : ""}</dd></div></dl><p>${escapeHtml(cookingOutcomeCopy(result))}</p><small class="cooking-resource-note">On record: ${escapeHtml(sourceText)}.</small>${result.usedHearthwright ? `<small class="cooking-feature-note">Hearthwright used: this strong success creates 2 extra servings.</small>` : ""}${result.outcome === "critical-success" ? `<small class="cooking-feature-note">Critical success: +1 serving.</small>` : ""}${result.becomesFamiliar ? `<small class="cooking-feature-note">Journeyman: this regional recipe becomes familiar when recorded.</small>` : ""}<div class="cooking-result-actions">${rerollAvailable ? `<button class="button button-accent button-small" type="button" data-action="reroll-cooking-check">Master Cook reroll</button>` : ""}<button class="button button-primary button-small" type="button" data-action="record-cooking-result" ${result.recorded ? "disabled" : ""}>${result.recorded ? "Result recorded" : "Record result & consume ingredients"}</button></div></article>`;
   }
 
   function renderCookingHistory() {
     const history = derived.cooking.history;
-    if (!history.length) return `<div class="empty-state compact"><strong>No cooking history</strong><span>Recorded checks and training appear here.</span></div>`;
+    if (!history.length) return `<div class="empty-state compact"><strong>No cooking history</strong><span>Recorded checks, equipment purchases, and training appear here.</span></div>`;
     const visible = ui.showCookingHistory ? history : history.slice(0, 5);
     const rows = visible.map((entry) => {
-      if (entry.type === "training") {
-        return `<li><span class="history-marker" aria-hidden="true">XP</span><div><strong>Cooking lesson</strong><p>Gained 1 Cooking XP during Rest ${escapeHtml(entry.restCycle)}.</p></div></li>`;
-      }
+      if (entry.type === "training") return `<li><span class="history-marker" aria-hidden="true">XP</span><div><strong>Cooking lesson</strong><p>Gained 1 Cooking XP during Rest ${escapeHtml(entry.restCycle)}.</p></div></li>`;
+      if (entry.type === "kit-purchase") return `<li><span class="history-marker" aria-hidden="true">KIT</span><div><strong>Complete Cooking Kit purchased</strong><p>Paid 20 GP and unlocked the +25 Cooking modifier.</p></div></li>`;
       const label = cookingOutcomeLabel(entry.outcome);
       const servingText = entry.pantryAdded
         ? `${entry.pantryAdded} pantry serving${entry.pantryAdded === 1 ? "" : "s"}`
         : `${entry.standardFoodAdded || 0} standard serving${entry.standardFoodAdded === 1 ? "" : "s"}`;
-      return `<li><span class="history-marker" aria-hidden="true">${escapeHtml(entry.naturalRoll)}</span><div><strong>${escapeHtml(entry.recipeName)} · ${escapeHtml(label)}</strong><p>Total ${escapeHtml(entry.total)} vs DC ${escapeHtml(entry.dc)} · ${escapeHtml(servingText)} · ${escapeHtml(entry.xpAwarded)} XP${entry.rerolled ? " · rerolled" : ""}</p></div></li>`;
+      const resourceText = entry.ingredientSource === "buy"
+        ? `${entry.costPaid || 0} SP paid`
+        : `${(entry.ingredientsConsumed || []).length} ingredients used`;
+      return `<li><span class="history-marker" aria-hidden="true">${escapeHtml(entry.naturalRoll)}</span><div><strong>${escapeHtml(entry.recipeName)} · ${escapeHtml(label)}</strong><p>Total ${escapeHtml(entry.total)} vs DC ${escapeHtml(entry.dc)} · ${escapeHtml(servingText)} · ${escapeHtml(resourceText)} · ${escapeHtml(entry.xpAwarded)} XP${entry.rerolled ? " · rerolled" : ""}</p></div></li>`;
     }).join("");
     return `<ul class="cooking-history-list">${rows}</ul>${history.length > 5 ? `<button class="button button-quiet button-small" type="button" data-action="toggle-cooking-history">${ui.showCookingHistory ? "Show recent" : `View all ${history.length}`}</button>` : ""}`;
   }
@@ -1935,118 +1983,36 @@
     const outcomes = rules.outcomes || [];
     const modifiers = rules.modifiers || [];
     const utensils = rules.specialtyUtensils || [];
-    const kitColumns = [
-      ["Cookware", kit.contents?.cookware || []],
-      ["Preparation", kit.contents?.preparation || []],
-      ["Field Supplies", kit.contents?.fieldSupplies || []],
-    ];
-    return `<section class="panel cooking-reference-panel"><div class="panel-heading rust"><h2>Cooking Rules & Equipment</h2><button class="button button-quiet button-small" type="button" data-action="toggle-cooking-reference">${ui.showCookingReference ? "Collapse rules" : "View full rules"}</button></div><div class="panel-body">
-      <div class="cooking-rule-callout"><strong>d100 + Cooking Skill + Hearthcraft Level Bonus + situational modifiers</strong><span>A complete Cooking Kit adds +25.</span></div>
-      ${ui.showCookingReference ? `<div class="cooking-reference-grid">
-        <section><h3>Difficulty & Time</h3><div class="reference-table">${difficulties.map((entry) => `<div><strong>DC ${escapeHtml(entry.dc)}</strong><span>${escapeHtml(entry.label)} · ${escapeHtml(entry.recipe)} · ${escapeHtml(entry.time)}</span></div>`).join("")}</div></section>
-        <section><h3>Results</h3><div class="reference-table">${outcomes.map((entry) => `<div><strong>${escapeHtml(entry.label)}</strong><span>${escapeHtml(entry.rule)}</span></div>`).join("")}</div></section>
-        <section><h3>Quick Modifiers</h3><div class="reference-table">${modifiers.map((entry) => `<div><strong>${escapeHtml(entry.situation)}</strong><span>${escapeHtml(entry.rule)}</span></div>`).join("")}</div></section>
-        <section><h3>Cooking Kit</h3><div class="kit-summary"><span>Cost ${escapeHtml(kit.cost || 20)} SP</span><span>Weight ${escapeHtml(kit.weight || 4)} kg</span><span>+${escapeHtml(kit.bonus || 25)} Cooking</span></div><div class="kit-columns">${kitColumns.map(([title, items]) => `<div><strong>${escapeHtml(title)}</strong><ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul></div>`).join("")}</div><small>${escapeHtml(kit.excludes || "")}</small></section>
-        <section class="reference-span"><h3>Specialty Utensils</h3><div class="specialty-utensil-grid">${utensils.map((utensil) => `<article><strong>${escapeHtml(utensil.name)}</strong><span>${escapeHtml(utensil.purpose)}</span></article>`).join("")}</div></section>
-        <section class="reference-span"><h3>Serving & XP Rules</h3><p>One check prepares up to 4 servings. Preparing 5-8 servings adds +10 DC. A creature benefits from only one Hearth Boon per long rest.</p><p>Gain 1 XP for successfully preparing a DC 35+ meal, plus 1 XP when it is new, dangerous, regional, or made under pressure. Maximum 2 Cooking XP per long rest. A meaningful lesson from a trained cook may grant 1 XP.</p></section>
-      </div>` : `<p class="panel-intro">Open the full reference for DCs, results, modifiers, kit contents, specialty utensils, serving rules, and Cooking XP.</p>`}
-    </div></section>`;
+    const kitColumns = [["Cookware", kit.contents?.cookware || []], ["Preparation", kit.contents?.preparation || []], ["Field Supplies", kit.contents?.fieldSupplies || []]];
+    return `<section class="panel cooking-reference-panel"><div class="panel-heading rust"><h2>Cooking Rules & Equipment</h2><button class="button button-quiet button-small" type="button" data-action="toggle-cooking-reference">${ui.showCookingReference ? "Collapse rules" : "View full rules"}</button></div><div class="panel-body"><div class="cooking-rule-callout"><strong>d100 + Cooking Skill + Hearthcraft Level Bonus + situational modifiers</strong><span>A purchased complete Cooking Kit adds +25.</span></div>${ui.showCookingReference ? `<div class="cooking-reference-grid"><section><h3>Difficulty, Region & Time</h3><div class="reference-table">${difficulties.map((entry) => `<div><strong>DC ${escapeHtml(entry.dc)}</strong><span>${escapeHtml(entry.label)} · ${escapeHtml(entry.recipe)} · ${escapeHtml(entry.time)}</span></div>`).join("")}</div></section><section><h3>Results</h3><div class="reference-table">${outcomes.map((entry) => `<div><strong>${escapeHtml(entry.label)}</strong><span>${escapeHtml(entry.rule)}</span></div>`).join("")}</div></section><section><h3>Progression Locks</h3><div class="reference-table">${derived.cooking.levels.map((entry) => `<div><strong>Level ${entry.level} · ${escapeHtml(entry.title)}</strong><span>${escapeHtml(entry.benefit)}</span></div>`).join("")}</div></section><section><h3>Quick Modifiers</h3><div class="reference-table">${modifiers.map((entry) => `<div><strong>${escapeHtml(entry.situation)}</strong><span>${escapeHtml(entry.rule)}</span></div>`).join("")}</div></section><section><h3>Cooking Kit</h3><div class="kit-summary"><span>Cost ${escapeHtml(kit.cost || 20)} ${escapeHtml(kit.costUnit || "GP")}</span><span>Weight ${escapeHtml(kit.weight || 4)} kg</span><span>+${escapeHtml(kit.bonus || 25)} Cooking</span></div><div class="kit-columns">${kitColumns.map(([title, items]) => `<div><strong>${escapeHtml(title)}</strong><ul>${items.map((item) => `<li>${escapeHtml(item)}</li>`).join("")}</ul></div>`).join("")}</div><small>${escapeHtml(kit.excludes || "")}</small></section><section class="reference-span"><h3>Specialty Utensils</h3><div class="specialty-utensil-grid">${utensils.map((utensil) => `<article><strong>${escapeHtml(utensil.name)}</strong><span>${escapeHtml(utensil.purpose)}</span></article>`).join("")}</div></section><section class="reference-span"><h3>Ingredient, Serving & XP Rules</h3><p>Every catalogue recipe consumes one unit of each listed ingredient, or its full listed SP cost. Normal dishes prepare 2 servings. Explicitly dangerous and Legendary dishes prepare 1. A natural 96-100 adds 1 serving.</p><p>Gain 1 XP for successfully preparing a DC 35+ meal, plus 1 XP when it is new, dangerous, regional, foreign, or made under pressure. Maximum 2 Cooking XP per long rest.</p></section></div>` : `<p class="panel-intro">Open the full reference for regional difficulty, progression locks, ingredient use, equipment, serving rules, and Cooking XP.</p>`}</div></section>`;
   }
 
   function renderCookingStation() {
     const cooking = derived.cooking;
     const preview = engine.previewCookingCheck(state, data, ui.cooking, derived.skills);
-    const recipeOptions = [
-      ["__basic", "Basic camp meal (DC 20)"],
-      ["__familiar", "Familiar household dish (DC 35)"],
-      ["__rare", "Custom rare or dangerous dish (DC 70)"],
-      ["__masterwork", "Custom masterwork or unstable dish (DC 85)"],
-      ...data.food.dishes.map((dish) => [dish.name, dish.name]),
-    ];
-    const progressLabel = cooking.nextLevel
-      ? `${cooking.xp} / ${cooking.nextLevel.threshold} XP to Level ${cooking.nextLevel.level}`
-      : `${cooking.xp} XP · Maximum level`;
+    const recipeOptions = [["__basic", "Basic camp meal (DC 20)"], ["__familiar", "Custom familiar dish (Level 1)"], ["__rare", "Custom rare or dangerous dish (Level 4)"], ["__masterwork", "Custom Legendary Masterchef dish (Level 5)"], ...data.food.dishes.map((dish) => [dish.name, dish.name])];
+    const progressLabel = cooking.nextLevel ? `${cooking.xp} / ${cooking.nextLevel.threshold} XP to Level ${cooking.nextLevel.level}` : `${cooking.xp} XP · Maximum level`;
     const customRecipe = String(ui.cooking.recipeKey).startsWith("__");
-    const familiarChips = cooking.familiarRecipes.length
-      ? cooking.familiarRecipes.map((name) => `<span class="pill pill-blue">${escapeHtml(name)}</span>`).join("")
-      : `<span class="muted-copy">No familiar regional recipes yet.</span>`;
-    const modifiers = [
-      ["Cooking skill", preview.modifierBreakdown.cookingSkill],
-      ["Hearthcraft level", preview.modifierBreakdown.levelBonus],
-      ["Cooking Kit", preview.modifierBreakdown.cookingKit],
-      ["Assistant", preview.modifierBreakdown.assistant],
-    ];
-    const conditionSummary = [
-      preview.rollMode !== "normal" ? titleCase(preview.rollMode) : "Normal roll",
-      preview.largeServingPenalty ? "+10 DC for 5-8 servings" : "Up to 4 servings",
-      preview.unfamiliarPenalty ? "+10 DC: unfamiliar without guidance" : preview.familiar ? "Familiar recipe" : "Guided recipe",
-      preview.campCookIgnoredCondition ? "Camp Cook ignored poor conditions" : "",
-    ].filter(Boolean).join(" · ");
-    return `<section class="panel cooking-station" id="cooking-station"><div class="panel-heading amber"><h2>Cooking Station</h2><span class="heading-note">Roll, prepare servings, and gain Cooking XP</span></div><div class="panel-body"><div class="cooking-station-grid">
-      <aside class="cooking-progression">
-        <div class="cooking-level-heading"><div><span>Cooking Level ${cooking.level}</span><h3>${escapeHtml(cooking.title)}</h3></div><strong>${cooking.totalBonus >= 0 ? "+" : ""}${escapeHtml(cooking.totalBonus)}</strong></div>
-        <p>${escapeHtml(cooking.benefit)}</p>
-        <div class="cooking-bonus-breakdown"><span>Character Cooking skill <strong>${cooking.skillBonus >= 0 ? "+" : ""}${escapeHtml(cooking.skillBonus)}</strong></span><span>Level bonus <strong>+${escapeHtml(cooking.progressionBonus)}</strong></span></div>
-        <div class="cooking-xp-progress"><div><span>${escapeHtml(progressLabel)}</span><span>${escapeHtml(cooking.xpThisRest)}/2 XP this rest</span></div><div class="progress-track"><span style="width:${escapeHtml(cooking.progressPercent)}%"></span></div></div>
-        <div class="cooking-progression-actions"><button class="button button-accent button-small" type="button" data-action="grant-cooking-training" ${cooking.xpRemainingThisRest < 1 ? "disabled" : ""}>Record training XP</button><button class="button button-quiet button-small" type="button" data-route="skills">Open Cooking skill</button></div>
-        <h4>Familiar Recipes</h4><div class="familiar-recipe-list">${familiarChips}</div>
-        <details class="cooking-level-table"><summary>Level progression</summary><div>${cooking.levels.map((entry) => `<article class="${entry.level === cooking.level ? "is-current" : ""}"><strong>Level ${entry.level} · ${escapeHtml(entry.title)}</strong><span>+${entry.bonus} · ${escapeHtml(entry.threshold)} XP</span><p>${escapeHtml(entry.benefit)}</p></article>`).join("")}</div></details>
-      </aside>
-      <div class="cooking-check-builder">
-        <div class="form-grid two">
-          <label class="field"><span>Recipe</span><select data-cooking-control="recipeKey">${recipeOptions.map(([value, label]) => `<option value="${escapeHtml(value)}" ${ui.cooking.recipeKey === value ? "selected" : ""}>${escapeHtml(label)}</option>`).join("")}</select></label>
-          <label class="field"><span>Servings</span><input type="number" min="1" max="8" step="1" data-value-type="number" data-cooking-control="servings" value="${escapeHtml(ui.cooking.servings)}" /></label>
-          ${customRecipe ? `<label class="field field-wide"><span>Meal name</span><input type="text" data-cooking-control="customName" value="${escapeHtml(ui.cooking.customName)}" placeholder="Name this meal" /></label>` : ""}
-        </div>
-        <div class="cooking-recipe-summary"><div><span>${escapeHtml(preview.difficulty.label)}</span><strong>DC ${escapeHtml(preview.dc)}</strong></div><p>${escapeHtml(preview.recipeName)} · ${escapeHtml(preview.time)}${preview.specialtyUtensil ? ` · ${preview.specialtyPresent ? "Using" : "Missing"} ${escapeHtml(preview.specialtyUtensil)}` : ""}</p></div>
-        <div class="cooking-options-grid">
-          <label><input type="checkbox" data-cooking-control="cookingKit" ${ui.cooking.cookingKit ? "checked" : ""} /><span>Complete Cooking Kit <small>+25</small></span></label>
-          <label><input type="checkbox" data-cooking-control="assistant" ${ui.cooking.assistant ? "checked" : ""} /><span>Proficient assistant <small>+10</small></span></label>
-          <label><input type="checkbox" data-cooking-control="professionalKitchen" ${ui.cooking.professionalKitchen ? "checked" : ""} /><span>Professional kitchen <small>Advantage</small></span></label>
-          <label><input type="checkbox" data-cooking-control="writtenRecipe" ${ui.cooking.writtenRecipe ? "checked" : ""} /><span>Written recipe or local instruction</span></label>
-          <label><input type="checkbox" data-cooking-control="poorConditions" ${ui.cooking.poorConditions ? "checked" : ""} /><span>Poor fire, water, or weather <small>Disadvantage</small></span></label>
-          <label><input type="checkbox" data-cooking-control="underPressure" ${ui.cooking.underPressure ? "checked" : ""} /><span>Made under pressure <small>Bonus XP trigger</small></span></label>
-          ${preview.specialtyUtensil ? `<label><input type="checkbox" data-cooking-control="specialtyUtensil" ${ui.cooking.specialtyUtensil ? "checked" : ""} /><span>${escapeHtml(preview.specialtyUtensil)} available</span></label>` : ""}
-          ${cooking.level >= 2 && ui.cooking.poorConditions ? `<label><input type="checkbox" data-cooking-control="useCampCook" ${ui.cooking.useCampCook ? "checked" : ""} /><span>Use Camp Cook to ignore the condition</span></label>` : ""}
-          ${cooking.level >= 4 ? `<label><input type="checkbox" data-cooking-control="useHearthwright" ${ui.cooking.useHearthwright ? "checked" : ""} ${cooking.hearthwrightAvailable ? "" : "disabled"} /><span>Use Hearthwright on a strong success <small>${cooking.hearthwrightAvailable ? "Available" : "Used this rest"}</small></span></label>` : ""}
-        </div>
-        <div class="cooking-check-preview"><div><span>Check modifier</span><strong>${preview.modifier >= 0 ? "+" : ""}${escapeHtml(preview.modifier)}</strong></div><p>${modifiers.map(([label, value]) => `${label} ${value >= 0 ? "+" : ""}${value}`).join(" · ")}</p><small>${escapeHtml(conditionSummary)}</small></div>
-        <button class="button button-primary cooking-roll-button" type="button" data-action="roll-cooking-check">Roll Cooking Check</button>
-        ${renderCookingResult(ui.cooking.lastResult)}
-      </div>
-    </div><div class="cooking-history"><div class="subsection-heading"><div><h3>Cooking History</h3><span>XP, prepared servings, and feature use</span></div><button class="button button-danger button-small" type="button" data-action="undo-cooking" ${cooking.history.length ? "" : "disabled"}>Undo last</button></div>${renderCookingHistory()}</div></div></section>`;
+    const familiarChips = cooking.familiarRecipes.length ? cooking.familiarRecipes.map((name) => `<span class="pill pill-blue">${escapeHtml(name)}</span>`).join("") : `<span class="muted-copy">No learned regional recipes yet.</span>`;
+    const modifiers = [["Cooking skill", preview.modifierBreakdown.cookingSkill], ["Hearthcraft level", preview.modifierBreakdown.levelBonus], ["Cooking Kit", preview.modifierBreakdown.cookingKit], ["Assistant", preview.modifierBreakdown.assistant]];
+    const conditionSummary = [preview.rollMode !== "normal" ? titleCase(preview.rollMode) : "Normal roll", preview.unfamiliarPenalty ? "+10 DC: unfamiliar without guidance" : preview.familiar ? "Learned familiar recipe" : preview.difficultyReason, preview.campCookIgnoredCondition ? "Camp Cook ignored poor conditions" : ""].filter(Boolean).join(" · ");
+    const tone = difficultyTone(preview.difficulty.key);
+    const ingredientRows = preview.ingredients.length ? preview.ingredients.map((ingredient) => `<li class="${ingredient.owned >= ingredient.required ? "is-ready" : "is-missing"}"><span>${escapeHtml(ingredient.name)}</span><strong>${ingredient.owned}/${ingredient.required}</strong></li>`).join("") : `<li class="is-ready"><span>No tracked catalogue ingredients</span><strong>Ready</strong></li>`;
+    const pantryDisabled = preview.isHearthDish && !preview.pantryReady;
+    const buyDisabled = preview.isHearthDish && !preview.canAffordIngredients;
+    const requirementMessage = !preview.levelUnlocked ? preview.lockReason : !preview.ingredientReady ? (ui.cooking.ingredientSource === "buy" ? `You need ${preview.purchaseCost} SP to buy this ingredient set.` : `Missing: ${preview.missingIngredients.map((entry) => entry.name).join(", ")}.`) : "Ready to cook.";
+    return `<section class="panel cooking-station" id="cooking-station"><div class="panel-heading amber"><h2>Cooking Station</h2><span class="heading-note">Ingredients are consumed when the result is recorded</span></div><div class="panel-body"><div class="cooking-station-grid"><aside class="cooking-progression"><div class="cooking-level-heading"><div><span>Cooking Level ${cooking.level}</span><h3>${escapeHtml(cooking.title)}</h3></div><strong>${cooking.totalBonus >= 0 ? "+" : ""}${escapeHtml(cooking.totalBonus)}</strong></div><p>${escapeHtml(cooking.benefit)}</p><div class="cooking-bonus-breakdown"><span>Character Cooking skill <strong>${cooking.skillBonus >= 0 ? "+" : ""}${escapeHtml(cooking.skillBonus)}</strong></span><span>Level bonus <strong>+${escapeHtml(cooking.progressionBonus)}</strong></span></div><div class="cooking-xp-progress"><div><span>${escapeHtml(progressLabel)}</span><span>${escapeHtml(cooking.xpThisRest)}/2 XP this rest</span></div><div class="progress-track"><span style="width:${escapeHtml(cooking.progressPercent)}%"></span></div></div><div class="cooking-progression-actions"><button class="button button-accent button-small" type="button" data-action="grant-cooking-training" ${cooking.xpRemainingThisRest < 1 ? "disabled" : ""}>Record training XP</button><button class="button button-quiet button-small" type="button" data-route="skills">Open Cooking skill</button></div><h4>Learned Familiar Recipes</h4><div class="familiar-recipe-list">${familiarChips}</div><details class="cooking-level-table"><summary>Level progression & recipe access</summary><div>${cooking.levels.map((entry) => `<article class="${entry.level === cooking.level ? "is-current" : cooking.level < entry.level ? "is-locked" : ""}"><strong>Level ${entry.level} · ${escapeHtml(entry.title)}</strong><span>+${entry.bonus} · ${escapeHtml(entry.threshold)} XP</span><p>${escapeHtml(entry.benefit)}</p></article>`).join("")}</div></details></aside><div class="cooking-check-builder"><div class="form-grid two"><label class="field field-wide"><span>Recipe</span><select data-cooking-control="recipeKey">${recipeOptions.map(([value, label]) => `<option value="${escapeHtml(value)}" ${ui.cooking.recipeKey === value ? "selected" : ""}>${escapeHtml(label)}</option>`).join("")}</select></label>${customRecipe ? `<label class="field field-wide"><span>Meal name</span><input type="text" data-cooking-control="customName" value="${escapeHtml(ui.cooking.customName)}" placeholder="Name this meal" /></label>` : ""}</div><div class="cooking-recipe-summary difficulty-${tone}"><div><span>${escapeHtml(preview.difficulty.label)}</span><strong>DC ${escapeHtml(preview.dc)}</strong></div><p>${escapeHtml(preview.recipeName)} · ${escapeHtml(preview.time)} · ${escapeHtml(preview.difficultyReason)} · ${escapeHtml(preview.baseServings)} base serving${preview.baseServings === 1 ? "" : "s"}</p>${preview.difficulty.key === "masterwork" ? `<b>Legendary Masterchef Dish</b>` : ""}</div><section class="cooking-ingredient-requirements"><div><h3>Ingredient Set</h3><span>One unit of each ingredient per check</span></div><ul>${ingredientRows}</ul>${preview.isHearthDish ? `<div class="ingredient-source-options"><label class="${pantryDisabled ? "is-disabled" : ""}"><input type="radio" name="ingredient-source" value="pantry" data-cooking-control="ingredientSource" ${ui.cooking.ingredientSource !== "buy" ? "checked" : ""} ${pantryDisabled ? "disabled" : ""} /><span>Use pantry ingredients<small>${preview.pantryReady ? "All ingredients available" : `${preview.missingIngredients.length} missing`}</small></span></label><label class="${buyDisabled ? "is-disabled" : ""}"><input type="radio" name="ingredient-source" value="buy" data-cooking-control="ingredientSource" ${ui.cooking.ingredientSource === "buy" ? "checked" : ""} ${buyDisabled ? "disabled" : ""} /><span>Buy ingredients now<small>${preview.purchaseCost} SP · ${formatOutput(preview.coinBalanceSp, "sp")} available</small></span></label></div>` : ""}</section><div class="cooking-options-grid"><label class="${cooking.cookingKitOwned ? "" : "is-disabled"}"><input type="checkbox" data-cooking-control="cookingKit" ${ui.cooking.cookingKit && cooking.cookingKitOwned ? "checked" : ""} ${cooking.cookingKitOwned ? "" : "disabled"} /><span>Use Complete Cooking Kit <small>${cooking.cookingKitOwned ? "+25" : "Not owned"}</small></span></label><label><input type="checkbox" data-cooking-control="assistant" ${ui.cooking.assistant ? "checked" : ""} /><span>Proficient assistant <small>+10</small></span></label><label><input type="checkbox" data-cooking-control="professionalKitchen" ${ui.cooking.professionalKitchen ? "checked" : ""} /><span>Professional kitchen <small>Advantage</small></span></label><label><input type="checkbox" data-cooking-control="writtenRecipe" ${ui.cooking.writtenRecipe ? "checked" : ""} /><span>Written recipe or local instruction</span></label><label><input type="checkbox" data-cooking-control="poorConditions" ${ui.cooking.poorConditions ? "checked" : ""} /><span>Poor fire, water, or weather <small>Disadvantage</small></span></label><label><input type="checkbox" data-cooking-control="underPressure" ${ui.cooking.underPressure ? "checked" : ""} /><span>Made under pressure <small>Bonus XP trigger</small></span></label>${preview.specialtyUtensil ? `<div class="utensil-readiness ${preview.specialtyPresent ? "is-ready" : "is-missing"}"><span>${escapeHtml(preview.specialtyUtensil)}</span><strong>${preview.specialtyPresent ? "Owned" : "Missing · Disadvantage"}</strong></div>` : ""}${cooking.level >= 2 && ui.cooking.poorConditions ? `<label><input type="checkbox" data-cooking-control="useCampCook" ${ui.cooking.useCampCook ? "checked" : ""} /><span>Use Camp Cook to ignore the condition</span></label>` : ""}${cooking.level >= 4 ? `<label><input type="checkbox" data-cooking-control="useHearthwright" ${ui.cooking.useHearthwright ? "checked" : ""} ${cooking.hearthwrightAvailable ? "" : "disabled"} /><span>Use Hearthwright on a strong success <small>${cooking.hearthwrightAvailable ? "+2 servings" : "Used this rest"}</small></span></label>` : ""}</div><div class="cooking-check-preview"><div><span>Check modifier</span><strong>${preview.modifier >= 0 ? "+" : ""}${escapeHtml(preview.modifier)}</strong></div><p>${modifiers.map(([label, value]) => `${label} ${value >= 0 ? "+" : ""}${value}`).join(" · ")}</p><small>${escapeHtml(conditionSummary)}</small></div><div class="cooking-readiness ${preview.accepted ? "is-ready" : "is-locked"}"><strong>${preview.accepted ? "Requirements met" : "Cannot cook this recipe"}</strong><span>${escapeHtml(requirementMessage)}</span></div><button class="button button-primary cooking-roll-button" type="button" data-action="roll-cooking-check" ${preview.accepted ? "" : "disabled"}>Roll Cooking Check</button>${renderCookingResult(ui.cooking.lastResult)}</div></div><div class="cooking-history"><div class="subsection-heading"><div><h3>Cooking History</h3><span>Ingredients, coin, XP, prepared servings, and feature use</span></div><button class="button button-danger button-small" type="button" data-action="undo-cooking" ${cooking.history.length ? "" : "disabled"}>Undo last</button></div>${renderCookingHistory()}</div></div></section>`;
   }
 
   function renderFoodPage() {
     const navigation = renderHearthcraftViewTabs();
-    if (ui.foodView === "ingredients") {
-      return `<section class="page" data-page="food">${pageHeading(
-        "Regional cooking",
-        "Hearthcraft",
-        "Browse the agricultural, herbal, livestock, and fishery ingredients that define each region of Sesios.",
-        `<button class="button button-primary" type="button" data-action="switch-hearthcraft-view" data-view="dishes">Open Cooking Station</button>`,
-      )}${navigation}<div id="hearthcraft-view-content">${renderIngredientCatalogue()}</div></section>`;
-    }
-
+    const profile = renderHearthcraftProfile();
+    if (ui.foodView === "ingredients") return `<section class="page" data-page="food">${pageHeading("Regional cooking", "Hearthcraft", "Browse, collect, and connect the agricultural, herbal, livestock, and fishery ingredients of Sesios.", `<button class="button button-primary" type="button" data-action="switch-hearthcraft-view" data-view="pantry">Open Ingredient Pantry</button>`)}${profile}${navigation}<div id="hearthcraft-view-content">${renderIngredientCatalogue()}</div></section>`;
+    if (ui.foodView === "pantry") return `<section class="page" data-page="food">${pageHeading("Regional cooking", "Hearthcraft", "Track collected ingredients before preparing catalogue dishes.", `<button class="button button-primary" type="button" data-action="switch-hearthcraft-view" data-view="dishes">Open Cooking Station</button>`)}${profile}${navigation}<div id="hearthcraft-view-content">${renderIngredientPantry()}</div></section>`;
     const dishes = computeFilteredDishes();
     const selectedRegion = ui.filters.foodRegion;
     const cards = dishes.map(renderFoodCard).join("");
-    return `<section class="page" data-page="food">${pageHeading(
-      "Regional cooking",
-      "Hearthcraft",
-      "Prepare regional meals, resolve Cooking Checks, advance culinary mastery, and manage Hearth Boon servings.",
-      `<button class="button button-primary" type="button" data-route="survival">Open survival tracker</button>`,
-    )}${navigation}<div id="hearthcraft-view-content">
-      ${renderCookingStation()}
-      <div class="section-gap">${renderCookingReference()}</div>
-      <section class="panel section-gap"><div class="panel-heading blue"><h2>Campaign Hearthcraft Rules</h2><span class="heading-note">DM-editable catalogue notes</span></div><div class="panel-body"><div class="rule-grid">${data.food.rules.map((rule) => `<article class="rule-card"><strong>${escapeHtml(rule.rule)}</strong><span>${escapeHtml(rule.value ?? rule.detail ?? "")}</span></article>`).join("")}</div></div></section>
-      <div class="filters section-gap" role="search">
-        <label class="visually-hidden" for="food-search">Search dishes</label><input class="filter-control" id="food-search" type="search" data-filter="foodQuery" value="${escapeHtml(ui.filters.foodQuery)}" placeholder="Search dish names, methods, effects, ingredients, or utensils" />
-        <label class="visually-hidden" for="food-region">Filter region</label><select class="filter-control" id="food-region" data-filter="foodRegion">${renderOptions(["All", ...unique(data.food.dishes.map((dish) => dish.region))], selectedRegion)}</select>
-        <span class="filter-count" data-food-count="dishes">${dishes.length} of ${data.food.dishes.length} dishes</span>
-      </div>
-      <div class="catalog-grid" data-food-results="dishes">${cards || `<div class="empty-state"><strong>No matching dishes</strong><span>Change the search or region filter.</span></div>`}</div>
-    </div></section>`;
+    return `<section class="page" data-page="food">${pageHeading("Regional cooking", "Hearthcraft", "Cook with owned ingredients or purchase an ingredient set, then advance through region-based culinary mastery.", `<button class="button button-primary" type="button" data-route="survival">Open survival tracker</button>`)}${profile}${navigation}<div id="hearthcraft-view-content">${renderCookingStation()}<div class="section-gap">${renderCookingReference()}</div><section class="panel section-gap"><div class="panel-heading blue"><h2>Campaign Hearthcraft Rules</h2><span class="heading-note">DM-editable catalogue notes</span></div><div class="panel-body"><div class="rule-grid">${data.food.rules.map((rule) => `<article class="rule-card"><strong>${escapeHtml(rule.rule)}</strong><span>${escapeHtml(rule.value ?? rule.detail ?? "")}</span></article>`).join("")}</div></div></section><div class="filters section-gap" role="search"><label class="visually-hidden" for="food-search">Search dishes</label><input class="filter-control" id="food-search" type="search" data-filter="foodQuery" value="${escapeHtml(ui.filters.foodQuery)}" placeholder="Search dish names, methods, effects, ingredients, or utensils" /><label class="visually-hidden" for="food-region">Filter region</label><select class="filter-control" id="food-region" data-filter="foodRegion">${renderOptions(["All", ...unique(data.food.dishes.map((dish) => dish.region))], selectedRegion)}</select><span class="filter-count" data-food-count="dishes">${dishes.length} of ${data.food.dishes.length} dishes</span></div><div class="catalog-grid" data-food-results="dishes">${cards || `<div class="empty-state"><strong>No matching dishes</strong><span>Change the search or region filter.</span></div>`}</div></div></section>`;
   }
 
   function computeFilteredCraftingSections() {
@@ -2253,9 +2219,49 @@
       return;
     }
     if (action === "switch-hearthcraft-view") {
-      ui.foodView = button.dataset.view === "ingredients" ? "ingredients" : "dishes";
+      ui.foodView = ["dishes", "pantry", "ingredients"].includes(button.dataset.view) ? button.dataset.view : "dishes";
       renderRoute({ preserveScroll: true });
       window.requestAnimationFrame(() => document.getElementById("hearthcraft-view-content")?.scrollIntoView({ behavior: "smooth", block: "start" }));
+      return;
+    }
+    if (action === "buy-cooking-kit") {
+      const result = engine.buyCookingKit(state);
+      if (!result.accepted) {
+        const copy = result.reason === "already-owned" ? "The Complete Cooking Kit is already owned." : "The character does not have the 20 GP required for a Complete Cooking Kit.";
+        showToast(copy, "error");
+        return;
+      }
+      recalculate();
+      scheduleSave();
+      renderRoute({ preserveScroll: true });
+      showToast("Complete Cooking Kit purchased for 20 GP. The +25 Cooking modifier is now available.", "success");
+      return;
+    }
+    if (action === "add-collected-ingredient") {
+      const name = ui.pantryIngredient || data.food.ingredients?.[0]?.name;
+      const amount = Math.max(1, Math.floor(engine.numberValue(ui.pantryAmount) || 1));
+      if (!name) {
+        showToast("Choose an ingredient to add.", "error");
+        return;
+      }
+      state.cooking.ingredientPantry[name] = Math.max(0, Math.floor(engine.numberValue(state.cooking.ingredientPantry[name]))) + amount;
+      recalculate();
+      scheduleSave();
+      renderRoute({ preserveScroll: true });
+      showToast(`${amount} ${name} added to the ingredient pantry.`, "success");
+      return;
+    }
+    if (action === "add-ingredient" || action === "remove-ingredient") {
+      const name = button.dataset.name;
+      const current = Math.max(0, Math.floor(engine.numberValue(state.cooking.ingredientPantry[name])));
+      const next = action === "add-ingredient" ? current + 1 : Math.max(0, current - 1);
+      if (next) state.cooking.ingredientPantry[name] = next;
+      else delete state.cooking.ingredientPantry[name];
+      ui.cooking.lastResult = null;
+      recalculate();
+      scheduleSave();
+      renderRoute({ preserveScroll: true });
+      showToast(`${name}: ${next} in the ingredient pantry.`, "success");
       return;
     }
     if (action === "show-ingredient") {
@@ -2277,7 +2283,17 @@
       return;
     }
     if (action === "roll-cooking-check") {
-      ui.cooking.lastResult = engine.rollCookingCheck(state, data, ui.cooking, derived.skills);
+      const result = engine.rollCookingCheck(state, data, ui.cooking, derived.skills);
+      if (!result.accepted) {
+        const copy = result.reason === "level-locked"
+          ? result.preview?.lockReason || "This recipe is locked by Cooking Level."
+          : result.reason === "missing-ingredients"
+            ? `Missing ingredients: ${(result.preview?.missingIngredients || []).map((entry) => entry.name).join(", ")}.`
+            : "The character cannot afford this recipe’s ingredient set.";
+        showToast(copy, "error");
+        return;
+      }
+      ui.cooking.lastResult = result;
       renderRoute({ preserveScroll: true });
       return;
     }
@@ -2297,7 +2313,16 @@
     if (action === "record-cooking-result") {
       const result = engine.recordCookingResult(state, data, ui.cooking.lastResult, derived.skills);
       if (!result.accepted) {
-        showToast(result.reason === "already-recorded" ? "That Cooking Check has already been recorded." : "The Cooking Check could not be recorded.", "error");
+        const copy = result.reason === "already-recorded"
+          ? "That Cooking Check has already been recorded."
+          : result.reason === "missing-ingredients"
+            ? "The required pantry ingredients are no longer available."
+            : result.reason === "insufficient-funds"
+              ? "The character no longer has enough coin to buy the ingredient set."
+              : result.reason === "level-locked"
+                ? "The recipe is no longer unlocked at this Cooking Level."
+                : "The Cooking Check could not be recorded.";
+        showToast(copy, "error");
         return;
       }
       ui.cooking.lastResult = { ...ui.cooking.lastResult, recorded: true, xpAwarded: result.actualXp };
@@ -2305,11 +2330,16 @@
       scheduleSave();
       renderRoute({ preserveScroll: true });
       const servingCopy = result.pantryAdded
-        ? `${result.pantryAdded} Hearth serving${result.pantryAdded === 1 ? "" : "s"} added to the pantry.`
+        ? `${result.pantryAdded} Hearth serving${result.pantryAdded === 1 ? "" : "s"} added to the cooked-meal pantry.`
         : result.standardFoodAdded
           ? `${result.standardFoodAdded} standard serving${result.standardFoodAdded === 1 ? "" : "s"} added to today’s food.`
           : "No servings were created.";
-      showToast(`${servingCopy}${result.actualXp ? ` Gained ${result.actualXp} Cooking XP.` : ""}`, "success");
+      const resourceCopy = result.costPaid
+        ? ` Paid ${result.costPaid} SP for ingredients.`
+        : result.consumedIngredients?.length
+          ? ` Consumed ${result.consumedIngredients.length} ingredient type${result.consumedIngredients.length === 1 ? "" : "s"}.`
+          : "";
+      showToast(`${servingCopy}${resourceCopy}${result.actualXp ? ` Gained ${result.actualXp} Cooking XP.` : ""}`, "success");
       return;
     }
     if (action === "grant-cooking-training") {
@@ -2326,7 +2356,8 @@
     }
     if (action === "undo-cooking") {
       const latest = derived.cooking.history[0];
-      if (!latest || !window.confirm(`Undo the latest cooking ${latest.type === "training" ? "training entry" : `result for ${latest.recipeName}`}?`)) return;
+      const latestLabel = latest?.type === "training" ? "training entry" : latest?.type === "kit-purchase" ? "Cooking Kit purchase" : `result for ${latest?.recipeName}`;
+      if (!latest || !window.confirm(`Undo the latest cooking ${latestLabel}?`)) return;
       const result = engine.undoLastCookingAction(state);
       if (!result.accepted) {
         const undoMessage = result.reason === "day-advanced"
@@ -2521,7 +2552,7 @@
         changed = true;
         message = `${button.dataset.name} added to ailments at Mark 1.`;
       } else {
-        message = "All seven ailment slots are occupied.";
+        message = "All six ailment slots are occupied.";
       }
     }
     if (action === "add-food") {

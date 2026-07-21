@@ -4899,3 +4899,364 @@ input[type="checkbox"] {
     gap: 2px;
   }
 }
+
+/* Hearthcraft ingredient pantry, regional difficulty, and equipment ownership */
+.hearthcraft-profile {
+  margin-bottom: 1rem;
+}
+
+.hearthcraft-profile-grid {
+  display: grid;
+  grid-template-columns: minmax(240px, 1.1fr) minmax(240px, 1fr) minmax(210px, .8fr);
+  gap: .85rem;
+  align-items: stretch;
+}
+
+.cooking-kit-card,
+.coin-purse-card {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: .9rem 1rem;
+  background: var(--surface-muted);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+.cooking-kit-card > div,
+.coin-purse-card {
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.cooking-kit-card span,
+.coin-purse-card span {
+  color: var(--muted);
+  font-size: .78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+}
+
+.cooking-kit-card strong,
+.coin-purse-card strong {
+  color: var(--ink);
+}
+
+.cooking-kit-card.is-owned {
+  border-color: color-mix(in srgb, var(--green) 48%, var(--line));
+  background: color-mix(in srgb, var(--green) 8%, var(--surface));
+}
+
+.coin-purse-card small {
+  color: var(--muted);
+}
+
+.owned-utensils {
+  margin-top: 1rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--line);
+}
+
+.owned-utensils > div:first-child {
+  display: flex;
+  justify-content: space-between;
+  gap: 1rem;
+  margin-bottom: .75rem;
+}
+
+.owned-utensils > div:first-child span {
+  color: var(--muted);
+  font-size: .84rem;
+}
+
+.utensil-checkbox-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .65rem;
+}
+
+.utensil-checkbox-grid label,
+.ingredient-source-options label {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: .72rem;
+  display: flex;
+  align-items: flex-start;
+  gap: .6rem;
+  background: var(--surface);
+}
+
+.utensil-checkbox-grid label:has(input:checked),
+.ingredient-source-options label:has(input:checked) {
+  border-color: var(--blue);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--blue) 14%, transparent);
+}
+
+.utensil-checkbox-grid span,
+.ingredient-source-options span {
+  display: grid;
+  gap: .2rem;
+  font-weight: 800;
+}
+
+.utensil-checkbox-grid small,
+.ingredient-source-options small {
+  color: var(--muted);
+  font-weight: 500;
+  line-height: 1.35;
+}
+
+.difficulty-card,
+.cooking-recipe-summary {
+  --difficulty-accent: var(--blue);
+}
+
+.difficulty-familiar { --difficulty-accent: #2f8b69; }
+.difficulty-regional { --difficulty-accent: #276e9c; }
+.difficulty-rare { --difficulty-accent: #7251a6; }
+.difficulty-masterwork { --difficulty-accent: #b17a12; }
+.difficulty-basic { --difficulty-accent: #66727a; }
+
+.food-card.difficulty-card {
+  border-top: 4px solid var(--difficulty-accent);
+}
+
+.difficulty-pill {
+  border-color: color-mix(in srgb, var(--difficulty-accent) 55%, var(--line));
+  color: var(--difficulty-accent);
+  background: color-mix(in srgb, var(--difficulty-accent) 10%, var(--surface));
+}
+
+.cooking-recipe-summary {
+  border-left: 6px solid var(--difficulty-accent);
+}
+
+.cooking-recipe-summary > div span,
+.cooking-recipe-summary > b {
+  color: var(--difficulty-accent);
+}
+
+.legendary-mark {
+  display: inline-flex;
+  margin-left: .4rem;
+  padding: .18rem .45rem;
+  border-radius: 999px;
+  font: 800 .66rem/1 system-ui, sans-serif;
+  text-transform: uppercase;
+  letter-spacing: .06em;
+  color: #6a4300;
+  background: #f2d27c;
+  vertical-align: middle;
+}
+
+.food-ingredient-list button.is-owned {
+  border-color: color-mix(in srgb, var(--green) 48%, var(--line));
+}
+
+.food-ingredient-list button.is-missing {
+  border-color: color-mix(in srgb, var(--red) 42%, var(--line));
+}
+
+.food-ingredient-list button small {
+  margin-left: .3rem;
+}
+
+.pantry-count-pill {
+  margin-left: auto;
+}
+
+.ingredient-quantity-actions {
+  display: flex;
+  gap: .5rem;
+  margin: .75rem 0;
+}
+
+.ingredient-pantry-panel .panel-body {
+  display: grid;
+  gap: 1rem;
+}
+
+.ingredient-collect-form {
+  display: grid;
+  grid-template-columns: minmax(240px, 2fr) minmax(100px, .5fr) auto auto;
+  gap: .75rem;
+  align-items: end;
+}
+
+.owned-ingredient-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: .75rem;
+}
+
+.owned-ingredient-grid article {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--surface);
+  padding: .8rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: .7rem;
+}
+
+.owned-ingredient-grid article > div:first-child {
+  display: grid;
+  gap: .18rem;
+}
+
+.owned-ingredient-grid article > div:first-child span {
+  color: var(--muted);
+  font-size: .72rem;
+  text-transform: uppercase;
+  letter-spacing: .05em;
+}
+
+.owned-ingredient-quantity {
+  display: flex;
+  align-items: center;
+  gap: .45rem;
+}
+
+.owned-ingredient-quantity strong {
+  min-width: 2ch;
+  text-align: center;
+  font-size: 1.05rem;
+}
+
+.cooking-ingredient-requirements {
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: .9rem;
+  background: var(--surface-muted);
+}
+
+.cooking-ingredient-requirements > div:first-child {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: .75rem;
+}
+
+.cooking-ingredient-requirements > div:first-child h3 {
+  margin: 0;
+}
+
+.cooking-ingredient-requirements > div:first-child span {
+  color: var(--muted);
+  font-size: .8rem;
+}
+
+.cooking-ingredient-requirements ul {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .45rem;
+  margin: .75rem 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.cooking-ingredient-requirements li {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  padding: .55rem .65rem;
+  display: flex;
+  justify-content: space-between;
+  gap: .5rem;
+  background: var(--surface);
+}
+
+.cooking-ingredient-requirements li.is-ready strong,
+.utensil-readiness.is-ready strong {
+  color: var(--green);
+}
+
+.cooking-ingredient-requirements li.is-missing strong,
+.utensil-readiness.is-missing strong {
+  color: var(--red);
+}
+
+.ingredient-source-options {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: .6rem;
+  margin-top: .8rem;
+}
+
+.is-disabled {
+  opacity: .55;
+}
+
+.utensil-readiness {
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  padding: .72rem;
+  display: flex;
+  justify-content: space-between;
+  gap: .5rem;
+}
+
+.cooking-readiness {
+  border-radius: 10px;
+  padding: .75rem .85rem;
+  display: grid;
+  gap: .2rem;
+}
+
+.cooking-readiness.is-ready {
+  border: 1px solid color-mix(in srgb, var(--green) 45%, var(--line));
+  background: color-mix(in srgb, var(--green) 8%, var(--surface));
+}
+
+.cooking-readiness.is-locked {
+  border: 1px solid color-mix(in srgb, var(--red) 42%, var(--line));
+  background: color-mix(in srgb, var(--red) 7%, var(--surface));
+}
+
+.cooking-readiness span,
+.cooking-resource-note {
+  color: var(--muted);
+}
+
+.cooking-level-table article.is-locked {
+  opacity: .58;
+}
+
+@media (max-width: 1050px) {
+  .hearthcraft-profile-grid,
+  .owned-ingredient-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .utensil-checkbox-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .ingredient-collect-form {
+    grid-template-columns: minmax(220px, 2fr) minmax(100px, .5fr);
+  }
+}
+
+@media (max-width: 700px) {
+  .hearthcraft-profile-grid,
+  .owned-ingredient-grid,
+  .utensil-checkbox-grid,
+  .ingredient-source-options,
+  .cooking-ingredient-requirements ul,
+  .ingredient-collect-form {
+    grid-template-columns: 1fr;
+  }
+
+  .owned-utensils > div:first-child,
+  .cooking-ingredient-requirements > div:first-child {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .cooking-kit-card,
+  .coin-purse-card {
+    align-items: flex-start;
+  }
+}
