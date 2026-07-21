@@ -658,7 +658,6 @@
   }
 
   function calculateClassProfile(className, context) {
-    const rule = CLASS_RULES[className] || CLASS_RULES.Rogue;
     const {
       level,
       vitality,
@@ -668,6 +667,18 @@
       bonuses,
       speedModifier,
     } = context;
+    if (!String(className || "").trim()) {
+      return {
+        maxHealth: bonuses.hitPoints,
+        armor: equipmentSums.armor + bonuses.armor,
+        resistance: equipmentSums.resistance + bonuses.resistance,
+        evasion: Math.max(0, excelRoundDown(equipmentSums.evasion + speedModifier + bonuses.evasion, 0)),
+        spellSave: 0,
+        maxMana: bonuses.mana,
+        spellDamage: equipmentSums.magicalDamage + bonuses.spellDamage,
+      };
+    }
+    const rule = CLASS_RULES[className] || CLASS_RULES.Rogue;
 
     const maxHealth = excelFloor(
       rule.hpBase + level + rule.hpVitalityRate * level * vitality + bonuses.hitPoints,
@@ -2104,8 +2115,13 @@
       } else {
         equipmentBonus = equipmentSums[definition.id];
       }
+      const hasStoredBase = state.abilityBaseScores &&
+        Object.prototype.hasOwnProperty.call(state.abilityBaseScores, definition.id);
+      const baseScore = hasStoredBase
+        ? numberValue(state.abilityBaseScores[definition.id])
+        : definition.base;
       abilityScores[definition.id] =
-        definition.base + equipmentBonus + numberValue(state.abilityBonuses?.[definition.id]);
+        baseScore + equipmentBonus + numberValue(state.abilityBonuses?.[definition.id]);
     });
 
     const abilityModifiers = {};
