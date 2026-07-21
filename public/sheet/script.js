@@ -118,6 +118,9 @@
   const advanceDayDialog = document.getElementById("advance-day-dialog");
   const hearthMealDialog = document.getElementById("hearth-meal-dialog");
   const historyEditDialog = document.getElementById("history-edit-dialog");
+  const sheetPlayerBrand = document.getElementById("sheet-player-brand");
+  const sheetPlayerInitial = document.getElementById("sheet-player-initial");
+  const sheetPlayerName = document.getElementById("sheet-player-name");
 
   if (!data || !engine || !root) {
     throw new Error("The workbook data or calculation engine failed to load.");
@@ -322,6 +325,7 @@
       if (event.origin !== window.location.origin || event.source !== window.parent) return;
       if (event.data?.type === "amutsu:load") {
         captureSheetLocation();
+        updateSheetPlayerIdentity(event.data.ownerName);
         applyCataloguePayload(event.data.catalogues);
         state = mergeWithDefaults(clone(data.defaultState), event.data.state || {});
         engine.normalizeCharacterProgression(state);
@@ -343,6 +347,14 @@
         );
       }
     });
+  }
+
+  function updateSheetPlayerIdentity(value) {
+    const name = String(value || "").trim();
+    if (!name) return;
+    if (sheetPlayerName) sheetPlayerName.textContent = name;
+    if (sheetPlayerInitial) sheetPlayerInitial.textContent = name.slice(0, 1).toUpperCase();
+    if (sheetPlayerBrand) sheetPlayerBrand.setAttribute("aria-label", `${name} Character Sheet home`);
   }
 
   function applyCataloguePayload(payload) {
@@ -703,8 +715,8 @@
       const matchesQuery = !query || `${trait.name} ${trait.benefit} ${trait.drawback}`.toLowerCase().includes(query);
       return matchesQuery && (selectedGroup === "All" || trait.group === selectedGroup);
     });
-    const grid = root.querySelector('[data-food-results="dishes"]');
-    const count = root.querySelector('[data-food-count="dishes"]');
+    const grid = root.querySelector('[data-filter-results="traits"]');
+    const count = root.querySelector('[data-filter-count="traits"]');
     if (grid) {
       grid.innerHTML = traits.map(renderTraitCard).join("") ||
         `<div class="empty-state"><strong>No matching traits</strong><span>Change the search or group filter.</span></div>`;
@@ -1752,9 +1764,9 @@
       <div class="filters" role="search">
         <label class="visually-hidden" for="traits-search">Search traits</label><input class="filter-control" id="traits-search" type="search" data-filter="traitsQuery" value="${escapeHtml(ui.filters.traitsQuery)}" placeholder="Search traits, benefits, or drawbacks" />
         <label class="visually-hidden" for="traits-group">Filter trait group</label><select class="filter-control" id="traits-group" data-filter="traitsGroup">${renderOptions(["All", ...unique(data.traits.map((trait) => trait.group))], selectedGroup)}</select>
-        <span class="filter-count">${traits.length} of ${data.traits.length} traits</span>
+        <span class="filter-count" data-filter-count="traits">${traits.length} of ${data.traits.length} traits</span>
       </div>
-      <div class="catalog-grid">${cards || `<div class="empty-state"><strong>No matching traits</strong><span>Change the search or group filter.</span></div>`}</div>
+      <div class="catalog-grid" data-filter-results="traits">${cards || `<div class="empty-state"><strong>No matching traits</strong><span>Change the search or group filter.</span></div>`}</div>
     </section>`;
   }
 

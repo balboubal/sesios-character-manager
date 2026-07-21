@@ -143,7 +143,7 @@ window.AMUTSU_DATA = {
         "evasion": "=ROUNDDOWN(SUM(ItemEVA)+BEVA+SPDMOD,0)+18",
         "spellSave": "=ROUNDUP(40+PROFMOD*1.5+SpellCastingMOD,0)",
         "maxMana": "=MROUND((3.41863*LVL^1.09414)*10,10)+BMANA+40",
-        "spellDamage": "=PROFMOD+SpellCastingMOD+SUM(ItemMAGDMG)+BSPELLDMG"
+        "spellDamage": "=LVL+SUM(ItemMAGDMG)+BSPELLDMG"
       }
     },
     {
@@ -156,7 +156,7 @@ window.AMUTSU_DATA = {
         "evasion": "=ROUNDDOWN(SUM(ItemEVA)+BEVA+SPDMOD,0)+14",
         "spellSave": "=ROUNDUP(30+PROFMOD*1.5+SpellCastingMOD,0)",
         "maxMana": "=MROUND((1.71863*LVL^1.09414)*10,10)+BMANA",
-        "spellDamage": "=ROUNDDOWN((PROFMOD+SpellCastingMOD+SUM(ItemMAGDMG)+BSPELLDMG)/2,0)"
+        "spellDamage": "=LVL+SUM(ItemMAGDMG)+BSPELLDMG"
       }
     },
     {
@@ -169,7 +169,7 @@ window.AMUTSU_DATA = {
         "evasion": "=ROUNDDOWN(SUM(ItemEVA)+BEVA+SPDMOD,0)+17",
         "spellSave": "=ROUNDUP(35+(PROFMOD*1.5)+SpellCastingMOD,0)",
         "maxMana": "=MROUND((3.41863*LVL^1.09414)*10,10)+BMANA+40",
-        "spellDamage": "=PROFMOD+SUM(ItemMAGDMG)+BSPELLDMG+1"
+        "spellDamage": "=LVL+SUM(ItemMAGDMG)+BSPELLDMG"
       }
     },
     {
@@ -182,7 +182,7 @@ window.AMUTSU_DATA = {
         "evasion": "=ROUNDDOWN(SUM(ItemEVA)+BEVA+SPDMOD,0)+20",
         "spellSave": "=ROUNDUP(40+PROFMOD*1.5+SpellCastingMOD,0)",
         "maxMana": "=MROUND((1.71863*LVL^1.09414)*10,10)+BMANA",
-        "spellDamage": "=ROUNDDOWN((PROFMOD+SpellCastingMOD+SUM(ItemMAGDMG)+BSPELLDMG)/2,0)"
+        "spellDamage": "=LVL+SUM(ItemMAGDMG)+BSPELLDMG"
       }
     },
     {
@@ -195,7 +195,7 @@ window.AMUTSU_DATA = {
         "evasion": "=ROUNDDOWN(SUM(ItemEVA)+SPDMOD,0)+20",
         "spellSave": "=ROUNDUP(40+PROFMOD*1.5+SpellCastingMOD,0)",
         "maxMana": "=MROUND((3.41863*LVL^1.09414)*10,10)+BMANA+40",
-        "spellDamage": "=PROFMOD+SpellCastingMOD+SUM(ItemMAGDMG)+BSPELLDMG"
+        "spellDamage": "=LVL+SUM(ItemMAGDMG)+BSPELLDMG"
       }
     },
     {
@@ -208,7 +208,7 @@ window.AMUTSU_DATA = {
         "evasion": "=ROUNDDOWN(SUM(ItemEVA)+SPDMOD,0)+15",
         "spellSave": "=ROUNDUP(30+PROFMOD*1.5+SpellCastingMOD,0)",
         "maxMana": "=MROUND((0*LVL^1.09414)*10,10)+BMANA",
-        "spellDamage": "=SUM(ItemMAGDMG)+BSPELLDMG"
+        "spellDamage": "=LVL+SUM(ItemMAGDMG)+BSPELLDMG"
       }
     },
     {
@@ -221,7 +221,7 @@ window.AMUTSU_DATA = {
         "evasion": "=ROUNDDOWN(SUM(ItemEVA)+SPDMOD,0)+24",
         "spellSave": "=ROUNDUP(40+PROFMOD*1.5+SpellCastingMOD,0)",
         "maxMana": "=MROUND((0*LVL^1.09414)*10,10)+BMANA",
-        "spellDamage": "=SUM(ItemMAGDMG)+BSPELLDMG"
+        "spellDamage": "=LVL+SUM(ItemMAGDMG)+BSPELLDMG"
       }
     }
   ],

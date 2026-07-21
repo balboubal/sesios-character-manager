@@ -75,6 +75,7 @@ const context = { window: {} };
 vm.runInNewContext(fs.readFileSync(path.join(root, "public/sheet/data.js"), "utf8"), context);
 vm.runInNewContext(fs.readFileSync(path.join(root, "public/sheet/engine.js"), "utf8"), context);
 const workbook = context.window.AMUTSU_DATA;
+const sheetEngine = context.window.AmutsuEngine;
 assert.equal(workbook.items.length, 267, "Workbook item catalogue changed unexpectedly");
 assert.equal(workbook.traits.length, 41, "Workbook trait catalogue changed unexpectedly");
 assert.equal(workbook.conditions.length, 27, "Workbook condition catalogue changed unexpectedly");
@@ -115,9 +116,34 @@ assert.deepEqual(JSON.parse(JSON.stringify(workbook.defaultState.crafting.legend
 assert.equal(workbook.crafting.recipes.every((recipe) => Array.isArray(recipe.requirements) && recipe.requirements.length >= 1 && recipe.requirements.length <= 4), true, "Every recipe must use one to four concise material requirement lines");
 assert.ok(workbook.crafting.recipes.some((recipe) => recipe.blueprintRequired && recipe.rarity === "Rare"), "Rare recipe blueprint rules are missing");
 
+const spellDamageData = JSON.parse(JSON.stringify(workbook));
+spellDamageData.items.push({
+  name: "Regression Spell Focus",
+  type: "Trinket",
+  magicalDamage: 7,
+});
+const spellDamageState = JSON.parse(JSON.stringify(workbook.defaultState));
+spellDamageState.character.className = "Rogue";
+spellDamageState.character.experience = 70;
+spellDamageState.bonuses.spellDamage = 4;
+spellDamageState.equipment.trinket = "Regression Spell Focus";
+assert.equal(
+  sheetEngine.calculate(spellDamageState, spellDamageData).stats.spellDamage,
+  13,
+  "Spell Damage must equal LVL + SUM(ItemMAGDMG) + BSPELLDMG",
+);
+
 const bridge = fs.readFileSync(path.join(root, "public/sheet/script.js"), "utf8");
 assert.match(bridge, /amutsu:state-change/, "Online character save bridge is missing");
 assert.match(bridge, /amutsu:load/, "Online character load bridge is missing");
+assert.match(bridge, /updateSheetPlayerIdentity\(event\.data\.ownerName\)/, "Embedded player identity must update from the assigned owner profile");
+assert.match(bridge, /data-filter-results="traits"/, "Personality trait search results container is missing");
+assert.match(bridge, /data-filter-count="traits"/, "Personality trait filtered count hook is missing");
+assert.match(
+  bridge,
+  /function renderTraitsResults\(\) \{[\s\S]*?data-filter-results="traits"[\s\S]*?data-filter-count="traits"[\s\S]*?\n  \}/,
+  "Personality filtering must update the trait results grid and count",
+);
 assert.match(bridge, /abilityBaseScores/, "Per-character base ability score support is missing");
 assert.match(bridge, /characterExperienceMarkup/, "Character-level XP progress display is missing");
 assert.match(bridge, /DM-controlled XP/, "Reset and import handling must preserve DM-controlled XP");
@@ -237,6 +263,10 @@ assert.doesNotMatch(
   /data-bind="personality\.\$\{index\}\.cost"/,
   "Personality costs should remain hidden on the character sheet",
 );
+
+const portalScript = fs.readFileSync(path.join(root, "src/main.js"), "utf8");
+assert.match(portalScript, /ownerName,/, "The portal must send the assigned player name to the embedded character sheet");
+assert.match(portalScript, /sendCharacterToSheet\(\);\s*showToast\("Character owner updated\./, "Changing a character owner must refresh the embedded player identity");
 
 const stylesheet = fs.readFileSync(path.join(root, "public/sheet/styles.css"), "utf8");
 assert.match(stylesheet, /\.ability-grid\s*{[^}]*repeat\(6,/s, "Ability scores are not full-width");
