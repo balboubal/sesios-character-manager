@@ -1,4 +1,3 @@
-/* Generated from Amutsu Character Sheet.xlsx. Static data only. */
 window.AMUTSU_DATA = {
   "meta": {
     "title": "Amutsu Character Sheet",
@@ -8201,1059 +8200,1059 @@ window.AMUTSU_DATA = {
   ],
   "food": {
     "ingredients": [
-          {
-                "name": "Canal Mint",
-                "category": "Herb & Plant",
-                "region": "Asura",
-                "mainUse": "Cooling garnish and digestive tea",
-                "notes": "Used in student cafes, canal kitchens, and light fish broths. It grows in clay troughs beside clean channels.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Aesper Sage",
-                "category": "Herb & Plant",
-                "region": "Asura",
-                "mainUse": "Mana-stabilizing seasoning",
-                "notes": "Added sparingly to foods cooked near active conduits. Overuse gives food a metallic aftertaste.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Silver Reed",
-                "category": "Herb & Plant",
-                "region": "Asura, Fittoa",
-                "mainUse": "Purity test and broth stirrer",
-                "notes": "A reed utensil rather than a spice. It darkens in unsafe Fittoan milk or mana-tainted water.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Blue Fen Thyme",
-                "category": "Herb & Plant",
-                "region": "Asura",
-                "mainUse": "Fish, curd, and glasshouse vegetables",
-                "notes": "A controlled herb crop used by formal kitchens that want flavor without visible rusticity.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Prismbloom Pollen",
-                "category": "Herb & Plant",
-                "region": "Asura",
-                "mainUse": "Honey culture and pastry dust",
-                "notes": "Gathered from Prismbee hives. Conductive wax and resin are more valuable than the pollen itself.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Smokeleaf",
-                "category": "Herb & Plant",
-                "region": "Ronoa",
-                "mainUse": "Preservation and winter stews",
-                "notes": "Hung in smokehouses with fish and Brumox cuts. It tastes harsh unless cooked for hours.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Frostmarjor",
-                "category": "Herb & Plant",
-                "region": "Ronoa",
-                "mainUse": "Cold-weather tea and game sauce",
-                "notes": "A bitter mountain herb crushed into Skalven preserves and hunting meals.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Cairnwort",
-                "category": "Herb & Plant",
-                "region": "Ronoa",
-                "mainUse": "Burial rites and sickness care",
-                "notes": "Burned beside sickbeds during White-Lung recovery and carried by guides crossing old cairn roads.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Ironmoss",
-                "category": "Herb & Plant",
-                "region": "Ronoa",
-                "mainUse": "Mineral tonic and trail poultice",
-                "notes": "Scraped from stone near northern springs. Not eaten raw. Brewed with broth or pressed into bandages.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Hearth Nettle",
-                "category": "Herb & Plant",
-                "region": "Ronoa",
-                "mainUse": "Goose fat cakes and winter greens",
-                "notes": "Stinging leaves softened in fat. Poor households use it to stretch grain meals.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Charcoal Root",
-                "category": "Herb & Plant",
-                "region": "Fittoa",
-                "mainUse": "Detox wash, ash-sickness treatment, broth base",
-                "notes": "The standard field ingredient for red ash exposure. Boiled, crushed, or rubbed into water filters.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Ashbitter",
-                "category": "Herb & Plant",
-                "region": "Fittoa",
-                "mainUse": "Mask tea and nausea control",
-                "notes": "Keeps travelers from vomiting under ash exposure. It stains cups red-grey.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Bellweed",
-                "category": "Herb & Plant",
-                "region": "Fittoa",
-                "mainUse": "Warning charm and dangerous tea",
-                "notes": "Seed pods click in wind. Camp cooks avoid brewing it unless a guide approves the harvest site.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Redmask Reed",
-                "category": "Herb & Plant",
-                "region": "Fittoa",
-                "mainUse": "Filter fiber and camp bundles",
-                "notes": "Woven into mask linings and water strainers. It must be dried outside dense mist.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Memory Nettle",
-                "category": "Herb & Plant",
-                "region": "Fittoa",
-                "mainUse": "Forbidden ritual garnish",
-                "notes": "Used with Telleth in black-market memory food. Legal cooks refuse it.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Grave Sage",
-                "category": "Herb & Plant",
-                "region": "Karrnath",
-                "mainUse": "Marrow dishes and funeral soup",
-                "notes": "Its smoke covers the scent of bone stock. Gravekeepers also burn it after contaminated burials.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Vigil Thyme",
-                "category": "Herb & Plant",
-                "region": "Karrnath",
-                "mainUse": "Night-watch tea",
-                "notes": "Served during funeral watches with Blackwake broth to keep mourners awake without loud speech.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Marrowleaf",
-                "category": "Herb & Plant",
-                "region": "Karrnath",
-                "mainUse": "Rich sauces and anti-rot poultices",
-                "notes": "A dark leaf bruised into vinegar before being served with Duskhide marrow.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Black Salt Grass",
-                "category": "Herb & Plant",
-                "region": "Karrnath",
-                "mainUse": "Pickling and ration salt",
-                "notes": "Ash-black blades harvested from brackish gravefields. Heavily regulated.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Ledgerbloom",
-                "category": "Herb & Plant",
-                "region": "Karrnath",
-                "mainUse": "Contract rites and bitter dye",
-                "notes": "Pressed into ink for estate food ledgers and death-related obligations.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "River Hyssop",
-                "category": "Herb & Plant",
-                "region": "Shirone",
-                "mainUse": "Fish marinade and fever water",
-                "notes": "Used with Nayara in temple kitchens and river-clay medicine.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Pilgrim Cress",
-                "category": "Herb & Plant",
-                "region": "Shirone",
-                "mainUse": "Flatbread, travel greens, temple soup",
-                "notes": "Grows near maintained pilgrim roads. Harvesting too much from shrine beds is fined.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Halo Reed",
-                "category": "Herb & Plant",
-                "region": "Shirone",
-                "mainUse": "Oath seals and aromatic steam",
-                "notes": "Burned with Sunhive wax during meals of formal reconciliation.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Nayara Leaf",
-                "category": "Herb & Plant",
-                "region": "Shirone",
-                "mainUse": "Oil, peel, marinade, bright sauces",
-                "notes": "The leaf is less prestigious than the fruit but more common in kitchens.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "White Canal Basil",
-                "category": "Herb & Plant",
-                "region": "Shirone",
-                "mainUse": "Yoghurt, fish stew, canal vegetables",
-                "notes": "A soft herb grown beside temple canals and used in public kitchens.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Barkmint",
-                "category": "Herb & Plant",
-                "region": "Milis",
-                "mainUse": "Honey tea and forest medicine",
-                "notes": "Tended near Barkbee hives. The grove, not the beekeeper, is considered the first owner.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Rootlace",
-                "category": "Herb & Plant",
-                "region": "Milis",
-                "mainUse": "Stew thickener and binding poultice",
-                "notes": "A thin root-vine used in dumplings, medicinal wraps, and forest trail soups.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Rainmoss",
-                "category": "Herb & Plant",
-                "region": "Milis",
-                "mainUse": "Cold compress and smoked fish lining",
-                "notes": "Laid beneath Rootfin trout during forest smoking. Also used to cool fevered skin.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Grove Fennel",
-                "category": "Herb & Plant",
-                "region": "Milis",
-                "mainUse": "Clan feasts and animal digestion",
-                "notes": "Fed to Bramblebacks before long forest travel and chopped into feast breads.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Mooncap",
-                "category": "Herb & Plant",
-                "region": "Milis",
-                "mainUse": "Night stew and dream caution",
-                "notes": "A pale forest fungus. Safe only when gathered from approved tree-lines.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Well Coriander",
-                "category": "Herb & Plant",
-                "region": "Begaritt",
-                "mainUse": "Cooling bowls and caravan cheese",
-                "notes": "Grown in shaded cistern niches. Never harvested without waterkeeper approval.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Glasssage",
-                "category": "Herb & Plant",
-                "region": "Begaritt",
-                "mainUse": "Water testing and bitter tea",
-                "notes": "Leaves go limp in poisoned cisterns. The tea is unpleasant but trusted.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Shade Cumin",
-                "category": "Herb & Plant",
-                "region": "Begaritt",
-                "mainUse": "Preserved meat and desert stew",
-                "notes": "A low shrub spice that masks old fat and Khasar cheese sharpness.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Khezir Peel",
-                "category": "Herb & Plant",
-                "region": "Begaritt",
-                "mainUse": "Syrup, incense, meat preservation",
-                "notes": "The oil-heavy peel is more useful than the bitter fruit itself.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Starflower Anise",
-                "category": "Herb & Plant",
-                "region": "Begaritt",
-                "mainUse": "Festival cakes and prophecy tea",
-                "notes": "Harvested under recorded star dates, especially near Ishkara orchards.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Cinderleaf",
-                "category": "Herb & Plant",
-                "region": "Demon Continent",
-                "mainUse": "Ash-roasts and firepot stews",
-                "notes": "Withstands kiln heat. Used to wrap Gorak fruit, eel, and siege-store meats.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Ember Fennel",
-                "category": "Herb & Plant",
-                "region": "Demon Continent",
-                "mainUse": "Animal feed and harsh stew",
-                "notes": "Keeps Kharak herds calm in ash winds and cuts the oiliness of Cinder eel.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Steam Algae",
-                "category": "Herb & Plant",
-                "region": "Demon Continent",
-                "mainUse": "Thermal pond food and thickener",
-                "notes": "Cultivated beside Cinder eels. Soldiers dry it into black-green ration sheets.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Taruzh Rind",
-                "category": "Herb & Plant",
-                "region": "Demon Continent",
-                "mainUse": "Pickles, sour sauces, medicinal salts",
-                "notes": "Sharper than the fruit pulp. Good cooks use it to wake up heavy ash-roasted food.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Ash Salt",
-                "category": "Herb & Plant",
-                "region": "Demon Continent",
-                "mainUse": "Curing, travel rations, fermentation",
-                "notes": "A survival ingredient, not a luxury. Villages maintain communal salt jars.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Halor Oil",
-                "category": "Herb & Plant",
-                "region": "Heaven Continent",
-                "mainUse": "Healing oil and temple incense",
-                "notes": "Rare. Even a drop in a sealed dish changes the price of the meal.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Iril Rind",
-                "category": "Herb & Plant",
-                "region": "Heaven Continent",
-                "mainUse": "Sacred dessert flavoring",
-                "notes": "Does not freeze properly. Usually shaved, never boiled.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Cyrune Leaf",
-                "category": "Herb & Plant",
-                "region": "Heaven Continent",
-                "mainUse": "Moon-wine steeping",
-                "notes": "Known mostly through liturgical descriptions and suspect merchant claims.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Othal Blossom",
-                "category": "Herb & Plant",
-                "region": "Heaven Continent",
-                "mainUse": "Answered-prayer offerings",
-                "notes": "If real, it is treated as evidence rather than seasoning.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Veyrin Frostmelt",
-                "category": "Herb & Plant",
-                "region": "Heaven Continent",
-                "mainUse": "Preserved offerings and omen food",
-                "notes": "Blue frost scraped from Veyrin storage jars. Mostly counterfeit in ordinary markets.",
-                "role": "Keeper Crop"
-          },
-          {
-                "name": "Lysael Pear",
-                "category": "Witness Fruit & Produce",
-                "region": "Asura",
-                "mainUse": "Wine, clear preserves, noble desserts, glazes",
-                "notes": "Blue-green pear with silver veins. Best near stable Aesperium conduits.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Skalven Berry",
-                "category": "Witness Fruit & Produce",
-                "region": "Ronoa",
-                "mainUse": "Winter preserves, soldier rations, game sauces",
-                "notes": "A frost-bearing berry that remains on the branch through early snow.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Telleth Fruit",
-                "category": "Witness Fruit & Produce",
-                "region": "Fittoa",
-                "mainUse": "Illegal alchemy, memory rites, black-market food",
-                "notes": "Pale fruit with black veins. Some say it rings faintly when cut.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Morvane Plum",
-                "category": "Witness Fruit & Produce",
-                "region": "Karrnath",
-                "mainUse": "Funeral wine, vinegar, sauces, fruit leather",
-                "notes": "Black plum with deep red flesh, grown in iron-heavy gravefield soil.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Nayara Citrus",
-                "category": "Witness Fruit & Produce",
-                "region": "Shirone",
-                "mainUse": "Temple oil, naval provisions, fish marinade, sweet wine",
-                "notes": "Striped blue-orange citrus, central to sacred and coastal cooking.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Vaelwyn Pear",
-                "category": "Witness Fruit & Produce",
-                "region": "Milis",
-                "mainUse": "Honey wine, wedding feasts, dumplings",
-                "notes": "Twin-grown pear. Grove origin matters legally and ritually.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Selvara Berry",
-                "category": "Witness Fruit & Produce",
-                "region": "Milis",
-                "mainUse": "Sweet sauces, medicine, ceremonial dye",
-                "notes": "Long emerald berry that ripens after heavy forest rain.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Orimel Apple",
-                "category": "Witness Fruit & Produce",
-                "region": "Milis",
-                "mainUse": "Winter food, cider, caravan trade",
-                "notes": "Mineral-rich apple from dwarven terraces.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Brannoc Pod",
-                "category": "Witness Fruit & Produce",
-                "region": "Milis",
-                "mainUse": "Travel food, thick stews, beast feed",
-                "notes": "Amber pod with creamy pulp and edible seeds.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Heshari Fig",
-                "category": "Witness Fruit & Produce",
-                "region": "Milis",
-                "mainUse": "Pilgrim bread, temple offerings, dried rations",
-                "notes": "Pale fig grown in shaded sacred groves.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Qasira Fruit",
-                "category": "Witness Fruit & Produce",
-                "region": "Begaritt",
-                "mainUse": "Hydration, caravan supplies, cooling tonics",
-                "notes": "Thick-rinded green fruit filled with cold water-pulp.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Ishkara Fig",
-                "category": "Witness Fruit & Produce",
-                "region": "Begaritt",
-                "mainUse": "Sweet cakes, prophecy rites, luxury exports",
-                "notes": "Bronze fig that ripens only during specific celestial seasons.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Zahlun Melon",
-                "category": "Witness Fruit & Produce",
-                "region": "Begaritt",
-                "mainUse": "Candies, wine, noble banquets",
-                "notes": "Translucent melon with crisp sugar-like flesh.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Khezir Orange",
-                "category": "Witness Fruit & Produce",
-                "region": "Begaritt",
-                "mainUse": "Spice syrup, preserved meat, incense",
-                "notes": "Bitter fruit prized for its oil-heavy peel.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Tazim Pomegranate",
-                "category": "Witness Fruit & Produce",
-                "region": "Begaritt",
-                "mainUse": "Festival food, medicinal seed oil, marriage rites",
-                "notes": "Crimson fruit that ripens underground after rare rains.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Gorak Fruit",
-                "category": "Witness Fruit & Produce",
-                "region": "Demon Continent",
-                "mainUse": "Roasting, fermentation, trade preserves",
-                "notes": "Black skin, orange flesh, smoky sweetness.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Veshkar Fig",
-                "category": "Witness Fruit & Produce",
-                "region": "Demon Continent",
-                "mainUse": "Long-term rations, warrior travel packs",
-                "notes": "Dense purple fig that dries naturally on the branch.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Taruzh Fruit",
-                "category": "Witness Fruit & Produce",
-                "region": "Demon Continent",
-                "mainUse": "Pickles, sour sauces, medicinal salts",
-                "notes": "Sharp green fruit that splits after volcanic rain.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Molgra Melon",
-                "category": "Witness Fruit & Produce",
-                "region": "Demon Continent",
-                "mainUse": "Water storage, stew base, animal feed",
-                "notes": "Heavy red melon from thermal caves and steam vents.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Shaleth Berry",
-                "category": "Witness Fruit & Produce",
-                "region": "Demon Continent",
-                "mainUse": "Dye, wine, fever medicine, poultices",
-                "notes": "Small violet berry from black forest edges.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Iril Pear",
-                "category": "Witness Fruit & Produce",
-                "region": "Heaven Continent",
-                "mainUse": "Sacred desserts, rites, luxury offerings",
-                "notes": "White frost pear with warm golden flesh.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Cyrune Grape",
-                "category": "Witness Fruit & Produce",
-                "region": "Heaven Continent",
-                "mainUse": "Divine wine and moonlit rites",
-                "notes": "Silver-skinned grape that reflects moonlight.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Halor Fruit",
-                "category": "Witness Fruit & Produce",
-                "region": "Heaven Continent",
-                "mainUse": "Temple incense and healing oils",
-                "notes": "Small orange fruit with a ring pattern near the stem.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Othal Apple",
-                "category": "Witness Fruit & Produce",
-                "region": "Heaven Continent",
-                "mainUse": "Pilgrim legends, answered-prayer offerings",
-                "notes": "Red-gold apple said to grow where prayers are answered.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Veyrin Berry",
-                "category": "Witness Fruit & Produce",
-                "region": "Heaven Continent",
-                "mainUse": "Sky-memory relic and preserved offerings",
-                "notes": "Translucent blue berry preserved in ice.",
-                "role": "Witness Fruit"
-          },
-          {
-                "name": "Vellhorn Cattle",
-                "category": "Livestock",
-                "region": "Asura",
-                "mainUse": "Milk, cheese, draught work",
-                "secondaryUse": "Pale hide, rich manure, mana-warning behavior",
-                "marketStatus": "Common in Asuran estates",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Brumoxen",
-                "category": "Livestock",
-                "region": "Ronoa",
-                "mainUse": "Sled pulling, winter meat, milk",
-                "secondaryUse": "Fur-lined hides, salted butter, mountain hauling",
-                "marketStatus": "Common but communally controlled",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Hushbacks",
-                "category": "Livestock",
-                "region": "Fittoa",
-                "mainUse": "Lichen grazing, milk, safe-route warning",
-                "secondaryUse": "Camp survival, ashland scouting",
-                "marketStatus": "Scarce, rarely exported",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Duskhide Cattle",
-                "category": "Livestock",
-                "region": "Karrnath",
-                "mainUse": "Beef, marrow, black leather",
-                "secondaryUse": "Fertilizer, military ration paste",
-                "marketStatus": "Regulated by noble estates",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Reedhorns",
-                "category": "Livestock",
-                "region": "Shirone",
-                "mainUse": "Wetland ploughing, milk, river transport",
-                "secondaryUse": "Leather, yoghurt, temple estate labor",
-                "marketStatus": "Common in riverlands",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Khasar",
-                "category": "Livestock",
-                "region": "Begaritt",
-                "mainUse": "Desert travel, water carriage",
-                "secondaryUse": "Wool, sour milk, dried dung fuel",
-                "marketStatus": "Valuable, tied to Water-Names",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Kharak",
-                "category": "Livestock",
-                "region": "Demon Continent",
-                "mainUse": "Ashland hauling, siege transport",
-                "secondaryUse": "Eggs, meat, hard hide",
-                "marketStatus": "Common in fortified settlements",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Brambleback",
-                "category": "Livestock",
-                "region": "Milis",
-                "mainUse": "Forest pack animal, orchard grazing",
-                "secondaryUse": "Truffle finding, brush clearing",
-                "marketStatus": "Clan or grove-controlled",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Hearth Geese",
-                "category": "Livestock",
-                "region": "Ronoa",
-                "mainUse": "Eggs, winter fat",
-                "secondaryUse": "Down, alarm animals",
-                "marketStatus": "Common household animal",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Velvet Moths",
-                "category": "Livestock",
-                "region": "Karrnath",
-                "mainUse": "Black shroud-silk",
-                "secondaryUse": "Dark dye, funeral thread",
-                "marketStatus": "Temple and estate controlled",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Prismbees",
-                "category": "Livestock",
-                "region": "Asura",
-                "mainUse": "Honey, conductive wax",
-                "secondaryUse": "Spell-component resin",
-                "marketStatus": "Urban apiary product",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Sunhives",
-                "category": "Livestock",
-                "region": "Shirone",
-                "mainUse": "Golden wax",
-                "secondaryUse": "Temple candles, oath seals",
-                "marketStatus": "Temple-managed",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Barkbees",
-                "category": "Livestock",
-                "region": "Milis",
-                "mainUse": "Forest honey, medicinal propolis",
-                "secondaryUse": "Sacred pollination",
-                "marketStatus": "Grove-protected",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Moonmoths",
-                "category": "Livestock",
-                "region": "Begaritt",
-                "mainUse": "Pale silk",
-                "secondaryUse": "Cool-chamber textile craft",
-                "marketStatus": "Wealthy oasis trade",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Ashmoths",
-                "category": "Livestock",
-                "region": "Demon Continent",
-                "mainUse": "Heat-resistant fiber",
-                "secondaryUse": "Kiln cloth, military gloves",
-                "marketStatus": "Practical military good",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Silverwings",
-                "category": "Livestock",
-                "region": "Heaven Continent",
-                "mainUse": "Feather-silk",
-                "secondaryUse": "Relic banners, divine vestments",
-                "marketStatus": "Rumored, not normal trade",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Vellhorn Milk",
-                "category": "Livestock Product",
-                "region": "Asura",
-                "mainUse": "Clear-white cheese, noble curd, recovery food",
-                "source": "Vellhorn cattle",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Brumox Butter",
-                "category": "Livestock Product",
-                "region": "Ronoa",
-                "mainUse": "Salted winter fat, ration jars, stew base",
-                "source": "Brumoxen",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Hushback Milk",
-                "category": "Livestock Product",
-                "region": "Fittoa",
-                "mainUse": "Survival broth, ashland treatment, tested camp dairy",
-                "source": "Hushbacks",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Duskhide Marrow",
-                "category": "Livestock Product",
-                "region": "Karrnath",
-                "mainUse": "Military ration paste, marrow tartines, grave-road food",
-                "source": "Duskhide cattle",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Reedhorn Yoghurt",
-                "category": "Livestock Product",
-                "region": "Shirone",
-                "mainUse": "Pilgrim bread topping, temple food, medicinal meals",
-                "source": "Reedhorns",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Khasar Milk",
-                "category": "Livestock Product",
-                "region": "Begaritt",
-                "mainUse": "Sour desert cheese, caravan food",
-                "source": "Khasar",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Kharak Eggs",
-                "category": "Livestock Product",
-                "region": "Demon Continent",
-                "mainUse": "Siege stores, ashland baking, durable ration food",
-                "source": "Kharak",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Barkbee Honey",
-                "category": "Livestock Product",
-                "region": "Milis",
-                "mainUse": "Forest preservation, medicine, ritual sweets",
-                "source": "Barkbees",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Prismbee Wax",
-                "category": "Livestock Product",
-                "region": "Asura",
-                "mainUse": "Lamp seals, spellwork, urban food storage",
-                "source": "Prismbees",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Sunhive Wax",
-                "category": "Livestock Product",
-                "region": "Shirone",
-                "mainUse": "Temple candles, oath seals, sacred preservation",
-                "source": "Sunhives",
-                "role": "Herd Ingredient"
-          },
-          {
-                "name": "Glassfin Carp",
-                "category": "Fishery Catch",
-                "region": "Asura",
-                "mainUse": "Soup stock, canal fish",
-                "secondaryUse": "Fertilizer, mana contamination testing",
-                "notes": "Scales cloud near mana damage",
-                "role": "Tide Ingredient"
-          },
-          {
-                "name": "Hrimchar",
-                "category": "Fishery Catch",
-                "region": "Ronoa",
-                "mainUse": "Smoked fish, winter rations",
-                "secondaryUse": "Expedition food, fish cakes",
-                "notes": "Caught after first deep freeze",
-                "role": "Tide Ingredient"
-          },
-          {
-                "name": "Mirror Eels",
-                "category": "Fishery Catch",
-                "region": "Fittoa",
-                "mainUse": "Alchemy, rare bait",
-                "secondaryUse": "Illegal trade",
-                "notes": "Not safe food, may reflect absent faces",
-                "role": "Tide Ingredient"
-          },
-          {
-                "name": "Blackwake Lamprey",
-                "category": "Fishery Catch",
-                "region": "Karrnath",
-                "mainUse": "Oil, salt paste, blood broth",
-                "secondaryUse": "Funeral vigil food, medicinal broth",
-                "notes": "Associated with death rites",
-                "role": "Tide Ingredient"
-          },
-          {
-                "name": "Azurefin",
-                "category": "Fishery Catch",
-                "region": "Shirone",
-                "mainUse": "Grilled fish, stew",
-                "secondaryUse": "Dried naval ration",
-                "notes": "Sold fresh at Waterkeep each dawn",
-                "role": "Tide Ingredient"
-          },
-          {
-                "name": "Rootfin Trout",
-                "category": "Fishery Catch",
-                "region": "Milis",
-                "mainUse": "River cooking, forest smoking",
-                "secondaryUse": "Festival dishes",
-                "notes": "Cannot be taken near sacred groves",
-                "role": "Tide Ingredient"
-          },
-          {
-                "name": "Cistern Glassfish",
-                "category": "Fishery Catch",
-                "region": "Begaritt",
-                "mainUse": "Food, mosquito control",
-                "secondaryUse": "Water quality warning",
-                "notes": "Raised in stepwells",
-                "role": "Tide Ingredient"
-          },
-          {
-                "name": "Cinder Eels",
-                "category": "Fishery Catch",
-                "region": "Demon Continent",
-                "mainUse": "Smoked meat, oil",
-                "secondaryUse": "Thermal pond farming",
-                "notes": "Survive volcanic runoff pools",
-                "role": "Tide Ingredient"
-          },
-          {
-                "name": "Bellfin",
-                "category": "Fishery Catch",
-                "region": "Heaven Continent",
-                "mainUse": "Rumored sacred food",
-                "secondaryUse": "Frost preservation, divine omen",
-                "notes": "No verified common-market specimen",
-                "role": "Tide Ingredient"
-          },
-          {
-                "name": "Glassfin Stock",
-                "category": "Fishery Product",
-                "region": "Asura",
-                "mainUse": "Asuran soups, canal-worker meals, water-testing kitchens",
-                "source": "Glassfin carp",
-                "role": "Tide Ingredient"
-          },
-          {
-                "name": "Hrimchar Smoke",
-                "category": "Fishery Product",
-                "region": "Ronoa",
-                "mainUse": "Ronoan ration cakes, winter trail food",
-                "source": "Hrimchar",
-                "role": "Tide Ingredient"
-          },
-          {
-                "name": "Mirror Eel Flesh",
-                "category": "Fishery Product",
-                "region": "Fittoa",
-                "mainUse": "Alchemical reagent, forbidden bait, black-market curiosity",
-                "source": "Mirror eels",
-                "role": "Tide Ingredient"
-          },
-          {
-                "name": "Blackwake Oil",
-                "category": "Fishery Product",
-                "region": "Karrnath",
-                "mainUse": "Lamp oil, medicine, funeral rites",
-                "source": "Blackwake lamprey",
-                "role": "Tide Ingredient"
-          },
-          {
-                "name": "Blackwake Salt Paste",
-                "category": "Fishery Product",
-                "region": "Karrnath",
-                "mainUse": "Preserved Karrnathi food, soldier ration additive",
-                "source": "Blackwake lamprey",
-                "role": "Tide Ingredient"
-          },
-          {
-                "name": "Azurefin Fillets",
-                "category": "Fishery Product",
-                "region": "Shirone",
-                "mainUse": "Street skewers, temple stews, naval provisions",
-                "source": "Azurefin",
-                "role": "Tide Ingredient"
-          },
-          {
-                "name": "Rootfin Smoke",
-                "category": "Fishery Product",
-                "region": "Milis",
-                "mainUse": "Milis feast food, preserved forest ration",
-                "source": "Rootfin trout",
-                "role": "Tide Ingredient"
-          },
-          {
-                "name": "Glassfish Shoal",
-                "category": "Fishery Product",
-                "region": "Begaritt",
-                "mainUse": "Stepwell food, mosquito control, poisoned-water warning",
-                "source": "Cistern glassfish",
-                "role": "Tide Ingredient"
-          },
-          {
-                "name": "Cinder Eel Oil",
-                "category": "Fishery Product",
-                "region": "Demon Continent",
-                "mainUse": "Heat cooking, ashland preservation, lamp fuel",
-                "source": "Cinder eels",
-                "role": "Tide Ingredient"
-          },
-          {
-                "name": "Bellfin Salt",
-                "category": "Fishery Product",
-                "region": "Heaven Continent",
-                "mainUse": "Mythic frost-preserved offering, Heaven-linked relic food",
-                "source": "Bellfin",
-                "role": "Tide Ingredient"
-          }
+      {
+        "name": "Canal Mint",
+        "category": "Herb & Plant",
+        "region": "Asura",
+        "mainUse": "Cooling garnish and digestive tea",
+        "notes": "Used in student cafes, canal kitchens, and light fish broths. It grows in clay troughs beside clean channels.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Aesper Sage",
+        "category": "Herb & Plant",
+        "region": "Asura",
+        "mainUse": "Mana-stabilizing seasoning",
+        "notes": "Added sparingly to foods cooked near active conduits. Overuse gives food a metallic aftertaste.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Silver Reed",
+        "category": "Herb & Plant",
+        "region": "Asura, Fittoa",
+        "mainUse": "Purity test and broth stirrer",
+        "notes": "A reed utensil rather than a spice. It darkens in unsafe Fittoan milk or mana-tainted water.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Blue Fen Thyme",
+        "category": "Herb & Plant",
+        "region": "Asura",
+        "mainUse": "Fish, curd, and glasshouse vegetables",
+        "notes": "A controlled herb crop used by formal kitchens that want flavor without visible rusticity.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Prismbloom Pollen",
+        "category": "Herb & Plant",
+        "region": "Asura",
+        "mainUse": "Honey culture and pastry dust",
+        "notes": "Gathered from Prismbee hives. Conductive wax and resin are more valuable than the pollen itself.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Smokeleaf",
+        "category": "Herb & Plant",
+        "region": "Ronoa",
+        "mainUse": "Preservation and winter stews",
+        "notes": "Hung in smokehouses with fish and Brumox cuts. It tastes harsh unless cooked for hours.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Frostmarjor",
+        "category": "Herb & Plant",
+        "region": "Ronoa",
+        "mainUse": "Cold-weather tea and game sauce",
+        "notes": "A bitter mountain herb crushed into Skalven preserves and hunting meals.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Cairnwort",
+        "category": "Herb & Plant",
+        "region": "Ronoa",
+        "mainUse": "Burial rites and sickness care",
+        "notes": "Burned beside sickbeds during White-Lung recovery and carried by guides crossing old cairn roads.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Ironmoss",
+        "category": "Herb & Plant",
+        "region": "Ronoa",
+        "mainUse": "Mineral tonic and trail poultice",
+        "notes": "Scraped from stone near northern springs. Not eaten raw. Brewed with broth or pressed into bandages.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Hearth Nettle",
+        "category": "Herb & Plant",
+        "region": "Ronoa",
+        "mainUse": "Goose fat cakes and winter greens",
+        "notes": "Stinging leaves softened in fat. Poor households use it to stretch grain meals.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Charcoal Root",
+        "category": "Herb & Plant",
+        "region": "Fittoa",
+        "mainUse": "Detox wash, ash-sickness treatment, broth base",
+        "notes": "The standard field ingredient for red ash exposure. Boiled, crushed, or rubbed into water filters.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Ashbitter",
+        "category": "Herb & Plant",
+        "region": "Fittoa",
+        "mainUse": "Mask tea and nausea control",
+        "notes": "Keeps travelers from vomiting under ash exposure. It stains cups red-grey.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Bellweed",
+        "category": "Herb & Plant",
+        "region": "Fittoa",
+        "mainUse": "Warning charm and dangerous tea",
+        "notes": "Seed pods click in wind. Camp cooks avoid brewing it unless a guide approves the harvest site.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Redmask Reed",
+        "category": "Herb & Plant",
+        "region": "Fittoa",
+        "mainUse": "Filter fiber and camp bundles",
+        "notes": "Woven into mask linings and water strainers. It must be dried outside dense mist.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Memory Nettle",
+        "category": "Herb & Plant",
+        "region": "Fittoa",
+        "mainUse": "Forbidden ritual garnish",
+        "notes": "Used with Telleth in black-market memory food. Legal cooks refuse it.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Grave Sage",
+        "category": "Herb & Plant",
+        "region": "Karrnath",
+        "mainUse": "Marrow dishes and funeral soup",
+        "notes": "Its smoke covers the scent of bone stock. Gravekeepers also burn it after contaminated burials.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Vigil Thyme",
+        "category": "Herb & Plant",
+        "region": "Karrnath",
+        "mainUse": "Night-watch tea",
+        "notes": "Served during funeral watches with Blackwake broth to keep mourners awake without loud speech.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Marrowleaf",
+        "category": "Herb & Plant",
+        "region": "Karrnath",
+        "mainUse": "Rich sauces and anti-rot poultices",
+        "notes": "A dark leaf bruised into vinegar before being served with Duskhide marrow.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Black Salt Grass",
+        "category": "Herb & Plant",
+        "region": "Karrnath",
+        "mainUse": "Pickling and ration salt",
+        "notes": "Ash-black blades harvested from brackish gravefields. Heavily regulated.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Ledgerbloom",
+        "category": "Herb & Plant",
+        "region": "Karrnath",
+        "mainUse": "Contract rites and bitter dye",
+        "notes": "Pressed into ink for estate food ledgers and death-related obligations.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "River Hyssop",
+        "category": "Herb & Plant",
+        "region": "Shirone",
+        "mainUse": "Fish marinade and fever water",
+        "notes": "Used with Nayara in temple kitchens and river-clay medicine.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Pilgrim Cress",
+        "category": "Herb & Plant",
+        "region": "Shirone",
+        "mainUse": "Flatbread, travel greens, temple soup",
+        "notes": "Grows near maintained pilgrim roads. Harvesting too much from shrine beds is fined.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Halo Reed",
+        "category": "Herb & Plant",
+        "region": "Shirone",
+        "mainUse": "Oath seals and aromatic steam",
+        "notes": "Burned with Sunhive wax during meals of formal reconciliation.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Nayara Leaf",
+        "category": "Herb & Plant",
+        "region": "Shirone",
+        "mainUse": "Oil, peel, marinade, bright sauces",
+        "notes": "The leaf is less prestigious than the fruit but more common in kitchens.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "White Canal Basil",
+        "category": "Herb & Plant",
+        "region": "Shirone",
+        "mainUse": "Yoghurt, fish stew, canal vegetables",
+        "notes": "A soft herb grown beside temple canals and used in public kitchens.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Barkmint",
+        "category": "Herb & Plant",
+        "region": "Milis",
+        "mainUse": "Honey tea and forest medicine",
+        "notes": "Tended near Barkbee hives. The grove, not the beekeeper, is considered the first owner.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Rootlace",
+        "category": "Herb & Plant",
+        "region": "Milis",
+        "mainUse": "Stew thickener and binding poultice",
+        "notes": "A thin root-vine used in dumplings, medicinal wraps, and forest trail soups.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Rainmoss",
+        "category": "Herb & Plant",
+        "region": "Milis",
+        "mainUse": "Cold compress and smoked fish lining",
+        "notes": "Laid beneath Rootfin trout during forest smoking. Also used to cool fevered skin.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Grove Fennel",
+        "category": "Herb & Plant",
+        "region": "Milis",
+        "mainUse": "Clan feasts and animal digestion",
+        "notes": "Fed to Bramblebacks before long forest travel and chopped into feast breads.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Mooncap",
+        "category": "Herb & Plant",
+        "region": "Milis",
+        "mainUse": "Night stew and dream caution",
+        "notes": "A pale forest fungus. Safe only when gathered from approved tree-lines.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Well Coriander",
+        "category": "Herb & Plant",
+        "region": "Begaritt",
+        "mainUse": "Cooling bowls and caravan cheese",
+        "notes": "Grown in shaded cistern niches. Never harvested without waterkeeper approval.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Glasssage",
+        "category": "Herb & Plant",
+        "region": "Begaritt",
+        "mainUse": "Water testing and bitter tea",
+        "notes": "Leaves go limp in poisoned cisterns. The tea is unpleasant but trusted.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Shade Cumin",
+        "category": "Herb & Plant",
+        "region": "Begaritt",
+        "mainUse": "Preserved meat and desert stew",
+        "notes": "A low shrub spice that masks old fat and Khasar cheese sharpness.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Khezir Peel",
+        "category": "Herb & Plant",
+        "region": "Begaritt",
+        "mainUse": "Syrup, incense, meat preservation",
+        "notes": "The oil-heavy peel is more useful than the bitter fruit itself.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Starflower Anise",
+        "category": "Herb & Plant",
+        "region": "Begaritt",
+        "mainUse": "Festival cakes and prophecy tea",
+        "notes": "Harvested under recorded star dates, especially near Ishkara orchards.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Cinderleaf",
+        "category": "Herb & Plant",
+        "region": "Demon Continent",
+        "mainUse": "Ash-roasts and firepot stews",
+        "notes": "Withstands kiln heat. Used to wrap Gorak fruit, eel, and siege-store meats.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Ember Fennel",
+        "category": "Herb & Plant",
+        "region": "Demon Continent",
+        "mainUse": "Animal feed and harsh stew",
+        "notes": "Keeps Kharak herds calm in ash winds and cuts the oiliness of Cinder eel.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Steam Algae",
+        "category": "Herb & Plant",
+        "region": "Demon Continent",
+        "mainUse": "Thermal pond food and thickener",
+        "notes": "Cultivated beside Cinder eels. Soldiers dry it into black-green ration sheets.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Taruzh Rind",
+        "category": "Herb & Plant",
+        "region": "Demon Continent",
+        "mainUse": "Pickles, sour sauces, medicinal salts",
+        "notes": "Sharper than the fruit pulp. Good cooks use it to wake up heavy ash-roasted food.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Ash Salt",
+        "category": "Herb & Plant",
+        "region": "Demon Continent",
+        "mainUse": "Curing, travel rations, fermentation",
+        "notes": "A survival ingredient, not a luxury. Villages maintain communal salt jars.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Halor Oil",
+        "category": "Herb & Plant",
+        "region": "Heaven Continent",
+        "mainUse": "Healing oil and temple incense",
+        "notes": "Rare. Even a drop in a sealed dish changes the price of the meal.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Iril Rind",
+        "category": "Herb & Plant",
+        "region": "Heaven Continent",
+        "mainUse": "Sacred dessert flavoring",
+        "notes": "Does not freeze properly. Usually shaved, never boiled.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Cyrune Leaf",
+        "category": "Herb & Plant",
+        "region": "Heaven Continent",
+        "mainUse": "Moon-wine steeping",
+        "notes": "Known mostly through liturgical descriptions and suspect merchant claims.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Othal Blossom",
+        "category": "Herb & Plant",
+        "region": "Heaven Continent",
+        "mainUse": "Answered-prayer offerings",
+        "notes": "If real, it is treated as evidence rather than seasoning.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Veyrin Frostmelt",
+        "category": "Herb & Plant",
+        "region": "Heaven Continent",
+        "mainUse": "Preserved offerings and omen food",
+        "notes": "Blue frost scraped from Veyrin storage jars. Mostly counterfeit in ordinary markets.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Lysael Pear",
+        "category": "Witness Fruit & Produce",
+        "region": "Asura",
+        "mainUse": "Wine, clear preserves, noble desserts, glazes",
+        "notes": "Blue-green pear with silver veins. Best near stable Aesperium conduits.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Skalven Berry",
+        "category": "Witness Fruit & Produce",
+        "region": "Ronoa",
+        "mainUse": "Winter preserves, soldier rations, game sauces",
+        "notes": "A frost-bearing berry that remains on the branch through early snow.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Telleth Fruit",
+        "category": "Witness Fruit & Produce",
+        "region": "Fittoa",
+        "mainUse": "Illegal alchemy, memory rites, black-market food",
+        "notes": "Pale fruit with black veins. Some say it rings faintly when cut.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Morvane Plum",
+        "category": "Witness Fruit & Produce",
+        "region": "Karrnath",
+        "mainUse": "Funeral wine, vinegar, sauces, fruit leather",
+        "notes": "Black plum with deep red flesh, grown in iron-heavy gravefield soil.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Nayara Citrus",
+        "category": "Witness Fruit & Produce",
+        "region": "Shirone",
+        "mainUse": "Temple oil, naval provisions, fish marinade, sweet wine",
+        "notes": "Striped blue-orange citrus, central to sacred and coastal cooking.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Vaelwyn Pear",
+        "category": "Witness Fruit & Produce",
+        "region": "Milis",
+        "mainUse": "Honey wine, wedding feasts, dumplings",
+        "notes": "Twin-grown pear. Grove origin matters legally and ritually.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Selvara Berry",
+        "category": "Witness Fruit & Produce",
+        "region": "Milis",
+        "mainUse": "Sweet sauces, medicine, ceremonial dye",
+        "notes": "Long emerald berry that ripens after heavy forest rain.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Orimel Apple",
+        "category": "Witness Fruit & Produce",
+        "region": "Milis",
+        "mainUse": "Winter food, cider, caravan trade",
+        "notes": "Mineral-rich apple from dwarven terraces.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Brannoc Pod",
+        "category": "Witness Fruit & Produce",
+        "region": "Milis",
+        "mainUse": "Travel food, thick stews, beast feed",
+        "notes": "Amber pod with creamy pulp and edible seeds.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Heshari Fig",
+        "category": "Witness Fruit & Produce",
+        "region": "Milis",
+        "mainUse": "Pilgrim bread, temple offerings, dried rations",
+        "notes": "Pale fig grown in shaded sacred groves.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Qasira Fruit",
+        "category": "Witness Fruit & Produce",
+        "region": "Begaritt",
+        "mainUse": "Hydration, caravan supplies, cooling tonics",
+        "notes": "Thick-rinded green fruit filled with cold water-pulp.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Ishkara Fig",
+        "category": "Witness Fruit & Produce",
+        "region": "Begaritt",
+        "mainUse": "Sweet cakes, prophecy rites, luxury exports",
+        "notes": "Bronze fig that ripens only during specific celestial seasons.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Zahlun Melon",
+        "category": "Witness Fruit & Produce",
+        "region": "Begaritt",
+        "mainUse": "Candies, wine, noble banquets",
+        "notes": "Translucent melon with crisp sugar-like flesh.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Khezir Orange",
+        "category": "Witness Fruit & Produce",
+        "region": "Begaritt",
+        "mainUse": "Spice syrup, preserved meat, incense",
+        "notes": "Bitter fruit prized for its oil-heavy peel.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Tazim Pomegranate",
+        "category": "Witness Fruit & Produce",
+        "region": "Begaritt",
+        "mainUse": "Festival food, medicinal seed oil, marriage rites",
+        "notes": "Crimson fruit that ripens underground after rare rains.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Gorak Fruit",
+        "category": "Witness Fruit & Produce",
+        "region": "Demon Continent",
+        "mainUse": "Roasting, fermentation, trade preserves",
+        "notes": "Black skin, orange flesh, smoky sweetness.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Veshkar Fig",
+        "category": "Witness Fruit & Produce",
+        "region": "Demon Continent",
+        "mainUse": "Long-term rations, warrior travel packs",
+        "notes": "Dense purple fig that dries naturally on the branch.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Taruzh Fruit",
+        "category": "Witness Fruit & Produce",
+        "region": "Demon Continent",
+        "mainUse": "Pickles, sour sauces, medicinal salts",
+        "notes": "Sharp green fruit that splits after volcanic rain.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Molgra Melon",
+        "category": "Witness Fruit & Produce",
+        "region": "Demon Continent",
+        "mainUse": "Water storage, stew base, animal feed",
+        "notes": "Heavy red melon from thermal caves and steam vents.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Shaleth Berry",
+        "category": "Witness Fruit & Produce",
+        "region": "Demon Continent",
+        "mainUse": "Dye, wine, fever medicine, poultices",
+        "notes": "Small violet berry from black forest edges.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Iril Pear",
+        "category": "Witness Fruit & Produce",
+        "region": "Heaven Continent",
+        "mainUse": "Sacred desserts, rites, luxury offerings",
+        "notes": "White frost pear with warm golden flesh.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Cyrune Grape",
+        "category": "Witness Fruit & Produce",
+        "region": "Heaven Continent",
+        "mainUse": "Divine wine and moonlit rites",
+        "notes": "Silver-skinned grape that reflects moonlight.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Halor Fruit",
+        "category": "Witness Fruit & Produce",
+        "region": "Heaven Continent",
+        "mainUse": "Temple incense and healing oils",
+        "notes": "Small orange fruit with a ring pattern near the stem.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Othal Apple",
+        "category": "Witness Fruit & Produce",
+        "region": "Heaven Continent",
+        "mainUse": "Pilgrim legends, answered-prayer offerings",
+        "notes": "Red-gold apple said to grow where prayers are answered.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Veyrin Berry",
+        "category": "Witness Fruit & Produce",
+        "region": "Heaven Continent",
+        "mainUse": "Sky-memory relic and preserved offerings",
+        "notes": "Translucent blue berry preserved in ice.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Vellhorn Cattle",
+        "category": "Livestock",
+        "region": "Asura",
+        "mainUse": "Milk, cheese, draught work",
+        "secondaryUse": "Pale hide, rich manure, mana-warning behavior",
+        "marketStatus": "Common in Asuran estates",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Brumoxen",
+        "category": "Livestock",
+        "region": "Ronoa",
+        "mainUse": "Sled pulling, winter meat, milk",
+        "secondaryUse": "Fur-lined hides, salted butter, mountain hauling",
+        "marketStatus": "Common but communally controlled",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Hushbacks",
+        "category": "Livestock",
+        "region": "Fittoa",
+        "mainUse": "Lichen grazing, milk, safe-route warning",
+        "secondaryUse": "Camp survival, ashland scouting",
+        "marketStatus": "Scarce, rarely exported",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Duskhide Cattle",
+        "category": "Livestock",
+        "region": "Karrnath",
+        "mainUse": "Beef, marrow, black leather",
+        "secondaryUse": "Fertilizer, military ration paste",
+        "marketStatus": "Regulated by noble estates",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Reedhorns",
+        "category": "Livestock",
+        "region": "Shirone",
+        "mainUse": "Wetland ploughing, milk, river transport",
+        "secondaryUse": "Leather, yoghurt, temple estate labor",
+        "marketStatus": "Common in riverlands",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Khasar",
+        "category": "Livestock",
+        "region": "Begaritt",
+        "mainUse": "Desert travel, water carriage",
+        "secondaryUse": "Wool, sour milk, dried dung fuel",
+        "marketStatus": "Valuable, tied to Water-Names",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Kharak",
+        "category": "Livestock",
+        "region": "Demon Continent",
+        "mainUse": "Ashland hauling, siege transport",
+        "secondaryUse": "Eggs, meat, hard hide",
+        "marketStatus": "Common in fortified settlements",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Brambleback",
+        "category": "Livestock",
+        "region": "Milis",
+        "mainUse": "Forest pack animal, orchard grazing",
+        "secondaryUse": "Truffle finding, brush clearing",
+        "marketStatus": "Clan or grove-controlled",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Hearth Geese",
+        "category": "Livestock",
+        "region": "Ronoa",
+        "mainUse": "Eggs, winter fat",
+        "secondaryUse": "Down, alarm animals",
+        "marketStatus": "Common household animal",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Velvet Moths",
+        "category": "Livestock",
+        "region": "Karrnath",
+        "mainUse": "Black shroud-silk",
+        "secondaryUse": "Dark dye, funeral thread",
+        "marketStatus": "Temple and estate controlled",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Prismbees",
+        "category": "Livestock",
+        "region": "Asura",
+        "mainUse": "Honey, conductive wax",
+        "secondaryUse": "Spell-component resin",
+        "marketStatus": "Urban apiary product",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Sunhives",
+        "category": "Livestock",
+        "region": "Shirone",
+        "mainUse": "Golden wax",
+        "secondaryUse": "Temple candles, oath seals",
+        "marketStatus": "Temple-managed",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Barkbees",
+        "category": "Livestock",
+        "region": "Milis",
+        "mainUse": "Forest honey, medicinal propolis",
+        "secondaryUse": "Sacred pollination",
+        "marketStatus": "Grove-protected",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Moonmoths",
+        "category": "Livestock",
+        "region": "Begaritt",
+        "mainUse": "Pale silk",
+        "secondaryUse": "Cool-chamber textile craft",
+        "marketStatus": "Wealthy oasis trade",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Ashmoths",
+        "category": "Livestock",
+        "region": "Demon Continent",
+        "mainUse": "Heat-resistant fiber",
+        "secondaryUse": "Kiln cloth, military gloves",
+        "marketStatus": "Practical military good",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Silverwings",
+        "category": "Livestock",
+        "region": "Heaven Continent",
+        "mainUse": "Feather-silk",
+        "secondaryUse": "Relic banners, divine vestments",
+        "marketStatus": "Rumored, not normal trade",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Vellhorn Milk",
+        "category": "Livestock Product",
+        "region": "Asura",
+        "mainUse": "Clear-white cheese, noble curd, recovery food",
+        "source": "Vellhorn cattle",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Brumox Butter",
+        "category": "Livestock Product",
+        "region": "Ronoa",
+        "mainUse": "Salted winter fat, ration jars, stew base",
+        "source": "Brumoxen",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Hushback Milk",
+        "category": "Livestock Product",
+        "region": "Fittoa",
+        "mainUse": "Survival broth, ashland treatment, tested camp dairy",
+        "source": "Hushbacks",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Duskhide Marrow",
+        "category": "Livestock Product",
+        "region": "Karrnath",
+        "mainUse": "Military ration paste, marrow tartines, grave-road food",
+        "source": "Duskhide cattle",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Reedhorn Yoghurt",
+        "category": "Livestock Product",
+        "region": "Shirone",
+        "mainUse": "Pilgrim bread topping, temple food, medicinal meals",
+        "source": "Reedhorns",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Khasar Milk",
+        "category": "Livestock Product",
+        "region": "Begaritt",
+        "mainUse": "Sour desert cheese, caravan food",
+        "source": "Khasar",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Kharak Eggs",
+        "category": "Livestock Product",
+        "region": "Demon Continent",
+        "mainUse": "Siege stores, ashland baking, durable ration food",
+        "source": "Kharak",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Barkbee Honey",
+        "category": "Livestock Product",
+        "region": "Milis",
+        "mainUse": "Forest preservation, medicine, ritual sweets",
+        "source": "Barkbees",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Prismbee Wax",
+        "category": "Livestock Product",
+        "region": "Asura",
+        "mainUse": "Lamp seals, spellwork, urban food storage",
+        "source": "Prismbees",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Sunhive Wax",
+        "category": "Livestock Product",
+        "region": "Shirone",
+        "mainUse": "Temple candles, oath seals, sacred preservation",
+        "source": "Sunhives",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Glassfin Carp",
+        "category": "Fishery Catch",
+        "region": "Asura",
+        "mainUse": "Soup stock, canal fish",
+        "secondaryUse": "Fertilizer, mana contamination testing",
+        "notes": "Scales cloud near mana damage",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Hrimchar",
+        "category": "Fishery Catch",
+        "region": "Ronoa",
+        "mainUse": "Smoked fish, winter rations",
+        "secondaryUse": "Expedition food, fish cakes",
+        "notes": "Caught after first deep freeze",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Mirror Eels",
+        "category": "Fishery Catch",
+        "region": "Fittoa",
+        "mainUse": "Alchemy, rare bait",
+        "secondaryUse": "Illegal trade",
+        "notes": "Not safe food, may reflect absent faces",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Blackwake Lamprey",
+        "category": "Fishery Catch",
+        "region": "Karrnath",
+        "mainUse": "Oil, salt paste, blood broth",
+        "secondaryUse": "Funeral vigil food, medicinal broth",
+        "notes": "Associated with death rites",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Azurefin",
+        "category": "Fishery Catch",
+        "region": "Shirone",
+        "mainUse": "Grilled fish, stew",
+        "secondaryUse": "Dried naval ration",
+        "notes": "Sold fresh at Waterkeep each dawn",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Rootfin Trout",
+        "category": "Fishery Catch",
+        "region": "Milis",
+        "mainUse": "River cooking, forest smoking",
+        "secondaryUse": "Festival dishes",
+        "notes": "Cannot be taken near sacred groves",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Cistern Glassfish",
+        "category": "Fishery Catch",
+        "region": "Begaritt",
+        "mainUse": "Food, mosquito control",
+        "secondaryUse": "Water quality warning",
+        "notes": "Raised in stepwells",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Cinder Eels",
+        "category": "Fishery Catch",
+        "region": "Demon Continent",
+        "mainUse": "Smoked meat, oil",
+        "secondaryUse": "Thermal pond farming",
+        "notes": "Survive volcanic runoff pools",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Bellfin",
+        "category": "Fishery Catch",
+        "region": "Heaven Continent",
+        "mainUse": "Rumored sacred food",
+        "secondaryUse": "Frost preservation, divine omen",
+        "notes": "No verified common-market specimen",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Glassfin Stock",
+        "category": "Fishery Product",
+        "region": "Asura",
+        "mainUse": "Asuran soups, canal-worker meals, water-testing kitchens",
+        "source": "Glassfin carp",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Hrimchar Smoke",
+        "category": "Fishery Product",
+        "region": "Ronoa",
+        "mainUse": "Ronoan ration cakes, winter trail food",
+        "source": "Hrimchar",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Mirror Eel Flesh",
+        "category": "Fishery Product",
+        "region": "Fittoa",
+        "mainUse": "Alchemical reagent, forbidden bait, black-market curiosity",
+        "source": "Mirror eels",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Blackwake Oil",
+        "category": "Fishery Product",
+        "region": "Karrnath",
+        "mainUse": "Lamp oil, medicine, funeral rites",
+        "source": "Blackwake lamprey",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Blackwake Salt Paste",
+        "category": "Fishery Product",
+        "region": "Karrnath",
+        "mainUse": "Preserved Karrnathi food, soldier ration additive",
+        "source": "Blackwake lamprey",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Azurefin Fillets",
+        "category": "Fishery Product",
+        "region": "Shirone",
+        "mainUse": "Street skewers, temple stews, naval provisions",
+        "source": "Azurefin",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Rootfin Smoke",
+        "category": "Fishery Product",
+        "region": "Milis",
+        "mainUse": "Milis feast food, preserved forest ration",
+        "source": "Rootfin trout",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Glassfish Shoal",
+        "category": "Fishery Product",
+        "region": "Begaritt",
+        "mainUse": "Stepwell food, mosquito control, poisoned-water warning",
+        "source": "Cistern glassfish",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Cinder Eel Oil",
+        "category": "Fishery Product",
+        "region": "Demon Continent",
+        "mainUse": "Heat cooking, ashland preservation, lamp fuel",
+        "source": "Cinder eels",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Bellfin Salt",
+        "category": "Fishery Product",
+        "region": "Heaven Continent",
+        "mainUse": "Mythic frost-preserved offering, Heaven-linked relic food",
+        "source": "Bellfin",
+        "role": "Tide Ingredient"
+      }
     ],
     "ingredientRoles": [
-          {
-                "role": "Hearth Crop",
-                "mainUse": "Bulk food and famine stores",
-                "examples": "Grain, tubers, beans, rice, fungi",
-                "dmFunction": "Answers hunger first. Cheap, predictable, and politically important."
-          },
-          {
-                "role": "Keeper Crop",
-                "mainUse": "Soil repair, pest control, mana stability",
-                "examples": "Legumes, bitter herbs, grazing plants, root vines",
-                "dmFunction": "Keeps the field alive after the harvest. Removing it risks Field Forgetting."
-          },
-          {
-                "role": "Witness Fruit",
-                "mainUse": "Regional identity and soil resonance",
-                "examples": "Lysael, Skalven, Telleth, Morvane, Nayara",
-                "dmFunction": "Marks where food came from. Used in ritual, trade, noble cuisine, and fraud."
-          },
-          {
-                "role": "Herd Ingredient",
-                "mainUse": "Food, labour, material, field return",
-                "examples": "Milk, meat, hide, wool, manure, hauling animals",
-                "dmFunction": "Governed by Herd-Right. An animal should return more than it consumes."
-          },
-          {
-                "role": "Tide Ingredient",
-                "mainUse": "Fish, oil, broth, water testing",
-                "examples": "Carp, eels, trout, lamprey, shellbeds",
-                "dmFunction": "Governed by Tide-Right. Breeding waters are protected by law or custom."
-          }
+      {
+        "role": "Hearth Crop",
+        "mainUse": "Bulk food and famine stores",
+        "examples": "Grain, tubers, beans, rice, fungi",
+        "dmFunction": "Answers hunger first. Cheap, predictable, and politically important."
+      },
+      {
+        "role": "Keeper Crop",
+        "mainUse": "Soil repair, pest control, mana stability",
+        "examples": "Legumes, bitter herbs, grazing plants, root vines",
+        "dmFunction": "Keeps the field alive after the harvest. Removing it risks Field Forgetting."
+      },
+      {
+        "role": "Witness Fruit",
+        "mainUse": "Regional identity and soil resonance",
+        "examples": "Lysael, Skalven, Telleth, Morvane, Nayara",
+        "dmFunction": "Marks where food came from. Used in ritual, trade, noble cuisine, and fraud."
+      },
+      {
+        "role": "Herd Ingredient",
+        "mainUse": "Food, labour, material, field return",
+        "examples": "Milk, meat, hide, wool, manure, hauling animals",
+        "dmFunction": "Governed by Herd-Right. An animal should return more than it consumes."
+      },
+      {
+        "role": "Tide Ingredient",
+        "mainUse": "Fish, oil, broth, water testing",
+        "examples": "Carp, eels, trout, lamprey, shellbeds",
+        "dmFunction": "Governed by Tide-Right. Breeding waters are protected by law or custom."
+      }
     ],
     "regionalIdentity": [
-          {
-                "region": "Asura",
-                "identity": "Measured, engineered, watched for mana stability"
-          },
-          {
-                "region": "Ronoa",
-                "identity": "Preserved, communal, winter-proof"
-          },
-          {
-                "region": "Fittoa",
-                "identity": "Tested, mistrusted, useful only after proof"
-          },
-          {
-                "region": "Karrnath",
-                "identity": "Regulated, ritualized, tied to death and labor"
-          },
-          {
-                "region": "Shirone",
-                "identity": "Abundant, river-fed, temple-managed"
-          },
-          {
-                "region": "Milis",
-                "identity": "Grove-bound, seasonal, protected by old agreements"
-          },
-          {
-                "region": "Begaritt",
-                "identity": "Water-measured, inherited, never wasted"
-          },
-          {
-                "region": "Demon Continent",
-                "identity": "Communal, heat-shaped, siege-ready"
-          },
-          {
-                "region": "Heaven Continent",
-                "identity": "Mythic, unverifiable, more evidence than cuisine"
-          }
+      {
+        "region": "Asura",
+        "identity": "Measured, engineered, watched for mana stability"
+      },
+      {
+        "region": "Ronoa",
+        "identity": "Preserved, communal, winter-proof"
+      },
+      {
+        "region": "Fittoa",
+        "identity": "Tested, mistrusted, useful only after proof"
+      },
+      {
+        "region": "Karrnath",
+        "identity": "Regulated, ritualized, tied to death and labor"
+      },
+      {
+        "region": "Shirone",
+        "identity": "Abundant, river-fed, temple-managed"
+      },
+      {
+        "region": "Milis",
+        "identity": "Grove-bound, seasonal, protected by old agreements"
+      },
+      {
+        "region": "Begaritt",
+        "identity": "Water-measured, inherited, never wasted"
+      },
+      {
+        "region": "Demon Continent",
+        "identity": "Communal, heat-shaped, siege-ready"
+      },
+      {
+        "region": "Heaven Continent",
+        "identity": "Mythic, unverifiable, more evidence than cuisine"
+      }
     ],
     "sceneSuggestions": [
-          {
-                "situation": "Asuran noble kitchen",
-                "ingredients": "Lysael, Vellhorn cheese, Glassfin carp, Prismbee honey, Aesper Sage"
-          },
-          {
-                "situation": "Ronoan winter camp",
-                "ingredients": "Brumox butter, Hrimchar, Hearth goose eggs, Smokeleaf, Skalven"
-          },
-          {
-                "situation": "Fittoan hazard preparation",
-                "ingredients": "Hushback milk, Charcoal Root, Silver Reed, Redmask Reed"
-          },
-          {
-                "situation": "Karrnathi funeral table",
-                "ingredients": "Blackwake lamprey, Duskhide marrow, Grave Sage, Vigil Thyme"
-          },
-          {
-                "situation": "Shirone temple feast",
-                "ingredients": "Azurefin, Reedhorn yoghurt, Nayara Leaf, Sunhive wax candles"
-          },
-          {
-                "situation": "Milis grove meal",
-                "ingredients": "Rootfin trout, Barkbee honey, Brambleback truffles, Barkmint"
-          },
-          {
-                "situation": "Begaritt caravan",
-                "ingredients": "Khasar cheese, Qasira, Khezir Peel, Cistern glassfish, Well Coriander"
-          },
-          {
-                "situation": "Demon siege store",
-                "ingredients": "Cinder eel, Kharak eggs, Veshkar figs, Ash Salt, Steam Algae"
-          },
-          {
-                "situation": "Heaven omen",
-                "ingredients": "Iril, Halor Oil, Bellfin salt, Silverwing feather-silk, Veyrin Frostmelt"
-          }
+      {
+        "situation": "Asuran noble kitchen",
+        "ingredients": "Lysael, Vellhorn cheese, Glassfin carp, Prismbee honey, Aesper Sage"
+      },
+      {
+        "situation": "Ronoan winter camp",
+        "ingredients": "Brumox butter, Hrimchar, Hearth goose eggs, Smokeleaf, Skalven"
+      },
+      {
+        "situation": "Fittoan hazard preparation",
+        "ingredients": "Hushback milk, Charcoal Root, Silver Reed, Redmask Reed"
+      },
+      {
+        "situation": "Karrnathi funeral table",
+        "ingredients": "Blackwake lamprey, Duskhide marrow, Grave Sage, Vigil Thyme"
+      },
+      {
+        "situation": "Shirone temple feast",
+        "ingredients": "Azurefin, Reedhorn yoghurt, Nayara Leaf, Sunhive wax candles"
+      },
+      {
+        "situation": "Milis grove meal",
+        "ingredients": "Rootfin trout, Barkbee honey, Brambleback truffles, Barkmint"
+      },
+      {
+        "situation": "Begaritt caravan",
+        "ingredients": "Khasar cheese, Qasira, Khezir Peel, Cistern glassfish, Well Coriander"
+      },
+      {
+        "situation": "Demon siege store",
+        "ingredients": "Cinder eel, Kharak eggs, Veshkar figs, Ash Salt, Steam Algae"
+      },
+      {
+        "situation": "Heaven omen",
+        "ingredients": "Iril, Halor Oil, Bellfin salt, Silverwing feather-silk, Veyrin Frostmelt"
+      }
     ],
     "dishes": [
       {
@@ -9262,12 +9261,19 @@ window.AMUTSU_DATA = {
         "cost": 7,
         "method": "Steamed fish, curd, canal herbs, Lysael pear glaze wrapped in reed leaves.",
         "effect": "Once, gain +5 to Arcana, Research, Investigation, or a tool check involving magic or machinery.",
-        "difficulty": "Regional",
-        "dc": 50,
+        "difficulty": "Automatic by Region",
+        "dc": 0,
         "time": "1 hour",
         "specialtyUtensil": "",
         "preparationClass": "standard",
-        "ingredients": ["Glassfin Carp", "Vellhorn Milk", "Canal Mint", "Lysael Pear"]
+        "ingredients": [
+          "Glassfin Carp",
+          "Vellhorn Milk",
+          "Canal Mint",
+          "Lysael Pear"
+        ],
+        "legendary": false,
+        "rareDangerous": false
       },
       {
         "name": "Vellhorn Cloud Curd",
@@ -9275,12 +9281,18 @@ window.AMUTSU_DATA = {
         "cost": 4,
         "method": "Whipped Vellhorn cheese, Lysael preserve, honey, oat crumble. Served cold.",
         "effect": "During your next short rest, regain 2 HP or 10 MP.",
-        "difficulty": "Regional",
-        "dc": 50,
+        "difficulty": "Automatic by Region",
+        "dc": 0,
         "time": "1 hour",
         "specialtyUtensil": "",
         "preparationClass": "standard",
-        "ingredients": ["Vellhorn Milk", "Lysael Pear", "Prismbloom Pollen"]
+        "ingredients": [
+          "Vellhorn Milk",
+          "Lysael Pear",
+          "Prismbloom Pollen"
+        ],
+        "legendary": false,
+        "rareDangerous": false
       },
       {
         "name": "Brumox Winter Pot",
@@ -9288,12 +9300,19 @@ window.AMUTSU_DATA = {
         "cost": 5,
         "method": "Slow-cooked Brumox meat, roots, smoked broth, dark bread, Skalven berries.",
         "effect": "Gain 5 temporary HP and reduce ordinary cold penalties for 1 hour.",
-        "difficulty": "Regional",
-        "dc": 50,
+        "difficulty": "Automatic by Region",
+        "dc": 0,
         "time": "1 hour",
         "specialtyUtensil": "",
         "preparationClass": "standard",
-        "ingredients": ["Brumoxen", "Brumox Butter", "Smokeleaf", "Skalven Berry"]
+        "ingredients": [
+          "Brumoxen",
+          "Brumox Butter",
+          "Smokeleaf",
+          "Skalven Berry"
+        ],
+        "legendary": false,
+        "rareDangerous": false
       },
       {
         "name": "Hrimchar Smoke-Cakes",
@@ -9301,12 +9320,19 @@ window.AMUTSU_DATA = {
         "cost": 3,
         "method": "Smoked fish, rye meal, oats, goose egg, fried on iron.",
         "effect": "Once, gain +5 to Survival or Perception involving weather, tracks, routes, or wilderness danger.",
-        "difficulty": "Regional",
-        "dc": 50,
+        "difficulty": "Automatic by Region",
+        "dc": 0,
         "time": "1 hour",
         "specialtyUtensil": "Smoking Rack",
         "preparationClass": "standard",
-        "ingredients": ["Hrimchar", "Hrimchar Smoke", "Hearth Geese", "Smokeleaf"]
+        "ingredients": [
+          "Hrimchar",
+          "Hrimchar Smoke",
+          "Hearth Geese",
+          "Smokeleaf"
+        ],
+        "legendary": false,
+        "rareDangerous": false
       },
       {
         "name": "Hushback Silver-Reed Broth",
@@ -9319,7 +9345,14 @@ window.AMUTSU_DATA = {
         "time": "2 hours",
         "specialtyUtensil": "Silver Reed",
         "preparationClass": "dangerous",
-        "ingredients": ["Hushback Milk", "Charcoal Root", "Silver Reed", "Ashbitter"]
+        "ingredients": [
+          "Hushback Milk",
+          "Charcoal Root",
+          "Silver Reed",
+          "Ashbitter"
+        ],
+        "legendary": false,
+        "rareDangerous": true
       },
       {
         "name": "Telleth Bellbread ⚠",
@@ -9332,7 +9365,13 @@ window.AMUTSU_DATA = {
         "time": "2 hours",
         "specialtyUtensil": "Resonance-Safe Knife",
         "preparationClass": "dangerous",
-        "ingredients": ["Telleth Fruit", "Memory Nettle", "Bellweed"]
+        "ingredients": [
+          "Telleth Fruit",
+          "Memory Nettle",
+          "Bellweed"
+        ],
+        "legendary": false,
+        "rareDangerous": true
       },
       {
         "name": "Duskhide Marrow Tartine",
@@ -9345,7 +9384,14 @@ window.AMUTSU_DATA = {
         "time": "2 hours",
         "specialtyUtensil": "Bone-Roasting Pan",
         "preparationClass": "dangerous",
-        "ingredients": ["Duskhide Marrow", "Black Salt Grass", "Morvane Plum", "Grave Sage"]
+        "ingredients": [
+          "Duskhide Marrow",
+          "Black Salt Grass",
+          "Morvane Plum",
+          "Grave Sage"
+        ],
+        "legendary": false,
+        "rareDangerous": true
       },
       {
         "name": "Blackwake Vigil Soup",
@@ -9353,12 +9399,19 @@ window.AMUTSU_DATA = {
         "cost": 5,
         "method": "Lamprey, dark greens, onion, vinegar, dried Morvane skins.",
         "effect": "Once, gain +5 to Medicine, Religion, Insight, or Investigation involving death, wounds, corpses, undead, or grief.",
-        "difficulty": "Regional",
-        "dc": 50,
+        "difficulty": "Automatic by Region",
+        "dc": 0,
         "time": "1 hour",
         "specialtyUtensil": "",
         "preparationClass": "standard",
-        "ingredients": ["Blackwake Lamprey", "Blackwake Salt Paste", "Vigil Thyme", "Morvane Plum"]
+        "ingredients": [
+          "Blackwake Lamprey",
+          "Blackwake Salt Paste",
+          "Vigil Thyme",
+          "Morvane Plum"
+        ],
+        "legendary": false,
+        "rareDangerous": false
       },
       {
         "name": "Azurefin Nayara Skewers",
@@ -9366,12 +9419,19 @@ window.AMUTSU_DATA = {
         "cost": 4,
         "method": "Nayara-marinated fish grilled over open flame with temple salt.",
         "effect": "Once, gain +5 against being shoved, grappled, restrained, or knocked prone.",
-        "difficulty": "Regional",
-        "dc": 50,
+        "difficulty": "Automatic by Region",
+        "dc": 0,
         "time": "1 hour",
         "specialtyUtensil": "",
         "preparationClass": "standard",
-        "ingredients": ["Azurefin", "Azurefin Fillets", "Nayara Citrus", "River Hyssop"]
+        "ingredients": [
+          "Azurefin",
+          "Azurefin Fillets",
+          "Nayara Citrus",
+          "River Hyssop"
+        ],
+        "legendary": false,
+        "rareDangerous": false
       },
       {
         "name": "Reedhorn Yoghurt Hearthbread",
@@ -9379,12 +9439,19 @@ window.AMUTSU_DATA = {
         "cost": 3,
         "method": "Warm flatbread topped with cold Reedhorn yoghurt, Nayara zest, herbs, and salt.",
         "effect": "Once, gain +5 to Persuasion, Insight, or Medicine.",
-        "difficulty": "Regional",
-        "dc": 50,
+        "difficulty": "Automatic by Region",
+        "dc": 0,
         "time": "1 hour",
         "specialtyUtensil": "",
         "preparationClass": "standard",
-        "ingredients": ["Reedhorn Yoghurt", "Nayara Leaf", "Pilgrim Cress", "White Canal Basil"]
+        "ingredients": [
+          "Reedhorn Yoghurt",
+          "Nayara Leaf",
+          "Pilgrim Cress",
+          "White Canal Basil"
+        ],
+        "legendary": false,
+        "rareDangerous": false
       },
       {
         "name": "Vaelwyn Bark-Honey Dumplings",
@@ -9392,12 +9459,18 @@ window.AMUTSU_DATA = {
         "cost": 8,
         "method": "Twin Vaelwyn pears browned in bark honey and steamed in leaf baskets.",
         "effect": "When you Help an ally on a non-combat check, they gain an additional +10.",
-        "difficulty": "Regional",
-        "dc": 50,
+        "difficulty": "Automatic by Region",
+        "dc": 0,
         "time": "1 hour",
         "specialtyUtensil": "Leaf-Steaming Basket",
         "preparationClass": "standard",
-        "ingredients": ["Vaelwyn Pear", "Barkbee Honey", "Rootlace"]
+        "ingredients": [
+          "Vaelwyn Pear",
+          "Barkbee Honey",
+          "Rootlace"
+        ],
+        "legendary": false,
+        "rareDangerous": false
       },
       {
         "name": "Qasira Well-Bowl",
@@ -9405,12 +9478,19 @@ window.AMUTSU_DATA = {
         "cost": 5,
         "method": "Cold Qasira fruit pulp, yoghurt, Khezir peel, toasted grain, desert salt.",
         "effect": "Ignore ordinary heat and thirst penalties for 1 hour.",
-        "difficulty": "Regional",
-        "dc": 50,
+        "difficulty": "Automatic by Region",
+        "dc": 0,
         "time": "1 hour",
         "specialtyUtensil": "",
         "preparationClass": "standard",
-        "ingredients": ["Qasira Fruit", "Khezir Peel", "Khasar Milk", "Well Coriander"]
+        "ingredients": [
+          "Qasira Fruit",
+          "Khezir Peel",
+          "Khasar Milk",
+          "Well Coriander"
+        ],
+        "legendary": false,
+        "rareDangerous": false
       },
       {
         "name": "Gorak Ash-Roast",
@@ -9418,12 +9498,20 @@ window.AMUTSU_DATA = {
         "cost": 6,
         "method": "Gorak fruit, eel, Taruzh pickle, ash salt, buried beneath hot coals.",
         "effect": "Once, gain +5 to a Strength or Vitality saving throw.",
-        "difficulty": "Rare or Dangerous",
-        "dc": 70,
+        "difficulty": "Automatic by Region",
+        "dc": 0,
         "time": "2 hours",
         "specialtyUtensil": "",
-        "preparationClass": "dangerous",
-        "ingredients": ["Gorak Fruit", "Cinder Eels", "Taruzh Fruit", "Ash Salt", "Cinderleaf"]
+        "preparationClass": "standard",
+        "ingredients": [
+          "Gorak Fruit",
+          "Cinder Eels",
+          "Taruzh Fruit",
+          "Ash Salt",
+          "Cinderleaf"
+        ],
+        "legendary": false,
+        "rareDangerous": false
       },
       {
         "name": "Iril Candle-Pear ✦",
@@ -9431,46 +9519,57 @@ window.AMUTSU_DATA = {
         "cost": 30,
         "method": "Iril pear warmed in sealed glass with a drop of Halor oil. Never allowed to boil.",
         "effect": "Once, gain +5 to an Awareness save against fear, magical sleep, cold, or disorientation.",
-        "difficulty": "Masterwork or Unstable",
+        "difficulty": "Masterchef Dish · Legendary",
         "dc": 85,
-        "time": "2 hours",
+        "time": "2-4 hours",
         "specialtyUtensil": "Sealed Glass Vessel",
-        "preparationClass": "masterwork",
-        "ingredients": ["Iril Pear", "Iril Rind", "Halor Oil", "Veyrin Frostmelt"]
+        "preparationClass": "masterchef",
+        "ingredients": [
+          "Iril Pear",
+          "Iril Rind",
+          "Halor Oil",
+          "Veyrin Frostmelt"
+        ],
+        "legendary": true,
+        "rareDangerous": false
       }
     ],
     "rules": [
       {
-        "rule": "Cooking Check",
-        "value": "d100 + Cooking Skill + Hearthcraft Level Bonus + situational modifiers"
+        "rule": "Home Region",
+        "value": "Select Asura, Karrnath, Fittoa, Shirone, or Ronoa. Home-region dishes are Familiar (DC 35)."
       },
       {
-        "rule": "Complete Cooking Kit",
-        "value": "+25 to the Cooking Check"
+        "rule": "Regional & Foreign Dishes",
+        "value": "Other Central Continent dishes are Regional (DC 50). Milis, Begaritt, Demon Continent, and Heaven Continent dishes are Rare or Dangerous (DC 70)."
+      },
+      {
+        "rule": "Progression Locks",
+        "value": "Level 1 unlocks home dishes, Level 2 Central regional dishes, Level 3 foreign dishes, Level 4 explicitly dangerous dishes, and Level 5 Legendary Masterchef dishes."
+      },
+      {
+        "rule": "Ingredient Requirement",
+        "value": "A catalogue dish requires one unit of every listed ingredient. Use owned pantry ingredients or buy the full ingredient set for the listed SP cost."
+      },
+      {
+        "rule": "Serving Yield",
+        "value": "One ingredient set normally prepares 2 servings. Explicitly dangerous and Legendary dishes prepare 1 serving. A natural 96-100 creates +1 serving."
+      },
+      {
+        "rule": "Cooking Kit",
+        "value": "A complete Cooking Kit costs 20 GP and grants +25 to the Cooking Check."
       },
       {
         "rule": "Proficient Assistant",
-        "value": "+10; only one assistant may help"
+        "value": "+10; only one assistant may help."
       },
       {
         "rule": "Advantage & Disadvantage",
-        "value": "Professional kitchen grants Advantage. Poor fire, dirty water, heavy weather, or a missing specialty utensil may impose Disadvantage."
-      },
-      {
-        "rule": "Unfamiliar Recipe",
-        "value": "+10 DC without a written recipe or local instruction"
-      },
-      {
-        "rule": "Serving Size",
-        "value": "Up to 4 servings normally. Preparing 5-8 servings adds +10 DC."
-      },
-      {
-        "rule": "Hearth Boon Limit",
-        "value": "One Hearth Boon per creature per long rest"
+        "value": "Professional kitchen grants Advantage. Poor conditions or a missing required specialty utensil impose Disadvantage."
       },
       {
         "rule": "Cooking XP",
-        "value": "1 XP for a successful DC 35+ meal, plus 1 XP if new, dangerous, regional, or under pressure. Maximum 2 XP per long rest."
+        "value": "1 XP for a successful DC 35+ meal, plus 1 XP if new, dangerous, regional, foreign, or made under pressure. Maximum 2 XP per long rest."
       },
       {
         "rule": "Failed Cooking",
@@ -9490,25 +9589,25 @@ window.AMUTSU_DATA = {
         {
           "dc": 35,
           "label": "Familiar",
-          "recipe": "Familiar household or camp dish",
-          "time": "30-60 minutes"
+          "recipe": "Dish from the cook’s selected home region",
+          "time": "1 hour"
         },
         {
           "dc": 50,
           "label": "Regional",
-          "recipe": "Regional recipe or standard Hearthcraft meal",
+          "recipe": "Dish from another Central Continent region",
           "time": "1 hour"
         },
         {
           "dc": 70,
           "label": "Rare or Dangerous",
-          "recipe": "Rare, foreign, dangerous, or resonant dish",
+          "recipe": "Foreign-continent or explicitly dangerous dish",
           "time": "2 hours"
         },
         {
           "dc": 85,
-          "label": "Masterwork or Unstable",
-          "recipe": "Masterwork banquet or unstable ingredient",
+          "label": "Masterchef Dish · Legendary",
+          "recipe": "Legendary catalogue dish",
           "time": "2-4 hours"
         }
       ],
@@ -9526,17 +9625,17 @@ window.AMUTSU_DATA = {
         {
           "key": "strong-success",
           "label": "Success by 20+",
-          "rule": "Strong success: create 1 additional serving."
+          "rule": "Strong success may trigger the Hearthwright level benefit."
         },
         {
           "key": "critical-success",
           "label": "Natural 96-100",
-          "rule": "Critical success: 1 additional creature gains the boon."
+          "rule": "Critical success creates 1 additional serving."
         },
         {
           "key": "critical-failure",
           "label": "Natural 1-5",
-          "rule": "Critical failure: ingredients are spoiled or become unsafe."
+          "rule": "Ingredients are spoiled or become unsafe."
         }
       ],
       "modifiers": [
@@ -9597,7 +9696,8 @@ window.AMUTSU_DATA = {
             "Salt tin and oil vial"
           ]
         },
-        "excludes": "Fuel, water, ingredients, bowls, and regional specialty utensils."
+        "excludes": "Fuel, water, ingredients, bowls, and regional specialty utensils.",
+        "costUnit": "GP"
       },
       "specialtyUtensils": [
         {
@@ -9631,42 +9731,42 @@ window.AMUTSU_DATA = {
           "title": "Untrained",
           "bonus": 0,
           "threshold": 0,
-          "benefit": "Basic meals only. Unfamiliar recipes have disadvantage."
+          "benefit": "Basic camp meals only."
         },
         {
           "level": 1,
           "title": "Hearthhand",
           "bonus": 5,
           "threshold": 3,
-          "benefit": "Prepare familiar dishes without penalty."
+          "benefit": "Cook familiar dishes from your selected home region."
         },
         {
           "level": 2,
           "title": "Camp Cook",
           "bonus": 10,
           "threshold": 7,
-          "benefit": "Ignore one ordinary camp condition."
+          "benefit": "Cook dishes from other Central Continent regions and ignore one ordinary camp condition."
         },
         {
           "level": 3,
           "title": "Journeyman",
           "bonus": 15,
           "threshold": 12,
-          "benefit": "A regional recipe becomes familiar after one success."
+          "benefit": "Cook foreign-continent dishes. A regional recipe becomes familiar after one success."
         },
         {
           "level": 4,
           "title": "Hearthwright",
           "bonus": 20,
           "threshold": 18,
-          "benefit": "Strong success creates 2 extra servings once per long rest."
+          "benefit": "Cook explicitly rare or dangerous dishes. Strong success creates 2 extra servings once per long rest."
         },
         {
           "level": 5,
           "title": "Master Cook",
           "bonus": 25,
           "threshold": 25,
-          "benefit": "Reroll one Cooking Check per long rest; use the new result."
+          "benefit": "Cook Legendary Masterchef dishes and reroll one Cooking Check per long rest; use the new result."
         }
       ]
     }
@@ -12218,7 +12318,7 @@ window.AMUTSU_DATA = {
     "Crafting Catalogue": []
   },
   "defaultState": {
-    "schemaVersion": 4,
+    "schemaVersion": 5,
     "character": {
       "name": "Zele Kopsffmann",
       "race": "Human (Sesian)",
@@ -14969,7 +15069,11 @@ window.AMUTSU_DATA = {
       "history": [],
       "sequence": 0,
       "rerollUsedRest": 0,
-      "hearthwrightUsedRest": 0
+      "hearthwrightUsedRest": 0,
+      "homeRegion": "Asura",
+      "ingredientPantry": {},
+      "cookingKitOwned": false,
+      "ownedUtensils": []
     }
   }
 };

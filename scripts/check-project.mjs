@@ -36,6 +36,7 @@ const requiredFiles = [
   "supabase/migrations/20260720001000_bulk_import_catalogue_items.sql",
   "supabase/migrations/20260721000000_hearthcraft_cooking_metadata.sql",
   "supabase/migrations/20260721001000_hearthcraft_ingredient_catalogue.sql",
+  "supabase/migrations/20260721002000_hearthcraft_ingredient_pantry_and_region_rules.sql",
   "supabase/functions/invite-player/index.ts",
   "README.md",
 ];
@@ -55,6 +56,15 @@ assert.ok(workbook.defaultState.character, "Default character state is missing")
 assert.ok(workbook.defaultState.cooking, "Default Cooking progression state is missing");
 assert.equal(workbook.food.cooking.levels.length, 6, "Cooking progression must include Levels 0-5");
 assert.equal(workbook.food.cooking.kit.bonus, 25, "Cooking Kit bonus must remain +25");
+assert.equal(workbook.food.cooking.kit.cost, 20, "Cooking Kit must cost 20 GP");
+assert.equal(workbook.food.cooking.kit.costUnit, "GP", "Cooking Kit price unit must be GP");
+assert.equal(workbook.defaultState.schemaVersion, 5, "Ingredient-pantry rules require schema 5");
+assert.equal(workbook.defaultState.cooking.homeRegion, "Asura", "Cooking home region must have a valid default");
+assert.equal(Object.keys(workbook.defaultState.cooking.ingredientPantry).length, 0, "Ingredient pantry must start empty");
+assert.equal(workbook.defaultState.cooking.cookingKitOwned, false, "Cooking Kit ownership must start false");
+assert.equal(workbook.defaultState.cooking.ownedUtensils.length, 0, "Specialty utensils must start unowned");
+assert.ok(workbook.food.dishes.some((dish) => dish.rareDangerous === true && dish.dc === 70), "Rare or dangerous dish override metadata is missing");
+assert.ok(workbook.food.dishes.some((dish) => dish.legendary === true && dish.dc === 85), "Legendary Masterchef dish metadata is missing");
 assert.equal(workbook.food.ingredients.length, 115, "The complete Hearthcraft ingredient catalogue must contain 115 entries");
 assert.ok(workbook.food.ingredients.some((entry) => entry.name === "Charcoal Root" && entry.region === "Fittoa"), "Fittoan ingredient reference is missing");
 assert.ok(workbook.food.ingredients.some((entry) => entry.name === "Bellfin Salt" && entry.category === "Fishery Product"), "Fishery product reference is missing");
@@ -74,6 +84,16 @@ assert.match(bridge, /grant-cooking-training/, "Cooking training XP control is m
 assert.match(bridge, /Master Cook reroll/, "Master Cook reroll control is missing");
 assert.match(bridge, /Cooking Rules & Equipment/, "Full cooking rules reference is missing");
 assert.match(bridge, /Ingredient Catalogue/, "Hearthcraft ingredient catalogue tab is missing");
+assert.match(bridge, /Ingredient Pantry/, "Player ingredient pantry tab is missing");
+assert.match(bridge, /buy-cooking-kit/, "Cooking Kit purchase control is missing");
+assert.match(bridge, /data-action="add-ingredient"/, "Ingredient collection controls are missing");
+assert.match(bridge, /cooking\.homeRegion/, "Player home-region selector is missing");
+assert.match(bridge, /cooking\.ownedUtensils/, "Owned specialty-utensil controls are missing");
+assert.match(bridge, /ingredientSource/, "Pantry-versus-purchase cooking source is missing");
+assert.match(bridge, /Cannot cook this recipe/, "Cooking progression locks are missing");
+assert.match(bridge, /Legendary Masterchef Dish/, "Legendary dish display is missing");
+assert.match(bridge, /path === "cooking\.ingredientPantry"/, "Dynamic ingredient pantry persistence hook is missing");
+assert.match(bridge, /path === "cooking\.ownedUtensils"/, "Dynamic utensil ownership persistence hook is missing");
 assert.match(bridge, /renderIngredientCard/, "Ingredient catalogue cards are missing");
 assert.match(bridge, /data-action="show-ingredient"/, "Dish-to-ingredient navigation is missing");
 assert.match(bridge, /data-food-results="ingredients"/, "Ingredient filter results container is missing");
@@ -181,6 +201,10 @@ assert.match(stylesheet, /\.cooking-reference-grid\s*\{/, "Cooking rules referen
 assert.match(stylesheet, /\.ingredient-grid\s*\{/, "Ingredient catalogue grid styling is missing");
 assert.match(stylesheet, /\.food-ingredient-list\s*\{/, "Dish ingredient-link styling is missing");
 assert.match(stylesheet, /\.ingredient-role-grid\s*\{/, "Ingredient role reference styling is missing");
+assert.match(stylesheet, /\.ingredient-pantry-panel \.panel-body\s*\{/, "Ingredient pantry styling is missing");
+assert.match(stylesheet, /\.utensil-checkbox-grid\s*\{/, "Specialty utensil ownership styling is missing");
+assert.match(stylesheet, /\.difficulty-rare\s*\{/, "Rare or dangerous purple styling is missing");
+assert.match(stylesheet, /\.difficulty-masterwork\s*\{/, "Legendary Masterchef gold styling is missing");
 
 const workbookSource = fs.readFileSync(path.join(root, "src/workbook.js"), "utf8");
 assert.match(workbookSource, /food_ingredients/, "DM-editable Hearthcraft Ingredients catalogue is missing");
@@ -191,6 +215,10 @@ assert.match(portalSource, /data-action="bulk-import-items"/, "Item bulk-import 
 assert.match(portalSource, /id="bulk-item-form"/, "Item bulk-import form is missing");
 assert.match(portalSource, /bulk_import_catalogue_items/, "Atomic bulk-import RPC call is missing");
 assert.match(portalSource, /Copy supported header row/, "Spreadsheet header helper is missing");
+assert.match(portalSource, /normalizeDishCatalogueData/, "Hearthcraft dish metadata normalization is missing");
+assert.match(portalSource, /Rare or Dangerous override/, "DM rare or dangerous checkbox is missing");
+assert.match(portalSource, /Masterchef Dish · Legendary/, "DM Legendary Masterchef checkbox is missing");
+assert.match(portalSource, /catalogueSelectField\(key, "Specialty Utensil"/, "Fixed Hearthcraft metadata must use dropdown controls");
 const portalStylesheet = fs.readFileSync(path.join(root, "src/styles.css"), "utf8");
 assert.match(portalSource, /handleAuthStateChange/, "Auth-event gating is missing");
 assert.match(portalSource, /document\.addEventListener\("visibilitychange"/, "Return-to-tab update checks are missing");
@@ -433,7 +461,7 @@ legacySurvivalState.activeEffects[1].mark = "Mark 2";
 delete legacySurvivalState.survivalHistory;
 delete legacySurvivalState.survivalHistorySequence;
 survivalEngine.normalizeSurvivalState(legacySurvivalState);
-assert.equal(legacySurvivalState.schemaVersion, 4, "Legacy survival state must migrate to schema 4");
+assert.equal(legacySurvivalState.schemaVersion, 5, "Legacy survival state must migrate to schema 5");
 assert.equal(legacySurvivalState.hunger.days.length, 1, "Blank legacy hunger rows must be removed");
 assert.equal(legacySurvivalState.hearth.log.length, 1, "Blank legacy meal rows must be removed");
 assert.equal(legacySurvivalState.hunger.currentDay, 2);
@@ -444,7 +472,7 @@ assert.equal(legacySurvivalState.survivalHistory.length, 3, "Legacy day, meal, a
 
 function createActionState() {
   const state = JSON.parse(JSON.stringify(workbook.defaultState));
-  state.schemaVersion = 4;
+  state.schemaVersion = 5;
   state.character.className = "Wizard";
   state.character.currentHitPoints = 12;
   state.character.temporaryHitPoints = 9;
@@ -656,15 +684,46 @@ assert.equal(survivalResult.accepted, true);
 assert.equal(dynamicJourneyState.hunger.days[0].foodGained, 5, "DM history edits must update source data");
 
 
+
+function stockRecipeIngredients(state, dishName) {
+  const dish = workbook.food.dishes.find((entry) => entry.name === dishName);
+  assert.ok(dish, `Missing test dish ${dishName}`);
+  dish.ingredients.forEach((name) => {
+    state.cooking.ingredientPantry[name] = 1;
+  });
+}
+
+function cookingConfig(recipeKey, overrides = {}) {
+  return {
+    recipeKey,
+    customName: "",
+    cookingKit: false,
+    assistant: false,
+    professionalKitchen: false,
+    writtenRecipe: true,
+    poorConditions: false,
+    ingredientSource: "pantry",
+    underPressure: false,
+    useCampCook: true,
+    useHearthwright: true,
+    ...overrides,
+  };
+}
+
 const cookingState = createActionState();
-cookingState.cooking = {
+Object.assign(cookingState.cooking, {
   xp: 3,
+  homeRegion: "Asura",
+  cookingKitOwned: true,
   familiarRecipes: [],
+  ingredientPantry: {},
+  ownedUtensils: [],
   history: [],
   sequence: 0,
   rerollUsedRest: 0,
   hearthwrightUsedRest: 0,
-};
+});
+stockRecipeIngredients(cookingState, "Lysael Glassfin Parcels");
 survivalEngine.normalizeCookingState(cookingState);
 let cookingDerived = survivalEngine.calculate(cookingState, workbook);
 assert.equal(cookingDerived.cooking.level, 1, "3 Cooking XP must grant Hearthhand");
@@ -673,31 +732,20 @@ assert.equal(
   cookingDerived.skills["95"] + 5,
   "Cooking Checks must combine the character Cooking skill and level bonus",
 );
-const cookingConfig = {
-  recipeKey: "Lysael Glassfin Parcels",
-  servings: 4,
-  cookingKit: true,
-  assistant: true,
-  professionalKitchen: false,
-  writtenRecipe: true,
-  poorConditions: false,
-  specialtyUtensil: true,
-  underPressure: true,
-  useCampCook: true,
-  useHearthwright: true,
-};
 let cookingRoll = survivalEngine.rollCookingCheck(
   cookingState,
   workbook,
-  cookingConfig,
+  cookingConfig("Lysael Glassfin Parcels", { cookingKit: true, assistant: true, underPressure: true }),
   cookingDerived.skills,
   () => 0.8,
 );
+assert.equal(cookingRoll.accepted, true);
+assert.equal(cookingRoll.difficulty.key, "familiar", "Home-region dishes must be familiar difficulty");
 assert.equal(cookingRoll.naturalRoll, 81);
 assert.equal(cookingRoll.modifierBreakdown.cookingKit, 25);
 assert.equal(cookingRoll.modifierBreakdown.assistant, 10);
 assert.equal(cookingRoll.outcome, "strong-success");
-assert.equal(cookingRoll.preparedServings, 5, "Strong success must add one serving");
+assert.equal(cookingRoll.preparedServings, 2, "A normal Cooking Check must prepare 2 servings");
 let cookingRecord = survivalEngine.recordCookingResult(
   cookingState,
   workbook,
@@ -705,14 +753,30 @@ let cookingRecord = survivalEngine.recordCookingResult(
   cookingDerived.skills,
 );
 assert.equal(cookingRecord.accepted, true);
-assert.equal(cookingRecord.pantryAdded, 5, "Successful Hearthcraft must add prepared servings to the pantry");
-assert.equal(cookingRecord.actualXp, 2, "A regional pressured success may grant 2 XP");
+assert.equal(cookingRecord.pantryAdded, 2, "Successful Hearthcraft must add 2 prepared servings to the meal pantry");
+assert.equal(cookingRecord.actualXp, 2, "A pressured success may grant 2 XP");
+assert.equal(cookingState.cooking.ingredientPantry["Glassfin Carp"], undefined, "Cooking must consume one of each required ingredient");
 assert.equal(survivalEngine.calculate(cookingState, workbook).cooking.xpThisRest, 2);
 assert.equal(
   survivalEngine.grantCookingTrainingXp(cookingState, cookingDerived.skills).accepted,
   false,
   "Cooking XP must be limited to 2 per long rest",
 );
+
+const criticalCookingState = createActionState();
+criticalCookingState.cooking.xp = 3;
+stockRecipeIngredients(criticalCookingState, "Lysael Glassfin Parcels");
+survivalEngine.normalizeCookingState(criticalCookingState);
+const criticalDerived = survivalEngine.calculate(criticalCookingState, workbook);
+const criticalRoll = survivalEngine.rollCookingCheck(
+  criticalCookingState,
+  workbook,
+  cookingConfig("Lysael Glassfin Parcels"),
+  criticalDerived.skills,
+  () => 0.97,
+);
+assert.equal(criticalRoll.outcome, "critical-success");
+assert.equal(criticalRoll.preparedServings, 3, "Critical success must add exactly 1 serving");
 
 const ordinaryCookingState = createActionState();
 ordinaryCookingState.cooking.xp = 3;
@@ -721,57 +785,178 @@ const ordinaryDerived = survivalEngine.calculate(ordinaryCookingState, workbook)
 const failedMeal = survivalEngine.rollCookingCheck(
   ordinaryCookingState,
   workbook,
-  { ...cookingConfig, recipeKey: "__familiar", customName: "Ration stew", assistant: false, cookingKit: false, writtenRecipe: true },
+  cookingConfig("__familiar", { customName: "Ration stew" }),
   ordinaryDerived.skills,
   () => 0.1,
 );
 assert.equal(failedMeal.success, false);
 const foodBeforeCooking = ordinaryCookingState.hunger.foodGainedToday;
 const failedRecord = survivalEngine.recordCookingResult(ordinaryCookingState, workbook, failedMeal, ordinaryDerived.skills);
-assert.equal(failedRecord.standardFoodAdded, 4, "Failed edible meals must add ordinary food rather than a Hearth Boon");
-assert.equal(ordinaryCookingState.hunger.foodGainedToday, foodBeforeCooking + 4);
+assert.equal(failedRecord.standardFoodAdded, 2, "Failed edible meals must create 2 ordinary servings");
+assert.equal(ordinaryCookingState.hunger.foodGainedToday, foodBeforeCooking + 2);
+
+const regionalLockState = createActionState();
+regionalLockState.cooking.xp = 3;
+stockRecipeIngredients(regionalLockState, "Brumox Winter Pot");
+survivalEngine.normalizeCookingState(regionalLockState);
+let regionalDerived = survivalEngine.calculate(regionalLockState, workbook);
+let regionalPreview = survivalEngine.previewCookingCheck(
+  regionalLockState,
+  workbook,
+  cookingConfig("Brumox Winter Pot"),
+  regionalDerived.skills,
+);
+assert.equal(regionalPreview.difficulty.key, "regional");
+assert.equal(regionalPreview.requiredLevel, 2);
+assert.equal(regionalPreview.levelUnlocked, false, "Hearthhand cannot cook another Central-region dish");
+regionalLockState.cooking.xp = 7;
+regionalDerived = survivalEngine.calculate(regionalLockState, workbook);
+regionalPreview = survivalEngine.previewCookingCheck(regionalLockState, workbook, cookingConfig("Brumox Winter Pot"), regionalDerived.skills);
+assert.equal(regionalPreview.levelUnlocked, true, "Camp Cook must unlock other Central-region dishes");
+assert.equal(regionalPreview.dc, 50);
+
+const foreignLockState = createActionState();
+foreignLockState.cooking.xp = 7;
+stockRecipeIngredients(foreignLockState, "Gorak Ash-Roast");
+survivalEngine.normalizeCookingState(foreignLockState);
+let foreignDerived = survivalEngine.calculate(foreignLockState, workbook);
+let foreignPreview = survivalEngine.previewCookingCheck(foreignLockState, workbook, cookingConfig("Gorak Ash-Roast"), foreignDerived.skills);
+assert.equal(foreignPreview.difficulty.key, "rare");
+assert.equal(foreignPreview.requiredLevel, 3);
+assert.equal(foreignPreview.levelUnlocked, false);
+assert.equal(foreignPreview.baseServings, 2, "Foreign dishes still prepare 2 servings unless explicitly dangerous");
+foreignLockState.cooking.xp = 12;
+foreignDerived = survivalEngine.calculate(foreignLockState, workbook);
+foreignPreview = survivalEngine.previewCookingCheck(foreignLockState, workbook, cookingConfig("Gorak Ash-Roast"), foreignDerived.skills);
+assert.equal(foreignPreview.levelUnlocked, true, "Journeyman must unlock foreign-continent dishes");
+
+const dangerousState = createActionState();
+dangerousState.cooking.xp = 12;
+stockRecipeIngredients(dangerousState, "Hushback Silver-Reed Broth");
+survivalEngine.normalizeCookingState(dangerousState);
+let dangerousDerived = survivalEngine.calculate(dangerousState, workbook);
+let dangerousPreview = survivalEngine.previewCookingCheck(dangerousState, workbook, cookingConfig("Hushback Silver-Reed Broth"), dangerousDerived.skills);
+assert.equal(dangerousPreview.difficulty.key, "dangerous");
+assert.equal(dangerousPreview.requiredLevel, 4);
+assert.equal(dangerousPreview.levelUnlocked, false, "Journeyman cannot cook explicitly dangerous dishes");
+assert.equal(dangerousPreview.baseServings, 1, "Explicitly dangerous dishes prepare only 1 serving");
+dangerousState.cooking.xp = 18;
+dangerousState.cooking.ownedUtensils = ["Silver Reed"];
+dangerousDerived = survivalEngine.calculate(dangerousState, workbook);
+dangerousPreview = survivalEngine.previewCookingCheck(dangerousState, workbook, cookingConfig("Hushback Silver-Reed Broth"), dangerousDerived.skills);
+assert.equal(dangerousPreview.levelUnlocked, true, "Hearthwright must unlock explicitly dangerous dishes");
+assert.equal(dangerousPreview.specialtyPresent, true);
+assert.equal(dangerousPreview.rollMode, "normal");
+
+dangerousState.cooking.ownedUtensils = [];
+dangerousPreview = survivalEngine.previewCookingCheck(dangerousState, workbook, cookingConfig("Hushback Silver-Reed Broth"), dangerousDerived.skills);
+assert.equal(dangerousPreview.rollMode, "disadvantage", "Missing a specialty utensil must impose disadvantage");
+
+const legendaryState = createActionState();
+legendaryState.cooking.xp = 18;
+stockRecipeIngredients(legendaryState, "Iril Candle-Pear ✦");
+survivalEngine.normalizeCookingState(legendaryState);
+let legendaryDerived = survivalEngine.calculate(legendaryState, workbook);
+let legendaryPreview = survivalEngine.previewCookingCheck(legendaryState, workbook, cookingConfig("Iril Candle-Pear ✦"), legendaryDerived.skills);
+assert.equal(legendaryPreview.difficulty.key, "masterwork");
+assert.equal(legendaryPreview.difficulty.legendary, true);
+assert.equal(legendaryPreview.requiredLevel, 5);
+assert.equal(legendaryPreview.levelUnlocked, false);
+assert.equal(legendaryPreview.dc, 85);
+assert.equal(legendaryPreview.time, "2-4 hours");
+assert.equal(legendaryPreview.baseServings, 1);
+legendaryState.cooking.xp = 25;
+legendaryDerived = survivalEngine.calculate(legendaryState, workbook);
+legendaryPreview = survivalEngine.previewCookingCheck(legendaryState, workbook, cookingConfig("Iril Candle-Pear ✦"), legendaryDerived.skills);
+assert.equal(legendaryPreview.levelUnlocked, true, "Master Cook must unlock Legendary dishes");
 
 const journeymanState = createActionState();
 journeymanState.cooking.xp = 12;
-journeymanState.cooking.history = [];
+stockRecipeIngredients(journeymanState, "Brumox Winter Pot");
 survivalEngine.normalizeCookingState(journeymanState);
 const journeymanDerived = survivalEngine.calculate(journeymanState, workbook);
 const regionalSuccess = survivalEngine.rollCookingCheck(
   journeymanState,
   workbook,
-  cookingConfig,
+  cookingConfig("Brumox Winter Pot"),
   journeymanDerived.skills,
   () => 0.9,
 );
 assert.equal(regionalSuccess.becomesFamiliar, true, "Journeyman success must familiarize a regional recipe");
 survivalEngine.recordCookingResult(journeymanState, workbook, regionalSuccess, journeymanDerived.skills);
-assert.ok(journeymanState.cooking.familiarRecipes.includes("Lysael Glassfin Parcels"));
-const familiarPreview = survivalEngine.previewCookingCheck(journeymanState, workbook, cookingConfig, journeymanDerived.skills);
+assert.ok(journeymanState.cooking.familiarRecipes.includes("Brumox Winter Pot"));
+const familiarPreview = survivalEngine.previewCookingCheck(journeymanState, workbook, cookingConfig("Brumox Winter Pot", { ingredientSource: "buy" }), journeymanDerived.skills);
 assert.equal(familiarPreview.baseDc, 35, "A familiar regional recipe must use the familiar DC");
 
 const hearthwrightState = createActionState();
 hearthwrightState.cooking.xp = 18;
-hearthwrightState.cooking.history = [];
+hearthwrightState.cooking.cookingKitOwned = true;
+hearthwrightState.cooking.ownedUtensils = ["Silver Reed"];
+stockRecipeIngredients(hearthwrightState, "Hushback Silver-Reed Broth");
 survivalEngine.normalizeCookingState(hearthwrightState);
 const hearthwrightDerived = survivalEngine.calculate(hearthwrightState, workbook);
 const hearthwrightRoll = survivalEngine.rollCookingCheck(
   hearthwrightState,
   workbook,
-  cookingConfig,
+  cookingConfig("Hushback Silver-Reed Broth", { cookingKit: true }),
   hearthwrightDerived.skills,
   () => 0.8,
 );
 assert.equal(hearthwrightRoll.usedHearthwright, true);
-assert.equal(hearthwrightRoll.preparedServings, 6, "Hearthwright strong success must create two extra servings");
+assert.equal(hearthwrightRoll.preparedServings, 3, "Hearthwright strong success must add 2 to a dangerous dish's 1 serving");
 survivalEngine.recordCookingResult(hearthwrightState, workbook, hearthwrightRoll, hearthwrightDerived.skills);
 assert.equal(survivalEngine.calculate(hearthwrightState, workbook).cooking.hearthwrightAvailable, false);
 
+const paymentState = createActionState();
+paymentState.cooking.xp = 3;
+paymentState.currency = { copper: 0, silver: 0, gold: 1, platinum: 0 };
+survivalEngine.normalizeCookingState(paymentState);
+const paymentDerived = survivalEngine.calculate(paymentState, workbook);
+const paidRoll = survivalEngine.rollCookingCheck(
+  paymentState,
+  workbook,
+  cookingConfig("Lysael Glassfin Parcels", { ingredientSource: "buy" }),
+  paymentDerived.skills,
+  () => 0.9,
+);
+assert.equal(paidRoll.accepted, true);
+const paidRecord = survivalEngine.recordCookingResult(paymentState, workbook, paidRoll, paymentDerived.skills);
+assert.equal(paidRecord.costPaid, 7, "Buying ingredients must charge the dish's SP price");
+assert.deepEqual(paymentState.currency, { copper: 0, silver: 3, gold: 0, platinum: 0 }, "Payments must spend silver first and break higher coins when required");
+
+const insufficientState = createActionState();
+insufficientState.cooking.xp = 3;
+insufficientState.currency = { copper: 0, silver: 0, gold: 0, platinum: 0 };
+survivalEngine.normalizeCookingState(insufficientState);
+const insufficientDerived = survivalEngine.calculate(insufficientState, workbook);
+const insufficientRoll = survivalEngine.rollCookingCheck(
+  insufficientState,
+  workbook,
+  cookingConfig("Lysael Glassfin Parcels", { ingredientSource: "buy" }),
+  insufficientDerived.skills,
+  () => 0.9,
+);
+assert.equal(insufficientRoll.accepted, false);
+assert.equal(insufficientRoll.reason, "insufficient-funds");
+
+const kitState = createActionState();
+kitState.currency = { copper: 0, silver: 0, gold: 20, platinum: 0 };
+survivalEngine.normalizeCookingState(kitState);
+const kitPurchase = survivalEngine.buyCookingKit(kitState);
+assert.equal(kitPurchase.accepted, true);
+assert.equal(kitPurchase.costPaid, 200, "Cooking Kit must cost 20 GP or 200 SP");
+assert.equal(kitState.cooking.cookingKitOwned, true);
+assert.deepEqual(kitState.currency, { copper: 0, silver: 0, gold: 0, platinum: 0 });
+assert.equal(survivalEngine.undoLastCookingAction(kitState).accepted, true, "Cooking Kit purchase must be undoable");
+assert.equal(kitState.cooking.cookingKitOwned, false);
+assert.equal(JSON.stringify(kitState.currency), JSON.stringify({ copper: 0, silver: 0, gold: 20, platinum: 0 }));
+
 const masterCookState = createActionState();
 masterCookState.cooking.xp = 25;
-masterCookState.cooking.history = [];
+stockRecipeIngredients(masterCookState, "Lysael Glassfin Parcels");
 survivalEngine.normalizeCookingState(masterCookState);
 const masterDerived = survivalEngine.calculate(masterCookState, workbook);
-const firstMasterRoll = survivalEngine.rollCookingCheck(masterCookState, workbook, cookingConfig, masterDerived.skills, () => 0.4);
+const firstMasterRoll = survivalEngine.rollCookingCheck(masterCookState, workbook, cookingConfig("Lysael Glassfin Parcels"), masterDerived.skills, () => 0.4);
 const rerollResult = survivalEngine.rerollCookingCheck(masterCookState, workbook, firstMasterRoll, masterDerived.skills, () => 0.9);
 assert.equal(rerollResult.accepted, true, "Master Cook must be able to reroll once per long rest");
 assert.equal(rerollResult.result.rerolled, true);
@@ -963,5 +1148,14 @@ assert.match(bulkImportMigration, /security definer/i);
 assert.match(bulkImportMigration, /not public\.is_dm\(\)/i);
 assert.match(bulkImportMigration, /jsonb_array_length\(p_rows\) > 1000/i);
 assert.match(bulkImportMigration, /grant execute on function public\.bulk_import_catalogue_items\(jsonb\) to authenticated/i);
+
+const hearthcraftPantryMigration = fs.readFileSync(
+  path.join(root, "supabase/migrations/20260721002000_hearthcraft_ingredient_pantry_and_region_rules.sql"),
+  "utf8",
+);
+assert.match(hearthcraftPantryMigration, /rareDangerous/i);
+assert.match(hearthcraftPantryMigration, /legendary/i);
+assert.match(hearthcraftPantryMigration, /Home Region/i);
+assert.match(hearthcraftPantryMigration, /20 GP/i);
 
 console.log("Project checks passed.");

@@ -89,20 +89,22 @@
   };
 
   const PERSONALITY_TRAIT_LIMIT = 70;
+  const CENTRAL_COOKING_REGIONS = Object.freeze(["Asura", "Karrnath", "Fittoa", "Shirone", "Ronoa"]);
   const COOKING_LEVELS = Object.freeze([
-    { level: 0, title: "Untrained", bonus: 0, threshold: 0, benefit: "Basic meals only. Unfamiliar recipes have disadvantage." },
-    { level: 1, title: "Hearthhand", bonus: 5, threshold: 3, benefit: "Prepare familiar dishes without penalty." },
-    { level: 2, title: "Camp Cook", bonus: 10, threshold: 7, benefit: "Ignore one ordinary camp condition." },
-    { level: 3, title: "Journeyman", bonus: 15, threshold: 12, benefit: "A regional recipe becomes familiar after one success." },
-    { level: 4, title: "Hearthwright", bonus: 20, threshold: 18, benefit: "Strong success creates 2 extra servings once per long rest." },
-    { level: 5, title: "Master Cook", bonus: 25, threshold: 25, benefit: "Reroll one Cooking Check per long rest; use the new result." },
+    { level: 0, title: "Untrained", bonus: 0, threshold: 0, benefit: "Basic camp meals only." },
+    { level: 1, title: "Hearthhand", bonus: 5, threshold: 3, benefit: "Cook familiar dishes from your selected home region." },
+    { level: 2, title: "Camp Cook", bonus: 10, threshold: 7, benefit: "Cook dishes from other Central Continent regions and ignore one ordinary camp condition." },
+    { level: 3, title: "Journeyman", bonus: 15, threshold: 12, benefit: "Cook foreign-continent dishes. A regional recipe becomes familiar after one success." },
+    { level: 4, title: "Hearthwright", bonus: 20, threshold: 18, benefit: "Cook explicitly rare or dangerous dishes. Strong success creates 2 extra servings once per long rest." },
+    { level: 5, title: "Master Cook", bonus: 25, threshold: 25, benefit: "Cook Legendary Masterchef dishes and reroll one Cooking Check per long rest; use the new result." },
   ]);
   const COOKING_DIFFICULTIES = Object.freeze({
-    basic: { key: "basic", label: "Basic", dc: 20, time: "30 minutes" },
-    familiar: { key: "familiar", label: "Familiar", dc: 35, time: "30-60 minutes" },
-    regional: { key: "regional", label: "Regional", dc: 50, time: "1 hour" },
-    rare: { key: "rare", label: "Rare or Dangerous", dc: 70, time: "2 hours" },
-    masterwork: { key: "masterwork", label: "Masterwork or Unstable", dc: 85, time: "2-4 hours" },
+    basic: { key: "basic", label: "Basic", dc: 20, time: "30 minutes", requiredLevel: 0 },
+    familiar: { key: "familiar", label: "Familiar", dc: 35, time: "1 hour", requiredLevel: 1 },
+    regional: { key: "regional", label: "Regional", dc: 50, time: "1 hour", requiredLevel: 2 },
+    rare: { key: "rare", label: "Rare or Dangerous", dc: 70, time: "2 hours", requiredLevel: 3 },
+    dangerous: { key: "dangerous", label: "Rare or Dangerous", dc: 70, time: "2 hours", requiredLevel: 4 },
+    masterwork: { key: "masterwork", label: "Masterchef Dish · Legendary", dc: 85, time: "2-4 hours", requiredLevel: 5 },
   });
 
   function numberValue(value) {
@@ -263,10 +265,21 @@
     if (!state.cooking || typeof state.cooking !== "object") state.cooking = {};
     if (!Array.isArray(state.cooking.familiarRecipes)) state.cooking.familiarRecipes = [];
     if (!Array.isArray(state.cooking.history)) state.cooking.history = [];
+    if (!state.cooking.ingredientPantry || typeof state.cooking.ingredientPantry !== "object" || Array.isArray(state.cooking.ingredientPantry)) {
+      state.cooking.ingredientPantry = {};
+    }
+    if (!Array.isArray(state.cooking.ownedUtensils)) state.cooking.ownedUtensils = [];
+    if (!CENTRAL_COOKING_REGIONS.includes(state.cooking.homeRegion)) state.cooking.homeRegion = "Asura";
+    state.cooking.cookingKitOwned = state.cooking.cookingKitOwned === true;
     state.cooking.xp = Math.max(0, Math.floor(numberValue(state.cooking.xp)));
     state.cooking.sequence = Math.max(0, Math.floor(numberValue(state.cooking.sequence)));
     state.cooking.rerollUsedRest = Math.max(0, Math.floor(numberValue(state.cooking.rerollUsedRest)));
     state.cooking.hearthwrightUsedRest = Math.max(0, Math.floor(numberValue(state.cooking.hearthwrightUsedRest)));
+    Object.keys(state.cooking.ingredientPantry).forEach((name) => {
+      const quantity = Math.max(0, Math.floor(numberValue(state.cooking.ingredientPantry[name])));
+      if (quantity) state.cooking.ingredientPantry[name] = quantity;
+      else delete state.cooking.ingredientPantry[name];
+    });
   }
 
   function cookingLevelForXp(xp) {
@@ -284,6 +297,9 @@
     state.cooking.familiarRecipes = [...new Set(
       state.cooking.familiarRecipes.map((name) => String(name || "").trim()).filter(Boolean),
     )].sort((left, right) => left.localeCompare(right));
+    state.cooking.ownedUtensils = [...new Set(
+      state.cooking.ownedUtensils.map((name) => String(name || "").trim()).filter(Boolean),
+    )].sort((left, right) => left.localeCompare(right));
     state.cooking.history = state.cooking.history
       .filter((entry) => entry && typeof entry === "object")
       .map((entry) => ({
@@ -293,8 +309,65 @@
         restCycle: Math.max(1, Math.floor(numberValue(entry.restCycle) || 1)),
         xpAwarded: Math.max(0, Math.floor(numberValue(entry.xpAwarded))),
       }));
-    state.schemaVersion = Math.max(4, Math.floor(numberValue(state.schemaVersion)));
+    state.schemaVersion = Math.max(5, Math.floor(numberValue(state.schemaVersion)));
     return state;
+  }
+
+  function currencyBalanceInSilver(state) {
+    return (
+      Math.max(0, Math.floor(numberValue(state.currency?.copper))) * 0.1 +
+      Math.max(0, Math.floor(numberValue(state.currency?.silver))) +
+      Math.max(0, Math.floor(numberValue(state.currency?.gold))) * 10 +
+      Math.max(0, Math.floor(numberValue(state.currency?.platinum))) * 100
+    );
+  }
+
+  function spendCurrencyInSilver(state, requestedCost) {
+    const costSp = Math.max(0, numberValue(requestedCost));
+    const targetCopper = Math.round(costSp * 10);
+    if (!state.currency || typeof state.currency !== "object") state.currency = {};
+    const purse = {
+      copper: Math.max(0, Math.floor(numberValue(state.currency.copper))),
+      silver: Math.max(0, Math.floor(numberValue(state.currency.silver))),
+      gold: Math.max(0, Math.floor(numberValue(state.currency.gold))),
+      platinum: Math.max(0, Math.floor(numberValue(state.currency.platinum))),
+    };
+    const totalCopper = purse.copper + purse.silver * 10 + purse.gold * 100 + purse.platinum * 1000;
+    if (totalCopper < targetCopper) return { accepted: false, reason: "insufficient-funds", costSp };
+    const previous = { ...purse };
+    let remaining = targetCopper;
+    while (remaining > 0) {
+      if (remaining >= 10 && purse.silver > 0) {
+        const used = Math.min(purse.silver, Math.floor(remaining / 10));
+        purse.silver -= used;
+        remaining -= used * 10;
+        continue;
+      }
+      if (purse.copper > 0) {
+        const used = Math.min(purse.copper, remaining);
+        purse.copper -= used;
+        remaining -= used;
+        continue;
+      }
+      if (remaining < 10 && purse.silver > 0) {
+        purse.silver -= 1;
+        purse.copper += 10;
+        continue;
+      }
+      if (purse.gold > 0) {
+        purse.gold -= 1;
+        purse.silver += 10;
+        continue;
+      }
+      if (purse.platinum > 0) {
+        purse.platinum -= 1;
+        purse.gold += 10;
+        continue;
+      }
+      return { accepted: false, reason: "insufficient-funds", costSp };
+    }
+    Object.assign(state.currency, purse);
+    return { accepted: true, costSp, previous, current: { ...purse } };
   }
 
   function calculateCooking(state, skillScores) {
@@ -328,6 +401,12 @@
         ? Math.max(0, Math.min(100, ((xp - level.threshold) / (nextLevel.threshold - level.threshold)) * 100))
         : 100,
       familiarRecipes: [...state.cooking.familiarRecipes],
+      homeRegion: state.cooking.homeRegion,
+      ingredientPantry: { ...state.cooking.ingredientPantry },
+      ingredientUnits: Object.values(state.cooking.ingredientPantry).reduce((sum, value) => sum + numberValue(value), 0),
+      cookingKitOwned: state.cooking.cookingKitOwned,
+      ownedUtensils: [...state.cooking.ownedUtensils],
+      coinBalanceSp: currencyBalanceInSilver(state),
       rerollAvailable: level.level >= 5 && state.cooking.rerollUsedRest !== currentRest,
       hearthwrightAvailable: level.level >= 4 && state.cooking.hearthwrightUsedRest !== currentRest,
       currentRest,
@@ -335,28 +414,29 @@
     };
   }
 
-  function inferRecipeDifficulty(dish) {
-    const explicitDc = Math.floor(numberValue(dish?.dc));
-    if (explicitDc >= 85) return COOKING_DIFFICULTIES.masterwork;
-    if (explicitDc >= 70) return COOKING_DIFFICULTIES.rare;
-    if (explicitDc >= 50) return COOKING_DIFFICULTIES.regional;
-    if (explicitDc >= 35) return COOKING_DIFFICULTIES.familiar;
-    if (explicitDc > 0) return COOKING_DIFFICULTIES.basic;
-    const label = String(dish?.difficulty || "").toLowerCase();
-    const name = String(dish?.name || "");
-    if (label.includes("master") || label.includes("unstable") || name.includes("✦")) return COOKING_DIFFICULTIES.masterwork;
-    if (label.includes("rare") || label.includes("danger") || name.includes("⚠")) return COOKING_DIFFICULTIES.rare;
-    return COOKING_DIFFICULTIES.regional;
+  function normalizeCookingRegion(region) {
+    return String(region || "").trim();
+  }
+
+  function inferRecipeDifficulty(dish, homeRegion) {
+    const legendary = dish?.legendary === true || Number(dish?.dc) >= 85 || /master|legendary/i.test(String(dish?.difficulty || "")) || String(dish?.preparationClass || "").toLowerCase() === "masterchef";
+    if (legendary) return { ...COOKING_DIFFICULTIES.masterwork, legendary: true, explicitlyDangerous: false, reason: "Legendary catalogue dish" };
+    const explicitlyDangerous = dish?.rareDangerous === true || String(dish?.preparationClass || "").toLowerCase() === "dangerous";
+    if (explicitlyDangerous) return { ...COOKING_DIFFICULTIES.dangerous, legendary: false, explicitlyDangerous: true, reason: "Explicitly rare or dangerous" };
+    const region = normalizeCookingRegion(dish?.region);
+    if (region === normalizeCookingRegion(homeRegion)) return { ...COOKING_DIFFICULTIES.familiar, legendary: false, explicitlyDangerous: false, reason: "Home-region dish" };
+    if (CENTRAL_COOKING_REGIONS.includes(region)) return { ...COOKING_DIFFICULTIES.regional, legendary: false, explicitlyDangerous: false, reason: "Central Continent regional dish" };
+    return { ...COOKING_DIFFICULTIES.rare, legendary: false, explicitlyDangerous: false, reason: "Foreign-continent dish" };
   }
 
   function cookingRecipeFromConfig(state, data, config, cooking) {
     const recipeKey = String(config?.recipeKey || "__basic");
     const customName = String(config?.customName || "").trim();
     const customRecipes = {
-      __basic: { name: customName || "Basic camp meal", difficulty: COOKING_DIFFICULTIES.basic, isHearthDish: false },
-      __familiar: { name: customName || "Familiar household dish", difficulty: COOKING_DIFFICULTIES.familiar, isHearthDish: false },
-      __rare: { name: customName || "Rare or dangerous dish", difficulty: COOKING_DIFFICULTIES.rare, isHearthDish: false },
-      __masterwork: { name: customName || "Masterwork or unstable dish", difficulty: COOKING_DIFFICULTIES.masterwork, isHearthDish: false },
+      __basic: { name: customName || "Basic camp meal", difficulty: COOKING_DIFFICULTIES.basic, isHearthDish: false, ingredients: [], cost: 0 },
+      __familiar: { name: customName || "Familiar household dish", difficulty: COOKING_DIFFICULTIES.familiar, isHearthDish: false, ingredients: [], cost: 0 },
+      __rare: { name: customName || "Rare or dangerous dish", difficulty: COOKING_DIFFICULTIES.dangerous, isHearthDish: false, ingredients: [], cost: 0 },
+      __masterwork: { name: customName || "Legendary Masterchef dish", difficulty: COOKING_DIFFICULTIES.masterwork, isHearthDish: false, ingredients: [], cost: 0 },
     };
     if (customRecipes[recipeKey]) return { ...customRecipes[recipeKey], dish: null, specialtyUtensil: "" };
     const dish = data.food?.dishes?.find((entry) => entry.name === recipeKey) || null;
@@ -364,9 +444,11 @@
     return {
       name: dish.name,
       dish,
-      difficulty: inferRecipeDifficulty(dish),
+      difficulty: inferRecipeDifficulty(dish, cooking.homeRegion),
       isHearthDish: true,
       specialtyUtensil: String(dish.specialtyUtensil || ""),
+      ingredients: Array.isArray(dish.ingredients) ? [...new Set(dish.ingredients.map((name) => String(name || "").trim()).filter(Boolean))] : [],
+      cost: Math.max(0, numberValue(dish.cost)),
     };
   }
 
@@ -375,50 +457,67 @@
     const recipe = cookingRecipeFromConfig(state, data, config, cooking);
     const familiar = cooking.familiarRecipes.includes(recipe.name);
     const regionalNowFamiliar = familiar && recipe.difficulty.key === "regional";
-    const baseDc = regionalNowFamiliar ? COOKING_DIFFICULTIES.familiar.dc : recipe.difficulty.dc;
-    const servings = Math.max(1, Math.min(8, Math.floor(numberValue(config?.servings) || 4)));
-    const largeServingPenalty = servings > 4 ? 10 : 0;
-    const unfamiliar = recipe.difficulty.key !== "basic" && !familiar;
+    const effectiveDifficulty = regionalNowFamiliar ? COOKING_DIFFICULTIES.familiar : recipe.difficulty;
+    const baseDc = effectiveDifficulty.dc;
+    const unfamiliar = !["basic", "familiar"].includes(effectiveDifficulty.key) && !familiar;
     const writtenRecipe = config?.writtenRecipe === true;
     const unfamiliarPenalty = unfamiliar && !writtenRecipe ? 10 : 0;
-    const hasCookingKit = config?.cookingKit !== false;
+    const useCookingKit = state.cooking.cookingKitOwned === true && config?.cookingKit !== false;
     const assistant = config?.assistant === true;
     const professionalKitchen = config?.professionalKitchen === true;
     const poorConditions = config?.poorConditions === true;
     const useCampCook = config?.useCampCook !== false && cooking.level >= 2 && poorConditions;
-    const specialtyPresent = !recipe.specialtyUtensil || config?.specialtyUtensil !== false;
-    const modifier = cooking.totalBonus + (hasCookingKit ? 25 : 0) + (assistant ? 10 : 0);
+    const specialtyPresent = !recipe.specialtyUtensil || state.cooking.ownedUtensils.includes(recipe.specialtyUtensil);
+    const modifier = cooking.totalBonus + (useCookingKit ? 25 : 0) + (assistant ? 10 : 0);
     const advantageSources = professionalKitchen ? ["Professional kitchen"] : [];
     const disadvantageSources = [];
     if (poorConditions && !useCampCook) disadvantageSources.push("Poor fire, water, or weather");
     if (!specialtyPresent) disadvantageSources.push(`Missing ${recipe.specialtyUtensil}`);
-    if (cooking.level === 0 && unfamiliar) disadvantageSources.push("Untrained with an unfamiliar recipe");
     let rollMode = "normal";
     if (advantageSources.length && !disadvantageSources.length) rollMode = "advantage";
     if (disadvantageSources.length && !advantageSources.length) rollMode = "disadvantage";
+    const requiredIngredients = recipe.ingredients.map((name) => ({
+      name,
+      required: 1,
+      owned: Math.max(0, Math.floor(numberValue(state.cooking.ingredientPantry[name]))),
+    }));
+    const missingIngredients = requiredIngredients.filter((entry) => entry.owned < entry.required);
+    const ingredientSource = config?.ingredientSource === "buy" ? "buy" : "pantry";
+    const pantryReady = !requiredIngredients.length || !missingIngredients.length;
+    const canAffordIngredients = currencyBalanceInSilver(state) >= recipe.cost;
+    const ingredientReady = !recipe.isHearthDish || (ingredientSource === "buy" ? canAffordIngredients : pantryReady);
+    const requiredLevel = effectiveDifficulty.requiredLevel;
+    const levelUnlocked = cooking.level >= requiredLevel;
+    const canAttempt = levelUnlocked && ingredientReady;
+    const baseServings = effectiveDifficulty.key === "dangerous" || effectiveDifficulty.key === "masterwork" ? 1 : 2;
     return {
+      accepted: canAttempt,
       recipeKey: String(config?.recipeKey || "__basic"),
       recipeName: recipe.name,
       dish: recipe.dish,
       isHearthDish: recipe.isHearthDish,
-      difficulty: regionalNowFamiliar ? COOKING_DIFFICULTIES.familiar : recipe.difficulty,
+      difficulty: effectiveDifficulty,
       originalDifficulty: recipe.difficulty,
-      time: recipe.dish?.time || recipe.difficulty.time,
+      difficultyReason: recipe.difficulty.reason || "Recipe category",
+      requiredLevel,
+      levelUnlocked,
+      lockReason: levelUnlocked ? "" : `Requires Cooking Level ${requiredLevel}`,
+      time: recipe.dish?.time || effectiveDifficulty.time,
       specialtyUtensil: recipe.specialtyUtensil,
       specialtyPresent,
       familiar,
       unfamiliar,
       writtenRecipe,
-      servings,
-      largeServingPenalty,
       unfamiliarPenalty,
-      dc: baseDc + largeServingPenalty + unfamiliarPenalty,
+      servings: baseServings,
+      baseServings,
+      dc: baseDc + unfamiliarPenalty,
       baseDc,
       modifier,
       modifierBreakdown: {
         cookingSkill: cooking.skillBonus,
         levelBonus: cooking.progressionBonus,
-        cookingKit: hasCookingKit ? 25 : 0,
+        cookingKit: useCookingKit ? 25 : 0,
         assistant: assistant ? 10 : 0,
       },
       rollMode,
@@ -428,16 +527,24 @@
       underPressure: config?.underPressure === true,
       useHearthwright: config?.useHearthwright !== false,
       cooking,
+      ingredients: requiredIngredients,
+      missingIngredients,
+      ingredientSource,
+      pantryReady,
+      ingredientReady,
+      canAttempt,
+      purchaseCost: recipe.cost,
+      canAffordIngredients,
+      coinBalanceSp: currencyBalanceInSilver(state),
       config: {
         recipeKey: String(config?.recipeKey || "__basic"),
         customName: String(config?.customName || "").trim(),
-        servings,
-        cookingKit: hasCookingKit,
+        cookingKit: useCookingKit,
         assistant,
         professionalKitchen,
         writtenRecipe,
         poorConditions,
-        specialtyUtensil: config?.specialtyUtensil !== false,
+        ingredientSource,
         underPressure: config?.underPressure === true,
         useCampCook: config?.useCampCook !== false,
         useHearthwright: config?.useHearthwright !== false,
@@ -452,6 +559,14 @@
 
   function rollCookingCheck(state, data, config, skillScores, randomSource) {
     const preview = previewCookingCheck(state, data, config, skillScores);
+    if (!preview.canAttempt && preview.accepted === false) {
+      const reason = !preview.levelUnlocked
+        ? "level-locked"
+        : preview.ingredientSource === "buy" && !preview.canAffordIngredients
+          ? "insufficient-funds"
+          : "missing-ingredients";
+      return { accepted: false, reason, preview };
+    }
     const rolls = [randomD100(randomSource)];
     if (preview.rollMode !== "normal") rolls.push(randomD100(randomSource));
     const naturalRoll = preview.rollMode === "advantage"
@@ -470,12 +585,12 @@
       outcome === "strong-success" &&
       preview.cooking.hearthwrightAvailable &&
       preview.useHearthwright;
-    const extraServings = outcome === "strong-success" ? (useHearthwright ? 2 : 1) : 0;
-    const preparedServings = outcome === "critical-failure" ? 0 : preview.servings + extraServings;
+    const extraServings = (outcome === "critical-success" ? 1 : 0) + (useHearthwright ? 2 : 0);
+    const preparedServings = outcome === "critical-failure" ? 0 : preview.baseServings + extraServings;
     const bonusXpReason =
       preview.underPressure ||
       preview.unfamiliar ||
-      ["regional", "rare", "masterwork"].includes(preview.originalDifficulty.key);
+      ["regional", "rare", "dangerous", "masterwork"].includes(preview.originalDifficulty.key);
     const potentialXp = success && preview.dc >= 35 ? 1 + (bonusXpReason ? 1 : 0) : 0;
     const xpAwarded = Math.min(preview.cooking.xpRemainingThisRest, potentialXp);
     const becomesFamiliar =
@@ -485,6 +600,7 @@
       !preview.familiar;
     return {
       ...preview,
+      accepted: true,
       checkId: `check-${Date.now()}-${Math.floor((typeof randomSource === "function" ? randomSource() : Math.random()) * 1000000)}`,
       rolls,
       naturalRoll,
@@ -493,7 +609,7 @@
       success,
       extraServings,
       preparedServings,
-      extraBoonTargets: outcome === "critical-success" ? 1 : 0,
+      extraBoonTargets: 0,
       usedHearthwright: useHearthwright,
       potentialXp,
       xpAwarded,
@@ -506,10 +622,11 @@
   function rerollCookingCheck(state, data, previousResult, skillScores, randomSource) {
     normalizeCookingState(state);
     const cooking = calculateCooking(state, skillScores);
-    if (!previousResult || cooking.level < 5) return { accepted: false, reason: "unavailable" };
+    if (!previousResult || previousResult.accepted === false || cooking.level < 5) return { accepted: false, reason: "unavailable" };
     if (!cooking.rerollAvailable) return { accepted: false, reason: "already-used" };
     state.cooking.rerollUsedRest = cooking.currentRest;
     const result = rollCookingCheck(state, data, previousResult.config, skillScores, randomSource);
+    if (!result.accepted) return result;
     result.checkId = previousResult.checkId;
     result.rerolled = true;
     return { accepted: true, result };
@@ -531,9 +648,13 @@
   function recordCookingResult(state, data, result, skillScores) {
     normalizeSurvivalState(state);
     normalizeCookingState(state);
-    if (!result?.checkId || state.cooking.history.some((entry) => entry.checkId === result.checkId)) {
+    if (!result?.checkId || result.accepted === false || state.cooking.history.some((entry) => entry.checkId === result.checkId)) {
       return { accepted: false, reason: "already-recorded" };
     }
+    const currentPreview = previewCookingCheck(state, data, result.config, skillScores);
+    if (!currentPreview.levelUnlocked) return { accepted: false, reason: "level-locked" };
+    if (result.ingredientSource === "pantry" && !currentPreview.pantryReady) return { accepted: false, reason: "missing-ingredients" };
+    if (result.ingredientSource === "buy" && !currentPreview.canAffordIngredients) return { accepted: false, reason: "insufficient-funds" };
     const cooking = calculateCooking(state, skillScores);
     const previous = {
       xp: state.cooking.xp,
@@ -541,7 +662,23 @@
       pantryQuantity: numberValue(state.hearth.acquired[result.recipeName]),
       familiarRecipes: [...state.cooking.familiarRecipes],
       hearthwrightUsedRest: state.cooking.hearthwrightUsedRest,
+      ingredientPantry: { ...state.cooking.ingredientPantry },
+      currency: { ...state.currency },
     };
+    const consumedIngredients = [];
+    let costPaid = 0;
+    if (result.isHearthDish && result.ingredientSource === "pantry") {
+      result.ingredients.forEach((entry) => {
+        const remaining = Math.max(0, Math.floor(numberValue(state.cooking.ingredientPantry[entry.name])) - entry.required);
+        if (remaining) state.cooking.ingredientPantry[entry.name] = remaining;
+        else delete state.cooking.ingredientPantry[entry.name];
+        consumedIngredients.push({ name: entry.name, quantity: entry.required });
+      });
+    } else if (result.isHearthDish && result.ingredientSource === "buy") {
+      const payment = spendCurrencyInSilver(state, result.purchaseCost);
+      if (!payment.accepted) return payment;
+      costPaid = payment.costSp;
+    }
     const actualXp = Math.min(cooking.xpRemainingThisRest, Math.max(0, Math.floor(numberValue(result.potentialXp))));
     let pantryAdded = 0;
     let standardFoodAdded = 0;
@@ -565,11 +702,12 @@
       checkId: result.checkId,
       recipeName: result.recipeName,
       dc: result.dc,
+      difficulty: result.difficulty.label,
       naturalRoll: result.naturalRoll,
       rolls: [...result.rolls],
       total: result.total,
       outcome: result.outcome,
-      servingsRequested: result.servings,
+      servingsRequested: result.baseServings,
       servingsPrepared: result.preparedServings,
       pantryAdded,
       standardFoodAdded,
@@ -577,9 +715,28 @@
       becameFamiliar: result.becomesFamiliar,
       usedHearthwright: result.usedHearthwright,
       rerolled: result.rerolled === true,
+      ingredientSource: result.ingredientSource,
+      ingredientsConsumed: consumedIngredients,
+      costPaid,
       previous,
     });
-    return { accepted: true, historyEntry, actualXp, pantryAdded, standardFoodAdded };
+    return { accepted: true, historyEntry, actualXp, pantryAdded, standardFoodAdded, consumedIngredients, costPaid };
+  }
+
+  function buyCookingKit(state) {
+    normalizeCookingState(state);
+    if (state.cooking.cookingKitOwned) return { accepted: false, reason: "already-owned" };
+    const payment = spendCurrencyInSilver(state, 200);
+    if (!payment.accepted) return payment;
+    const previous = { currency: payment.previous, cookingKitOwned: false };
+    state.cooking.cookingKitOwned = true;
+    const historyEntry = appendCookingHistory(state, {
+      type: "kit-purchase",
+      xpAwarded: 0,
+      costPaid: 200,
+      previous,
+    });
+    return { accepted: true, historyEntry, costPaid: 200 };
   }
 
   function grantCookingTrainingXp(state, skillScores) {
@@ -621,8 +778,15 @@
         ? [...event.previous.familiarRecipes]
         : state.cooking.familiarRecipes;
       state.cooking.hearthwrightUsedRest = Math.max(0, Math.floor(numberValue(event.previous?.hearthwrightUsedRest)));
+      state.cooking.ingredientPantry = event.previous?.ingredientPantry && typeof event.previous.ingredientPantry === "object"
+        ? { ...event.previous.ingredientPantry }
+        : state.cooking.ingredientPantry;
+      if (event.previous?.currency && typeof event.previous.currency === "object") state.currency = { ...event.previous.currency };
     } else if (event.type === "training") {
       state.cooking.xp = Math.max(0, Math.floor(numberValue(event.previous?.xp)));
+    } else if (event.type === "kit-purchase") {
+      state.cooking.cookingKitOwned = event.previous?.cookingKitOwned === true;
+      if (event.previous?.currency && typeof event.previous.currency === "object") state.currency = { ...event.previous.currency };
     } else {
       return { accepted: false, reason: "unsupported" };
     }
@@ -1730,6 +1894,9 @@
     recordCookingResult,
     grantCookingTrainingXp,
     undoLastCookingAction,
+    buyCookingKit,
+    currencyBalanceInSilver,
+    spendCurrencyInSilver,
     previewHungerDay,
     advanceHungerDay,
     resetDayCounter,

@@ -609,7 +609,9 @@ function renderCharacterModal() {
 
 function renderCatalogueModal() {
   const row = application.modal.row;
-  const data = application.modal.data;
+  const data = application.catalogueCategory === "food_dishes"
+    ? normalizeDishCatalogueData(application.modal.data)
+    : application.modal.data;
   const fields = Object.entries(data).map(([key, value]) => renderCatalogueField(key, value)).join("");
   return `
     <div class="modal-backdrop" data-action="close-modal">
@@ -742,8 +744,62 @@ function renderBulkItemPreviewRow(entry) {
   </tr>`;
 }
 
+function normalizeDishCatalogueData(value) {
+  const data = value && typeof value === "object" ? structuredClone(value) : {};
+  const legendary = data.legendary === true || Number(data.dc) >= 85 || /master|legendary/i.test(String(data.difficulty || "")) || String(data.preparationClass || "").toLowerCase() === "masterchef";
+  const rareDangerous = !legendary && (data.rareDangerous === true || String(data.preparationClass || "").toLowerCase() === "dangerous");
+  return {
+    name: String(data.name || ""),
+    region: String(data.region || "Asura"),
+    cost: Number(data.cost || 0),
+    time: String(data.time || (legendary ? "2-4 hours" : rareDangerous ? "2 hours" : "1 hour")),
+    method: String(data.method || ""),
+    effect: String(data.effect || ""),
+    ingredients: Array.isArray(data.ingredients) ? data.ingredients : [],
+    specialtyUtensil: String(data.specialtyUtensil || ""),
+    preparationClass: legendary ? "masterchef" : rareDangerous ? "dangerous" : String(data.preparationClass || "standard"),
+    rareDangerous,
+    legendary,
+    difficulty: legendary ? "Masterchef Dish · Legendary" : rareDangerous ? "Rare or Dangerous" : "Automatic by Region",
+    dc: legendary ? 85 : rareDangerous ? 70 : 0,
+  };
+}
+
+function catalogueSelectField(key, label, value, options, hint = "") {
+  return `<label>${escapeHtml(label)}<select data-catalogue-field="${escapeHtml(key)}" data-kind="string">${options.map(([optionValue, optionLabel]) => `<option value="${escapeHtml(optionValue)}" ${String(optionValue) === String(value) ? "selected" : ""}>${escapeHtml(optionLabel)}</option>`).join("")}</select>${hint ? `<small>${escapeHtml(hint)}</small>` : ""}</label>`;
+}
+
 function renderCatalogueField(key, value) {
   const label = titleCase(key);
+  if (application.catalogueCategory === "food_dishes") {
+    if (key === "region") {
+      return catalogueSelectField(key, "Region", value, ["Asura", "Karrnath", "Fittoa", "Shirone", "Ronoa", "Milis", "Begaritt", "Demon Continent", "Heaven Continent"].map((entry) => [entry, entry]));
+    }
+    if (key === "time") {
+      return catalogueSelectField(key, "Cooking Time", value, [["30 minutes", "30 minutes"], ["1 hour", "1 hour"], ["2 hours", "2 hours"], ["2-4 hours", "2-4 hours"]]);
+    }
+    if (key === "specialtyUtensil") {
+      return catalogueSelectField(key, "Specialty Utensil", value, [["", "None"], ["Silver Reed", "Silver Reed"], ["Sealed Glass Vessel", "Sealed Glass Vessel"], ["Leaf-Steaming Basket", "Leaf-Steaming Basket"], ["Resonance-Safe Knife", "Resonance-Safe Knife"], ["Smoking Rack", "Smoking Rack"], ["Bone-Roasting Pan", "Bone-Roasting Pan"]]);
+    }
+    if (key === "preparationClass") {
+      return catalogueSelectField(key, "Preparation Class", value, [["standard", "Standard"], ["dangerous", "Rare or Dangerous"], ["masterchef", "Masterchef / Legendary"]], "Rare and Legendary flags will keep this synchronized.");
+    }
+    if (key === "difficulty") {
+      return catalogueSelectField(key, "Difficulty Rule", value, [["Automatic by Region", "Automatic by player region"], ["Rare or Dangerous", "Rare or Dangerous · DC 70"], ["Masterchef Dish · Legendary", "Masterchef Dish · Legendary · DC 85"]], "The final player DC is calculated from home region unless an override is ticked.");
+    }
+    if (key === "dc") {
+      return `<label>Stored DC<select data-catalogue-field="dc" data-kind="number"><option value="0" ${Number(value) === 0 ? "selected" : ""}>Automatic</option><option value="70" ${Number(value) === 70 ? "selected" : ""}>70 · Rare or Dangerous</option><option value="85" ${Number(value) === 85 ? "selected" : ""}>85 · Legendary Masterchef</option></select><small>Player-region difficulty is calculated automatically for standard dishes.</small></label>`;
+    }
+    if (key === "ingredients") {
+      return `<label class="form-span">Ingredients<textarea rows="8" spellcheck="false" data-catalogue-field="ingredients" data-kind="string-list">${escapeHtml((Array.isArray(value) ? value : []).join("\n"))}</textarea><small>Enter one ingredient catalogue name per line. One unit of each is required per Cooking Check.</small></label>`;
+    }
+    if (key === "rareDangerous") {
+      return `<label class="checkbox-field"><input type="checkbox" data-catalogue-field="${escapeHtml(key)}" data-kind="boolean" ${value ? "checked" : ""} /><span>Rare or Dangerous override · DC 70 · 1 serving</span></label>`;
+    }
+    if (key === "legendary") {
+      return `<label class="checkbox-field"><input type="checkbox" data-catalogue-field="${escapeHtml(key)}" data-kind="boolean" ${value ? "checked" : ""} /><span>Masterchef Dish · Legendary · DC 85 · 1 serving</span></label>`;
+    }
+  }
   if (typeof value === "boolean") {
     return `<label class="checkbox-field"><input type="checkbox" data-catalogue-field="${escapeHtml(key)}" data-kind="boolean" ${value ? "checked" : ""} /><span>${escapeHtml(label)}</span></label>`;
   }
@@ -1138,11 +1194,18 @@ async function saveCatalogueEntry(form) {
       if (control.dataset.kind === "boolean") data[key] = control.checked;
       else if (control.dataset.kind === "number") data[key] = Number(control.value || 0);
       else if (control.dataset.kind === "json") data[key] = JSON.parse(control.value || "null");
+      else if (control.dataset.kind === "string-list") data[key] = [...new Set(control.value.split(/\n|,/).map((entry) => entry.trim()).filter(Boolean))];
       else data[key] = control.value;
     });
   } catch (error) {
     showToast(`Invalid JSON: ${error.message}`, "error");
     return;
+  }
+
+  if (application.catalogueCategory === "food_dishes") {
+    const normalized = normalizeDishCatalogueData(data);
+    Object.keys(data).forEach((key) => delete data[key]);
+    Object.assign(data, normalized);
   }
 
   const existing = application.modal.row;

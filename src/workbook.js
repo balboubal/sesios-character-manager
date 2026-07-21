@@ -55,6 +55,23 @@ export function blankCatalogueEntry(category, reference) {
   if (category === "food_rules") {
     return { rule: "", detail: "" };
   }
+  if (category === "food_dishes") {
+    return {
+      name: "",
+      region: "Asura",
+      cost: 0,
+      time: "1 hour",
+      method: "",
+      effect: "",
+      ingredients: [],
+      specialtyUtensil: "",
+      preparationClass: "standard",
+      rareDangerous: false,
+      legendary: false,
+      difficulty: "Automatic by Region",
+      dc: 0,
+    };
+  }
   if (category === "food_ingredients") {
     return {
       name: "",
