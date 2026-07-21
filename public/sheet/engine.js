@@ -89,6 +89,7 @@
   };
 
   const PERSONALITY_TRAIT_LIMIT = 70;
+  const OTHER_SKILL_LIMIT = 15;
   const CHARACTER_XP_LEVELS = Object.freeze([
     { level: 0, totalXp: 0, xpToNext: 25 },
     { level: 1, totalXp: 25, xpToNext: 45 },
@@ -1517,6 +1518,19 @@
     return { availableNames, clearedSlots };
   }
 
+  function normalizeOtherSkillsState(state) {
+    if (!state || typeof state !== "object") return state;
+    const source = Array.isArray(state.otherSkills) ? state.otherSkills : [];
+    state.otherSkills = source
+      .slice(0, OTHER_SKILL_LIMIT)
+      .map((entry) => ({
+        name: String(entry?.name || ""),
+        effect: String(entry?.effect || ""),
+      }));
+    state.schemaVersion = Math.max(8, Math.floor(numberValue(state.schemaVersion)));
+    return state;
+  }
+
   function mergePersonalitySlots(defaultPersonality, suppliedPersonality) {
     const source = Array.isArray(suppliedPersonality)
       ? suppliedPersonality
@@ -1540,7 +1554,14 @@
         const catalogueTrait = catalogueByName.get(name);
         const hasStoredCost = entry?.cost !== undefined && entry?.cost !== null && entry?.cost !== "";
         const cost = numberValue(hasStoredCost ? entry.cost : catalogueTrait?.cost);
-        return { index, name, cost };
+        return {
+          index,
+          name,
+          cost,
+          group: String(catalogueTrait?.group || ""),
+          benefit: String(catalogueTrait?.benefit || ""),
+          drawback: String(catalogueTrait?.drawback || ""),
+        };
       })
       .filter(Boolean);
     const total = rows.reduce((sum, entry) => sum + entry.cost, 0);
@@ -1790,6 +1811,7 @@
     ensureSurvivalContainers(state);
     normalizeCookingState(state);
     normalizeCraftingState(state);
+    normalizeOtherSkillsState(state);
 
     const existingIds = [
       ...state.survivalHistory.map((entry) => entry?.id),
@@ -2424,6 +2446,7 @@
     removePersonalityTrait,
     applyHearthMealEdit,
     normalizeTrackedConditions,
+    normalizeOtherSkillsState,
     setTrackedAilment,
     changeTrackedAilmentMark,
     normalizeSurvivalState,
