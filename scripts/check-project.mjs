@@ -60,6 +60,16 @@ assert.equal(workbook.food.cooking.kit.bonus, 25, "Cooking Kit bonus must remain
 assert.equal(workbook.food.cooking.kit.cost, 20, "Cooking Kit must cost 20 GP");
 assert.equal(workbook.food.cooking.kit.costUnit, "GP", "Cooking Kit price unit must be GP");
 assert.equal(workbook.defaultState.schemaVersion, 6, "The Crafter's Ledger requires schema 6");
+assert.equal(workbook.defaultState.character.name, "", "Fresh character defaults must not contain the former test character name");
+assert.equal(workbook.defaultState.character.className, "", "Fresh characters must not begin with a test class");
+assert.equal(workbook.defaultState.inventory.length, 0, "Fresh characters must begin with an empty inventory");
+assert.equal(Object.values(workbook.defaultState.currency).every((value) => value === 0), true, "Fresh characters must begin with no test currency");
+assert.equal(Object.values(workbook.defaultState.skills).every((skill) => skill.proficient === false && skill.bonus === 0), true, "Fresh characters must begin without test proficiencies");
+assert.deepEqual(
+  JSON.parse(JSON.stringify(workbook.defaultState.abilityBaseScores)),
+  { strength: 0, speed: 0, vitality: 0, intelligence: 0, awareness: 0, talent: 0 },
+  "Fresh state must include per-character base ability score storage",
+);
 assert.equal(workbook.defaultState.cooking.homeRegion, "Asura", "Cooking home region must have a valid default");
 assert.equal(Object.keys(workbook.defaultState.cooking.ingredientPantry).length, 0, "Ingredient pantry must start empty");
 assert.equal(workbook.defaultState.cooking.cookingKitOwned, false, "Cooking Kit ownership must start false");
@@ -82,6 +92,9 @@ assert.ok(workbook.crafting.recipes.some((recipe) => recipe.blueprintRequired &&
 const bridge = fs.readFileSync(path.join(root, "public/sheet/script.js"), "utf8");
 assert.match(bridge, /amutsu:state-change/, "Online character save bridge is missing");
 assert.match(bridge, /amutsu:load/, "Online character load bridge is missing");
+assert.match(bridge, /abilityBaseScores/, "Per-character base ability score support is missing");
+assert.match(bridge, /Character reset to the original name and base ability rolls/, "Reset must preserve the creation identity and base rolls");
+assert.match(bridge, /amutsu-character-sheet:v2/, "Standalone test-character local storage must be retired");
 assert.match(bridge, /request-long-rest/, "Character Sheet Long Rest control is missing");
 assert.match(bridge, /request-advance-day/, "Advance Day control is missing");
 assert.match(bridge, /request-reset-days/, "Reset days control is missing");
@@ -246,6 +259,12 @@ assert.match(workbookSource, /materials: grouped\.crafting_materials/, "Crafting
 assert.match(workbookSource, /recipes: grouped\.crafting_recipes/, "Crafting recipe payload bridge is missing");
 
 const portalSource = fs.readFileSync(path.join(root, "src/main.js"), "utf8");
+assert.match(portalSource, /What are your base ability scores\?/, "Character creation must request the six base ability rolls");
+assert.match(portalSource, /name="base-\$\{key\}"/, "Creation modal must render a base-score input for each ability");
+for (const ability of ["strength", "speed", "vitality", "intelligence", "awareness", "talent"]) {
+  assert.ok(portalSource.includes(`["${ability}"`), `Missing ${ability} creation definition`);
+}
+assert.match(portalSource, /cloneDefaultCharacterState\(name, baseAbilityScores\)/, "New character creation must store the supplied base rolls");
 assert.match(portalSource, /data-action="bulk-import-items"/, "Item bulk-import action is missing");
 assert.match(portalSource, /id="bulk-item-form"/, "Item bulk-import form is missing");
 assert.match(portalSource, /bulk_import_catalogue_items/, "Atomic bulk-import RPC call is missing");
@@ -391,27 +410,27 @@ assert.equal(
 const personalityEngine = context.window.AmutsuEngine;
 const personalityState = JSON.parse(JSON.stringify(workbook.defaultState));
 let personalityResult = personalityEngine.calculatePersonality(personalityState, workbook);
-assert.equal(personalityResult.total, 70, "Default personality budget must retain workbook costs");
+assert.equal(personalityResult.total, 0, "Fresh characters must begin without personality traits");
 assert.equal(personalityResult.limit, 70);
-assert.equal(personalityResult.atLimit, true);
+assert.equal(personalityResult.atLimit, false);
 assert.equal(personalityResult.overLimit, false);
 
 let traitEditResult = personalityEngine.addPersonalityTrait(personalityState, workbook, "Brave");
-assert.equal(traitEditResult.added, false);
-assert.equal(traitEditResult.reason, "limit");
+assert.equal(traitEditResult.added, true);
+assert.equal(traitEditResult.total, 10);
 traitEditResult = personalityEngine.removePersonalityTrait(personalityState, 0);
 assert.equal(traitEditResult.removed, true);
-assert.equal(traitEditResult.name, "Greedy");
+assert.equal(traitEditResult.name, "Brave");
 traitEditResult = personalityEngine.addPersonalityTrait(personalityState, workbook, "Chaste");
 assert.equal(traitEditResult.added, true);
-assert.equal(traitEditResult.total, 65);
+assert.equal(traitEditResult.total, 5);
 traitEditResult = personalityEngine.addPersonalityTrait(
   personalityState,
   workbook,
   "Master Manipulator",
 );
-assert.equal(traitEditResult.added, false);
-assert.equal(traitEditResult.reason, "duplicate");
+assert.equal(traitEditResult.added, true);
+assert.equal(traitEditResult.total, 40);
 
 const sixLowCostTraits = ["Chaste", "Content", "Fickle", "Humble", "Patient", "Temperate"];
 const dynamicPersonalityState = {
@@ -493,7 +512,15 @@ delete legacySurvivalState.hunger.currentDay;
 delete legacySurvivalState.hunger.foodGainedToday;
 delete legacySurvivalState.hunger.eatRationToday;
 delete legacySurvivalState.hunger.hearthMealsEatenToday;
+legacySurvivalState.hunger.days = [
+  { day: 1, foodGained: 3, rationsEaten: 1 },
+  { day: "", foodGained: "", rationsEaten: "" },
+];
 delete legacySurvivalState.hearth.selectedDish;
+legacySurvivalState.hearth.log = [
+  { rest: 1, day: 1, dish: "Hushback Silver-Reed Broth", eaten: true, boonUsed: true },
+  { rest: "", day: "", dish: "", eaten: false, boonUsed: false },
+];
 delete legacySurvivalState.activeAilments;
 legacySurvivalState.activeEffects[1].ailment = "Fittoan Ash-Sickness";
 legacySurvivalState.activeEffects[1].mark = "Mark 2";
@@ -512,6 +539,7 @@ assert.equal(legacySurvivalState.survivalHistory.length, 3, "Legacy day, meal, a
 function createActionState() {
   const state = JSON.parse(JSON.stringify(workbook.defaultState));
   state.schemaVersion = 6;
+  state.abilityBaseScores = { strength: 60, speed: 60, vitality: 60, intelligence: 60, awareness: 60, talent: 60 };
   state.character.className = "Wizard";
   state.character.currentHitPoints = 12;
   state.character.temporaryHitPoints = 9;
