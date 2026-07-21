@@ -1,0 +1,21489 @@
+window.AMUTSU_DATA = {
+  "meta": {
+    "title": "Amutsu Character Sheet",
+    "sourceWorkbook": "Amutsu Character Sheet.xlsx",
+    "formulaCellCount": 785,
+    "definedNameCount": 47,
+    "sheets": [
+      {
+        "name": "Character Sheet",
+        "dimension": "A1:AM1002",
+        "formulaCount": 723,
+        "literalCount": 900,
+        "validationCount": 11,
+        "conditionalFormatGroups": 18,
+        "commentCount": 91,
+        "tableCount": 4,
+        "imageCount": 0,
+        "hiddenRows": [],
+        "hiddenColumns": []
+      },
+      {
+        "name": "Personality Traits",
+        "dimension": "A1:D45",
+        "formulaCount": 0,
+        "literalCount": 169,
+        "validationCount": 0,
+        "conditionalFormatGroups": 0,
+        "commentCount": 0,
+        "tableCount": 0,
+        "imageCount": 0,
+        "hiddenRows": [],
+        "hiddenColumns": []
+      },
+      {
+        "name": "Data",
+        "dimension": "A1:Z29",
+        "formulaCount": 49,
+        "literalCount": 382,
+        "validationCount": 0,
+        "conditionalFormatGroups": 0,
+        "commentCount": 0,
+        "tableCount": 2,
+        "imageCount": 0,
+        "hiddenRows": [],
+        "hiddenColumns": []
+      },
+      {
+        "name": "Items",
+        "dimension": "A1:Y269",
+        "formulaCount": 13,
+        "literalCount": 6561,
+        "validationCount": 3,
+        "conditionalFormatGroups": 1,
+        "commentCount": 0,
+        "tableCount": 1,
+        "imageCount": 0,
+        "hiddenRows": [],
+        "hiddenColumns": []
+      },
+      {
+        "name": "Food Catalogue",
+        "dimension": "A1:H17",
+        "formulaCount": 0,
+        "literalCount": 99,
+        "validationCount": 0,
+        "conditionalFormatGroups": 0,
+        "commentCount": 0,
+        "tableCount": 0,
+        "imageCount": 0,
+        "hiddenRows": [],
+        "hiddenColumns": []
+      },
+      {
+        "name": "Crafting Catalogue",
+        "dimension": "A1:D112",
+        "formulaCount": 0,
+        "literalCount": 264,
+        "validationCount": 0,
+        "conditionalFormatGroups": 0,
+        "commentCount": 0,
+        "tableCount": 14,
+        "imageCount": 1,
+        "hiddenRows": [],
+        "hiddenColumns": []
+      }
+    ],
+    "anomalies": [
+      "Character Sheet B8 sums ItemAWR instead of the defined ItemTAL range.",
+      "Data I13 calculates Rogue resistance from ItemAC and BAC instead of resistance ranges.",
+      "Character Sheet AJ37 uses hunger-tracker references that do not match adjacent rows.",
+      "Character Sheet AF18 compares a 0–99 roll against a fractional critical chance.",
+      "Character Sheet B15, B16, B17, B18, and B19 add bonuses already included by several class-table formulas.",
+      "Character Sheet E228:E233 can produce a numeric error when an ability score is below 30.",
+      "Two FILTER formulas were exported through an Excel compatibility wrapper; their intended INDEX/FILTER behavior is implemented directly."
+    ]
+  },
+  "abilityDefinitions": [
+    {
+      "id": "strength",
+      "abbr": "STR",
+      "label": "Strength",
+      "base": 41
+    },
+    {
+      "id": "speed",
+      "abbr": "SPD",
+      "label": "Speed",
+      "base": 73
+    },
+    {
+      "id": "vitality",
+      "abbr": "VIT",
+      "label": "Vitality",
+      "base": 42
+    },
+    {
+      "id": "intelligence",
+      "abbr": "INT",
+      "label": "Intelligence",
+      "base": 43
+    },
+    {
+      "id": "awareness",
+      "abbr": "AWR",
+      "label": "Awareness",
+      "base": 58
+    },
+    {
+      "id": "talent",
+      "abbr": "TAL",
+      "label": "Talent",
+      "base": 74
+    }
+  ],
+  "classes": [
+    {
+      "name": "Wizard",
+      "sourceRow": 3,
+      "formulaSources": {
+        "maxHealth": "= FLOOR(9+LVL+((0.04*LVL)*VIT)+BHP,1)",
+        "armor": "=SUM(ItemAC)+BAC",
+        "resistance": "=SUM(ItemRES)+BRES+1",
+        "evasion": "=ROUNDDOWN(SUM(ItemEVA)+BEVA+SPDMOD,0)+18",
+        "spellSave": "=ROUNDUP(40+PROFMOD*1.5+SpellCastingMOD,0)",
+        "maxMana": "=MROUND((3.41863*LVL^1.09414)*10,10)+BMANA+40",
+        "spellDamage": "=LVL+SUM(ItemMAGDMG)+BSPELLDMG"
+      }
+    },
+    {
+      "name": "Paladin",
+      "sourceRow": 6,
+      "formulaSources": {
+        "maxHealth": "= FLOOR(13+LVL+((0.1*LVL)*VIT)+BHP,1)",
+        "armor": "=SUM(ItemAC)+BAC+1",
+        "resistance": "=SUM(ItemRES)+BRES+1",
+        "evasion": "=ROUNDDOWN(SUM(ItemEVA)+BEVA+SPDMOD,0)+14",
+        "spellSave": "=ROUNDUP(30+PROFMOD*1.5+SpellCastingMOD,0)",
+        "maxMana": "=MROUND((1.71863*LVL^1.09414)*10,10)+BMANA",
+        "spellDamage": "=LVL+SUM(ItemMAGDMG)+BSPELLDMG"
+      }
+    },
+    {
+      "name": "Cleric",
+      "sourceRow": 7,
+      "formulaSources": {
+        "maxHealth": "= FLOOR(8+LVL+((0.045*LVL)*VIT)+BHP,1)",
+        "armor": "=SUM(ItemAC)+BAC",
+        "resistance": "=SUM(ItemRES)+BRES",
+        "evasion": "=ROUNDDOWN(SUM(ItemEVA)+BEVA+SPDMOD,0)+17",
+        "spellSave": "=ROUNDUP(35+(PROFMOD*1.5)+SpellCastingMOD,0)",
+        "maxMana": "=MROUND((3.41863*LVL^1.09414)*10,10)+BMANA+40",
+        "spellDamage": "=LVL+SUM(ItemMAGDMG)+BSPELLDMG"
+      }
+    },
+    {
+      "name": "Blood Hunter",
+      "sourceRow": 8,
+      "formulaSources": {
+        "maxHealth": "= FLOOR(10+LVL+((0.08*LVL)*VIT)+BHP,1)",
+        "armor": "=SUM(ItemAC)+BAC+1",
+        "resistance": "=SUM(ItemRES)+BRES",
+        "evasion": "=ROUNDDOWN(SUM(ItemEVA)+BEVA+SPDMOD,0)+20",
+        "spellSave": "=ROUNDUP(40+PROFMOD*1.5+SpellCastingMOD,0)",
+        "maxMana": "=MROUND((1.71863*LVL^1.09414)*10,10)+BMANA",
+        "spellDamage": "=LVL+SUM(ItemMAGDMG)+BSPELLDMG"
+      }
+    },
+    {
+      "name": "Bard",
+      "sourceRow": 9,
+      "formulaSources": {
+        "maxHealth": "= FLOOR(11+LVL+((0.07*LVL)*VIT)+BHP,1)",
+        "armor": "=SUM(ItemAC)+BAC+1",
+        "resistance": "=SUM(ItemRES)+BRES+1",
+        "evasion": "=ROUNDDOWN(SUM(ItemEVA)+SPDMOD,0)+20",
+        "spellSave": "=ROUNDUP(40+PROFMOD*1.5+SpellCastingMOD,0)",
+        "maxMana": "=MROUND((3.41863*LVL^1.09414)*10,10)+BMANA+40",
+        "spellDamage": "=LVL+SUM(ItemMAGDMG)+BSPELLDMG"
+      }
+    },
+    {
+      "name": "Fighter",
+      "sourceRow": 11,
+      "formulaSources": {
+        "maxHealth": "= FLOOR(12+LVL+((0.08*LVL)*VIT)+BHP,1)",
+        "armor": "=SUM(ItemAC)+BAC+2",
+        "resistance": "=SUM(ItemRES)+BRES+1",
+        "evasion": "=ROUNDDOWN(SUM(ItemEVA)+SPDMOD,0)+15",
+        "spellSave": "=ROUNDUP(30+PROFMOD*1.5+SpellCastingMOD,0)",
+        "maxMana": "=MROUND((0*LVL^1.09414)*10,10)+BMANA",
+        "spellDamage": "=LVL+SUM(ItemMAGDMG)+BSPELLDMG"
+      }
+    },
+    {
+      "name": "Rogue",
+      "sourceRow": 13,
+      "formulaSources": {
+        "maxHealth": "= FLOOR(10+LVL+((0.05*LVL)*VIT)+BHP,1)",
+        "armor": "=SUM(ItemAC)+BAC",
+        "resistance": "=SUM(ItemAC)+BAC",
+        "evasion": "=ROUNDDOWN(SUM(ItemEVA)+SPDMOD,0)+24",
+        "spellSave": "=ROUNDUP(40+PROFMOD*1.5+SpellCastingMOD,0)",
+        "maxMana": "=MROUND((0*LVL^1.09414)*10,10)+BMANA",
+        "spellDamage": "=LVL+SUM(ItemMAGDMG)+BSPELLDMG"
+      }
+    }
+  ],
+  "faiths": [
+    "None",
+    "Pelor",
+    "Naga",
+    "Heironeous",
+    "Yondalla",
+    "Maya",
+    "The Devourer",
+    "Green Mother",
+    "First Stag",
+    "Stone Father",
+    "Moon Sister",
+    "River Bride",
+    "The Arctic Bear",
+    "The Wolf",
+    "The Mother of Mountains",
+    "The Storm Rider",
+    "Blood of Vol",
+    "Church of the Cog"
+  ],
+  "alignments": [
+    "Unaligned",
+    "Lawful Good",
+    "Neutral Good",
+    "Chaotic Good",
+    "Lawful Neutral",
+    "True Neutral",
+    "Choatic Neutral",
+    "Lawful Evil",
+    "Neutral Evil",
+    "Chaotic Evil"
+  ],
+  "sanctums": [
+    "None",
+    "Sanctum of Shadow",
+    "Sanctum of Wisdom",
+    "Sanctum of Purity",
+    "Sanctum of Blood",
+    "Sanctum of Greed",
+    "Sanctum of Focus",
+    "Sanctum of Life",
+    "Sactum of Haste"
+  ],
+  "statusOptions": [
+    "Acid",
+    "Bleeding",
+    "Confused",
+    "Cursed",
+    "Death Mark",
+    "Frozen",
+    "Petrified",
+    "Poisoned",
+    "Scared",
+    "Shocked",
+    "Stunned",
+    "Wet",
+    "Blinded",
+    "Deafened",
+    "Charmed",
+    "Grappled",
+    "Incapacitated",
+    "Paralyzed",
+    "Invisible",
+    "Prone",
+    "Restrained",
+    "Unconscious",
+    "Short-Term Madness",
+    "Long-Term Madness",
+    "Indefinite Madness",
+    "Exhausted I",
+    "Exhausted II",
+    "Exhausted III",
+    "Exhausted IV",
+    "Exhausted V",
+    "Exhausted VI",
+    "None",
+    "Blood Mark"
+  ],
+  "durations": [
+    "1 Turn",
+    "2 Turns",
+    "3 Turns",
+    "1 Min",
+    "1 Hour",
+    "12 Hours",
+    "1 Day",
+    "3 Days",
+    "1 Week",
+    "1 Month",
+    "6 Months",
+    "1 Year",
+    "Will not wear off"
+  ],
+  "traits": [
+    {
+      "group": "Neutral",
+      "name": "Battle Mania",
+      "cost": 45,
+      "benefit": "Adds +5 bonus to strength ability score, advantage on saving throws against being frightened.",
+      "drawback": "Must charge nearest enemy as initiative combat action, even if it's strategically disadvantageous."
+    },
+    {
+      "group": "Neutral",
+      "name": "Guiding Vision",
+      "cost": 35,
+      "benefit": "Adds +5 bonus to speed ability score, advantage on rolls to predict enemy actions or discover hidden passageways.",
+      "drawback": "Plagued by prophetic nightmares, gain exhaustion levels after long rests unless you follow one of your visions, even if it seems nonsensical."
+    },
+    {
+      "group": "Neutral",
+      "name": "Master Manipulator",
+      "cost": 35,
+      "benefit": "Add +5 bonus to talent ability score, advantage on saving throws against magical charm effects.",
+      "drawback": "Struggle with maintaining genuine connections, often questioning the sincerity of others and yourself."
+    },
+    {
+      "group": "Neutral",
+      "name": "Undying Curiosity",
+      "cost": 40,
+      "benefit": "Adds +5 bonus to intelligence ability score, advantage on checks to learn or recall lore related to magic or ancient mysteries.",
+      "drawback": "Easily distracted by the lure of knowledge, often putting yourself and others at risk to pursue forbidden studies or hidden lore."
+    },
+    {
+      "group": "Neutral",
+      "name": "Whispers of the Wild",
+      "cost": 40,
+      "benefit": "Add +5 bonus to awareness ability score, advantage on checks to calm or befriend animals, advantage on saving throws against plant-based effects.",
+      "drawback": "Easily distracted by the natural world, often wandering off course or ignoring potential dangers to commune with nature."
+    },
+    {
+      "group": "Neutral",
+      "name": "Unbreakable Will",
+      "cost": 40,
+      "benefit": "Add +5 bonus to vitality ability score, advantage on saving throws against charm, fear, and forced movement.",
+      "drawback": "Struggle to understand and empathize with others' emotions, appearing cold and stoic even in times of need."
+    },
+    {
+      "group": "Positive",
+      "name": "Brave",
+      "cost": 10,
+      "benefit": "Adds +1 proficiency bonus to Intimidation checks, advantage on saving throws against fear.",
+      "drawback": "Can be reckless in dangerous situations."
+    },
+    {
+      "group": "Positive",
+      "name": "Calm",
+      "cost": 10,
+      "benefit": "Adds +2 proficiency bonus to Perception checks, advantage on saving throws against being surprised.",
+      "drawback": "May appear unemotional or uninvested in situations."
+    },
+    {
+      "group": "Positive",
+      "name": "Chaste",
+      "cost": 5,
+      "benefit": "Advantage on saving throws against charm effects related to lust or desire.",
+      "drawback": "May struggle with forming romantic relationships."
+    },
+    {
+      "group": "Positive",
+      "name": "Content",
+      "cost": 5,
+      "benefit": "Adds +1 proficiency bonus to Nature checks, advantage on saving throws against spells like \"suggestion\".",
+      "drawback": "May lack drive or ambition, appearing complacent."
+    },
+    {
+      "group": "Positive",
+      "name": "Diligent",
+      "cost": 10,
+      "benefit": "Adds +1 proficiency bonus to Arcana checks, advantage on checks to focus or study for extended periods.",
+      "drawback": "Can become workaholics, neglecting social interaction or personal needs."
+    },
+    {
+      "group": "Positive",
+      "name": "Fickle",
+      "cost": 5,
+      "benefit": "Adds +1 proficiency bonus to Performance checks, advantage on checks to adapt to changing situations.",
+      "drawback": "May be unreliable or indecisive, changing plans or allegiances frequently."
+    },
+    {
+      "group": "Positive",
+      "name": "Forgiving",
+      "cost": 10,
+      "benefit": "Adds +1 proficiency bonus to Persuasion checks, advantage on checks to resolve conflicts peacefully.",
+      "drawback": "May be seen as gullible or easily taken advantage of."
+    },
+    {
+      "group": "Positive",
+      "name": "Generous",
+      "cost": 10,
+      "benefit": "Adds +1 proficiency bonus to Persuasion checks, advantage on checks to inspire or motivate others.",
+      "drawback": "May struggle with setting boundaries or saying no, leading to personal sacrifice."
+    },
+    {
+      "group": "Positive",
+      "name": "Gregarious",
+      "cost": 10,
+      "benefit": "Adds +1 proficiency bonus to History checks, advantage on checks to make friends or allies.",
+      "drawback": "May crave constant social interaction, neglecting solitude or introspection."
+    },
+    {
+      "group": "Positive",
+      "name": "Honest",
+      "cost": 15,
+      "benefit": "Adds +1 proficiency bonus to Deception checks with no penalty for telling the truth, advantage on saving throws against magical lies.",
+      "drawback": "May struggle to understand or navigate social situations that require \"white lies\"."
+    },
+    {
+      "group": "Positive",
+      "name": "Humble",
+      "cost": 5,
+      "benefit": "Advantage on saving throws against effects that rely on pride or arrogance.",
+      "drawback": "May downplay their own achievements or abilities, hindering self-promotion."
+    },
+    {
+      "group": "Positive",
+      "name": "Just",
+      "cost": 10,
+      "benefit": "Adds +1 proficiency bonus to Insight checks, advantage on checks to detect deception or lies.",
+      "drawback": "May be inflexible or unwilling to compromise, creating conflict with others."
+    },
+    {
+      "group": "Positive",
+      "name": "Patient",
+      "cost": 5,
+      "benefit": "Adds +1 proficiency bonus to Nature checks, advantage on saving throws against effects that rely on impatience or impulsivity.",
+      "drawback": "May appear slow to act or indecisive, missing opportunities for quick action."
+    },
+    {
+      "group": "Positive",
+      "name": "Temperate",
+      "cost": 5,
+      "benefit": "Advantage on saving throws against spells or effects that rely on strong emotions.",
+      "drawback": "May appear stoic or unemotional, even in dire situations."
+    },
+    {
+      "group": "Positive",
+      "name": "Trusting",
+      "cost": 5,
+      "benefit": "Advantage on saving throws against charm effects related to trust or loyalty.",
+      "drawback": "May be easily manipulated or deceived by those they trust."
+    },
+    {
+      "group": "Positive",
+      "name": "Zealous",
+      "cost": 15,
+      "benefit": "Adds +1 proficiency bonus to Persuasion checks related to a specific cause or belief, advantage on checks to inspire or rally others to that cause.",
+      "drawback": "Can become fixated on their cause, neglecting other aspects of life or alienating those who disagree."
+    },
+    {
+      "group": "Positive",
+      "name": "Compassionate",
+      "cost": 10,
+      "benefit": "Adds +1 proficiency bonus to Medicine checks, advantage on checks to provide emotional support.",
+      "drawback": "May become emotionally invested in the suffering of others, neglecting their own needs."
+    },
+    {
+      "group": "Negative",
+      "name": "Lustful",
+      "cost": 15,
+      "benefit": "Advantage on saving throws against charm effects related to lust or desire, +1 proficiency bonus to Performance checks when using Talent to attract attention.",
+      "drawback": "May act impulsively based on desires, disregarding consequences or social norms."
+    },
+    {
+      "group": "Negative",
+      "name": "Gluttonous",
+      "cost": 15,
+      "benefit": "Advantage on saving throws against spells or effects that rely on hunger or cravings, +1 proficiency bonus to Vitality checks to resist fatigue or exhaustion.",
+      "drawback": "May overindulge in food or drink, leading to health problems or social awkwardness."
+    },
+    {
+      "group": "Negative",
+      "name": "Greedy",
+      "cost": 10,
+      "benefit": "Adds +1 proficiency bonus to Perception checks, advantage on checks to find valuable items.",
+      "drawback": "May hoard possessions or wealth, neglecting relationships or ethical considerations."
+    },
+    {
+      "group": "Negative",
+      "name": "Lazy",
+      "cost": 5,
+      "benefit": "Advantage on saving throws against spells or effects that rely on physical exertion, +1 proficiency bonus to Speed checks to avoid work or responsibilities.",
+      "drawback": "May struggle to complete tasks or meet deadlines, relying on others to carry the burden."
+    },
+    {
+      "group": "Negative",
+      "name": "Wrathful",
+      "cost": 15,
+      "benefit": "Advantage on saving throws against fear-based effects, +1 proficiency bonus to Strength checks when fueled by anger.",
+      "drawback": "Prone to outbursts of rage, potentially harming allies or jeopardizing plans."
+    },
+    {
+      "group": "Negative",
+      "name": "Impatient",
+      "cost": 10,
+      "benefit": "Gain +1 bonus on Speed saving throws against spells and effects that require a snap reaction.",
+      "drawback": "May act impulsively without considering consequences, leading to mistakes or poor decisions."
+    },
+    {
+      "group": "Negative",
+      "name": "Arrogant",
+      "cost": 10,
+      "benefit": "Adds +1 proficiency bonus to Intimidation checks, advantage on checks to command or lead others.",
+      "drawback": "May alienate others with their condescending attitude, making it difficult to form true friendships or alliances."
+    },
+    {
+      "group": "Negative",
+      "name": "Deceitful",
+      "cost": 10,
+      "benefit": "Adds +1 proficiency bonus to Deception checks, advantage on checks to create elaborate lies or illusions.",
+      "drawback": "May struggle with trust and honesty, manipulating others for personal gain."
+    },
+    {
+      "group": "Negative",
+      "name": "Craven",
+      "cost": 5,
+      "benefit": "Advantage on saving throws against fear-based effects, +1 proficiency bonus to Speed checks to avoid danger.",
+      "drawback": "May prioritize self-preservation above all else, betraying allies or abandoning them in times of need."
+    },
+    {
+      "group": "Negative",
+      "name": "Shy",
+      "cost": 5,
+      "benefit": "Advantage on saving throws against effects that rely on social interaction, +1 proficiency bonus to Stealth checks to avoid unwanted attention.",
+      "drawback": "May struggle to communicate effectively or participate in social situations, potentially hindering group activities."
+    },
+    {
+      "group": "Negative",
+      "name": "Ambitious",
+      "cost": 10,
+      "benefit": "Adds +1 proficiency bonus to Persuasion checks, advantage on checks to gain power or influence.",
+      "drawback": "May step on others to achieve their goals, neglecting compassion or ethics."
+    },
+    {
+      "group": "Negative",
+      "name": "Arbitrary",
+      "cost": 10,
+      "benefit": "Adds +1 proficiency bonus to Intimidation checks, advantage on checks to enforce rules or impose their will.",
+      "drawback": "May be inflexible and unfair, creating resentment and conflict within groups."
+    },
+    {
+      "group": "Negative",
+      "name": "Cynical",
+      "cost": 10,
+      "benefit": "Adds +1 proficiency bonus to Insight checks, advantage on checks to detect hidden motives or ulterior agendas.",
+      "drawback": "May be dismissive or distrustful of others, hindering potential friendships or alliances."
+    },
+    {
+      "group": "Negative",
+      "name": "Paranoid",
+      "cost": 15,
+      "benefit": "Advantage on saving throws against illusions or deceptive magic, +1 proficiency bonus to Perception checks to notice hidden threats.",
+      "drawback": "May perceive threats even where they don't exist, isolating themselves or distrusting their allies."
+    },
+    {
+      "group": "Negative",
+      "name": "Callous",
+      "cost": 15,
+      "benefit": "Advantage on saving throws against effects that rely on empathy or compassion, +1 proficiency bonus to Stealth checks to avoid detection.",
+      "drawback": "May struggle to understand or connect with others' emotions, appearing cold and uncaring."
+    },
+    {
+      "group": "Negative",
+      "name": "Sadistic",
+      "cost": 15,
+      "benefit": "Advantage on saving throws against effects that rely on fear or pain, +1 proficiency bonus to Intimidation checks to inflict fear or suffering.",
+      "drawback": "May enjoy inflicting pain or suffering on others, leading to moral concerns and potential conflict with the group."
+    },
+    {
+      "group": "Negative",
+      "name": "Stubborn",
+      "cost": 15,
+      "benefit": "Advantage on saving throws against effects that rely on persuasion or manipulation, +1 proficiency bonus to Vitality checks to resist coercion.",
+      "drawback": "May be inflexible and difficult to reason with, hindering cooperation and group decision-making."
+    },
+    {
+      "group": "Negative",
+      "name": "Vengeful",
+      "cost": 15,
+      "benefit": "Adds +1 bonus to damage rolls to one specific race/group, advantage on checks to track or find that target that has wronged them.",
+      "drawback": "May become consumed by revenge, neglecting other aspects of life and potentially harming innocent bystanders."
+    }
+  ],
+  "conditions": [
+    {
+      "id": "CND-001",
+      "name": "Aesperic Burn",
+      "region": "Asura",
+      "type": "Magical Ailment",
+      "exposure": "Damaged Aesperium conduit, unstable airship core, failed enchantment",
+      "save": "Vitality or Arcana DC 55",
+      "mark1": "Blue-green veins and copper taste",
+      "mark2": "-25 to all saves against magical attacks",
+      "mark3": "First spell each scene costs +5 MP or glitches",
+      "crisis": "Nearby magical devices misidentify or react to victim",
+      "treatment": "Grounding iron, anti-mana charcoal, 3 nights from active conduits",
+      "tags": "Magic, Mana, Asura"
+    },
+    {
+      "id": "CND-002",
+      "name": "Glassfin Fever",
+      "region": "Asura",
+      "type": "Sickness",
+      "exposure": "Contaminated canal fish or mana-damaged city water",
+      "save": "Vitality DC 50",
+      "mark1": "Cloudy eyes and numb fingers",
+      "mark2": "-10 passive perception",
+      "mark3": "Disadvantage on checks involving magical light or illusions",
+      "crisis": "Phantom reflections reveal false spellcasters",
+      "treatment": "Purified water, salt purge, anti-mana detox",
+      "tags": "Water, Magic, Asura"
+    },
+    {
+      "id": "CND-003",
+      "name": "The Inventor's Claim",
+      "region": "Asura",
+      "type": "Curse",
+      "exposure": "Using a patented magical invention without permission",
+      "save": "No save, activates on violation",
+      "mark1": "Faint serial number appears on skin",
+      "mark2": "Guild wards can identify victim",
+      "mark3": "Constructs and registry devices become suspicious",
+      "crisis": "Owner or guild can track the cursed user",
+      "treatment": "Return, destroy, or legally release the patented item",
+      "tags": "Contract, Arcane, Asura"
+    },
+    {
+      "id": "CND-004",
+      "name": "White-Lung",
+      "region": "Ronoa",
+      "type": "Sickness",
+      "exposure": "Wet cold, sleeping in snow, frozen cave exposure",
+      "save": "Vitality DC 55",
+      "mark1": "Frosted cough and cracked lips",
+      "mark2": "Reduced movement in freezing terrain",
+      "mark3": "Disadvantage on Speed and Vitality checks in cold",
+      "crisis": "Collapse into deathlike cold sleep",
+      "treatment": "Heat, dry shelter, Brumox Winter Pot, smoked herbs",
+      "tags": "Cold, Ronoa, Survival"
+    },
+    {
+      "id": "CND-005",
+      "name": "Whisperwind Fever",
+      "region": "Ronoa",
+      "type": "Magical Ailment",
+      "exposure": "Listening too long to old winds, runic mountain sites",
+      "save": "Awareness DC 60",
+      "mark1": "Hears distant names and battle songs",
+      "mark2": "Receive one clue but lose restful sleep",
+      "mark3": "Disadvantage on solo navigation",
+      "crisis": "Follows a false voice toward danger",
+      "treatment": "Firelight, communal music, companions speaking present names",
+      "tags": "Wind, Rune, Ronoa"
+    },
+    {
+      "id": "CND-006",
+      "name": "Cairn-Bound",
+      "region": "Ronoa",
+      "type": "Curse",
+      "exposure": "Abandoning a companion, desecrating a cairn, breaking a mountain oath",
+      "save": "No save, activates on betrayal",
+      "mark1": "Footprints subtly point back toward the broken oath",
+      "mark2": "Shelter and gear freeze at bad moments",
+      "mark3": "Haunted by calls for help during storms",
+      "crisis": "Cannot benefit from cold shelter until duty is faced",
+      "treatment": "Recover the dead, rebuild cairn, fulfill oath",
+      "tags": "Death, Oath, Ronoa"
+    },
+    {
+      "id": "CND-007",
+      "name": "Fittoan Ash-Sickness",
+      "region": "Fittoa",
+      "type": "Magical Sickness",
+      "exposure": "Inhaling red ash, mist exposure, contaminated relics, ruin collapse",
+      "save": "Vitality DC 55 to 85",
+      "mark1": "Soot tongue, red cough, distant bell sounds",
+      "mark2": "-5 Vitality and Dis/Survival dreams of unfamiliar places",
+      "mark3": "Disadvantage on first Awareness, Insight, or Navigation check daily",
+      "crisis": "Identity slips; false roads, echo-self, or ruin separation",
+      "treatment": "Hushback Silver-Reed Broth, clean camp, identity-anchor ritual, Soul Sanctuary",
+      "tags": "Red Ash, Soul, Memory, Fittoa"
+    },
+    {
+      "id": "CND-008",
+      "name": "Echo Fever",
+      "region": "Fittoa",
+      "type": "Magical Ailment",
+      "exposure": "Looping ruins, speaking to echoes, witnessing alternate lives",
+      "save": "Awareness DC 60",
+      "mark1": "Memory gaps and incorrect certainty",
+      "mark2": "-5 Intelligence and disadvantage on memory checks",
+      "mark3": "Recall useful clues from another timeline",
+      "crisis": "Acts on a false memory as though it is current",
+      "treatment": "Write events down, group confirmation, avoid solo rest",
+      "tags": "Time, Memory, Fittoa"
+    },
+    {
+      "id": "CND-009",
+      "name": "Broken Bell Debt",
+      "region": "Fittoa",
+      "type": "Curse",
+      "exposure": "Stealing memory-objects, ignoring warnings, lying about a death",
+      "save": "No save, activates on offense",
+      "mark1": "Hears an unexplained bell before danger",
+      "mark2": "Warnings are early, false, or meant for someone else",
+      "mark3": "Bell interrupts rest and concentration",
+      "crisis": "Ruin or echo begins actively calling victim by name",
+      "treatment": "Return object, name the forgotten dead, answer the original warning",
+      "tags": "Bell, Debt, Fittoa"
+    },
+    {
+      "id": "CND-010",
+      "name": "Gravewake Blight",
+      "region": "Karrnath",
+      "type": "Sickness",
+      "exposure": "Gravefield water, corpse dust, undead labor sites",
+      "save": "Vitality DC 55",
+      "mark1": "Cold skin and slowed pulse",
+      "mark2": "All healing reduced by half",
+      "mark3": "Magical healing restores half normal value",
+      "crisis": "Sleepwalks toward graves or necromantic sources",
+      "treatment": "Sun exposure, salt bath, burial rite, Blackwake Vigil Soup",
+      "tags": "Undead, Grave, Karrnath"
+    },
+    {
+      "id": "CND-011",
+      "name": "Marrow Rot",
+      "region": "Karrnath",
+      "type": "Ailment",
+      "exposure": "Failed fleshcrafting, bone-shaping residue, unsafe marrow",
+      "save": "Vitality DC 60",
+      "mark1": "Joint pain and black bruises",
+      "mark2": "-5 Speed and disadvantage on Acrobatics",
+      "mark3": "Evasion halved",
+      "crisis": "Bone growths form beneath the skin",
+      "treatment": "Bone-salt poultice, rest, anti-necromantic ritual",
+      "tags": "Flesh, Bone, Karrnath"
+    },
+    {
+      "id": "CND-012",
+      "name": "The Unburied Contract",
+      "region": "Karrnath",
+      "type": "Curse",
+      "exposure": "Taking inheritance, wages, or property owed to the dead",
+      "save": "No save, activates on theft",
+      "mark1": "Coins become cold; ledger sounds at night",
+      "mark2": "Dead recognize victim as indebted",
+      "mark3": "Spirits demand a task or repayment",
+      "crisis": "A named dead creditor manifests or claims property",
+      "treatment": "Settle debt, fulfill final obligation, negotiate inheritance",
+      "tags": "Death, Debt, Karrnath"
+    },
+    {
+      "id": "CND-013",
+      "name": "River-Salt Fever",
+      "region": "Shirone",
+      "type": "Sickness",
+      "exposure": "Floodwater, stagnant temple canals, contaminated milk",
+      "save": "Vitality DC 50",
+      "mark1": "Fever, cramps, blue-white salt on wounds",
+      "mark2": "-5 Vitality",
+      "mark3": "Disadvantage against poison and exhaustion",
+      "crisis": "Cannot retain water without ritual aid",
+      "treatment": "Temple salt, boiled Nayara peel, clean water, river-clay poultice",
+      "tags": "Water, Temple, Shirone"
+    },
+    {
+      "id": "CND-014",
+      "name": "Pilgrim's Halo",
+      "region": "Shirone",
+      "type": "Divine Ailment",
+      "exposure": "Traveling a holy route with guilt, false vows, or stolen relics",
+      "save": "Awareness DC 60",
+      "mark1": "Faint halo visible in darkness",
+      "mark2": "Pain when lying about purpose",
+      "mark3": "Cannot comfortably leave the sacred road",
+      "crisis": "Nearby people share visions of guilt",
+      "treatment": "Confession, restitution, honest completion of pilgrimage",
+      "tags": "Faith, Oath, Shirone"
+    },
+    {
+      "id": "CND-015",
+      "name": "Naga's Judgment",
+      "region": "Shirone",
+      "type": "Curse",
+      "exposure": "Betraying someone under protection or weaponizing holy law",
+      "save": "No save, activates on offense",
+      "mark1": "Serpent-shaped bruise appears",
+      "mark2": "Lies physically hurt",
+      "mark3": "Voice hisses while speaking injustice",
+      "crisis": "Temple wards and paladins sense deception easily",
+      "treatment": "Public confession, protect harmed person, selfless mercy",
+      "tags": "Faith, Justice, Shirone"
+    },
+    {
+      "id": "CND-016",
+      "name": "Barkblood",
+      "region": "Milis",
+      "type": "Sickness",
+      "exposure": "Forest spores, sacred fungi, infected grove wounds",
+      "save": "Vitality DC 55",
+      "mark1": "Green-brown veins and barklike scars",
+      "mark2": "-5 Speed",
+      "mark3": "Natural healing slows",
+      "crisis": "Roots bind victim in place during sleep",
+      "treatment": "Barkbee propolis, grove medicine, permission from local tree-line",
+      "tags": "Forest, Milis, Nature"
+    },
+    {
+      "id": "CND-017",
+      "name": "Green Sleep",
+      "region": "Milis",
+      "type": "Magical Ailment",
+      "exposure": "Dream pollen, sleeping beneath ancient trees",
+      "save": "Awareness DC 60",
+      "mark1": "Dreams an entire lifetime overnight",
+      "mark2": "Cannot gain full rest unless awakened by name",
+      "mark3": "Believes forest memories are their own",
+      "crisis": "Refuses to leave the grove or becomes lost in dreamscape",
+      "treatment": "Named awakening, sacred tea, companion anchor",
+      "tags": "Dream, Forest, Milis"
+    },
+    {
+      "id": "CND-018",
+      "name": "Tree-Line Severance",
+      "region": "Milis",
+      "type": "Curse",
+      "exposure": "Cutting sacred trees, breaking grove claims, harming migration beasts",
+      "save": "No save, activates on offense",
+      "mark1": "Shadow becomes rootlike",
+      "mark2": "Wild animals avoid or stalk victim",
+      "mark3": "Plants subtly hinder travel",
+      "crisis": "Grove itself recognizes victim as intruder",
+      "treatment": "Restore damage, plant replacement, swear duty to grove",
+      "tags": "Grove, Nature, Milis"
+    },
+    {
+      "id": "CND-019",
+      "name": "Moonwell Fever",
+      "region": "Begaritt",
+      "type": "Sickness",
+      "exposure": "Unregistered well, ruin cistern, tainted oasis water",
+      "save": "Vitality DC 55",
+      "mark1": "Silver tears and cracked lips",
+      "mark2": "-5 Vitality and -10 Vitality in heat",
+      "mark3": "Requires twice normal water",
+      "crisis": "Heard water leads victim into ruins or dunes",
+      "treatment": "Water from rightful Water-Name holder, salts, Qasira pulp",
+      "tags": "Water, Desert, Begaritt"
+    },
+    {
+      "id": "CND-020",
+      "name": "Glassbite",
+      "region": "Begaritt",
+      "type": "Ailment",
+      "exposure": "Glass-sand storm, buried battlefield, mirage field",
+      "save": "Speed or Vitality DC 60",
+      "mark1": "Fine glass fragments in skin",
+      "mark2": "-5 Speed and disadvantge on Stealth",
+      "mark3": "Bright sunlight causes pain",
+      "crisis": "Scars reflect scenes behind victim",
+      "treatment": "Moonlight extraction, oil bath, careful Medicine",
+      "tags": "Glass, Desert, Begaritt"
+    },
+    {
+      "id": "CND-021",
+      "name": "The Third Thirst",
+      "region": "Begaritt",
+      "type": "Curse",
+      "exposure": "Hoarding water in crisis, forging Water-Names, denying survival water",
+      "save": "No save, activates on offense",
+      "mark1": "Thirst remains after third swallow",
+      "mark2": "Water gives no relief during travel",
+      "mark3": "Thirst imposes disadvantage in heat",
+      "crisis": "Victim will drink cursed or unsafe water willingly",
+      "treatment": "Share water in danger, restore Water-Name, protect a well",
+      "tags": "Water, Curse, Begaritt"
+    },
+    {
+      "id": "CND-022",
+      "name": "Cinderlung",
+      "region": "Demon Continent",
+      "type": "Sickness",
+      "exposure": "Volcanic ash, forge smoke, ashfold exposure",
+      "save": "Vitality DC 55",
+      "mark1": "Black cough and heat in ribs",
+      "mark2": "-5 Vitality saves",
+      "mark3": "Disadvantage on forced marches or heat checks",
+      "crisis": "Breath may ignite dry material near flame",
+      "treatment": "Cold mineral water, ashcloth filters, steam-cave rest",
+      "tags": "Ash, Fire, Demon Continent"
+    },
+    {
+      "id": "CND-023",
+      "name": "Warfire Rot",
+      "region": "Demon Continent",
+      "type": "Ailment",
+      "exposure": "Infected battle wound, demon-beast blood, heat-cursed weapon",
+      "save": "Vitality DC 60",
+      "mark1": "Wound closes too fast then reopens",
+      "mark2": "First fire damage each combat deals +2d8 damage",
+      "mark3": "Anger or fear reopens old wounds",
+      "crisis": "Wound becomes a living fire curse",
+      "treatment": "Cooling salves, bloodletting, identify wound origin",
+      "tags": "Fire, Wound, Demon Continent"
+    },
+    {
+      "id": "CND-024",
+      "name": "Banner Scar",
+      "region": "Demon Continent",
+      "type": "Curse",
+      "exposure": "Desecrating or falsely swearing beneath a war banner",
+      "save": "No save, activates on offense",
+      "mark1": "War symbol appears on skin",
+      "mark2": "Commands near banners become difficult to resist",
+      "mark3": "Enemy standards trigger fear or compulsion",
+      "crisis": "Banner-owner can issue a direct curse-command",
+      "treatment": "Defeat owner, burn banner willingly, swear protective oath",
+      "tags": "War, Command, Demon Continent"
+    },
+    {
+      "id": "CND-025",
+      "name": "Cloudfade",
+      "region": "Heaven Continent",
+      "type": "Magical Ailment",
+      "exposure": "Long exposure to mist terraces, impossible altitude, northern lights",
+      "save": "Awareness DC 65",
+      "mark1": "Voice and steps become faint",
+      "mark2": "-5 Talent and disadvantage on Persuasion",
+      "mark3": "Allies must consciously remember victim during plans",
+      "crisis": "Victim cannot be recognized without an anchor",
+      "treatment": "Warm meal, touch, spoken names, beloved personal object",
+      "tags": "Mist, Identity, Heaven"
+    },
+    {
+      "id": "CND-026",
+      "name": "Aurora Blindness",
+      "region": "Heaven Continent",
+      "type": "Sickness",
+      "exposure": "Staring into reflected auroras, celestial ice, sky ruins",
+      "save": "Awareness DC 65",
+      "mark1": "Colored halos appear around creatures",
+      "mark2": "May see magical auras but normal sight worsens",
+      "mark3": "Disadvantage on sight-based checks",
+      "crisis": "Illusion and reality become indistinguishable",
+      "treatment": "Darkness, covered eyes, Halor oil, trusted guide",
+      "tags": "Light, Vision, Heaven"
+    },
+    {
+      "id": "CND-027",
+      "name": "The Still Prayer",
+      "region": "Heaven Continent",
+      "type": "Curse",
+      "exposure": "Asking divinity to preserve what must be allowed to change",
+      "save": "No save, activates through prayer",
+      "mark1": "Stops aging temporarily",
+      "mark2": "Resists emotional change and loss",
+      "mark3": "Cannot accept departure, grief, or new bonds",
+      "crisis": "Becomes spiritually frozen in one moment",
+      "treatment": "Release something precious, forgive, let a memory remain incomplete",
+      "tags": "Time, Faith, Heaven"
+    }
+  ],
+  "items": [
+    {
+      "name": "Club",
+      "rarity": "Common",
+      "type": "Melee",
+      "physicalDamage": "1d4 Bludgeoning",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.2,
+      "value": 10,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Light, Bludgeoning"
+    },
+    {
+      "name": "Dagger",
+      "rarity": "Common",
+      "type": "Melee",
+      "physicalDamage": "1d4 Piercing",
+      "magicalDamage": "–",
+      "criticalChance": 0.02,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.5,
+      "value": 20,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Finesse, Light, Thrown (20/60)"
+    },
+    {
+      "name": "Greatclub",
+      "rarity": "Common",
+      "type": "Melee",
+      "physicalDamage": "1d8 Bludgeoning",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 80,
+      "damageReflection": 1,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4,
+      "value": 20,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Two-Handed, Bludgeoning"
+    },
+    {
+      "name": "Handaxe",
+      "rarity": "Common",
+      "type": "Melee",
+      "physicalDamage": "1d6 Slashing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 75,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.5,
+      "value": 50,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Light, Thrown (20/60), Slashing"
+    },
+    {
+      "name": "Javelin",
+      "rarity": "Common",
+      "type": "Melee",
+      "physicalDamage": "1d6 Piercing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.2,
+      "value": 50,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Thrown (30/120), Piercing"
+    },
+    {
+      "name": "Light Hammer",
+      "rarity": "Common",
+      "type": "Melee",
+      "physicalDamage": "1d4 Bludgeoning",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1,
+      "value": 20,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Light, Thrown (20/60), Bludgeoning"
+    },
+    {
+      "name": "Mace",
+      "rarity": "Common",
+      "type": "Melee",
+      "physicalDamage": "1d6 Bludgeoning",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2,
+      "value": 50,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Bludgeoning"
+    },
+    {
+      "name": "Quarterstaff",
+      "rarity": "Common",
+      "type": "Melee",
+      "physicalDamage": "1d6 (1H) / 1d8 (2H) Bludgeoning",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.5,
+      "value": 20,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Versatile (1d8), Bludgeoning"
+    },
+    {
+      "name": "Spear",
+      "rarity": "Common",
+      "type": "Melee",
+      "physicalDamage": "1d6 (1H) / 1d8 (2H) Piercing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.5,
+      "value": 10,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Thrown (20/60), Versatile (1d8), Piercing"
+    },
+    {
+      "name": "Battleaxe",
+      "rarity": "Common",
+      "type": "Melee",
+      "physicalDamage": "1d8 (1H) / 1d10 (2H) Slashing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2,
+      "value": 100,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Versatile (1d10), Slashing"
+    },
+    {
+      "name": "Flail",
+      "rarity": "Common",
+      "type": "Melee",
+      "physicalDamage": "1d8 Bludgeoning",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.5,
+      "value": 100,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Bludgeoning"
+    },
+    {
+      "name": "Glaive",
+      "rarity": "Common",
+      "type": "Melee",
+      "physicalDamage": "1d10 Slashing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4,
+      "value": 200,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Heavy, Reach, Two-Handed, Slashing"
+    },
+    {
+      "name": "Greataxe",
+      "rarity": "Common",
+      "type": "Melee",
+      "physicalDamage": "1d12 Slashing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4.5,
+      "value": 300,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Heavy, Two-Handed, Slashing"
+    },
+    {
+      "name": "Greatsword",
+      "rarity": "Common",
+      "type": "Melee",
+      "physicalDamage": "2d6 Slashing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 3,
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 6,
+      "value": 500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Heavy, Two-Handed, Slashing"
+    },
+    {
+      "name": "Halberd",
+      "rarity": "Common",
+      "type": "Melee",
+      "physicalDamage": "1d10 Slashing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4,
+      "value": 200,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Heavy, Reach, Two-Handed, Slashing"
+    },
+    {
+      "name": "Lance",
+      "rarity": "Common",
+      "type": "Melee",
+      "physicalDamage": "1d12 Piercing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 75,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3,
+      "value": 100,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Reach, Special, Piercing"
+    },
+    {
+      "name": "Longsword",
+      "rarity": "Common",
+      "type": "Melee",
+      "physicalDamage": "1d8 (1H) / 1d10 (2H) Slashing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.5,
+      "value": 150,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Versatile (1d10), Slashing"
+    },
+    {
+      "name": "Maul",
+      "rarity": "Common",
+      "type": "Melee",
+      "physicalDamage": "2d6 Bludgeoning",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 5,
+      "value": 200,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Heavy, Two-Handed, Bludgeoning"
+    },
+    {
+      "name": "Dagger of the Viper",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d4 Piercing",
+      "magicalDamage": "1d6 Poison",
+      "criticalChance": 0.05,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": 1,
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 75,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.5,
+      "value": 1200,
+      "goldMultiplier": 0.1,
+      "xpMultiplier": 0,
+      "tags": "Finesse, Light, Thrown (20/60), Poisoned"
+    },
+    {
+      "name": "Flame Tongue Shortsword",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d6 Slashing",
+      "magicalDamage": "2d6 Fire",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.5,
+      "value": 2500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Finesse, Light, Fire Burst (bonus action to ignite)"
+    },
+    {
+      "name": "Shock Maul",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "2d6 Bludgeoning",
+      "magicalDamage": "1d6 Lightning",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 90,
+      "damageReflection": 1,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 6,
+      "value": 4000,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Heavy, Two-Handed, Bludgeoning, Lightning Arc (chain dmg)"
+    },
+    {
+      "name": "Vampiric Glaive",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d10 Slashing",
+      "magicalDamage": "–",
+      "criticalChance": 0.02,
+      "strength": 2,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 90,
+      "damageReflection": 0,
+      "healthRegeneration": 2,
+      "focus": 0,
+      "weight": 4.2,
+      "value": 3500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Heavy, Reach, Two-Handed, Life Steal (heal 1d4 on hit)"
+    },
+    {
+      "name": "Longsword of Warding",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d8 (1H) / 1d10 (2H) Slashing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": 2,
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.5,
+      "value": 3000,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Versatile (1d10), Slashing, Grants +1 AC while equipped"
+    },
+    {
+      "name": "Stormpiercer Spear",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d6 (1H) / 1d8 (2H) Piercing",
+      "magicalDamage": "1d4 Thunder",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.5,
+      "value": 1800,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Thrown (20/60), Versatile (1d8), Thunder Echo (audible boom)"
+    },
+    {
+      "name": "Battleaxe of Sundering",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d8 (1H) / 1d10 (2H) Slashing",
+      "magicalDamage": "1d4 Force",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 90,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.2,
+      "value": 3200,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Versatile (1d10), Slashing, Shatters magical barriers on crit"
+    },
+    {
+      "name": "Flail of the Leech",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d8 Bludgeoning",
+      "magicalDamage": "–",
+      "criticalChance": 0.03,
+      "strength": 2,
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 1,
+      "focus": 0,
+      "weight": 2.5,
+      "value": 2800,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Bludgeoning, Heals 1 HP on crit"
+    },
+    {
+      "name": "Glaive of Whispers",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d10 Slashing",
+      "magicalDamage": "–",
+      "criticalChance": 0.02,
+      "strength": 2,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": 1,
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 90,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4,
+      "value": 4500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Heavy, Reach, Two-Handed, Telepathic communication while held"
+    },
+    {
+      "name": "Greataxe of Brutality",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d12 Slashing",
+      "magicalDamage": "–",
+      "criticalChance": 0.05,
+      "strength": 3,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4.8,
+      "value": 3800,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Heavy, Two-Handed, Slashing, +2 damage on reckless attacks"
+    },
+    {
+      "name": "Greatsword of Storms",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "2d6 Slashing",
+      "magicalDamage": "1d4 Lightning",
+      "criticalChance": 0,
+      "strength": 3,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 90,
+      "damageReflection": 1,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 6.5,
+      "value": 5500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Heavy, Two-Handed, Slashing, Shock pulse on kill (1d6 nearby)"
+    },
+    {
+      "name": "Halberd of Reach",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d10 Slashing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4.2,
+      "value": 3100,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Heavy, Reach, Two-Handed, +5 ft reach extension on reactions"
+    },
+    {
+      "name": "Lance of Piercing Wind",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d12 Piercing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3,
+      "value": 3000,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Reach, Special, Piercing, Ignores cover when charging"
+    },
+    {
+      "name": "Longsword of Clarity",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d8 (1H) / 1d10 (2H) Slashing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": 1,
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.4,
+      "value": 3400,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Versatile (1d10), Slashing, Grants +1 to saving throws vs charm"
+    },
+    {
+      "name": "Maul of Shattering",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "2d6 Bludgeoning",
+      "magicalDamage": "1d6 Thunder",
+      "criticalChance": 0,
+      "strength": 3,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 90,
+      "damageReflection": 2,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 6,
+      "value": 5000,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Heavy, Two-Handed, Bludgeoning, Breaks stone/wood on crit"
+    },
+    {
+      "name": "Aetheric Baton",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d6 Bludgeoning",
+      "magicalDamage": "1d4 Force",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.2,
+      "value": 1500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Charges 1 FP per 2 hits; crafted in Ars using surplus Aesperium energy"
+    },
+    {
+      "name": "Rimefang Spike",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d6 Piercing",
+      "magicalDamage": "1d6 cold",
+      "criticalChance": 0.05,
+      "strength": 2,
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.8,
+      "value": 1200,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Forged from Everfrost glacier shards; crits chill target (speed -2)"
+    },
+    {
+      "name": "Zephiran Negotiator",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d4 Piercing",
+      "magicalDamage": "1d4 True",
+      "criticalChance": 0.07,
+      "strength": "–",
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": 1,
+      "awareness": "–",
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.7,
+      "value": 1800,
+      "goldMultiplier": 0.15,
+      "xpMultiplier": 0,
+      "tags": "Finesse, Wielded by Fairhaven's elite merchants; grants +10 on persuasion"
+    },
+    {
+      "name": "Ashen Shard Club",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d8 Bludgeoning",
+      "magicalDamage": "1d6 fire",
+      "criticalChance": 0,
+      "strength": 3,
+      "speed": -1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.2,
+      "value": 1750,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Forged from fused cinders in Fittoa ruins; 1/day: ignites flammable object on hit"
+    },
+    {
+      "name": "Inquisitor's Rod",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d6 Bludgeoning",
+      "magicalDamage": "1d4 radiant",
+      "criticalChance": 0.05,
+      "strength": 1,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": 2,
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.6,
+      "value": 1600,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Favored by Shirone’s Inquisitors; crits expose illusions within 10 ft"
+    },
+    {
+      "name": "Necrosteel Shiv",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d4 Piercing",
+      "magicalDamage": "1d6 necrotic",
+      "criticalChance": 0.05,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": 1,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 55,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.9,
+      "value": 1700,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Crafted in Karrnath’s fleshforges; regains 1 HP on kill (once per short rest)"
+    },
+    {
+      "name": "Warden’s Hook",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d6 Piercing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.3,
+      "value": 1400,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Used by Watchers at Wishiru towers; pull target 5 ft on hit (DC 50 STR)"
+    },
+    {
+      "name": "Celestial Glaive",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d10 Slashing",
+      "magicalDamage": "1d6 radiant",
+      "criticalChance": 0.05,
+      "strength": 3,
+      "speed": "–",
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3.5,
+      "value": 2200,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Used by Shironean paladins; glows in presence of undead"
+    },
+    {
+      "name": "Frostbrand Waraxe",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d12 Slashing",
+      "magicalDamage": "1d6 cold",
+      "criticalChance": 0.05,
+      "strength": 3,
+      "speed": -1,
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 75,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3.8,
+      "value": 2400,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Two-Handed, Ronoan-forged; on crit slows target's movement (5 ft penalty)"
+    },
+    {
+      "name": "Spellforged Blade",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d8 Slashing",
+      "magicalDamage": "1d8 arcane",
+      "criticalChance": 0.07,
+      "strength": 2,
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.5,
+      "value": 2600,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Designed in Ars; counts as both martial weapon and focus"
+    },
+    {
+      "name": "Gravepiercer Halberd",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d10 Slashing",
+      "magicalDamage": "1d6 necrotic",
+      "criticalChance": 0,
+      "strength": 3,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4,
+      "value": 2300,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Favored by Karrnathi boneguards; ignores resistance to necrotic damage"
+    },
+    {
+      "name": "Runebound Claymore",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "2d6 Slashing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 3,
+      "speed": -2,
+      "vitality": 3,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 1,
+      "focus": 0,
+      "weight": 4.5,
+      "value": 2800,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Ancient Ronoan relic; inscribed with binding runes"
+    },
+    {
+      "name": "Aethersteel Katana",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d8 Slashing",
+      "magicalDamage": "1d6 force",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": 3,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.8,
+      "value": 2700,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Arcanix-forged alloy; counts as magical for resistances"
+    },
+    {
+      "name": "Oathbreaker Mace",
+      "rarity": "Uncommon",
+      "type": "Melee",
+      "physicalDamage": "1d10 Bludgeoning",
+      "magicalDamage": "1d6 psychic",
+      "criticalChance": 0,
+      "strength": 3,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.8,
+      "value": 2500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Used by heretic hunters in Shirone; bypasses resistance to psychic damage"
+    },
+    {
+      "name": "Cinderbrand Shiv",
+      "rarity": "Rare",
+      "type": "Melee",
+      "physicalDamage": "1d6 Piercing",
+      "magicalDamage": "1d8 fire",
+      "criticalChance": 0.08,
+      "strength": 2,
+      "speed": 3,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": 1,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 75,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.8,
+      "value": 4200,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Forged from Malekith’s scorched relics; crits set enemies ablaze (1d4/round, 2 rounds)"
+    },
+    {
+      "name": "Whisperwood Dagger",
+      "rarity": "Rare",
+      "type": "Melee",
+      "physicalDamage": "1d4 Slashing",
+      "magicalDamage": "1d8 psychic",
+      "criticalChance": 0.1,
+      "strength": "–",
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": 3,
+      "talent": 1,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.5,
+      "value": 4000,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Crafted in secret by Whisperwind druids; reveals invisible foes on hit"
+    },
+    {
+      "name": "Milbot's Silver Stirrer",
+      "rarity": "Rare",
+      "type": "Melee",
+      "physicalDamage": "1d6 Bludgeoning",
+      "magicalDamage": "1d6 charm",
+      "criticalChance": 0.07,
+      "strength": "–",
+      "speed": 1,
+      "vitality": 1,
+      "intelligence": 1,
+      "awareness": 1,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 2,
+      "focus": 0,
+      "weight": 1.1,
+      "value": 3900,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Brewed with spirit elixirs; charm DC 65 once per long rest"
+    },
+    {
+      "name": "Serrated Moonpin",
+      "rarity": "Rare",
+      "type": "Melee",
+      "physicalDamage": "1d4 Piercing",
+      "magicalDamage": "1d8 radiant",
+      "criticalChance": 0.09,
+      "strength": 1,
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": 2,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 55,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.3,
+      "value": 4600,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Used by elite Shironean temple agents; grants advantage on stealth checks"
+    },
+    {
+      "name": "Ebon Lash Wand",
+      "rarity": "Rare",
+      "type": "Melee",
+      "physicalDamage": "1d6 Bludgeoning",
+      "magicalDamage": "1d8 necrotic",
+      "criticalChance": 0.06,
+      "strength": "–",
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": 3,
+      "awareness": 2,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.3,
+      "value": 4500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Wielded by Karrnath’s bonechanters; damage heals for half if target dies"
+    },
+    {
+      "name": "Aetherthread Rod",
+      "rarity": "Rare",
+      "type": "Melee",
+      "physicalDamage": "1d6 Bludgeoning",
+      "magicalDamage": "1d10 force",
+      "criticalChance": 0.06,
+      "strength": "–",
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": 3,
+      "awareness": 2,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.4,
+      "value": 5000,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Pulses with planar energy; acts as a magical focus and weapon"
+    },
+    {
+      "name": "Blade of Aetherborn",
+      "rarity": "Rare",
+      "type": "Melee",
+      "physicalDamage": "1d8 Slashing",
+      "magicalDamage": "2d6 arcane",
+      "criticalChance": 0.09,
+      "strength": 2,
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": 4,
+      "awareness": 2,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.8,
+      "value": 7000,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Glows in proximity to high-level spellcasters; crit triggers 1d4 FP regen"
+    },
+    {
+      "name": "Frozen End Halberd",
+      "rarity": "Rare",
+      "type": "Melee",
+      "physicalDamage": "1d10 Slashing",
+      "magicalDamage": "1d8 cold",
+      "criticalChance": 0.06,
+      "strength": 3,
+      "speed": "–",
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4.2,
+      "value": 6200,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "From the Everfrost; crits apply slow and reduce target SPD by 2"
+    },
+    {
+      "name": "Zephiran Dragonblade",
+      "rarity": "Rare",
+      "type": "Melee",
+      "physicalDamage": "2d6 Slashing",
+      "magicalDamage": "1d6 lightning",
+      "criticalChance": 0.08,
+      "strength": 2,
+      "speed": 3,
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": 2,
+      "talent": 1,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.5,
+      "value": 6800,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Slices air on swing; advantage on initiative rolls"
+    },
+    {
+      "name": "Light of the Sovereign",
+      "rarity": "Rare",
+      "type": "Melee",
+      "physicalDamage": "2d6 Slashing",
+      "magicalDamage": "1d8 radiant",
+      "criticalChance": 0.05,
+      "strength": 4,
+      "speed": "–",
+      "vitality": 2,
+      "intelligence": 1,
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 90,
+      "damageReflection": 1,
+      "healthRegeneration": 1,
+      "focus": 0,
+      "weight": 5,
+      "value": 7500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Used by Shirone’s High Paladins; once/day deals max radiant dmg vs undead"
+    },
+    {
+      "name": "Fleshhook Cleaver",
+      "rarity": "Rare",
+      "type": "Melee",
+      "physicalDamage": "1d12 Slashing",
+      "magicalDamage": "1d6 necrotic",
+      "criticalChance": 0.07,
+      "strength": 4,
+      "speed": -1,
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 75,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4.8,
+      "value": 6900,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Crafted in Karrnathi fleshforges; crits heal user for 1d6 HP"
+    },
+    {
+      "name": "Runeguard Edge",
+      "rarity": "Rare",
+      "type": "Melee",
+      "physicalDamage": "1d10 Slashing",
+      "magicalDamage": "–",
+      "criticalChance": 0.06,
+      "strength": 3,
+      "speed": 1,
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": 1,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 2,
+      "focus": 0,
+      "weight": 3.1,
+      "value": 6400,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Etched with ancient Ronoan runes; grants +5 Armor when wielded two-handed"
+    },
+    {
+      "name": "Phantom Saber",
+      "rarity": "Rare",
+      "type": "Melee",
+      "physicalDamage": "1d8 Slashing",
+      "magicalDamage": "1d8 psychic",
+      "criticalChance": 0.1,
+      "strength": 1,
+      "speed": 3,
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": 3,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.7,
+      "value": 7100,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Used by elite infiltrators in Ars; teleports wielder 10 ft on crit"
+    },
+    {
+      "name": "Wynarn’s Final Edict",
+      "rarity": "Very Rare",
+      "type": "Melee",
+      "physicalDamage": "2d6 Slashing",
+      "magicalDamage": "2d6 force",
+      "criticalChance": 0.12,
+      "strength": 3,
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": 5,
+      "awareness": 3,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 100,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3,
+      "value": 12000,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Last blade of Emperor Wynarn; stores 1 spell level per crit (max 3)"
+    },
+    {
+      "name": "Malekith’s Severance",
+      "rarity": "Very Rare",
+      "type": "Melee",
+      "physicalDamage": "2d10 Slashing",
+      "magicalDamage": "2d6 necrotic",
+      "criticalChance": 0.1,
+      "strength": 4,
+      "speed": -1,
+      "vitality": 3,
+      "intelligence": 2,
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 90,
+      "damageReflection": 2,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 6.5,
+      "value": 13500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Used by Malekith's lieutenant; crits bypass resistance and deal full necrotic"
+    },
+    {
+      "name": "Bannercleave of Thora",
+      "rarity": "Very Rare",
+      "type": "Melee",
+      "physicalDamage": "2d8 Slashing",
+      "magicalDamage": "–",
+      "criticalChance": 0.1,
+      "strength": 5,
+      "speed": -1,
+      "vitality": 3,
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": 1,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 95,
+      "damageReflection": 1,
+      "healthRegeneration": 2,
+      "focus": 0,
+      "weight": 5.5,
+      "value": 11000,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Carried by King Thora in the Battle of the Northern Frost; allies gain +2 STR when adjacent"
+    },
+    {
+      "name": "Naga’s Vow",
+      "rarity": "Very Rare",
+      "type": "Melee",
+      "physicalDamage": "1d10 Slashing",
+      "magicalDamage": "2d6 radiant",
+      "criticalChance": 0.09,
+      "strength": 2,
+      "speed": 3,
+      "vitality": 1,
+      "intelligence": 2,
+      "awareness": 3,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 1,
+      "focus": 0,
+      "weight": 2.4,
+      "value": 12500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Used by Shirone’s Sword Saints; once/day purges all curses on user"
+    },
+    {
+      "name": "Aetherium Fissure Blade",
+      "rarity": "Very Rare",
+      "type": "Melee",
+      "physicalDamage": "1d10 Slashing",
+      "magicalDamage": "2d8 arcane",
+      "criticalChance": 0.08,
+      "strength": 2,
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": 5,
+      "awareness": 3,
+      "talent": 3,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 90,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3.3,
+      "value": 14000,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Created in the forbidden Project Aetherium; once/day cast dimension door"
+    },
+    {
+      "name": "Frostbeard’s Will",
+      "rarity": "Very Rare",
+      "type": "Melee",
+      "physicalDamage": "2d6 Slashing",
+      "magicalDamage": "1d10 cold",
+      "criticalChance": 0.07,
+      "strength": 4,
+      "speed": -1,
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 95,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4.7,
+      "value": 11500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Forged by Anya Frostbeard; crits freeze terrain (difficult for 10 ft)"
+    },
+    {
+      "name": "The Hollow Brand",
+      "rarity": "Very Rare",
+      "type": "Melee",
+      "physicalDamage": "1d6 Piercing",
+      "magicalDamage": "2d6 psychic",
+      "criticalChance": 0.15,
+      "strength": "–",
+      "speed": 3,
+      "vitality": "–",
+      "intelligence": 3,
+      "awareness": 4,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 3,
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.9,
+      "value": 13200,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Tied to Master Orin the Hollow"
+    },
+    {
+      "name": "Ashendawn, Flame of the First War",
+      "rarity": "Legendary",
+      "type": "Melee",
+      "physicalDamage": "2d10 Slashing",
+      "magicalDamage": "2d10 fire",
+      "criticalChance": 0.12,
+      "strength": 5,
+      "speed": -1,
+      "vitality": 4,
+      "intelligence": 1,
+      "awareness": 2,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 120,
+      "damageReflection": 2,
+      "healthRegeneration": 2,
+      "focus": 0,
+      "weight": 6.5,
+      "value": 25000,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Once/day: unleash “Scorchwave” (60-ft cone, 8d8 fire); crits burn for 2d6/round (2 rounds)"
+    },
+    {
+      "name": "Judicator’s Final Mercy",
+      "rarity": "Legendary",
+      "type": "Melee",
+      "physicalDamage": "2d8 Bludgenoning",
+      "magicalDamage": "2d8 radiant",
+      "criticalChance": 0.1,
+      "strength": 4,
+      "speed": "–",
+      "vitality": 3,
+      "intelligence": 3,
+      "awareness": 2,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 110,
+      "damageReflection": 3,
+      "healthRegeneration": 3,
+      "focus": 0,
+      "weight": 4.8,
+      "value": 24000,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Wielded by the Saint of Shirone; user is under Sanctuary while at full HP; kills explode with radiant force"
+    },
+    {
+      "name": "The Hollow Choir",
+      "rarity": "Legendary",
+      "type": "Melee",
+      "physicalDamage": "2d12 Slashing",
+      "magicalDamage": "2d10 psychic",
+      "criticalChance": 0.14,
+      "strength": 3,
+      "speed": 1,
+      "vitality": 2,
+      "intelligence": 5,
+      "awareness": 5,
+      "talent": 3,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 3,
+      "durability": 100,
+      "damageReflection": 2,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 5.9,
+      "value": 26000,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Soulbound to Orin the Hollow; kills silence all enemies within 20 ft for 1 round"
+    },
+    {
+      "name": "Vowpiercer, Blade of the Oath Unbroken",
+      "rarity": "Legendary",
+      "type": "Melee",
+      "physicalDamage": "2d6 Slashing",
+      "magicalDamage": "2d8 force",
+      "criticalChance": 0.11,
+      "strength": 3,
+      "speed": 3,
+      "vitality": 1,
+      "intelligence": 4,
+      "awareness": 3,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 105,
+      "damageReflection": 1,
+      "healthRegeneration": 2,
+      "focus": 0,
+      "weight": 3.2,
+      "value": 24500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Cannot be disarmed. On parry, reflects 1 spell/day. Emits radiant shield for +2 AC (1 min/day)"
+    },
+    {
+      "name": "Crowncleaver of the Sovereign Betrayer",
+      "rarity": "Legendary",
+      "type": "Melee",
+      "physicalDamage": "2d8 Slashing",
+      "magicalDamage": "2d10 necrotic",
+      "criticalChance": 0.09,
+      "strength": 5,
+      "speed": -2,
+      "vitality": 4,
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 115,
+      "damageReflection": 2,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 5.2,
+      "value": 25500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "On kill, roll d6: 6 = target’s soul is trapped in cleaver (can fuel spells once per rest)"
+    },
+    {
+      "name": "Stormheart Reaver",
+      "rarity": "Legendary",
+      "type": "Melee",
+      "physicalDamage": "2d6 Slashing",
+      "magicalDamage": "2d6 lightning",
+      "criticalChance": 0.13,
+      "strength": 3,
+      "speed": 4,
+      "vitality": "–",
+      "intelligence": 3,
+      "awareness": 4,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 95,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3.5,
+      "value": 23500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Movement leaves behind electrified ground (5 ft, 1 turn, 1d6 lightning)"
+    },
+    {
+      "name": "Malekith’s Fang",
+      "rarity": "Legendary",
+      "type": "Melee",
+      "physicalDamage": "1d8 Piercing",
+      "magicalDamage": "2d10 void",
+      "criticalChance": 0.15,
+      "strength": 2,
+      "speed": 5,
+      "vitality": "–",
+      "intelligence": 5,
+      "awareness": 4,
+      "talent": 3,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 4,
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.2,
+      "value": 27500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Upon crit: cast Banishment (DC 90); user immune to scrying; fades from memory of witnesses"
+    },
+    {
+      "name": "The Heartpiercer of Gods",
+      "rarity": "Artifact",
+      "type": "Melee",
+      "physicalDamage": "3d10 Piercing",
+      "magicalDamage": "3d10 radiant",
+      "criticalChance": 0.15,
+      "strength": 6,
+      "speed": 2,
+      "vitality": 4,
+      "intelligence": 4,
+      "awareness": 4,
+      "talent": 3,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 150,
+      "damageReflection": 4,
+      "healthRegeneration": 3,
+      "focus": 0,
+      "weight": 4.5,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Slays any mortal target on nat 20 (if below 100 HP). Ignores all resistances. Glows in presence of deities."
+    },
+    {
+      "name": "The Eclipse Fang",
+      "rarity": "Artifact",
+      "type": "Melee",
+      "physicalDamage": "2d8 Piercing",
+      "magicalDamage": "3d10 necrotic/void",
+      "criticalChance": 0.18,
+      "strength": 3,
+      "speed": 6,
+      "vitality": "–",
+      "intelligence": 5,
+      "awareness": 5,
+      "talent": 3,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 4,
+      "durability": 95,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.2,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "On crit: teleport behind last struck target (no action). Kills erase target from resurrection magic."
+    },
+    {
+      "name": "Thorns of the First Betrayer",
+      "rarity": "Artifact",
+      "type": "Melee",
+      "physicalDamage": "2d6 Slashing",
+      "magicalDamage": "2d8 poison/psychic",
+      "criticalChance": 0.14,
+      "strength": 2,
+      "speed": 4,
+      "vitality": "–",
+      "intelligence": 4,
+      "awareness": 5,
+      "talent": 4,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 4,
+      "durability": 100,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.6,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Drains 1 random stat from target on crit (DM rolls secretly); weapon whispers lies when idle."
+    },
+    {
+      "name": "Sunbreaker",
+      "rarity": "Artifact",
+      "type": "Melee",
+      "physicalDamage": "3d8 Bludgenoning",
+      "magicalDamage": "3d8 fire/radiant",
+      "criticalChance": 0.12,
+      "strength": 6,
+      "speed": -1,
+      "vitality": 4,
+      "intelligence": 2,
+      "awareness": 3,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 140,
+      "damageReflection": 3,
+      "healthRegeneration": 4,
+      "focus": 0,
+      "weight": 6.2,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Creates daylight for 1 hour/day. Once per week: Meteor Swarm from sky above target (1-mile limit)."
+    },
+    {
+      "name": "Aetherveil Crescent",
+      "rarity": "Artifact",
+      "type": "Melee",
+      "physicalDamage": "3d6 Slashing",
+      "magicalDamage": "3d10 force/arcane",
+      "criticalChance": 0.13,
+      "strength": 3,
+      "speed": 3,
+      "vitality": 2,
+      "intelligence": 6,
+      "awareness": 4,
+      "talent": 3,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 130,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Can sever magical tethers (portals, spells, curses). Once/day: Plane Shift self and one target."
+    },
+    {
+      "name": "Sealcleaver of the Vaults",
+      "rarity": "Artifact",
+      "type": "Melee",
+      "physicalDamage": "4d6 Slashing",
+      "magicalDamage": "4d6 thunder",
+      "criticalChance": 0.1,
+      "strength": 6,
+      "speed": -2,
+      "vitality": 5,
+      "intelligence": 3,
+      "awareness": 2,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 160,
+      "damageReflection": 5,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 6.8,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Can shatter magical seals and break Wall of Force; user is immune to petrification and paralyze."
+    },
+    {
+      "name": "Ashthorn Crownblade",
+      "rarity": "Artifact",
+      "type": "Melee",
+      "physicalDamage": "3d6 Slashing",
+      "magicalDamage": "3d6 fire/psychic",
+      "criticalChance": 0.16,
+      "strength": 4,
+      "speed": 3,
+      "vitality": 2,
+      "intelligence": 4,
+      "awareness": 4,
+      "talent": 3,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 125,
+      "damageReflection": 2,
+      "healthRegeneration": 1,
+      "focus": 0,
+      "weight": 3.9,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Created by Malekith in secret. On crit: target must save vs madness or fall under DM control for 1 turn. Sentient, malevolent."
+    },
+    {
+      "name": "Shortbow",
+      "rarity": "Common",
+      "type": "Ranged",
+      "physicalDamage": "1d6 Piercing",
+      "magicalDamage": "–",
+      "criticalChance": 0.05,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.2,
+      "value": 250,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Light and easy to use; can be fired on horseback"
+    },
+    {
+      "name": "Light Crossbow",
+      "rarity": "Common",
+      "type": "Ranged",
+      "physicalDamage": "1d8 Piercing",
+      "magicalDamage": "–",
+      "criticalChance": 0.05,
+      "strength": 1,
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.5,
+      "value": 350,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Easy to load; common among town guards"
+    },
+    {
+      "name": "Sling",
+      "rarity": "Common",
+      "type": "Ranged",
+      "physicalDamage": "1d4 Bludgeoning",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.3,
+      "value": 20,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Can be used with basic ammo (rocks); perfect for poor villagers"
+    },
+    {
+      "name": "Throwing Knife",
+      "rarity": "Common",
+      "type": "Ranged",
+      "physicalDamage": "1d4 Piercing",
+      "magicalDamage": "–",
+      "criticalChance": 0.07,
+      "strength": "–",
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 55,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.5,
+      "value": 80,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Can be used as both melee and ranged"
+    },
+    {
+      "name": "Javelin",
+      "rarity": "Common",
+      "type": "Ranged",
+      "physicalDamage": "1d6 Piercing",
+      "magicalDamage": "–",
+      "criticalChance": 0.05,
+      "strength": 2,
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.5,
+      "value": 100,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Dual use: ranged or melee thrust"
+    },
+    {
+      "name": "Dart",
+      "rarity": "Common",
+      "type": "Ranged",
+      "physicalDamage": "1d4 Piercing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 3,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 40,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.1,
+      "value": 10,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Small, concealable, and throwable with great precision"
+    },
+    {
+      "name": "Longbow",
+      "rarity": "Common",
+      "type": "Ranged",
+      "physicalDamage": "1d8 Piercing",
+      "magicalDamage": "–",
+      "criticalChance": 0.05,
+      "strength": 1,
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2,
+      "value": 500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Heavy draw strength; disadvantage in tight spaces"
+    },
+    {
+      "name": "Heavy Crossbow",
+      "rarity": "Common",
+      "type": "Ranged",
+      "physicalDamage": "1d10 Piercing",
+      "magicalDamage": "–",
+      "criticalChance": 0.05,
+      "strength": 2,
+      "speed": -1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4.5,
+      "value": 600,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Two-handed; requires reload action"
+    },
+    {
+      "name": "War Sling",
+      "rarity": "Common",
+      "type": "Ranged",
+      "physicalDamage": "1d6 Bludgeoning",
+      "magicalDamage": "–",
+      "criticalChance": 0.03,
+      "strength": 1,
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.5,
+      "value": 100,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Used with lead shot or shaped stones"
+    },
+    {
+      "name": "Zephiran Pulsebow",
+      "rarity": "Uncommon",
+      "type": "Ranged",
+      "physicalDamage": "1d8 Piercing",
+      "magicalDamage": "1d6 Lightning",
+      "criticalChance": 0.07,
+      "strength": 1,
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 75,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.2,
+      "value": 1400,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Bolts spark on release; crits arc to 2nd nearby target (1d4 lightning)"
+    },
+    {
+      "name": "Shironean Faithcaster",
+      "rarity": "Uncommon",
+      "type": "Ranged",
+      "physicalDamage": "1d8 Piercing",
+      "magicalDamage": "1d4 Radiant",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.6,
+      "value": 1200,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Blessing of Shirone: deals +1 radiant vs undead"
+    },
+    {
+      "name": "Ronoan Slingshot",
+      "rarity": "Uncommon",
+      "type": "Ranged",
+      "physicalDamage": "1d6 Bludgeoning",
+      "magicalDamage": "1d4 Arcane",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.6,
+      "value": 850,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Empowered rocks hit like bullets; can fire magic pebbles (if crafted)"
+    },
+    {
+      "name": "Aetherborne Needler",
+      "rarity": "Uncommon",
+      "type": "Ranged",
+      "physicalDamage": "1d4 Piercing",
+      "magicalDamage": "1d6 Psychic",
+      "criticalChance": 0.1,
+      "strength": "–",
+      "speed": 3,
+      "vitality": "–",
+      "intelligence": 3,
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.5,
+      "value": 1600,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "High-precision; crit forces INT save or daze for 1 round"
+    },
+    {
+      "name": "Searing Bolt Thrower",
+      "rarity": "Uncommon",
+      "type": "Ranged",
+      "physicalDamage": "1d10 Piercing",
+      "magicalDamage": "1d6 Fire",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": -1,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4.8,
+      "value": 1500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Ignites oil-soaked targets; bolts sizzle on impact"
+    },
+    {
+      "name": "Skyfang Quillslinger",
+      "rarity": "Uncommon",
+      "type": "Ranged",
+      "physicalDamage": "1d8 Piercing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": 2,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3,
+      "value": 1450,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Holds 3 bolts; fires 2 if stationary this round"
+    },
+    {
+      "name": "Skybreaker Longbow",
+      "rarity": "Uncommon",
+      "type": "Ranged",
+      "physicalDamage": "1d10 Piercing",
+      "magicalDamage": "1d6 Lightning",
+      "criticalChance": 0.07,
+      "strength": 2,
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 75,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 2,
+      "weight": 2.1,
+      "value": 1600,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Arcs to a second target on crit (1d4 lightning); favored by Zephiran skywatchers"
+    },
+    {
+      "name": "Piercefang Arbalest",
+      "rarity": "Uncommon",
+      "type": "Ranged",
+      "physicalDamage": "1d12 Piercing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 3,
+      "speed": -1,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 1,
+      "weight": 5,
+      "value": 1700,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Punches through half and three-quarters cover"
+    },
+    {
+      "name": "Runed Boltcaster",
+      "rarity": "Uncommon",
+      "type": "Ranged",
+      "physicalDamage": "1d8 Piercing",
+      "magicalDamage": "1d6 Arcane",
+      "criticalChance": 0.07,
+      "strength": 1,
+      "speed": 3,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 3,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 2,
+      "weight": 3.2,
+      "value": 1800,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Fires arcane-infused bolts; ignores magic resistance on crit"
+    },
+    {
+      "name": "Volcanic Chakram",
+      "rarity": "Uncommon",
+      "type": "Ranged",
+      "physicalDamage": "1d8 Slashing",
+      "magicalDamage": "1d6 Fire",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": 4,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 1,
+      "weight": 0.9,
+      "value": 1500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Returns automatically after throw (max 20 ft); explodes (1d4 fire) if thrown in lava"
+    },
+    {
+      "name": "Ironroot Dart Swarm",
+      "rarity": "Uncommon",
+      "type": "Ranged",
+      "physicalDamage": "1d6 Piercing",
+      "magicalDamage": "1d4 Poison",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 4,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 2,
+      "weight": 1.6,
+      "value": 1550,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Poisons on hit (DC 60 CON or 1d6 poison/turn); antidote in Ronoa only"
+    },
+    {
+      "name": "Farsight Slingbow",
+      "rarity": "Uncommon",
+      "type": "Ranged",
+      "physicalDamage": "1d6 Bludgeoning",
+      "magicalDamage": "1d6 Psychic",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 1,
+      "weight": 0.6,
+      "value": 1400,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Always counts as having line of sight up to 100 ft (ignores soft cover)"
+    },
+    {
+      "name": "Whistlefang Blowpipe",
+      "rarity": "Uncommon",
+      "type": "Ranged",
+      "physicalDamage": "1d4 Piercing",
+      "magicalDamage": "1d6 Poison",
+      "criticalChance": 0.07,
+      "strength": "–",
+      "speed": 4,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 55,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 2,
+      "weight": 0.5,
+      "value": 950,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "60 ft range; ammo is toxin-laced needles (DC 60 CON or poisoned 1 turn)"
+    },
+    {
+      "name": "Crescent Spitter",
+      "rarity": "Uncommon",
+      "type": "Ranged",
+      "physicalDamage": "1d6 Bludgeoning",
+      "magicalDamage": "1d6 Acid",
+      "criticalChance": 0.05,
+      "strength": 1,
+      "speed": 3,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 1,
+      "weight": 1,
+      "value": 1050,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Slings alchemical flasks; ammo includes acid, oil, or smoke bombs"
+    },
+    {
+      "name": "Glyphshot Wand",
+      "rarity": "Uncommon",
+      "type": "Ranged",
+      "physicalDamage": "1d4 Bludgeoning",
+      "magicalDamage": "2d4 Arcane",
+      "criticalChance": 0.07,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": 3,
+      "awareness": "–",
+      "talent": 1,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 3,
+      "weight": 1.2,
+      "value": 1250,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Fires small glyph-tags (20 ft); can detonate remotely (1d6 force)"
+    },
+    {
+      "name": "Lantern Netgun",
+      "rarity": "Uncommon",
+      "type": "Ranged",
+      "physicalDamage": "–",
+      "magicalDamage": "1d4 Radiant",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 1,
+      "weight": 2.5,
+      "value": 1100,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Restrains target on hit (DC 65 STR); glows on undead and fiends"
+    },
+    {
+      "name": "Ronoan Flarecaster",
+      "rarity": "Uncommon",
+      "type": "Ranged",
+      "physicalDamage": "–",
+      "magicalDamage": "2d6 Fire",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 3,
+      "vitality": "–",
+      "intelligence": 3,
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 2,
+      "weight": 1.8,
+      "value": 1300,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Bright flare explodes in 10 ft (DC 60 DEX or blinded 1 turn)"
+    },
+    {
+      "name": "Thundertwig Launcher",
+      "rarity": "Uncommon",
+      "type": "Ranged",
+      "physicalDamage": "1d8 Piercing",
+      "magicalDamage": "1d6 Thunder",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": -2,
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": 3,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 2,
+      "weight": 2.3,
+      "value": 1450,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Launches crackling rods; on crit, deafens target (DC 65 CON)"
+    },
+    {
+      "name": "Stormpiercer Bow",
+      "rarity": "Rare",
+      "type": "Ranged",
+      "physicalDamage": "1d10 Piercing",
+      "magicalDamage": "2d6 Lightning",
+      "criticalChance": 0.09,
+      "strength": 2,
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": 3,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.2,
+      "value": 3200,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Calls thunderclap on crit (1d6 to all in 5 ft); ignores half cover"
+    },
+    {
+      "name": "Radiant Watchcaster",
+      "rarity": "Rare",
+      "type": "Ranged",
+      "physicalDamage": "1d8 Piercing",
+      "magicalDamage": "2d6 Radiant",
+      "criticalChance": 0.08,
+      "strength": 1,
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": 3,
+      "awareness": 2,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 1,
+      "focus": 0,
+      "weight": 2.8,
+      "value": 3000,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Once/day: blind undead on hit (DC 70 CON)"
+    },
+    {
+      "name": "Ghostleaf Recurve",
+      "rarity": "Rare",
+      "type": "Ranged",
+      "physicalDamage": "1d8 Piercing",
+      "magicalDamage": "1d8 Psychic",
+      "criticalChance": 0.1,
+      "strength": 1,
+      "speed": 3,
+      "vitality": "–",
+      "intelligence": 3,
+      "awareness": 3,
+      "talent": 3,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.8,
+      "value": 2800,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Can mark 1 target/day; crits against marked always roll max psychic"
+    },
+    {
+      "name": "Furnacebolt Arbalest",
+      "rarity": "Rare",
+      "type": "Ranged",
+      "physicalDamage": "1d12 Piercing",
+      "magicalDamage": "2d6 Fire",
+      "criticalChance": 0.07,
+      "strength": 3,
+      "speed": -2,
+      "vitality": 1,
+      "intelligence": 1,
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 90,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 5.2,
+      "value": 3500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Reload launches a small fiery pulse (5 ft, 1d4 fire)"
+    },
+    {
+      "name": "Aetherflare Darts",
+      "rarity": "Rare",
+      "type": "Ranged",
+      "physicalDamage": "1d6 Piercing",
+      "magicalDamage": "2d6 Force",
+      "criticalChance": 0.12,
+      "strength": "–",
+      "speed": 4,
+      "vitality": "–",
+      "intelligence": 4,
+      "awareness": 4,
+      "talent": 3,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 3,
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.5,
+      "value": 3300,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Targets hit can't use reactions until end of next turn"
+    },
+    {
+      "name": "Sunshard Repeater",
+      "rarity": "Rare",
+      "type": "Ranged",
+      "physicalDamage": "1d8 Piercing",
+      "magicalDamage": "1d6 Radiant",
+      "criticalChance": 0.09,
+      "strength": 1,
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": 3,
+      "awareness": 2,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 75,
+      "damageReflection": 0,
+      "healthRegeneration": 1,
+      "focus": 0,
+      "weight": 3.4,
+      "value": 3100,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Holds 4 bolts; radiant ammo explodes on crit (10 ft radius, 1d4 radiant)"
+    },
+    {
+      "name": "Bolt of the Starborn",
+      "rarity": "Very Rare",
+      "type": "Ranged",
+      "physicalDamage": "1d10 Piercing",
+      "magicalDamage": "2d8 Radiant",
+      "criticalChance": 0.12,
+      "strength": 2,
+      "speed": 3,
+      "vitality": "–",
+      "intelligence": 4,
+      "awareness": 4,
+      "talent": 3,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 95,
+      "damageReflection": 0,
+      "healthRegeneration": 1,
+      "focus": 3,
+      "weight": 2.4,
+      "value": 6200,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Fire glowing comet-shot once/day (4d6 radiant, blinds if failed DEX)"
+    },
+    {
+      "name": "Malachite Coilgun",
+      "rarity": "Very Rare",
+      "type": "Ranged",
+      "physicalDamage": "1d8 Piercing",
+      "magicalDamage": "2d8 Force",
+      "criticalChance": 0.11,
+      "strength": "–",
+      "speed": 4,
+      "vitality": "–",
+      "intelligence": 5,
+      "awareness": 5,
+      "talent": 3,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 3,
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 4,
+      "weight": 2,
+      "value": 6500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Ignores armor on crit; pulls target 10 ft toward shooter (if Large or smaller)"
+    },
+    {
+      "name": "Crimson Embercaster",
+      "rarity": "Very Rare",
+      "type": "Ranged",
+      "physicalDamage": "1d12 Piercing",
+      "magicalDamage": "2d10 Fire",
+      "criticalChance": 0.1,
+      "strength": 3,
+      "speed": -2,
+      "vitality": 1,
+      "intelligence": 3,
+      "awareness": 3,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 100,
+      "damageReflection": 2,
+      "healthRegeneration": 0,
+      "focus": 2,
+      "weight": 5.4,
+      "value": 6700,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Fires flameburst bolt (30 ft line, 3d6 fire) once per long rest"
+    },
+    {
+      "name": "Tethersting Arcbow",
+      "rarity": "Very Rare",
+      "type": "Ranged",
+      "physicalDamage": "1d8 Piercing",
+      "magicalDamage": "2d6 Lightning/Psychic",
+      "criticalChance": 0.13,
+      "strength": 2,
+      "speed": 4,
+      "vitality": "–",
+      "intelligence": 4,
+      "awareness": 4,
+      "talent": 4,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 3,
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 3,
+      "weight": 1.8,
+      "value": 6000,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Target hit cannot teleport or become invisible until next turn"
+    },
+    {
+      "name": "Blessed Chorus Flare",
+      "rarity": "Very Rare",
+      "type": "Ranged",
+      "physicalDamage": "1d8 Piercing",
+      "magicalDamage": "1d10 Radiant",
+      "criticalChance": 0.1,
+      "strength": 1,
+      "speed": 3,
+      "vitality": "–",
+      "intelligence": 4,
+      "awareness": 3,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 90,
+      "damageReflection": 0,
+      "healthRegeneration": 1,
+      "focus": 3,
+      "weight": 3.6,
+      "value": 6300,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Can fire Guiding Bolt once/day; glows near fiends and undead"
+    },
+    {
+      "name": "Shardhowler Sling",
+      "rarity": "Very Rare",
+      "type": "Ranged",
+      "physicalDamage": "1d6 Bludgeoning",
+      "magicalDamage": "2d8 Thunder",
+      "criticalChance": 0.09,
+      "strength": 1,
+      "speed": 4,
+      "vitality": "–",
+      "intelligence": 3,
+      "awareness": 2,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 75,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 2,
+      "weight": 1,
+      "value": 5800,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Crits deafen for 1 turn; can shatter fragile terrain (DM discretion)"
+    },
+    {
+      "name": "Vortex of the Silent Sky",
+      "rarity": "Legendary",
+      "type": "Ranged",
+      "physicalDamage": "1d12 Piercing",
+      "magicalDamage": "3d10 Thunder",
+      "criticalChance": 0.15,
+      "strength": 2,
+      "speed": 5,
+      "vitality": "–",
+      "intelligence": 5,
+      "awareness": 5,
+      "talent": 4,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 4,
+      "durability": 110,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 4,
+      "weight": 2.3,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Fires at supersonic speed. Once/day: tornado strike (60 ft line, STR save or prone + 4d6)"
+    },
+    {
+      "name": "Solar Wrath Ballista",
+      "rarity": "Legendary",
+      "type": "Ranged",
+      "physicalDamage": "2d10 Piercing",
+      "magicalDamage": "4d6 Radiant",
+      "criticalChance": 0.13,
+      "strength": 4,
+      "speed": -3,
+      "vitality": 2,
+      "intelligence": 4,
+      "awareness": 3,
+      "talent": 3,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 120,
+      "damageReflection": 3,
+      "healthRegeneration": 2,
+      "focus": 3,
+      "weight": 6.2,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Once/week: beam of sunlight (line 100 ft, 8d6 radiant, blinding)"
+    },
+    {
+      "name": "Moonshade Aria",
+      "rarity": "Legendary",
+      "type": "Ranged",
+      "physicalDamage": "1d10 Piercing",
+      "magicalDamage": "3d8 Psychic/Radiant",
+      "criticalChance": 0.16,
+      "strength": 2,
+      "speed": 4,
+      "vitality": "–",
+      "intelligence": 6,
+      "awareness": 5,
+      "talent": 5,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 3,
+      "durability": 100,
+      "damageReflection": 0,
+      "healthRegeneration": 2,
+      "focus": 5,
+      "weight": 1.6,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "On crit: pacify (WIS save or lose next action); whispers prophecies in Elvish when drawn"
+    },
+    {
+      "name": "Chainpiercer of Malekith",
+      "rarity": "Legendary",
+      "type": "Ranged",
+      "physicalDamage": "2d8 Piercing",
+      "magicalDamage": "3d8 Necrotic",
+      "criticalChance": 0.14,
+      "strength": 1,
+      "speed": 6,
+      "vitality": "–",
+      "intelligence": 5,
+      "awareness": 5,
+      "talent": 4,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 3,
+      "durability": 105,
+      "damageReflection": 1,
+      "healthRegeneration": 0,
+      "focus": 4,
+      "weight": 2,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Ignores resistances. Deals full dmg to incorporeal/ghosts. Shots chain between 3 enemies (2d6 each)"
+    },
+    {
+      "name": "Whispercoil Bloom",
+      "rarity": "Legendary",
+      "type": "Ranged",
+      "physicalDamage": "1d8 Piercing",
+      "magicalDamage": "3d6 Force/Poison",
+      "criticalChance": 0.12,
+      "strength": 1,
+      "speed": 4,
+      "vitality": "–",
+      "intelligence": 4,
+      "awareness": 5,
+      "talent": 4,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 90,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 4,
+      "weight": 3.1,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Grows living vines on crit that restrain target (STR save or restrained 1 round)"
+    },
+    {
+      "name": "Dusklight Halo",
+      "rarity": "Legendary",
+      "type": "Ranged",
+      "physicalDamage": "1d8 Bludgeoning",
+      "magicalDamage": "3d8 Radiant",
+      "criticalChance": 0.1,
+      "strength": 1,
+      "speed": 5,
+      "vitality": "–",
+      "intelligence": 5,
+      "awareness": 5,
+      "talent": 5,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 3,
+      "durability": 95,
+      "damageReflection": 0,
+      "healthRegeneration": 2,
+      "focus": 5,
+      "weight": 1,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Heals 1d4 HP on hit once per round; reveals all illusions in 30 ft"
+    },
+    {
+      "name": "Ash-Eater, the Sundering Horn",
+      "rarity": "Artifact",
+      "type": "Ranged",
+      "physicalDamage": "2d10 Piercing",
+      "magicalDamage": "4d10 Fire/Force",
+      "criticalChance": 0.18,
+      "strength": 3,
+      "speed": 6,
+      "vitality": 2,
+      "intelligence": 5,
+      "awareness": 6,
+      "talent": 5,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 4,
+      "durability": 150,
+      "damageReflection": 3,
+      "healthRegeneration": 3,
+      "focus": 6,
+      "weight": 2.8,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Shoots burning meteors (1/day: 100 ft line, 6d10 fire). Can split sky during eclipse."
+    },
+    {
+      "name": "The Last Oath of Shirone",
+      "rarity": "Artifact",
+      "type": "Ranged",
+      "physicalDamage": "2d8 Piercing",
+      "magicalDamage": "4d8 Radiant",
+      "criticalChance": 0.15,
+      "strength": 2,
+      "speed": 4,
+      "vitality": "–",
+      "intelligence": 6,
+      "awareness": 6,
+      "talent": 5,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 3,
+      "durability": 140,
+      "damageReflection": 4,
+      "healthRegeneration": 2,
+      "focus": 5,
+      "weight": 2.6,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Can only be used by those of lawful good or true heart. Revives user once (1/week)."
+    },
+    {
+      "name": "Echocoil of the Infinite",
+      "rarity": "Artifact",
+      "type": "Ranged",
+      "physicalDamage": "2d6 Piercing",
+      "magicalDamage": "3d8 Psychic/Arcane",
+      "criticalChance": 0.14,
+      "strength": 1,
+      "speed": 5,
+      "vitality": "–",
+      "intelligence": 7,
+      "awareness": 6,
+      "talent": 5,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 4,
+      "durability": 130,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 7,
+      "weight": 3.5,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Fires twice per turn with no penalty. Once/day: loops time, allowing 1 turn replay."
+    },
+    {
+      "name": "Voidspike Harbinger",
+      "rarity": "Artifact",
+      "type": "Ranged",
+      "physicalDamage": "2d10 Piercing",
+      "magicalDamage": "4d6 Necrotic/Entropy",
+      "criticalChance": 0.17,
+      "strength": 2,
+      "speed": 6,
+      "vitality": "–",
+      "intelligence": 6,
+      "awareness": 6,
+      "talent": 6,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 5,
+      "durability": 125,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 6,
+      "weight": 1.7,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Kills erase soul; target can’t be resurrected. Can fire across planes (DM limits)."
+    },
+    {
+      "name": "Sunroot Halo Stone",
+      "rarity": "Artifact",
+      "type": "Ranged",
+      "physicalDamage": "2d8 Bludgeoning",
+      "magicalDamage": "4d6 Radiant/Nature",
+      "criticalChance": 0.16,
+      "strength": 1,
+      "speed": 5,
+      "vitality": "–",
+      "intelligence": 6,
+      "awareness": 5,
+      "talent": 4,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 3,
+      "durability": 120,
+      "damageReflection": 0,
+      "healthRegeneration": 3,
+      "focus": 6,
+      "weight": 1.1,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Grows plants from corpses. Once/day: summon a celestial treant ally for 10 rounds."
+    },
+    {
+      "name": "Voice of Araleth",
+      "rarity": "Artifact",
+      "type": "Ranged",
+      "physicalDamage": "2d8 Piercing",
+      "magicalDamage": "4d6 Radiant/Psychic",
+      "criticalChance": 0.19,
+      "strength": 2,
+      "speed": 6,
+      "vitality": "–",
+      "intelligence": 7,
+      "awareness": 6,
+      "talent": 6,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 5,
+      "durability": 135,
+      "damageReflection": 0,
+      "healthRegeneration": 1,
+      "focus": 6,
+      "weight": 1.9,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Bow sings aloud. Commands fey spirits. Once/week: banish all fiends within 60 ft."
+    },
+    {
+      "name": "Stick Dart",
+      "rarity": "Common",
+      "type": "Ranged",
+      "physicalDamage": "1d4 Piercing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 40,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.3,
+      "value": 30,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Made from sharpened twigs; fragile, may break on crit fail"
+    },
+    {
+      "name": "Stone Chucker",
+      "rarity": "Common",
+      "type": "Ranged",
+      "physicalDamage": "1d6 Bludgeoning",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1,
+      "value": 70,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Can throw any Small object (plate, mug, shoe); DM discretion"
+    },
+    {
+      "name": "Spool Harpoon",
+      "rarity": "Common",
+      "type": "Ranged",
+      "physicalDamage": "1d6 Piercing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.5,
+      "value": 100,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Rope retrieval (10 ft pullback on hit)"
+    },
+    {
+      "name": "Dustpouch Toss",
+      "rarity": "Common",
+      "type": "Ranged",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 30,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.5,
+      "value": 60,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "On hit: blinds target (DC 50 CON) 1 round; single-use pouch"
+    },
+    {
+      "name": "Bait Thrower",
+      "rarity": "Common",
+      "type": "Ranged",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 45,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.9,
+      "value": 40,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Attracts beasts to location (30 ft radius); no damage"
+    },
+    {
+      "name": "Worn Leather Cap",
+      "rarity": "Common",
+      "type": "Head (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.5,
+      "value": 50,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Keeps sun out of eyes; mild comfort"
+    },
+    {
+      "name": "Iron Pot Helm",
+      "rarity": "Common",
+      "type": "Head (Heavy)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": -2,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 3,
+      "resistance": "–",
+      "evasion": -1,
+      "durability": 75,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2,
+      "value": 120,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Counts as improvised cooking gear"
+    },
+    {
+      "name": "Cloth Hood",
+      "rarity": "Common",
+      "type": "Head (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.3,
+      "value": 40,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Straw Hat",
+      "rarity": "Common",
+      "type": "Head (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 40,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.2,
+      "value": 20,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Advantage vs heatstroke/sunburn"
+    },
+    {
+      "name": "Bone Visor",
+      "rarity": "Common",
+      "type": "Head (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1,
+      "value": 100,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Found among scavenger tribes"
+    },
+    {
+      "name": "Chain Coif",
+      "rarity": "Common",
+      "type": "Head (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": -1,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.6,
+      "value": 150,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Compatible with all medium armor sets"
+    },
+    {
+      "name": "Steel Warhelm",
+      "rarity": "Common",
+      "type": "Head (Heavy)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": -2,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 3,
+      "resistance": "–",
+      "evasion": -2,
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.8,
+      "value": 200,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Standard-issue for Fairhaven's iron brigade"
+    },
+    {
+      "name": "Asuran Guard Visor",
+      "rarity": "Common",
+      "type": "Head (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": -1,
+      "vitality": "–",
+      "intelligence": 1,
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 2,
+      "resistance": 1,
+      "evasion": -1,
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.2,
+      "value": 180,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Has side vents; grants +5 to Keen Ears-based checks"
+    },
+    {
+      "name": "Spiked Helm",
+      "rarity": "Common",
+      "type": "Head (Heavy)",
+      "physicalDamage": "1d4 Piercing",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": -2,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 2,
+      "resistance": "–",
+      "evasion": -1,
+      "durability": 70,
+      "damageReflection": 1,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3,
+      "value": 220,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Deals 1d4 dmg to grapplers or on headbutt attacks"
+    },
+    {
+      "name": "Chain Hood",
+      "rarity": "Common",
+      "type": "Head (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": -1,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.6,
+      "value": 150,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Worn under helmets or alone; allows layered protection"
+    },
+    {
+      "name": "Ronoan Scrap Helm",
+      "rarity": "Common",
+      "type": "Head (Heavy)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": -2,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 2,
+      "resistance": "–",
+      "evasion": -1,
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.5,
+      "value": 120,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Built from salvaged war debris; creaks audibly"
+    },
+    {
+      "name": "Horned Leather Mask",
+      "rarity": "Common",
+      "type": "Head (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 55,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1,
+      "value": 100,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Used in militia intimidation drills"
+    },
+    {
+      "name": "Moss-Crowned Wrap",
+      "rarity": "Common",
+      "type": "Head (Cloth)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": 1,
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 40,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.3,
+      "value": 50,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Smells fresh; advantage vs nature-based scent tracking"
+    },
+    {
+      "name": "Cooking Pot Lid",
+      "rarity": "Common",
+      "type": "Head (Improvised)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": -2,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 2,
+      "resistance": "–",
+      "evasion": -2,
+      "durability": 45,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.5,
+      "value": 30,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Disadvantage on perception (clunky), but counts as helmet"
+    },
+    {
+      "name": "Traveler’s Towel Turban",
+      "rarity": "Common",
+      "type": "Head (Cloth)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.2,
+      "value": 40,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Keeps wearer cool and dry; advantage vs exhaustion rolls"
+    },
+    {
+      "name": "Child’s Wooden Mask",
+      "rarity": "Common",
+      "type": "Head (Toy)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": 1,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 30,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.4,
+      "value": 10,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Advantage vs fear effects once/day (due to silly bravery)"
+    },
+    {
+      "name": "Prayer Band of Rope",
+      "rarity": "Common",
+      "type": "Head (Ritual)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": 1,
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": 1,
+      "evasion": "–",
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.3,
+      "value": 60,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Gain +1 to concentration saves on rituals only"
+    },
+    {
+      "name": "Spellbook",
+      "rarity": "Common",
+      "type": "Tool",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 2,
+      "weight": 1.5,
+      "value": 500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Required for wizard spell prep"
+    },
+    {
+      "name": "Scholar's Pack",
+      "rarity": "Common",
+      "type": "Item",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4,
+      "value": 150,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Includes parchment, ink, quills, lamp, oil, and a scroll case"
+    },
+    {
+      "name": "Perfume",
+      "rarity": "Common",
+      "type": "Item",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 40,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.2,
+      "value": 100,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Deck of Cards",
+      "rarity": "Common",
+      "type": "Item",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 30,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.5,
+      "value": 20,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Forgery Kit",
+      "rarity": "Common",
+      "type": "Tool",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1,
+      "value": 250,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Costume",
+      "rarity": "Common",
+      "type": "Outfit",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 45,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.2,
+      "value": 80,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Fine Clothes",
+      "rarity": "Common",
+      "type": "Outfit",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.5,
+      "value": 200,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Grants +1 to Persuasion and Insight in noble/social settings"
+    },
+    {
+      "name": "Leather Mage Hood",
+      "rarity": "Common",
+      "type": "Head (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": 1,
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": 1,
+      "evasion": "–",
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.7,
+      "value": 150,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Leather Mage Robe",
+      "rarity": "Common",
+      "type": "Torso (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": 1,
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": 2,
+      "evasion": "–",
+      "durability": 75,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2,
+      "value": 250,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Ragged Mage Slippers",
+      "rarity": "Common",
+      "type": "Feet (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": 1,
+      "evasion": "–",
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.5,
+      "value": 100,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Veilhood of Thoughtlace",
+      "rarity": "Uncommon",
+      "type": "Head (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": 2,
+      "evasion": 1,
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.6,
+      "value": 400,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Aether-Runed Robes",
+      "rarity": "Uncommon",
+      "type": "Torso (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": 3,
+      "evasion": 1,
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.8,
+      "value": 650,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Softstep Hexwalkers",
+      "rarity": "Uncommon",
+      "type": "Feet (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": 1,
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": 2,
+      "evasion": 2,
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.7,
+      "value": 350,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Hood of Quiet Flame",
+      "rarity": "Uncommon",
+      "type": "Head (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": 1,
+      "awareness": 2,
+      "talent": 1,
+      "luck": "–",
+      "armor": 1,
+      "resistance": 2,
+      "evasion": 1,
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.6,
+      "value": 350,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Spellthreaded Coat",
+      "rarity": "Uncommon",
+      "type": "Torso (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": 1,
+      "talent": 1,
+      "luck": "–",
+      "armor": 2,
+      "resistance": 3,
+      "evasion": 1,
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.9,
+      "value": 550,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Woven Sandwalkers",
+      "rarity": "Uncommon",
+      "type": "Feet (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 3,
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": 1,
+      "talent": 1,
+      "luck": "–",
+      "armor": 1,
+      "resistance": 2,
+      "evasion": 2,
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.8,
+      "value": 300,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Crown of Whispering Veins",
+      "rarity": "Rare",
+      "type": "Head (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": 3,
+      "awareness": 3,
+      "talent": 2,
+      "luck": "–",
+      "armor": 2,
+      "resistance": 3,
+      "evasion": 2,
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.7,
+      "value": 1200,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Mantle of Runic Fractals",
+      "rarity": "Rare",
+      "type": "Torso (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": 2,
+      "intelligence": 4,
+      "awareness": 2,
+      "talent": 2,
+      "luck": "–",
+      "armor": 3,
+      "resistance": 4,
+      "evasion": 2,
+      "durability": 95,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.2,
+      "value": 1750,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Boots of the Silent Glyph",
+      "rarity": "Rare",
+      "type": "Feet (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 4,
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": 2,
+      "talent": 2,
+      "luck": "–",
+      "armor": 2,
+      "resistance": 3,
+      "evasion": 4,
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.9,
+      "value": 950,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Cowl of the Drowned Sigil",
+      "rarity": "Very Rare",
+      "type": "Head (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": 4,
+      "awareness": 4,
+      "talent": 3,
+      "luck": "–",
+      "armor": 3,
+      "resistance": 4,
+      "evasion": 2,
+      "durability": 90,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.8,
+      "value": 2500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Grants Mind Blank 1/day; wearer immune to telepathy unless allowed"
+    },
+    {
+      "name": "Aethermantle of Roa",
+      "rarity": "Very Rare",
+      "type": "Torso (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": 2,
+      "intelligence": 5,
+      "awareness": 3,
+      "talent": 3,
+      "luck": "–",
+      "armor": 4,
+      "resistance": 5,
+      "evasion": 2,
+      "durability": 105,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.5,
+      "value": 4000,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Reduces mana cost of 3rd-level spells by 10 MP once/day"
+    },
+    {
+      "name": "Shoes of the Nullwalk",
+      "rarity": "Very Rare",
+      "type": "Feet (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 4,
+      "vitality": "–",
+      "intelligence": 3,
+      "awareness": 3,
+      "talent": 3,
+      "luck": "–",
+      "armor": 3,
+      "resistance": 4,
+      "evasion": 4,
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.1,
+      "value": 1800,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Grants levitation for 1 minute/day; immune to opportunity attacks while levitating"
+    },
+    {
+      "name": "Crown of the Infinite Eye",
+      "rarity": "Legendary",
+      "type": "Head (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": 5,
+      "awareness": 5,
+      "talent": 4,
+      "luck": "–",
+      "armor": 3,
+      "resistance": 6,
+      "evasion": 3,
+      "durability": 110,
+      "damageReflection": 0,
+      "healthRegeneration": 1,
+      "focus": 0,
+      "weight": 0.8,
+      "value": 10000,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Truesight 60 ft, Telepathy 120 ft"
+    },
+    {
+      "name": "Shroud of the Aetherwell",
+      "rarity": "Legendary",
+      "type": "Torso (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": 3,
+      "intelligence": 6,
+      "awareness": 4,
+      "talent": 4,
+      "luck": "–",
+      "armor": 6,
+      "resistance": 6,
+      "evasion": 3,
+      "durability": 125,
+      "damageReflection": 0,
+      "healthRegeneration": 1,
+      "focus": 0,
+      "weight": 2.6,
+      "value": 15000,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Absorbs 1 spell per day; heal HP = spell level × 5"
+    },
+    {
+      "name": "Voidstep Sandals",
+      "rarity": "Legendary",
+      "type": "Feet (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 6,
+      "vitality": "–",
+      "intelligence": 4,
+      "awareness": 4,
+      "talent": 3,
+      "luck": "–",
+      "armor": 3,
+      "resistance": 6,
+      "evasion": 5,
+      "durability": 100,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1,
+      "value": 8000,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Gain Etherealness 1/day; teleport 30 ft as bonus action indefinitely"
+    },
+    {
+      "name": "Traveler’s Vest",
+      "rarity": "Common",
+      "type": "Torso (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.2,
+      "value": 60,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Weather-resistant; dries quickly after rain"
+    },
+    {
+      "name": "Peasant’s Shirt",
+      "rarity": "Common",
+      "type": "Torso (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 40,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.9,
+      "value": 30,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Merchant’s Tunic",
+      "rarity": "Common",
+      "type": "Torso  (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": 1,
+      "awareness": "–",
+      "talent": 1,
+      "luck": "–",
+      "armor": "–",
+      "resistance": 1,
+      "evasion": "–",
+      "durability": 45,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.3,
+      "value": 100,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Initiate’s Robe",
+      "rarity": "Common",
+      "type": "Torso  (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": 1,
+      "evasion": "–",
+      "durability": 55,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.5,
+      "value": 120,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Tanner’s Apron",
+      "rarity": "Common",
+      "type": "Torso  (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 2,
+      "resistance": "–",
+      "evasion": -1,
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2,
+      "value": 80,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Pilgrim’s Sash",
+      "rarity": "Common",
+      "type": "Torso  (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": 1,
+      "awareness": 1,
+      "talent": "–",
+      "luck": 5,
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1,
+      "value": 90,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Grants +1 to survival and religion checks while traveling"
+    },
+    {
+      "name": "Guard's Breastplate",
+      "rarity": "Common",
+      "type": "Torso (Heavy)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": -3,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 3,
+      "resistance": 1,
+      "evasion": -3,
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 10.5,
+      "value": 250,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Standard issue in city garrisons; durable and reliable"
+    },
+    {
+      "name": "Padded Combat Vest",
+      "rarity": "Common",
+      "type": "Torso (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": -1,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": 1,
+      "evasion": "–",
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3.5,
+      "value": 180,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Leather Harness",
+      "rarity": "Common",
+      "type": "Torso (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 55,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.8,
+      "value": 150,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Militiaman’s Brigandine",
+      "rarity": "Common",
+      "type": "Torso (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": -1,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 2,
+      "resistance": 1,
+      "evasion": -2,
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 5.5,
+      "value": 200,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Chainmail Vest",
+      "rarity": "Common",
+      "type": "Torso (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": -2,
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 2,
+      "resistance": 2,
+      "evasion": -3,
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 7,
+      "value": 300,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Warden's Coat",
+      "rarity": "Common",
+      "type": "Torso (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": 1,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3.2,
+      "value": 220,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Jester's Vest",
+      "rarity": "Common",
+      "type": "Torso  (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": 1,
+      "luck": 5,
+      "armor": 1,
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 40,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.9,
+      "value": 120,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Monk’s Wrap",
+      "rarity": "Common",
+      "type": "Torso  (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": 1,
+      "evasion": 1,
+      "durability": 55,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.2,
+      "value": 100,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Chef’s Jacket",
+      "rarity": "Common",
+      "type": "Torso (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": 2,
+      "luck": "–",
+      "armor": 2,
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.5,
+      "value": 80,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Courtier’s Vest",
+      "rarity": "Common",
+      "type": "Torso  (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": 2,
+      "luck": "–",
+      "armor": 1,
+      "resistance": 1,
+      "evasion": "–",
+      "durability": 45,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.3,
+      "value": 140,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Painter’s Smock",
+      "rarity": "Common",
+      "type": "Torso (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": 3,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 35,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.1,
+      "value": 60,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Tinker’s Vest",
+      "rarity": "Common",
+      "type": "Torso  (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": -2,
+      "vitality": -1,
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": 2,
+      "resistance": 1,
+      "evasion": "–",
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.4,
+      "value": 110,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Grants +1 to Mechanics and Repair checks"
+    },
+    {
+      "name": "Traveler’s Boots",
+      "rarity": "Common",
+      "type": "Feet  (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": 1,
+      "evasion": 2,
+      "durability": 45,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1,
+      "value": 60,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Apprentice Sandals",
+      "rarity": "Common",
+      "type": "Feet (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": 1,
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": 1,
+      "evasion": "–",
+      "durability": 40,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.6,
+      "value": 50,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Farmer’s Loafers",
+      "rarity": "Common",
+      "type": "Feet  (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": 1,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.9,
+      "value": 40,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Lucky Stitchers",
+      "rarity": "Common",
+      "type": "Feet  (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": 5,
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 40,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.8,
+      "value": 70,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Initiate’s Slippers",
+      "rarity": "Common",
+      "type": "Feet  (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": 1,
+      "luck": "–",
+      "armor": 1,
+      "resistance": 1,
+      "evasion": "–",
+      "durability": 45,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.7,
+      "value": 90,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Worn by young mages"
+    },
+    {
+      "name": "Pilgrim’s Footwraps",
+      "rarity": "Common",
+      "type": "Feet  (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": 1,
+      "evasion": 1,
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.8,
+      "value": 80,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Iron-Toed Boots",
+      "rarity": "Common",
+      "type": "Feet (Heavy)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": -2,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 3,
+      "resistance": "–",
+      "evasion": -2,
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 6.5,
+      "value": 160,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Soldier’s Greaves",
+      "rarity": "Common",
+      "type": "Feet (Heavy)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": -3,
+      "vitality": 3,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 2,
+      "resistance": 1,
+      "evasion": "–",
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 6.2,
+      "value": 140,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Standard issue; +1 to forced march checks"
+    },
+    {
+      "name": "Scout’s Leather Boots",
+      "rarity": "Common",
+      "type": "Feet (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 55,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.2,
+      "value": 120,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Militiaman’s Footwraps",
+      "rarity": "Common",
+      "type": "Feet (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": 1,
+      "evasion": "–",
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2,
+      "value": 100,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Chain-Capped Boots",
+      "rarity": "Common",
+      "type": "Feet (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": -3,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 3,
+      "resistance": 1,
+      "evasion": -2,
+      "durability": 75,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4,
+      "value": 180,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Warden’s Marchers",
+      "rarity": "Common",
+      "type": "Feet (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 2,
+      "resistance": 1,
+      "evasion": 1,
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.8,
+      "value": 150,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Performer’s Slippers",
+      "rarity": "Common",
+      "type": "Feet  (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": 2,
+      "luck": 5,
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 35,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.6,
+      "value": 80,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Artisan’s Footpads",
+      "rarity": "Common",
+      "type": "Feet  (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": 1,
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 45,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.9,
+      "value": 70,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Scribe’s Slippers",
+      "rarity": "Common",
+      "type": "Feet  (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": "–",
+      "talent": 1,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 40,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.7,
+      "value": 90,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Noble’s Gilded Shoes",
+      "rarity": "Common",
+      "type": "Feet  (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": 1,
+      "evasion": "–",
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1,
+      "value": 150,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Pilgrim’s Sandals",
+      "rarity": "Common",
+      "type": "Feet  (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": 1,
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": 1,
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.8,
+      "value": 60,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Cook’s Scorched Boots",
+      "rarity": "Common",
+      "type": "Feet  (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": 2,
+      "luck": "–",
+      "armor": 1,
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 55,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.3,
+      "value": 60,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Crowbar",
+      "rarity": "Common",
+      "type": "Tool",
+      "physicalDamage": "1d6 Bludgeoning",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2,
+      "value": 30,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Alchemist’s Visor",
+      "rarity": "Uncommon",
+      "type": "Head (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": 2,
+      "talent": 1,
+      "luck": "–",
+      "armor": 1,
+      "resistance": 2,
+      "evasion": "–",
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.9,
+      "value": 350,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Ranger’s Hood",
+      "rarity": "Uncommon",
+      "type": "Head (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0.03,
+      "strength": 1,
+      "speed": 2,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": "–",
+      "evasion": 3,
+      "durability": 55,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.8,
+      "value": 320,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Tinker’s Welding Cap",
+      "rarity": "Uncommon",
+      "type": "Head (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": 1,
+      "luck": "–",
+      "armor": 2,
+      "resistance": 1,
+      "evasion": "–",
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.3,
+      "value": 380,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Scholar’s Cap",
+      "rarity": "Uncommon",
+      "type": "Head (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": 1,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": 2,
+      "evasion": 1,
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.7,
+      "value": 300,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Beast-Ward Band",
+      "rarity": "Uncommon",
+      "type": "Head (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": 3,
+      "talent": "–",
+      "luck": "–",
+      "armor": 2,
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.2,
+      "value": 400,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Horned Guardhelm",
+      "rarity": "Uncommon",
+      "type": "Head (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": 4,
+      "resistance": 1,
+      "evasion": -2,
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3.2,
+      "value": 550,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Reinforced Iron Visor",
+      "rarity": "Uncommon",
+      "type": "Head (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": -1,
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": 4,
+      "resistance": 2,
+      "evasion": -2,
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3.5,
+      "value": 600,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Duskridge Helm",
+      "rarity": "Uncommon",
+      "type": "Head (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": 2,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": 1,
+      "armor": 2,
+      "resistance": 1,
+      "evasion": 2,
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2,
+      "value": 480,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Sentinel’s Coif",
+      "rarity": "Uncommon",
+      "type": "Head (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": "–",
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": 3,
+      "resistance": 2,
+      "evasion": "–",
+      "durability": 75,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.8,
+      "value": 500,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Howling Skullcap",
+      "rarity": "Uncommon",
+      "type": "Head (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": 2,
+      "armor": 3,
+      "resistance": 1,
+      "evasion": 1,
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.5,
+      "value": 520,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Seer’s Linen Robe",
+      "rarity": "Uncommon",
+      "type": "Torso (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": 2,
+      "talent": 1,
+      "luck": 1,
+      "armor": 1,
+      "resistance": 3,
+      "evasion": 1,
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.8,
+      "value": 420,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Traveler’s Duster",
+      "rarity": "Uncommon",
+      "type": "Torso (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": 2,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": 1,
+      "armor": 2,
+      "resistance": 1,
+      "evasion": 2,
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.2,
+      "value": 380,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Embroidered Tunic",
+      "rarity": "Uncommon",
+      "type": "Torso (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": 1,
+      "awareness": 1,
+      "talent": 2,
+      "luck": 2,
+      "armor": 1,
+      "resistance": 1,
+      "evasion": 1,
+      "durability": 55,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.4,
+      "value": 350,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Beastcaller’s Vest",
+      "rarity": "Uncommon",
+      "type": "Torso (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": 1,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": 2,
+      "resistance": 2,
+      "evasion": 2,
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2,
+      "value": 400,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Archivist’s Tabard",
+      "rarity": "Uncommon",
+      "type": "Torso (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": 1,
+      "talent": 2,
+      "luck": 1,
+      "armor": 1,
+      "resistance": 2,
+      "evasion": "–",
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.6,
+      "value": 450,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Ronoan Chaincoat",
+      "rarity": "Uncommon",
+      "type": "Torso (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": -1,
+      "vitality": 3,
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": 5,
+      "resistance": 2,
+      "evasion": "–",
+      "durability": 90,
+      "damageReflection": 0,
+      "healthRegeneration": 1,
+      "focus": 0,
+      "weight": 5.5,
+      "value": 700,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Ashen Scout Jacket",
+      "rarity": "Uncommon",
+      "type": "Torso (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": 2,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": 1,
+      "luck": 1,
+      "armor": 3,
+      "resistance": 1,
+      "evasion": 2,
+      "durability": 75,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3.2,
+      "value": 620,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Forgeplate Hauberk",
+      "rarity": "Uncommon",
+      "type": "Torso (Heavy)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": -3,
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 6,
+      "resistance": "–",
+      "evasion": -4,
+      "durability": 100,
+      "damageReflection": 0,
+      "healthRegeneration": 1,
+      "focus": 0,
+      "weight": 8.5,
+      "value": 800,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Duskscale Brigandine",
+      "rarity": "Uncommon",
+      "type": "Torso (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": 1,
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": 4,
+      "resistance": 2,
+      "evasion": 1,
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4.8,
+      "value": 680,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Bastion Guard Vest",
+      "rarity": "Uncommon",
+      "type": "Torso (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": -1,
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": 1,
+      "armor": 4,
+      "resistance": 3,
+      "evasion": -3,
+      "durability": 80,
+      "damageReflection": 1,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4.5,
+      "value": 650,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Duststep Sandals",
+      "rarity": "Uncommon",
+      "type": "Feet (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": 1,
+      "armor": 1,
+      "resistance": 1,
+      "evasion": 2,
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.2,
+      "value": 340,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Archivist’s Loafers",
+      "rarity": "Uncommon",
+      "type": "Feet (Cloth)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": 2,
+      "awareness": 1,
+      "talent": 2,
+      "luck": "–",
+      "armor": "–",
+      "resistance": 2,
+      "evasion": 1,
+      "durability": 45,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1,
+      "value": 360,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Tinker’s Leather Boots",
+      "rarity": "Uncommon",
+      "type": "Feet (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": 1,
+      "vitality": 1,
+      "intelligence": 1,
+      "awareness": "–",
+      "talent": 1,
+      "luck": "–",
+      "armor": 2,
+      "resistance": 1,
+      "evasion": 1,
+      "durability": 55,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1.5,
+      "value": 380,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Messenger’s Wraps",
+      "rarity": "Uncommon",
+      "type": "Feet (Cloth)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 2,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": 1,
+      "armor": 1,
+      "resistance": "–",
+      "evasion": 2,
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.8,
+      "value": 320,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Bonus movement +5 ft"
+    },
+    {
+      "name": "Wildweave Slippers",
+      "rarity": "Uncommon",
+      "type": "Feet (Cloth)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": 2,
+      "luck": 1,
+      "armor": "–",
+      "resistance": 2,
+      "evasion": 2,
+      "durability": 40,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.9,
+      "value": 400,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Stoneguard Boots",
+      "rarity": "Uncommon",
+      "type": "Feet (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": 2,
+      "resistance": 2,
+      "evasion": "–",
+      "durability": 70,
+      "damageReflection": 1,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3,
+      "value": 580,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Ranger’s Trailboots",
+      "rarity": "Uncommon",
+      "type": "Feet (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": 2,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": 1,
+      "armor": 1,
+      "resistance": 1,
+      "evasion": 2,
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.2,
+      "value": 520,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Forged Iron Greaves",
+      "rarity": "Uncommon",
+      "type": "Feet (Heavy)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": -2,
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 4,
+      "resistance": 2,
+      "evasion": -1,
+      "durability": 80,
+      "damageReflection": 1,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4.2,
+      "value": 660,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Duskridge Warboots",
+      "rarity": "Uncommon",
+      "type": "Feet (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": 1,
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": 2,
+      "resistance": 1,
+      "evasion": 1,
+      "durability": 75,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3.5,
+      "value": 600,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Sentinel’s Tread",
+      "rarity": "Uncommon",
+      "type": "Feet (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": "–",
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": 1,
+      "armor": 2,
+      "resistance": 1,
+      "evasion": -1,
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 1,
+      "focus": 0,
+      "weight": 3.1,
+      "value": 540,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Wooden Buckler",
+      "rarity": "Common",
+      "type": "Shield (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.5,
+      "value": 120,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Off-hand only"
+    },
+    {
+      "name": "Iron Heater Shield",
+      "rarity": "Common",
+      "type": "Shield (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": -2,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": 1,
+      "evasion": -1,
+      "durability": 85,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 4.5,
+      "value": 200,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Leather Targe",
+      "rarity": "Common",
+      "type": "Shield (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": -1,
+      "speed": 1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": 1,
+      "evasion": 2,
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.2,
+      "value": 100,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Guard’s Round Shield",
+      "rarity": "Common",
+      "type": "Shield (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": -1,
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 1,
+      "resistance": 1,
+      "evasion": "–",
+      "durability": 75,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3.8,
+      "value": 180,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Aegis of Hollowstep",
+      "rarity": "Uncommon",
+      "type": "Shield (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": -1,
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": 4,
+      "resistance": 2,
+      "evasion": -1,
+      "durability": 90,
+      "damageReflection": 1,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 5,
+      "value": 600,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Wyrmhide Round",
+      "rarity": "Uncommon",
+      "type": "Shield (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": 1,
+      "vitality": 1,
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": 1,
+      "luck": "–",
+      "armor": 3,
+      "resistance": 2,
+      "evasion": 2,
+      "durability": 65,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3,
+      "value": 550,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Sentinel's Grip",
+      "rarity": "Uncommon",
+      "type": "Shield (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": 4,
+      "resistance": 2,
+      "evasion": 1,
+      "durability": 80,
+      "damageReflection": 0,
+      "healthRegeneration": 1,
+      "focus": 0,
+      "weight": 4.5,
+      "value": 620,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Stormguard Shell",
+      "rarity": "Uncommon",
+      "type": "Shield (Medium)",
+      "physicalDamage": "1d6 Lightning (once/day)",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": -1,
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": 1,
+      "talent": "–",
+      "luck": "–",
+      "armor": 4,
+      "resistance": 3,
+      "evasion": -1,
+      "durability": 85,
+      "damageReflection": 1,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 5.5,
+      "value": 700,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Veiled Defender",
+      "rarity": "Uncommon",
+      "type": "Shield (Light)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 1,
+      "speed": 2,
+      "vitality": 1,
+      "intelligence": 1,
+      "awareness": 2,
+      "talent": "–",
+      "luck": "–",
+      "armor": 3,
+      "resistance": 1,
+      "evasion": 2,
+      "durability": 70,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3.2,
+      "value": 580,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Holy Symbol",
+      "rarity": "Common",
+      "type": "Divine Focus",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": 1,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 40,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0.5,
+      "value": 50,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Required for casting divine spells; can be worn as amulet or emblem"
+    },
+    {
+      "name": "Priest's Pack",
+      "rarity": "Common",
+      "type": "Tool",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": 1,
+      "intelligence": 1,
+      "awareness": 1,
+      "talent": 1,
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 60,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 5,
+      "value": 190,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": "Includes blanket, incense, censer, vestments, 10 rations, water skin"
+    },
+    {
+      "name": "Healer's Kit",
+      "rarity": "Common",
+      "type": "Utility Tool",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 50,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1,
+      "value": 50,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0.05,
+      "tags": "Contains bandages, salves, sutures; allows stabilizing dying allies without Medicine check; +1 Medicine"
+    },
+    {
+      "name": "Zele's Luggage Chest",
+      "rarity": "Common",
+      "type": "Container",
+      "physicalDamage": null,
+      "magicalDamage": null,
+      "criticalChance": null,
+      "strength": null,
+      "speed": null,
+      "vitality": 1,
+      "intelligence": 1,
+      "awareness": 1,
+      "talent": 1,
+      "luck": 1,
+      "armor": null,
+      "resistance": 1,
+      "evasion": null,
+      "durability": 0,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 20.1,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Noble’s satchel",
+      "rarity": "Common",
+      "type": "Container",
+      "physicalDamage": null,
+      "magicalDamage": null,
+      "criticalChance": null,
+      "strength": null,
+      "speed": null,
+      "vitality": 1,
+      "intelligence": 1,
+      "awareness": 1,
+      "talent": 1,
+      "luck": 1,
+      "armor": null,
+      "resistance": 1,
+      "evasion": null,
+      "durability": 0,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 2.1,
+      "value": 699,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Gaming Set",
+      "rarity": "Common",
+      "type": "Tool",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 40,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 1,
+      "value": 50,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Zele's Book",
+      "rarity": "Artifact",
+      "type": "Book",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 0,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Coin of Many Faces",
+      "rarity": "Artifact",
+      "type": "Coin",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 0,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Imani's Pendant",
+      "rarity": "Rare",
+      "type": "Trinket",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 0,
+      "damageReflection": 0,
+      "healthRegeneration": 2,
+      "focus": 0,
+      "weight": 0.3,
+      "value": 1200,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Vest of the Black Hand",
+      "rarity": "Rare",
+      "type": "Torso (Medium)",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": 2,
+      "speed": "–",
+      "vitality": 2,
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": 2,
+      "resistance": 2,
+      "evasion": "–",
+      "durability": 0,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 3.2,
+      "value": 1800,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    },
+    {
+      "name": "Thieve's Kit",
+      "rarity": "Common",
+      "type": "Tool",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": null,
+      "strength": null,
+      "speed": null,
+      "vitality": null,
+      "intelligence": null,
+      "awareness": null,
+      "talent": null,
+      "luck": null,
+      "armor": null,
+      "resistance": null,
+      "evasion": null,
+      "durability": 0,
+      "damageReflection": null,
+      "healthRegeneration": null,
+      "focus": null,
+      "weight": 2,
+      "value": null,
+      "goldMultiplier": null,
+      "xpMultiplier": null,
+      "tags": null
+    },
+    {
+      "name": "Teddy Bear",
+      "rarity": null,
+      "type": "Plushie",
+      "physicalDamage": "–",
+      "magicalDamage": "–",
+      "criticalChance": 0,
+      "strength": "–",
+      "speed": "–",
+      "vitality": "–",
+      "intelligence": "–",
+      "awareness": "–",
+      "talent": "–",
+      "luck": "–",
+      "armor": "–",
+      "resistance": "–",
+      "evasion": "–",
+      "durability": 0,
+      "damageReflection": 0,
+      "healthRegeneration": 0,
+      "focus": 0,
+      "weight": 0,
+      "value": 0,
+      "goldMultiplier": 0,
+      "xpMultiplier": 0,
+      "tags": null
+    }
+  ],
+  "food": {
+    "ingredients": [
+      {
+        "name": "Canal Mint",
+        "category": "Herb & Plant",
+        "region": "Asura",
+        "mainUse": "Cooling garnish and digestive tea",
+        "notes": "Used in student cafes, canal kitchens, and light fish broths. It grows in clay troughs beside clean channels.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Aesper Sage",
+        "category": "Herb & Plant",
+        "region": "Asura",
+        "mainUse": "Mana-stabilizing seasoning",
+        "notes": "Added sparingly to foods cooked near active conduits. Overuse gives food a metallic aftertaste.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Silver Reed",
+        "category": "Herb & Plant",
+        "region": "Asura, Fittoa",
+        "mainUse": "Purity test and broth stirrer",
+        "notes": "A reed utensil rather than a spice. It darkens in unsafe Fittoan milk or mana-tainted water.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Blue Fen Thyme",
+        "category": "Herb & Plant",
+        "region": "Asura",
+        "mainUse": "Fish, curd, and glasshouse vegetables",
+        "notes": "A controlled herb crop used by formal kitchens that want flavor without visible rusticity.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Prismbloom Pollen",
+        "category": "Herb & Plant",
+        "region": "Asura",
+        "mainUse": "Honey culture and pastry dust",
+        "notes": "Gathered from Prismbee hives. Conductive wax and resin are more valuable than the pollen itself.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Smokeleaf",
+        "category": "Herb & Plant",
+        "region": "Ronoa",
+        "mainUse": "Preservation and winter stews",
+        "notes": "Hung in smokehouses with fish and Brumox cuts. It tastes harsh unless cooked for hours.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Frostmarjor",
+        "category": "Herb & Plant",
+        "region": "Ronoa",
+        "mainUse": "Cold-weather tea and game sauce",
+        "notes": "A bitter mountain herb crushed into Skalven preserves and hunting meals.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Cairnwort",
+        "category": "Herb & Plant",
+        "region": "Ronoa",
+        "mainUse": "Burial rites and sickness care",
+        "notes": "Burned beside sickbeds during White-Lung recovery and carried by guides crossing old cairn roads.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Ironmoss",
+        "category": "Herb & Plant",
+        "region": "Ronoa",
+        "mainUse": "Mineral tonic and trail poultice",
+        "notes": "Scraped from stone near northern springs. Not eaten raw. Brewed with broth or pressed into bandages.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Hearth Nettle",
+        "category": "Herb & Plant",
+        "region": "Ronoa",
+        "mainUse": "Goose fat cakes and winter greens",
+        "notes": "Stinging leaves softened in fat. Poor households use it to stretch grain meals.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Charcoal Root",
+        "category": "Herb & Plant",
+        "region": "Fittoa",
+        "mainUse": "Detox wash, ash-sickness treatment, broth base",
+        "notes": "The standard field ingredient for red ash exposure. Boiled, crushed, or rubbed into water filters.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Ashbitter",
+        "category": "Herb & Plant",
+        "region": "Fittoa",
+        "mainUse": "Mask tea and nausea control",
+        "notes": "Keeps travelers from vomiting under ash exposure. It stains cups red-grey.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Bellweed",
+        "category": "Herb & Plant",
+        "region": "Fittoa",
+        "mainUse": "Warning charm and dangerous tea",
+        "notes": "Seed pods click in wind. Camp cooks avoid brewing it unless a guide approves the harvest site.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Redmask Reed",
+        "category": "Herb & Plant",
+        "region": "Fittoa",
+        "mainUse": "Filter fiber and camp bundles",
+        "notes": "Woven into mask linings and water strainers. It must be dried outside dense mist.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Memory Nettle",
+        "category": "Herb & Plant",
+        "region": "Fittoa",
+        "mainUse": "Forbidden ritual garnish",
+        "notes": "Used with Telleth in black-market memory food. Legal cooks refuse it.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Grave Sage",
+        "category": "Herb & Plant",
+        "region": "Karrnath",
+        "mainUse": "Marrow dishes and funeral soup",
+        "notes": "Its smoke covers the scent of bone stock. Gravekeepers also burn it after contaminated burials.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Vigil Thyme",
+        "category": "Herb & Plant",
+        "region": "Karrnath",
+        "mainUse": "Night-watch tea",
+        "notes": "Served during funeral watches with Blackwake broth to keep mourners awake without loud speech.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Marrowleaf",
+        "category": "Herb & Plant",
+        "region": "Karrnath",
+        "mainUse": "Rich sauces and anti-rot poultices",
+        "notes": "A dark leaf bruised into vinegar before being served with Duskhide marrow.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Black Salt Grass",
+        "category": "Herb & Plant",
+        "region": "Karrnath",
+        "mainUse": "Pickling and ration salt",
+        "notes": "Ash-black blades harvested from brackish gravefields. Heavily regulated.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Ledgerbloom",
+        "category": "Herb & Plant",
+        "region": "Karrnath",
+        "mainUse": "Contract rites and bitter dye",
+        "notes": "Pressed into ink for estate food ledgers and death-related obligations.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "River Hyssop",
+        "category": "Herb & Plant",
+        "region": "Shirone",
+        "mainUse": "Fish marinade and fever water",
+        "notes": "Used with Nayara in temple kitchens and river-clay medicine.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Pilgrim Cress",
+        "category": "Herb & Plant",
+        "region": "Shirone",
+        "mainUse": "Flatbread, travel greens, temple soup",
+        "notes": "Grows near maintained pilgrim roads. Harvesting too much from shrine beds is fined.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Halo Reed",
+        "category": "Herb & Plant",
+        "region": "Shirone",
+        "mainUse": "Oath seals and aromatic steam",
+        "notes": "Burned with Sunhive wax during meals of formal reconciliation.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Nayara Leaf",
+        "category": "Herb & Plant",
+        "region": "Shirone",
+        "mainUse": "Oil, peel, marinade, bright sauces",
+        "notes": "The leaf is less prestigious than the fruit but more common in kitchens.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "White Canal Basil",
+        "category": "Herb & Plant",
+        "region": "Shirone",
+        "mainUse": "Yoghurt, fish stew, canal vegetables",
+        "notes": "A soft herb grown beside temple canals and used in public kitchens.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Barkmint",
+        "category": "Herb & Plant",
+        "region": "Milis",
+        "mainUse": "Honey tea and forest medicine",
+        "notes": "Tended near Barkbee hives. The grove, not the beekeeper, is considered the first owner.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Rootlace",
+        "category": "Herb & Plant",
+        "region": "Milis",
+        "mainUse": "Stew thickener and binding poultice",
+        "notes": "A thin root-vine used in dumplings, medicinal wraps, and forest trail soups.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Rainmoss",
+        "category": "Herb & Plant",
+        "region": "Milis",
+        "mainUse": "Cold compress and smoked fish lining",
+        "notes": "Laid beneath Rootfin trout during forest smoking. Also used to cool fevered skin.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Grove Fennel",
+        "category": "Herb & Plant",
+        "region": "Milis",
+        "mainUse": "Clan feasts and animal digestion",
+        "notes": "Fed to Bramblebacks before long forest travel and chopped into feast breads.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Mooncap",
+        "category": "Herb & Plant",
+        "region": "Milis",
+        "mainUse": "Night stew and dream caution",
+        "notes": "A pale forest fungus. Safe only when gathered from approved tree-lines.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Well Coriander",
+        "category": "Herb & Plant",
+        "region": "Begaritt",
+        "mainUse": "Cooling bowls and caravan cheese",
+        "notes": "Grown in shaded cistern niches. Never harvested without waterkeeper approval.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Glasssage",
+        "category": "Herb & Plant",
+        "region": "Begaritt",
+        "mainUse": "Water testing and bitter tea",
+        "notes": "Leaves go limp in poisoned cisterns. The tea is unpleasant but trusted.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Shade Cumin",
+        "category": "Herb & Plant",
+        "region": "Begaritt",
+        "mainUse": "Preserved meat and desert stew",
+        "notes": "A low shrub spice that masks old fat and Khasar cheese sharpness.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Khezir Peel",
+        "category": "Herb & Plant",
+        "region": "Begaritt",
+        "mainUse": "Syrup, incense, meat preservation",
+        "notes": "The oil-heavy peel is more useful than the bitter fruit itself.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Starflower Anise",
+        "category": "Herb & Plant",
+        "region": "Begaritt",
+        "mainUse": "Festival cakes and prophecy tea",
+        "notes": "Harvested under recorded star dates, especially near Ishkara orchards.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Cinderleaf",
+        "category": "Herb & Plant",
+        "region": "Demon Continent",
+        "mainUse": "Ash-roasts and firepot stews",
+        "notes": "Withstands kiln heat. Used to wrap Gorak fruit, eel, and siege-store meats.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Ember Fennel",
+        "category": "Herb & Plant",
+        "region": "Demon Continent",
+        "mainUse": "Animal feed and harsh stew",
+        "notes": "Keeps Kharak herds calm in ash winds and cuts the oiliness of Cinder eel.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Steam Algae",
+        "category": "Herb & Plant",
+        "region": "Demon Continent",
+        "mainUse": "Thermal pond food and thickener",
+        "notes": "Cultivated beside Cinder eels. Soldiers dry it into black-green ration sheets.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Taruzh Rind",
+        "category": "Herb & Plant",
+        "region": "Demon Continent",
+        "mainUse": "Pickles, sour sauces, medicinal salts",
+        "notes": "Sharper than the fruit pulp. Good cooks use it to wake up heavy ash-roasted food.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Ash Salt",
+        "category": "Herb & Plant",
+        "region": "Demon Continent",
+        "mainUse": "Curing, travel rations, fermentation",
+        "notes": "A survival ingredient, not a luxury. Villages maintain communal salt jars.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Halor Oil",
+        "category": "Herb & Plant",
+        "region": "Heaven Continent",
+        "mainUse": "Healing oil and temple incense",
+        "notes": "Rare. Even a drop in a sealed dish changes the price of the meal.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Iril Rind",
+        "category": "Herb & Plant",
+        "region": "Heaven Continent",
+        "mainUse": "Sacred dessert flavoring",
+        "notes": "Does not freeze properly. Usually shaved, never boiled.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Cyrune Leaf",
+        "category": "Herb & Plant",
+        "region": "Heaven Continent",
+        "mainUse": "Moon-wine steeping",
+        "notes": "Known mostly through liturgical descriptions and suspect merchant claims.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Othal Blossom",
+        "category": "Herb & Plant",
+        "region": "Heaven Continent",
+        "mainUse": "Answered-prayer offerings",
+        "notes": "If real, it is treated as evidence rather than seasoning.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Veyrin Frostmelt",
+        "category": "Herb & Plant",
+        "region": "Heaven Continent",
+        "mainUse": "Preserved offerings and omen food",
+        "notes": "Blue frost scraped from Veyrin storage jars. Mostly counterfeit in ordinary markets.",
+        "role": "Keeper Crop"
+      },
+      {
+        "name": "Lysael Pear",
+        "category": "Witness Fruit & Produce",
+        "region": "Asura",
+        "mainUse": "Wine, clear preserves, noble desserts, glazes",
+        "notes": "Blue-green pear with silver veins. Best near stable Aesperium conduits.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Skalven Berry",
+        "category": "Witness Fruit & Produce",
+        "region": "Ronoa",
+        "mainUse": "Winter preserves, soldier rations, game sauces",
+        "notes": "A frost-bearing berry that remains on the branch through early snow.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Telleth Fruit",
+        "category": "Witness Fruit & Produce",
+        "region": "Fittoa",
+        "mainUse": "Illegal alchemy, memory rites, black-market food",
+        "notes": "Pale fruit with black veins. Some say it rings faintly when cut.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Morvane Plum",
+        "category": "Witness Fruit & Produce",
+        "region": "Karrnath",
+        "mainUse": "Funeral wine, vinegar, sauces, fruit leather",
+        "notes": "Black plum with deep red flesh, grown in iron-heavy gravefield soil.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Nayara Citrus",
+        "category": "Witness Fruit & Produce",
+        "region": "Shirone",
+        "mainUse": "Temple oil, naval provisions, fish marinade, sweet wine",
+        "notes": "Striped blue-orange citrus, central to sacred and coastal cooking.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Vaelwyn Pear",
+        "category": "Witness Fruit & Produce",
+        "region": "Milis",
+        "mainUse": "Honey wine, wedding feasts, dumplings",
+        "notes": "Twin-grown pear. Grove origin matters legally and ritually.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Selvara Berry",
+        "category": "Witness Fruit & Produce",
+        "region": "Milis",
+        "mainUse": "Sweet sauces, medicine, ceremonial dye",
+        "notes": "Long emerald berry that ripens after heavy forest rain.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Orimel Apple",
+        "category": "Witness Fruit & Produce",
+        "region": "Milis",
+        "mainUse": "Winter food, cider, caravan trade",
+        "notes": "Mineral-rich apple from dwarven terraces.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Brannoc Pod",
+        "category": "Witness Fruit & Produce",
+        "region": "Milis",
+        "mainUse": "Travel food, thick stews, beast feed",
+        "notes": "Amber pod with creamy pulp and edible seeds.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Heshari Fig",
+        "category": "Witness Fruit & Produce",
+        "region": "Milis",
+        "mainUse": "Pilgrim bread, temple offerings, dried rations",
+        "notes": "Pale fig grown in shaded sacred groves.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Qasira Fruit",
+        "category": "Witness Fruit & Produce",
+        "region": "Begaritt",
+        "mainUse": "Hydration, caravan supplies, cooling tonics",
+        "notes": "Thick-rinded green fruit filled with cold water-pulp.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Ishkara Fig",
+        "category": "Witness Fruit & Produce",
+        "region": "Begaritt",
+        "mainUse": "Sweet cakes, prophecy rites, luxury exports",
+        "notes": "Bronze fig that ripens only during specific celestial seasons.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Zahlun Melon",
+        "category": "Witness Fruit & Produce",
+        "region": "Begaritt",
+        "mainUse": "Candies, wine, noble banquets",
+        "notes": "Translucent melon with crisp sugar-like flesh.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Khezir Orange",
+        "category": "Witness Fruit & Produce",
+        "region": "Begaritt",
+        "mainUse": "Spice syrup, preserved meat, incense",
+        "notes": "Bitter fruit prized for its oil-heavy peel.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Tazim Pomegranate",
+        "category": "Witness Fruit & Produce",
+        "region": "Begaritt",
+        "mainUse": "Festival food, medicinal seed oil, marriage rites",
+        "notes": "Crimson fruit that ripens underground after rare rains.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Gorak Fruit",
+        "category": "Witness Fruit & Produce",
+        "region": "Demon Continent",
+        "mainUse": "Roasting, fermentation, trade preserves",
+        "notes": "Black skin, orange flesh, smoky sweetness.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Veshkar Fig",
+        "category": "Witness Fruit & Produce",
+        "region": "Demon Continent",
+        "mainUse": "Long-term rations, warrior travel packs",
+        "notes": "Dense purple fig that dries naturally on the branch.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Taruzh Fruit",
+        "category": "Witness Fruit & Produce",
+        "region": "Demon Continent",
+        "mainUse": "Pickles, sour sauces, medicinal salts",
+        "notes": "Sharp green fruit that splits after volcanic rain.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Molgra Melon",
+        "category": "Witness Fruit & Produce",
+        "region": "Demon Continent",
+        "mainUse": "Water storage, stew base, animal feed",
+        "notes": "Heavy red melon from thermal caves and steam vents.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Shaleth Berry",
+        "category": "Witness Fruit & Produce",
+        "region": "Demon Continent",
+        "mainUse": "Dye, wine, fever medicine, poultices",
+        "notes": "Small violet berry from black forest edges.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Iril Pear",
+        "category": "Witness Fruit & Produce",
+        "region": "Heaven Continent",
+        "mainUse": "Sacred desserts, rites, luxury offerings",
+        "notes": "White frost pear with warm golden flesh.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Cyrune Grape",
+        "category": "Witness Fruit & Produce",
+        "region": "Heaven Continent",
+        "mainUse": "Divine wine and moonlit rites",
+        "notes": "Silver-skinned grape that reflects moonlight.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Halor Fruit",
+        "category": "Witness Fruit & Produce",
+        "region": "Heaven Continent",
+        "mainUse": "Temple incense and healing oils",
+        "notes": "Small orange fruit with a ring pattern near the stem.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Othal Apple",
+        "category": "Witness Fruit & Produce",
+        "region": "Heaven Continent",
+        "mainUse": "Pilgrim legends, answered-prayer offerings",
+        "notes": "Red-gold apple said to grow where prayers are answered.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Veyrin Berry",
+        "category": "Witness Fruit & Produce",
+        "region": "Heaven Continent",
+        "mainUse": "Sky-memory relic and preserved offerings",
+        "notes": "Translucent blue berry preserved in ice.",
+        "role": "Witness Fruit"
+      },
+      {
+        "name": "Vellhorn Cattle",
+        "category": "Livestock",
+        "region": "Asura",
+        "mainUse": "Milk, cheese, draught work",
+        "secondaryUse": "Pale hide, rich manure, mana-warning behavior",
+        "marketStatus": "Common in Asuran estates",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Brumoxen",
+        "category": "Livestock",
+        "region": "Ronoa",
+        "mainUse": "Sled pulling, winter meat, milk",
+        "secondaryUse": "Fur-lined hides, salted butter, mountain hauling",
+        "marketStatus": "Common but communally controlled",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Hushbacks",
+        "category": "Livestock",
+        "region": "Fittoa",
+        "mainUse": "Lichen grazing, milk, safe-route warning",
+        "secondaryUse": "Camp survival, ashland scouting",
+        "marketStatus": "Scarce, rarely exported",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Duskhide Cattle",
+        "category": "Livestock",
+        "region": "Karrnath",
+        "mainUse": "Beef, marrow, black leather",
+        "secondaryUse": "Fertilizer, military ration paste",
+        "marketStatus": "Regulated by noble estates",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Reedhorns",
+        "category": "Livestock",
+        "region": "Shirone",
+        "mainUse": "Wetland ploughing, milk, river transport",
+        "secondaryUse": "Leather, yoghurt, temple estate labor",
+        "marketStatus": "Common in riverlands",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Khasar",
+        "category": "Livestock",
+        "region": "Begaritt",
+        "mainUse": "Desert travel, water carriage",
+        "secondaryUse": "Wool, sour milk, dried dung fuel",
+        "marketStatus": "Valuable, tied to Water-Names",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Kharak",
+        "category": "Livestock",
+        "region": "Demon Continent",
+        "mainUse": "Ashland hauling, siege transport",
+        "secondaryUse": "Eggs, meat, hard hide",
+        "marketStatus": "Common in fortified settlements",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Brambleback",
+        "category": "Livestock",
+        "region": "Milis",
+        "mainUse": "Forest pack animal, orchard grazing",
+        "secondaryUse": "Truffle finding, brush clearing",
+        "marketStatus": "Clan or grove-controlled",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Hearth Geese",
+        "category": "Livestock",
+        "region": "Ronoa",
+        "mainUse": "Eggs, winter fat",
+        "secondaryUse": "Down, alarm animals",
+        "marketStatus": "Common household animal",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Velvet Moths",
+        "category": "Livestock",
+        "region": "Karrnath",
+        "mainUse": "Black shroud-silk",
+        "secondaryUse": "Dark dye, funeral thread",
+        "marketStatus": "Temple and estate controlled",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Prismbees",
+        "category": "Livestock",
+        "region": "Asura",
+        "mainUse": "Honey, conductive wax",
+        "secondaryUse": "Spell-component resin",
+        "marketStatus": "Urban apiary product",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Sunhives",
+        "category": "Livestock",
+        "region": "Shirone",
+        "mainUse": "Golden wax",
+        "secondaryUse": "Temple candles, oath seals",
+        "marketStatus": "Temple-managed",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Barkbees",
+        "category": "Livestock",
+        "region": "Milis",
+        "mainUse": "Forest honey, medicinal propolis",
+        "secondaryUse": "Sacred pollination",
+        "marketStatus": "Grove-protected",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Moonmoths",
+        "category": "Livestock",
+        "region": "Begaritt",
+        "mainUse": "Pale silk",
+        "secondaryUse": "Cool-chamber textile craft",
+        "marketStatus": "Wealthy oasis trade",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Ashmoths",
+        "category": "Livestock",
+        "region": "Demon Continent",
+        "mainUse": "Heat-resistant fiber",
+        "secondaryUse": "Kiln cloth, military gloves",
+        "marketStatus": "Practical military good",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Silverwings",
+        "category": "Livestock",
+        "region": "Heaven Continent",
+        "mainUse": "Feather-silk",
+        "secondaryUse": "Relic banners, divine vestments",
+        "marketStatus": "Rumored, not normal trade",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Vellhorn Milk",
+        "category": "Livestock Product",
+        "region": "Asura",
+        "mainUse": "Clear-white cheese, noble curd, recovery food",
+        "source": "Vellhorn cattle",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Brumox Butter",
+        "category": "Livestock Product",
+        "region": "Ronoa",
+        "mainUse": "Salted winter fat, ration jars, stew base",
+        "source": "Brumoxen",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Hushback Milk",
+        "category": "Livestock Product",
+        "region": "Fittoa",
+        "mainUse": "Survival broth, ashland treatment, tested camp dairy",
+        "source": "Hushbacks",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Duskhide Marrow",
+        "category": "Livestock Product",
+        "region": "Karrnath",
+        "mainUse": "Military ration paste, marrow tartines, grave-road food",
+        "source": "Duskhide cattle",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Reedhorn Yoghurt",
+        "category": "Livestock Product",
+        "region": "Shirone",
+        "mainUse": "Pilgrim bread topping, temple food, medicinal meals",
+        "source": "Reedhorns",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Khasar Milk",
+        "category": "Livestock Product",
+        "region": "Begaritt",
+        "mainUse": "Sour desert cheese, caravan food",
+        "source": "Khasar",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Kharak Eggs",
+        "category": "Livestock Product",
+        "region": "Demon Continent",
+        "mainUse": "Siege stores, ashland baking, durable ration food",
+        "source": "Kharak",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Barkbee Honey",
+        "category": "Livestock Product",
+        "region": "Milis",
+        "mainUse": "Forest preservation, medicine, ritual sweets",
+        "source": "Barkbees",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Prismbee Wax",
+        "category": "Livestock Product",
+        "region": "Asura",
+        "mainUse": "Lamp seals, spellwork, urban food storage",
+        "source": "Prismbees",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Sunhive Wax",
+        "category": "Livestock Product",
+        "region": "Shirone",
+        "mainUse": "Temple candles, oath seals, sacred preservation",
+        "source": "Sunhives",
+        "role": "Herd Ingredient"
+      },
+      {
+        "name": "Glassfin Carp",
+        "category": "Fishery Catch",
+        "region": "Asura",
+        "mainUse": "Soup stock, canal fish",
+        "secondaryUse": "Fertilizer, mana contamination testing",
+        "notes": "Scales cloud near mana damage",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Hrimchar",
+        "category": "Fishery Catch",
+        "region": "Ronoa",
+        "mainUse": "Smoked fish, winter rations",
+        "secondaryUse": "Expedition food, fish cakes",
+        "notes": "Caught after first deep freeze",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Mirror Eels",
+        "category": "Fishery Catch",
+        "region": "Fittoa",
+        "mainUse": "Alchemy, rare bait",
+        "secondaryUse": "Illegal trade",
+        "notes": "Not safe food, may reflect absent faces",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Blackwake Lamprey",
+        "category": "Fishery Catch",
+        "region": "Karrnath",
+        "mainUse": "Oil, salt paste, blood broth",
+        "secondaryUse": "Funeral vigil food, medicinal broth",
+        "notes": "Associated with death rites",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Azurefin",
+        "category": "Fishery Catch",
+        "region": "Shirone",
+        "mainUse": "Grilled fish, stew",
+        "secondaryUse": "Dried naval ration",
+        "notes": "Sold fresh at Waterkeep each dawn",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Rootfin Trout",
+        "category": "Fishery Catch",
+        "region": "Milis",
+        "mainUse": "River cooking, forest smoking",
+        "secondaryUse": "Festival dishes",
+        "notes": "Cannot be taken near sacred groves",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Cistern Glassfish",
+        "category": "Fishery Catch",
+        "region": "Begaritt",
+        "mainUse": "Food, mosquito control",
+        "secondaryUse": "Water quality warning",
+        "notes": "Raised in stepwells",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Cinder Eels",
+        "category": "Fishery Catch",
+        "region": "Demon Continent",
+        "mainUse": "Smoked meat, oil",
+        "secondaryUse": "Thermal pond farming",
+        "notes": "Survive volcanic runoff pools",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Bellfin",
+        "category": "Fishery Catch",
+        "region": "Heaven Continent",
+        "mainUse": "Rumored sacred food",
+        "secondaryUse": "Frost preservation, divine omen",
+        "notes": "No verified common-market specimen",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Glassfin Stock",
+        "category": "Fishery Product",
+        "region": "Asura",
+        "mainUse": "Asuran soups, canal-worker meals, water-testing kitchens",
+        "source": "Glassfin carp",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Hrimchar Smoke",
+        "category": "Fishery Product",
+        "region": "Ronoa",
+        "mainUse": "Ronoan ration cakes, winter trail food",
+        "source": "Hrimchar",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Mirror Eel Flesh",
+        "category": "Fishery Product",
+        "region": "Fittoa",
+        "mainUse": "Alchemical reagent, forbidden bait, black-market curiosity",
+        "source": "Mirror eels",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Blackwake Oil",
+        "category": "Fishery Product",
+        "region": "Karrnath",
+        "mainUse": "Lamp oil, medicine, funeral rites",
+        "source": "Blackwake lamprey",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Blackwake Salt Paste",
+        "category": "Fishery Product",
+        "region": "Karrnath",
+        "mainUse": "Preserved Karrnathi food, soldier ration additive",
+        "source": "Blackwake lamprey",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Azurefin Fillets",
+        "category": "Fishery Product",
+        "region": "Shirone",
+        "mainUse": "Street skewers, temple stews, naval provisions",
+        "source": "Azurefin",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Rootfin Smoke",
+        "category": "Fishery Product",
+        "region": "Milis",
+        "mainUse": "Milis feast food, preserved forest ration",
+        "source": "Rootfin trout",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Glassfish Shoal",
+        "category": "Fishery Product",
+        "region": "Begaritt",
+        "mainUse": "Stepwell food, mosquito control, poisoned-water warning",
+        "source": "Cistern glassfish",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Cinder Eel Oil",
+        "category": "Fishery Product",
+        "region": "Demon Continent",
+        "mainUse": "Heat cooking, ashland preservation, lamp fuel",
+        "source": "Cinder eels",
+        "role": "Tide Ingredient"
+      },
+      {
+        "name": "Bellfin Salt",
+        "category": "Fishery Product",
+        "region": "Heaven Continent",
+        "mainUse": "Mythic frost-preserved offering, Heaven-linked relic food",
+        "source": "Bellfin",
+        "role": "Tide Ingredient"
+      }
+    ],
+    "ingredientRoles": [
+      {
+        "role": "Hearth Crop",
+        "mainUse": "Bulk food and famine stores",
+        "examples": "Grain, tubers, beans, rice, fungi",
+        "dmFunction": "Answers hunger first. Cheap, predictable, and politically important."
+      },
+      {
+        "role": "Keeper Crop",
+        "mainUse": "Soil repair, pest control, mana stability",
+        "examples": "Legumes, bitter herbs, grazing plants, root vines",
+        "dmFunction": "Keeps the field alive after the harvest. Removing it risks Field Forgetting."
+      },
+      {
+        "role": "Witness Fruit",
+        "mainUse": "Regional identity and soil resonance",
+        "examples": "Lysael, Skalven, Telleth, Morvane, Nayara",
+        "dmFunction": "Marks where food came from. Used in ritual, trade, noble cuisine, and fraud."
+      },
+      {
+        "role": "Herd Ingredient",
+        "mainUse": "Food, labour, material, field return",
+        "examples": "Milk, meat, hide, wool, manure, hauling animals",
+        "dmFunction": "Governed by Herd-Right. An animal should return more than it consumes."
+      },
+      {
+        "role": "Tide Ingredient",
+        "mainUse": "Fish, oil, broth, water testing",
+        "examples": "Carp, eels, trout, lamprey, shellbeds",
+        "dmFunction": "Governed by Tide-Right. Breeding waters are protected by law or custom."
+      }
+    ],
+    "regionalIdentity": [
+      {
+        "region": "Asura",
+        "identity": "Measured, engineered, watched for mana stability"
+      },
+      {
+        "region": "Ronoa",
+        "identity": "Preserved, communal, winter-proof"
+      },
+      {
+        "region": "Fittoa",
+        "identity": "Tested, mistrusted, useful only after proof"
+      },
+      {
+        "region": "Karrnath",
+        "identity": "Regulated, ritualized, tied to death and labor"
+      },
+      {
+        "region": "Shirone",
+        "identity": "Abundant, river-fed, temple-managed"
+      },
+      {
+        "region": "Milis",
+        "identity": "Grove-bound, seasonal, protected by old agreements"
+      },
+      {
+        "region": "Begaritt",
+        "identity": "Water-measured, inherited, never wasted"
+      },
+      {
+        "region": "Demon Continent",
+        "identity": "Communal, heat-shaped, siege-ready"
+      },
+      {
+        "region": "Heaven Continent",
+        "identity": "Mythic, unverifiable, more evidence than cuisine"
+      }
+    ],
+    "sceneSuggestions": [
+      {
+        "situation": "Asuran noble kitchen",
+        "ingredients": "Lysael, Vellhorn cheese, Glassfin carp, Prismbee honey, Aesper Sage"
+      },
+      {
+        "situation": "Ronoan winter camp",
+        "ingredients": "Brumox butter, Hrimchar, Hearth goose eggs, Smokeleaf, Skalven"
+      },
+      {
+        "situation": "Fittoan hazard preparation",
+        "ingredients": "Hushback milk, Charcoal Root, Silver Reed, Redmask Reed"
+      },
+      {
+        "situation": "Karrnathi funeral table",
+        "ingredients": "Blackwake lamprey, Duskhide marrow, Grave Sage, Vigil Thyme"
+      },
+      {
+        "situation": "Shirone temple feast",
+        "ingredients": "Azurefin, Reedhorn yoghurt, Nayara Leaf, Sunhive wax candles"
+      },
+      {
+        "situation": "Milis grove meal",
+        "ingredients": "Rootfin trout, Barkbee honey, Brambleback truffles, Barkmint"
+      },
+      {
+        "situation": "Begaritt caravan",
+        "ingredients": "Khasar cheese, Qasira, Khezir Peel, Cistern glassfish, Well Coriander"
+      },
+      {
+        "situation": "Demon siege store",
+        "ingredients": "Cinder eel, Kharak eggs, Veshkar figs, Ash Salt, Steam Algae"
+      },
+      {
+        "situation": "Heaven omen",
+        "ingredients": "Iril, Halor Oil, Bellfin salt, Silverwing feather-silk, Veyrin Frostmelt"
+      }
+    ],
+    "dishes": [
+      {
+        "name": "Lysael Glassfin Parcels",
+        "region": "Asura",
+        "cost": 7,
+        "method": "Steamed fish, curd, canal herbs, Lysael pear glaze wrapped in reed leaves.",
+        "effect": "Once, gain +5 to Arcana, Research, Investigation, or a tool check involving magic or machinery.",
+        "difficulty": "Automatic by Region",
+        "dc": 0,
+        "time": "1 hour",
+        "specialtyUtensil": "",
+        "preparationClass": "standard",
+        "ingredients": [
+          "Glassfin Carp",
+          "Vellhorn Milk",
+          "Canal Mint",
+          "Lysael Pear"
+        ],
+        "legendary": false,
+        "rareDangerous": false
+      },
+      {
+        "name": "Vellhorn Cloud Curd",
+        "region": "Asura",
+        "cost": 4,
+        "method": "Whipped Vellhorn cheese, Lysael preserve, honey, oat crumble. Served cold.",
+        "effect": "During your next short rest, regain 2 HP or 10 MP.",
+        "difficulty": "Automatic by Region",
+        "dc": 0,
+        "time": "1 hour",
+        "specialtyUtensil": "",
+        "preparationClass": "standard",
+        "ingredients": [
+          "Vellhorn Milk",
+          "Lysael Pear",
+          "Prismbloom Pollen"
+        ],
+        "legendary": false,
+        "rareDangerous": false
+      },
+      {
+        "name": "Brumox Winter Pot",
+        "region": "Ronoa",
+        "cost": 5,
+        "method": "Slow-cooked Brumox meat, roots, smoked broth, dark bread, Skalven berries.",
+        "effect": "Gain 5 temporary HP and reduce ordinary cold penalties for 1 hour.",
+        "difficulty": "Automatic by Region",
+        "dc": 0,
+        "time": "1 hour",
+        "specialtyUtensil": "",
+        "preparationClass": "standard",
+        "ingredients": [
+          "Brumoxen",
+          "Brumox Butter",
+          "Smokeleaf",
+          "Skalven Berry"
+        ],
+        "legendary": false,
+        "rareDangerous": false
+      },
+      {
+        "name": "Hrimchar Smoke-Cakes",
+        "region": "Ronoa",
+        "cost": 3,
+        "method": "Smoked fish, rye meal, oats, goose egg, fried on iron.",
+        "effect": "Once, gain +5 to Survival or Perception involving weather, tracks, routes, or wilderness danger.",
+        "difficulty": "Automatic by Region",
+        "dc": 0,
+        "time": "1 hour",
+        "specialtyUtensil": "Smoking Rack",
+        "preparationClass": "standard",
+        "ingredients": [
+          "Hrimchar",
+          "Hrimchar Smoke",
+          "Hearth Geese",
+          "Smokeleaf"
+        ],
+        "legendary": false,
+        "rareDangerous": false
+      },
+      {
+        "name": "Hushback Silver-Reed Broth",
+        "region": "Fittoa",
+        "cost": 8,
+        "method": "Hushback milk, charcoal root, oats, bitter herbs. Tested with silver before serving.",
+        "effect": "Once, gain +5 to resist poison, disease, contamination, or unstable terrain.",
+        "difficulty": "Rare or Dangerous",
+        "dc": 70,
+        "time": "2 hours",
+        "specialtyUtensil": "Silver Reed",
+        "preparationClass": "dangerous",
+        "ingredients": [
+          "Hushback Milk",
+          "Charcoal Root",
+          "Silver Reed",
+          "Ashbitter"
+        ],
+        "legendary": false,
+        "rareDangerous": true
+      },
+      {
+        "name": "Telleth Bellbread ⚠",
+        "region": "Fittoa",
+        "cost": 25,
+        "method": "Telleth rind steeped in honey-tea, brushed over hard oat bread, baked dry.",
+        "effect": "Recall one extra sensory detail from a location, object, or person examined in the last 24 hours.",
+        "difficulty": "Rare or Dangerous",
+        "dc": 70,
+        "time": "2 hours",
+        "specialtyUtensil": "Resonance-Safe Knife",
+        "preparationClass": "dangerous",
+        "ingredients": [
+          "Telleth Fruit",
+          "Memory Nettle",
+          "Bellweed"
+        ],
+        "legendary": false,
+        "rareDangerous": true
+      },
+      {
+        "name": "Duskhide Marrow Tartine",
+        "region": "Karrnath",
+        "cost": 6,
+        "method": "Roasted marrow, black rye, black salt, Morvane-vinegar reduction.",
+        "effect": "The first time you take damage in your next combat, reduce it by 5.",
+        "difficulty": "Rare or Dangerous",
+        "dc": 70,
+        "time": "2 hours",
+        "specialtyUtensil": "Bone-Roasting Pan",
+        "preparationClass": "dangerous",
+        "ingredients": [
+          "Duskhide Marrow",
+          "Black Salt Grass",
+          "Morvane Plum",
+          "Grave Sage"
+        ],
+        "legendary": false,
+        "rareDangerous": true
+      },
+      {
+        "name": "Blackwake Vigil Soup",
+        "region": "Karrnath",
+        "cost": 5,
+        "method": "Lamprey, dark greens, onion, vinegar, dried Morvane skins.",
+        "effect": "Once, gain +5 to Medicine, Religion, Insight, or Investigation involving death, wounds, corpses, undead, or grief.",
+        "difficulty": "Automatic by Region",
+        "dc": 0,
+        "time": "1 hour",
+        "specialtyUtensil": "",
+        "preparationClass": "standard",
+        "ingredients": [
+          "Blackwake Lamprey",
+          "Blackwake Salt Paste",
+          "Vigil Thyme",
+          "Morvane Plum"
+        ],
+        "legendary": false,
+        "rareDangerous": false
+      },
+      {
+        "name": "Azurefin Nayara Skewers",
+        "region": "Shirone",
+        "cost": 4,
+        "method": "Nayara-marinated fish grilled over open flame with temple salt.",
+        "effect": "Once, gain +5 against being shoved, grappled, restrained, or knocked prone.",
+        "difficulty": "Automatic by Region",
+        "dc": 0,
+        "time": "1 hour",
+        "specialtyUtensil": "",
+        "preparationClass": "standard",
+        "ingredients": [
+          "Azurefin",
+          "Azurefin Fillets",
+          "Nayara Citrus",
+          "River Hyssop"
+        ],
+        "legendary": false,
+        "rareDangerous": false
+      },
+      {
+        "name": "Reedhorn Yoghurt Hearthbread",
+        "region": "Shirone",
+        "cost": 3,
+        "method": "Warm flatbread topped with cold Reedhorn yoghurt, Nayara zest, herbs, and salt.",
+        "effect": "Once, gain +5 to Persuasion, Insight, or Medicine.",
+        "difficulty": "Automatic by Region",
+        "dc": 0,
+        "time": "1 hour",
+        "specialtyUtensil": "",
+        "preparationClass": "standard",
+        "ingredients": [
+          "Reedhorn Yoghurt",
+          "Nayara Leaf",
+          "Pilgrim Cress",
+          "White Canal Basil"
+        ],
+        "legendary": false,
+        "rareDangerous": false
+      },
+      {
+        "name": "Vaelwyn Bark-Honey Dumplings",
+        "region": "Milis",
+        "cost": 8,
+        "method": "Twin Vaelwyn pears browned in bark honey and steamed in leaf baskets.",
+        "effect": "When you Help an ally on a non-combat check, they gain an additional +10.",
+        "difficulty": "Automatic by Region",
+        "dc": 0,
+        "time": "1 hour",
+        "specialtyUtensil": "Leaf-Steaming Basket",
+        "preparationClass": "standard",
+        "ingredients": [
+          "Vaelwyn Pear",
+          "Barkbee Honey",
+          "Rootlace"
+        ],
+        "legendary": false,
+        "rareDangerous": false
+      },
+      {
+        "name": "Qasira Well-Bowl",
+        "region": "Begaritt",
+        "cost": 5,
+        "method": "Cold Qasira fruit pulp, yoghurt, Khezir peel, toasted grain, desert salt.",
+        "effect": "Ignore ordinary heat and thirst penalties for 1 hour.",
+        "difficulty": "Automatic by Region",
+        "dc": 0,
+        "time": "1 hour",
+        "specialtyUtensil": "",
+        "preparationClass": "standard",
+        "ingredients": [
+          "Qasira Fruit",
+          "Khezir Peel",
+          "Khasar Milk",
+          "Well Coriander"
+        ],
+        "legendary": false,
+        "rareDangerous": false
+      },
+      {
+        "name": "Gorak Ash-Roast",
+        "region": "Demon Continent",
+        "cost": 6,
+        "method": "Gorak fruit, eel, Taruzh pickle, ash salt, buried beneath hot coals.",
+        "effect": "Once, gain +5 to a Strength or Vitality saving throw.",
+        "difficulty": "Automatic by Region",
+        "dc": 0,
+        "time": "2 hours",
+        "specialtyUtensil": "",
+        "preparationClass": "standard",
+        "ingredients": [
+          "Gorak Fruit",
+          "Cinder Eels",
+          "Taruzh Fruit",
+          "Ash Salt",
+          "Cinderleaf"
+        ],
+        "legendary": false,
+        "rareDangerous": false
+      },
+      {
+        "name": "Iril Candle-Pear ✦",
+        "region": "Heaven Continent",
+        "cost": 30,
+        "method": "Iril pear warmed in sealed glass with a drop of Halor oil. Never allowed to boil.",
+        "effect": "Once, gain +5 to an Awareness save against fear, magical sleep, cold, or disorientation.",
+        "difficulty": "Masterchef Dish · Legendary",
+        "dc": 85,
+        "time": "2-4 hours",
+        "specialtyUtensil": "Sealed Glass Vessel",
+        "preparationClass": "masterchef",
+        "ingredients": [
+          "Iril Pear",
+          "Iril Rind",
+          "Halor Oil",
+          "Veyrin Frostmelt"
+        ],
+        "legendary": true,
+        "rareDangerous": false
+      }
+    ],
+    "rules": [
+      {
+        "rule": "Home Region",
+        "value": "Select Asura, Karrnath, Fittoa, Shirone, or Ronoa. Home-region dishes are Familiar (DC 35)."
+      },
+      {
+        "rule": "Regional & Foreign Dishes",
+        "value": "Other Central Continent dishes are Regional (DC 50). Milis, Begaritt, Demon Continent, and Heaven Continent dishes are Rare or Dangerous (DC 70)."
+      },
+      {
+        "rule": "Progression Locks",
+        "value": "Level 1 unlocks home dishes, Level 2 Central regional dishes, Level 3 foreign dishes, Level 4 explicitly dangerous dishes, and Level 5 Legendary Masterchef dishes."
+      },
+      {
+        "rule": "Ingredient Requirement",
+        "value": "A catalogue dish requires one unit of every listed ingredient. Use owned pantry ingredients or buy the full ingredient set for the listed SP cost."
+      },
+      {
+        "rule": "Serving Yield",
+        "value": "One ingredient set normally prepares 2 servings. Explicitly dangerous and Legendary dishes prepare 1 serving. A natural 96-100 creates +1 serving."
+      },
+      {
+        "rule": "Cooking Kit",
+        "value": "A complete Cooking Kit costs 20 GP and grants +25 to the Cooking Check."
+      },
+      {
+        "rule": "Proficient Assistant",
+        "value": "+10; only one assistant may help."
+      },
+      {
+        "rule": "Advantage & Disadvantage",
+        "value": "Professional kitchen grants Advantage. Poor conditions or a missing required specialty utensil impose Disadvantage."
+      },
+      {
+        "rule": "Cooking XP",
+        "value": "1 XP for a successful DC 35+ meal, plus 1 XP if new, dangerous, regional, foreign, or made under pressure. Maximum 2 XP per long rest."
+      },
+      {
+        "rule": "Failed Cooking",
+        "value": "Failure creates an edible ordinary meal with no Hearth Boon. Natural 1-5 spoils the ingredients."
+      }
+    ],
+    "cooking": {
+      "formula": "d100 + Cooking Skill + Hearthcraft Level Bonus + situational modifiers",
+      "xpLimitPerRest": 2,
+      "difficulties": [
+        {
+          "dc": 20,
+          "label": "Basic",
+          "recipe": "Boiled grain, ration stew, roasted meat",
+          "time": "30 minutes"
+        },
+        {
+          "dc": 35,
+          "label": "Familiar",
+          "recipe": "Dish from the cook’s selected home region",
+          "time": "1 hour"
+        },
+        {
+          "dc": 50,
+          "label": "Regional",
+          "recipe": "Dish from another Central Continent region",
+          "time": "1 hour"
+        },
+        {
+          "dc": 70,
+          "label": "Rare or Dangerous",
+          "recipe": "Foreign-continent or explicitly dangerous dish",
+          "time": "2 hours"
+        },
+        {
+          "dc": 85,
+          "label": "Masterchef Dish · Legendary",
+          "recipe": "Legendary catalogue dish",
+          "time": "2-4 hours"
+        }
+      ],
+      "outcomes": [
+        {
+          "key": "failure",
+          "label": "Failure",
+          "rule": "Edible ordinary meal. No Hearth Boon."
+        },
+        {
+          "key": "success",
+          "label": "Success",
+          "rule": "Dish is prepared correctly and grants its listed boon."
+        },
+        {
+          "key": "strong-success",
+          "label": "Success by 20+",
+          "rule": "Strong success may trigger the Hearthwright level benefit."
+        },
+        {
+          "key": "critical-success",
+          "label": "Natural 96-100",
+          "rule": "Critical success creates 1 additional serving."
+        },
+        {
+          "key": "critical-failure",
+          "label": "Natural 1-5",
+          "rule": "Ingredients are spoiled or become unsafe."
+        }
+      ],
+      "modifiers": [
+        {
+          "situation": "Complete Cooking Kit",
+          "rule": "+25 to the Cooking Check"
+        },
+        {
+          "situation": "Proficient assistant",
+          "rule": "+10; only one assistant may help"
+        },
+        {
+          "situation": "Professional kitchen",
+          "rule": "Advantage"
+        },
+        {
+          "situation": "Written recipe or local instruction",
+          "rule": "Removes unfamiliar recipe penalty"
+        },
+        {
+          "situation": "Unfamiliar recipe without guidance",
+          "rule": "+10 DC"
+        },
+        {
+          "situation": "Poor fire, dirty water, heavy weather",
+          "rule": "Disadvantage"
+        },
+        {
+          "situation": "Missing a required specialty utensil",
+          "rule": "Disadvantage or recipe cannot be attempted"
+        }
+      ],
+      "kit": {
+        "cost": 20,
+        "weight": 4,
+        "bonus": 25,
+        "contents": {
+          "cookware": [
+            "Lidded iron pot",
+            "Shallow iron pan",
+            "Small kettle",
+            "Ladle and wooden spoon",
+            "Iron tongs"
+          ],
+          "preparation": [
+            "Cook's knife",
+            "Small cleaver",
+            "Cutting board",
+            "Mortar and pestle",
+            "Measuring cup and spoon",
+            "Whetstone"
+          ],
+          "fieldSupplies": [
+            "Folding grate",
+            "6 iron skewers",
+            "Flint and tinder",
+            "Cleaning cloth and brush",
+            "Salt tin and oil vial"
+          ]
+        },
+        "excludes": "Fuel, water, ingredients, bowls, and regional specialty utensils.",
+        "costUnit": "GP"
+      },
+      "specialtyUtensils": [
+        {
+          "name": "Silver Reed",
+          "purpose": "Tests Fittoan milk, broth, and water for contamination"
+        },
+        {
+          "name": "Sealed Glass Vessel",
+          "purpose": "Required for Iril Candle-Pear and delicate Heaven fruit"
+        },
+        {
+          "name": "Leaf-Steaming Basket",
+          "purpose": "Used for Vaelwyn dumplings and Milis forest dishes"
+        },
+        {
+          "name": "Resonance-Safe Knife",
+          "purpose": "Prevents unstable fruit from reacting while cut"
+        },
+        {
+          "name": "Smoking Rack",
+          "purpose": "Preserves large quantities of fish or meat"
+        },
+        {
+          "name": "Bone-Roasting Pan",
+          "purpose": "Safely collects Duskhide marrow"
+        }
+      ],
+      "levels": [
+        {
+          "level": 0,
+          "title": "Untrained",
+          "bonus": 0,
+          "threshold": 0,
+          "benefit": "Basic camp meals only."
+        },
+        {
+          "level": 1,
+          "title": "Hearthhand",
+          "bonus": 5,
+          "threshold": 3,
+          "benefit": "Cook familiar dishes from your selected home region."
+        },
+        {
+          "level": 2,
+          "title": "Camp Cook",
+          "bonus": 10,
+          "threshold": 7,
+          "benefit": "Cook dishes from other Central Continent regions and ignore one ordinary camp condition."
+        },
+        {
+          "level": 3,
+          "title": "Journeyman",
+          "bonus": 15,
+          "threshold": 12,
+          "benefit": "Cook foreign-continent dishes. A regional recipe becomes familiar after one success."
+        },
+        {
+          "level": 4,
+          "title": "Hearthwright",
+          "bonus": 20,
+          "threshold": 18,
+          "benefit": "Cook explicitly rare or dangerous dishes. Strong success creates 2 extra servings once per long rest."
+        },
+        {
+          "level": 5,
+          "title": "Master Cook",
+          "bonus": 25,
+          "threshold": 25,
+          "benefit": "Cook Legendary Masterchef dishes and reroll one Cooking Check per long rest; use the new result."
+        }
+      ]
+    }
+  },
+  "crafting": {
+    "materials": [
+      {
+        "id": "MAT-001",
+        "name": "Iron",
+        "rarity": "Common",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Mine",
+        "source": "All continents; mines and trade",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-002",
+        "name": "Steel",
+        "rarity": "Common",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Trade",
+        "source": "All major settlements",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-003",
+        "name": "Silver",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Divine"
+        ],
+        "regions": [],
+        "sourceType": "Mine",
+        "source": "Mines, temples, noble markets",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-004",
+        "name": "Cold Iron",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Fey"
+        ],
+        "regions": [],
+        "sourceType": "Trade",
+        "source": "Milis, Ronoa, specialist smiths",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-005",
+        "name": "Mithral",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Arcane"
+        ],
+        "regions": [],
+        "sourceType": "Mine",
+        "source": "Dwarven holds and deep mines",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-006",
+        "name": "Adamantine",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Mine",
+        "source": "Ancient mines and legendary vaults",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-007",
+        "name": "Star Silver",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Celestial"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Meteor sites and sealed treasuries",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-008",
+        "name": "Hardwood",
+        "rarity": "Common",
+        "categoryTags": [
+          "Wood"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Mine",
+        "source": "Forests across Sesios",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-009",
+        "name": "Monster Hide",
+        "rarity": "Common",
+        "categoryTags": [
+          "Hide"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Beasts and monstrosities",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-010",
+        "name": "Chitin Plate",
+        "rarity": "Common",
+        "categoryTags": [
+          "Hide",
+          "Bone"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Insects and armored monsters",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-011",
+        "name": "Monster Bone",
+        "rarity": "Common",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Beasts, giants, monstrosities",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-012",
+        "name": "Fine Fiber",
+        "rarity": "Common",
+        "categoryTags": [
+          "Fiber"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Silk, tendon, treated cloth",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-013",
+        "name": "Alchemical Glass",
+        "rarity": "Common",
+        "categoryTags": [
+          "Glass"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Trade",
+        "source": "Cities, laboratories, desert glassworks",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-014",
+        "name": "Clear Quartz",
+        "rarity": "Common",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Mine",
+        "source": "Mines and river deposits",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-015",
+        "name": "Mana Crystal",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Arcane"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Arcane sites and magical creatures",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-016",
+        "name": "Elemental Crystal",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Elemental"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Elementals and ley-line sites",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-017",
+        "name": "Healing Herb Bundle",
+        "rarity": "Common",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Life"
+        ],
+        "regions": [],
+        "sourceType": "Plant",
+        "source": "Wilds, farms, apothecaries",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-018",
+        "name": "Purifying Salt",
+        "rarity": "Common",
+        "categoryTags": [
+          "Stone"
+        ],
+        "effectTags": [
+          "Ward"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Coasts, temples, desert pans",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-019",
+        "name": "Venom Gland",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Venom",
+          "Poison"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Venomous monsters",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-020",
+        "name": "Arcane Ink",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Ink"
+        ],
+        "effectTags": [
+          "Arcane"
+        ],
+        "regions": [],
+        "sourceType": "Trade",
+        "source": "Scribes and magical laboratories",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-021",
+        "name": "Aesperium Conduit",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Salvage"
+        ],
+        "effectTags": [
+          "Arcane",
+          "Lightning"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Asura",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-022",
+        "name": "Refined Mana Glass",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Glass"
+        ],
+        "effectTags": [
+          "Arcane"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Asura",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-023",
+        "name": "Sky-Silk",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Fiber"
+        ],
+        "effectTags": [
+          "Air"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Asura",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-024",
+        "name": "Rime Iron",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Cold"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Ronoa",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-025",
+        "name": "Rune Slate",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Stone"
+        ],
+        "effectTags": [
+          "Ward"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Ronoa",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-026",
+        "name": "Winterbeast Hide",
+        "rarity": "Common",
+        "categoryTags": [
+          "Hide"
+        ],
+        "effectTags": [
+          "Cold"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Ronoa",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-027",
+        "name": "Red Ash",
+        "rarity": "Uncommon",
+        "categoryTags": [],
+        "effectTags": [
+          "Ash",
+          "Memory"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Fittoa",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-028",
+        "name": "Ash Glass",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Glass"
+        ],
+        "effectTags": [
+          "Ash",
+          "Soul"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Fittoa",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-029",
+        "name": "Resonance Crystal",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Arcane",
+          "Resonance"
+        ],
+        "regions": [],
+        "sourceType": "Ruin",
+        "source": "Fittoa and ancient arcane ruins",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-030",
+        "name": "Echo Thread",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Fiber"
+        ],
+        "effectTags": [
+          "Memory",
+          "Soul"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Fittoa",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-031",
+        "name": "Grave Iron",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Necrotic"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Karrnath",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-032",
+        "name": "Blood Amber",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Blood"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Karrnath",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-033",
+        "name": "Marrow Resin",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Organic",
+          "Bone"
+        ],
+        "effectTags": [
+          "Death"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Karrnath",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-034",
+        "name": "Temple Silver",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Divine"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Shirone",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-035",
+        "name": "Sunstone",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Radiant"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Shirone",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-036",
+        "name": "Sanctified Salt",
+        "rarity": "Uncommon",
+        "categoryTags": [],
+        "effectTags": [
+          "Divine",
+          "Ward"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Shirone",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-037",
+        "name": "Elder Livingwood",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Wood"
+        ],
+        "effectTags": [
+          "Life",
+          "Spirit"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Milis",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-038",
+        "name": "Spirit Resin",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Spirit"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Milis",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-039",
+        "name": "Moonleaf Fiber",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Fiber"
+        ],
+        "effectTags": [
+          "Illusion"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Milis",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-040",
+        "name": "Feyglass",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Glass"
+        ],
+        "effectTags": [
+          "Fey",
+          "Illusion"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Milis",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-041",
+        "name": "Beast Amber",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Beast"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Milis",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-042",
+        "name": "Blue Dragon Ore",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Dragon",
+          "Lightning"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Milis Blue Dragon Mountains",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-043",
+        "name": "Sacred Grove Bark",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Wood"
+        ],
+        "effectTags": [
+          "Divine",
+          "Life"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Milis",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-044",
+        "name": "Dreamcap Spores",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Mind",
+          "Sleep"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Milis",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-045",
+        "name": "Ancestral Stone",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Stone"
+        ],
+        "effectTags": [
+          "Spirit",
+          "Memory"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Milis",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-046",
+        "name": "Sun Glass",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Glass"
+        ],
+        "effectTags": [
+          "Fire",
+          "Radiant"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Begaritt",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-047",
+        "name": "Star Sand",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Stone"
+        ],
+        "effectTags": [
+          "Time",
+          "Arcane"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Begaritt",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-048",
+        "name": "Mirage Crystal",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Illusion"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Begaritt",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-049",
+        "name": "Labyrinth Stone",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Stone"
+        ],
+        "effectTags": [
+          "Ward",
+          "Space"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Begaritt",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-050",
+        "name": "Water Pearl",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Water",
+          "Life"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Begaritt",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-051",
+        "name": "Ancient Bronze",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Relic"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Begaritt",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-052",
+        "name": "Tomb Linen",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Fiber"
+        ],
+        "effectTags": [
+          "Death",
+          "Ward"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Begaritt",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-053",
+        "name": "Sandwyrm Scale",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Hide"
+        ],
+        "effectTags": [
+          "Fire"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Begaritt",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-054",
+        "name": "Star-Key Fragment",
+        "rarity": "Very Rare",
+        "categoryTags": [],
+        "effectTags": [
+          "Relic",
+          "Time",
+          "Space"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Begaritt",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-055",
+        "name": "Abyssal Iron",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Shadow",
+          "Fiend"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Demon Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-056",
+        "name": "Emberstone",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Stone"
+        ],
+        "effectTags": [
+          "Fire"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Demon Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-057",
+        "name": "Black Chitin",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Hide"
+        ],
+        "effectTags": [
+          "Shadow"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Demon Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-058",
+        "name": "Fiend Blood",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Fire",
+          "Necrotic"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Demon Continent and fiends",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-059",
+        "name": "Basalt Fiber",
+        "rarity": "Common",
+        "categoryTags": [
+          "Fiber"
+        ],
+        "effectTags": [
+          "Fire"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Demon Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-060",
+        "name": "War-Scar Alloy",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Blood"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Demon Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-061",
+        "name": "Infernal Horn",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [
+          "Fiend"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Demon Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-062",
+        "name": "Abyssal Core",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Essence"
+        ],
+        "effectTags": [
+          "Fiend",
+          "Void"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Demon Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-063",
+        "name": "Demonheart Coal",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Stone"
+        ],
+        "effectTags": [
+          "Fire",
+          "Blood"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Demon Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-064",
+        "name": "Cloudsilver",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Air",
+          "Divine"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Heaven Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-065",
+        "name": "Aurora Thread",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Fiber"
+        ],
+        "effectTags": [
+          "Radiant",
+          "Illusion"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Heaven Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-066",
+        "name": "Stasis Glass",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Glass"
+        ],
+        "effectTags": [
+          "Time"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Heaven Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-067",
+        "name": "Celestial Feather",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Fiber"
+        ],
+        "effectTags": [
+          "Radiant"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Heaven Continent and celestials",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-068",
+        "name": "Halo Crystal",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Divine",
+          "Radiant"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Heaven Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-069",
+        "name": "Sky Memory Pearl",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Memory"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Heaven Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-070",
+        "name": "First-Light Oil",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Radiant"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Heaven Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-071",
+        "name": "Timefrost Crystal",
+        "rarity": "Legendary",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Time",
+          "Cold"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Heaven Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-072",
+        "name": "Saintbone",
+        "rarity": "Legendary",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [
+          "Divine",
+          "Soul"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Heaven Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-073",
+        "name": "Unfallen Star Fragment",
+        "rarity": "Legendary",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Celestial",
+          "Fire"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Heaven Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-074",
+        "name": "Coral Plate",
+        "rarity": "Common",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [
+          "Water"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Coasts and reefs",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-075",
+        "name": "Stormglass",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Glass"
+        ],
+        "effectTags": [
+          "Storm",
+          "Lightning"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Dangerous sea routes",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-076",
+        "name": "Siren Scale",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Hide"
+        ],
+        "effectTags": [
+          "Mind",
+          "Water"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Open seas",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-077",
+        "name": "Leviathan Bone",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [
+          "Water"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Deep seas",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-078",
+        "name": "Black Pearl",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Shadow",
+          "Water"
+        ],
+        "regions": [],
+        "sourceType": "Trade",
+        "source": "Deep seas and pirate markets",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-079",
+        "name": "Deep Salt",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Stone"
+        ],
+        "effectTags": [
+          "Ward",
+          "Water"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Deep sea harvests",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-080",
+        "name": "Kraken Ink",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Ink"
+        ],
+        "effectTags": [
+          "Mind",
+          "Shadow"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Deep seas",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-081",
+        "name": "Sea Serpent Venom",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Venom",
+          "Water"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Open seas",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-082",
+        "name": "Drowned Relic Brass",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Soul",
+          "Relic"
+        ],
+        "regions": [],
+        "sourceType": "Ruin",
+        "source": "Shipwrecks and drowned ruins",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-083",
+        "name": "Tideheart",
+        "rarity": "Legendary",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Water",
+          "Storm"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Mythic sea creatures",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-084",
+        "name": "Ashbound Claw",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [
+          "Ash",
+          "Weapon"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Ashbound Fiends",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-085",
+        "name": "Fittoan Ash Sac",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Ash",
+          "Volatile"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Ashbound Fiends",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-086",
+        "name": "Warped Bone Fragment",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [
+          "Aberrant",
+          "Resonance"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Fittoan creatures",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-087",
+        "name": "Monster Fang",
+        "rarity": "Common",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [
+          "Weapon"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Beasts and monstrosities",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-088",
+        "name": "Monster Claw",
+        "rarity": "Common",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [
+          "Weapon"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Beasts, fiends, and monstrosities",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-089",
+        "name": "Monster Bile",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Acid"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Large beasts and corrosive monsters",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-090",
+        "name": "Resin Bundle",
+        "rarity": "Common",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Plant",
+        "source": "Forests, alchemists, and trade",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-091",
+        "name": "Ooze Gel",
+        "rarity": "Common",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Acid"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Oozes and alchemical vats",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-092",
+        "name": "Parchment",
+        "rarity": "Common",
+        "categoryTags": [
+          "Fiber"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Trade",
+        "source": "Scribes and markets",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-093",
+        "name": "Soul Quartz",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Soul"
+        ],
+        "regions": [],
+        "sourceType": "Ruin",
+        "source": "Spirit sites and sealed ruins",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-094",
+        "name": "Dragon Scale",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Hide"
+        ],
+        "effectTags": [
+          "Dragon"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Dragons",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-095",
+        "name": "Dragonbone",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [
+          "Dragon"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Dragons",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-096",
+        "name": "Giant Heartblood",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Blood"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Giants and titan-blooded creatures",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-097",
+        "name": "Primal Core",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Essence"
+        ],
+        "effectTags": [
+          "Elemental"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Powerful elementals and primal sites",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-098",
+        "name": "Void Glass",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Glass"
+        ],
+        "effectTags": [
+          "Void"
+        ],
+        "regions": [],
+        "sourceType": "Ruin",
+        "source": "Planar breaches and sealed laboratories",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-099",
+        "name": "Memory Ink",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Ink"
+        ],
+        "effectTags": [
+          "Memory"
+        ],
+        "regions": [],
+        "sourceType": "Ruin",
+        "source": "Fittoan archives and identity rites",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      }
+    ],
+    "recipes": [
+      {
+        "id": "BSC-01",
+        "name": "Ammunition Bundle",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Metal or Bone x1 + Wood x1",
+        "requirements": [
+          {
+            "label": "Metal or Bone",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Bone"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Wood",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Wood"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "Short rest",
+        "batchYield": 1,
+        "effect": "Creates 20 arrows, bolts, or bullets.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BSC-02",
+        "name": "Rope",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Fiber x2",
+        "requirements": [
+          {
+            "label": "Fiber",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 1,
+        "effect": "50 ft. of durable rope.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BSC-03",
+        "name": "Grappling Hook",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Forgecraft",
+        "requirementsText": "Metal x1 + Fiber x1",
+        "requirements": [
+          {
+            "label": "Metal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 1,
+        "effect": "Standard climbing tool.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BSC-04",
+        "name": "Simple Weapon",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Forgecraft",
+        "requirementsText": "Metal, Wood, or Bone x2",
+        "requirements": [
+          {
+            "label": "Metal, Wood, or Bone",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Wood"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Bone"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Create one standard simple weapon.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BSC-05",
+        "name": "Martial Weapon",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Forgecraft",
+        "requirementsText": "Metal x2 + Wood or Fiber x1",
+        "requirements": [
+          {
+            "label": "Metal",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Wood or Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Wood"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Create one standard martial weapon.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BSC-06",
+        "name": "Shield",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Forgecraft",
+        "requirementsText": "Metal or Wood x2 + Hide x1",
+        "requirements": [
+          {
+            "label": "Metal or Wood",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Wood"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Hide",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Hide"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Create one standard shield.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BSC-07",
+        "name": "Light Armor",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Hide x2 + Fiber x1",
+        "requirements": [
+          {
+            "label": "Hide",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Hide"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Create one standard light armor.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BSC-08",
+        "name": "Medium Armor",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Forgecraft",
+        "requirementsText": "Metal or Hide x3 + Fiber x1",
+        "requirements": [
+          {
+            "label": "Metal or Hide",
+            "quantity": 3,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Hide"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Create one standard medium armor.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BSC-09",
+        "name": "Heavy Armor",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Forgecraft",
+        "requirementsText": "Metal x4 + Fiber x1",
+        "requirements": [
+          {
+            "label": "Metal",
+            "quantity": 4,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 days",
+        "batchYield": 1,
+        "effect": "Create one standard heavy armor.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BSC-10",
+        "name": "Spell Focus",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Runecraft",
+        "requirementsText": "Wood, Metal, or Bone x1 + Gem x1",
+        "requirements": [
+          {
+            "label": "Wood, Metal, or Bone",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Wood"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Bone"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Gem",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Gem"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Create one standard magical focus.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BSC-11",
+        "name": "Protective Mask",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Fiber x1 + Purifying material x1",
+        "requirements": [
+          {
+            "label": "Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Purifying material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Ward",
+                  "Divine",
+                  "Life"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 1,
+        "effect": "Advantage against ordinary airborne dust; does not fully stop magical contamination.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BOM-01",
+        "name": "Firebomb",
+        "category": "Bomb",
+        "rarity": "Common",
+        "discipline": "Alchemy",
+        "requirementsText": "Alchemical Glass x1 + Fire-tag material x1",
+        "requirements": [
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Fire-tag material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Fire"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "30 ft.; 10-ft. radius. Speed save or 2d6 fire, half on success.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-02",
+        "name": "Frost Bomb",
+        "category": "Bomb",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Alchemical Glass x1 + Cold-tag material x1",
+        "requirements": [
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Cold-tag material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Cold"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "10-ft. radius. 2d4 cold; failed save reduces movement by 10 ft. for 1 round.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-03",
+        "name": "Shock Flask",
+        "category": "Bomb",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Alchemical Glass x1 + Lightning-tag material x1",
+        "requirements": [
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Lightning-tag material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Lightning"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "2d6 lightning; failed save removes reactions until next turn.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-04",
+        "name": "Acid Flask",
+        "category": "Bomb",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Alchemical Glass x1 + Acid-tag organic x1",
+        "requirements": [
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Acid-tag organic",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Organic"
+                ],
+                "anyTags": [
+                  "Acid"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "2d6 acid; target suffers -2 AC until cleaned or repaired.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-05",
+        "name": "Smoke Bomb",
+        "category": "Bomb",
+        "rarity": "Common",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Alchemical Glass x1 + Smoke or Shadow material x1",
+        "requirements": [
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Smoke or Shadow material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Ash",
+                  "Shadow"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Creates heavy obscurement in a 10-ft. radius for 3 rounds.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-06",
+        "name": "Flash Bomb",
+        "category": "Bomb",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Alchemical Glass x1 + Radiant material x1",
+        "requirements": [
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Radiant material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Radiant",
+                  "Divine"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Awareness save or Blinded until end of next turn.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-07",
+        "name": "Shrapnel Bomb",
+        "category": "Bomb",
+        "rarity": "Uncommon",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Metal x1 + Volatile material x1",
+        "requirements": [
+          {
+            "label": "Metal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Volatile material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Volatile",
+                  "Fire",
+                  "Lightning"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "10-ft. radius. Speed save or 2d8 piercing, half on success.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-08",
+        "name": "Binding Bomb",
+        "category": "Bomb",
+        "rarity": "Rare",
+        "discipline": "Alchemy",
+        "requirementsText": "Alchemical Glass x1 + Resin or Ooze Gel x1 + Arcane catalyst x1",
+        "requirements": [
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Resin or Ooze Gel",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-090"
+                ],
+                "tags": []
+              },
+              {
+                "materialIds": [
+                  "MAT-091"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Arcane catalyst",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Arcane"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Speed save or Restrained; action and Strength DC 60 to escape.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-09",
+        "name": "Spirit Bomb",
+        "category": "Bomb",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Alchemical Glass x1 + Silver x1 + Soul material x1",
+        "requirements": [
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Silver",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-003"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Soul material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Soul"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "3d6 radiant or force to undead and incorporeal creatures.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-10",
+        "name": "Null Bomb",
+        "category": "Bomb",
+        "rarity": "Very Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Refined Mana Glass x1 + Void material x1 + Arcane catalyst x1",
+        "requirements": [
+          {
+            "label": "Refined Mana Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-022"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Void material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Void"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Arcane catalyst",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Arcane"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Suppresses one non-artifact magical effect in the area for 1 round.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-11",
+        "name": "Sleep Gas",
+        "category": "Bomb",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Alchemical Glass x1 + Dreamcap Spores x1",
+        "requirements": [
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Dreamcap Spores",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-044"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Vitality save or Drowsy; a second failed exposure causes sleep for 1 minute.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-12",
+        "name": "Ash Bomb",
+        "category": "Bomb",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Fittoan Ash Sac x1 + Alchemical Glass x1",
+        "requirements": [
+          {
+            "label": "Fittoan Ash Sac",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-085"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Creates a red ash cloud for 3 rounds; exposed creatures make an Ash-Sickness save.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-01",
+        "name": "Minor Healing Potion",
+        "category": "Potion",
+        "rarity": "Common",
+        "discipline": "Alchemy",
+        "requirementsText": "Healing Herb x1 + Life material x1",
+        "requirements": [
+          {
+            "label": "Healing Herb",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-017"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Life material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Life"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Restore 2d4 + 2 HP.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-02",
+        "name": "Greater Healing Potion",
+        "category": "Potion",
+        "rarity": "Rare",
+        "discipline": "Alchemy",
+        "requirementsText": "Rare Life material x1 + Healing Herb x1 + Mana Crystal x1",
+        "requirements": [
+          {
+            "label": "Rare Life material",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Life"
+                ],
+                "minRarity": "Rare"
+              }
+            ]
+          },
+          {
+            "label": "Healing Herb",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-017"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Mana Crystal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-015"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Restore 4d4 + 4 HP.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-03",
+        "name": "Superior Healing Potion",
+        "category": "Potion",
+        "rarity": "Very Rare",
+        "discipline": "Alchemy",
+        "requirementsText": "Very Rare Life material x1 + Rare catalyst x1",
+        "requirements": [
+          {
+            "label": "Very Rare Life material",
+            "quantity": 1,
+            "minRarity": "Very Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Life"
+                ],
+                "minRarity": "Very Rare"
+              }
+            ]
+          },
+          {
+            "label": "Rare catalyst",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "minRarity": "Rare"
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Restore 6d4 + 6 HP.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-04",
+        "name": "Mana Tonic",
+        "category": "Potion",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Mana Crystal x1 + Arcane organic x1",
+        "requirements": [
+          {
+            "label": "Mana Crystal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-015"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Arcane organic",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Organic"
+                ],
+                "anyTags": [
+                  "Arcane"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Restore 20 MP.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-05",
+        "name": "Greater Mana Tonic",
+        "category": "Potion",
+        "rarity": "Rare",
+        "discipline": "Alchemy",
+        "requirementsText": "Rare Mana Crystal x1 + Arcane essence x1",
+        "requirements": [
+          {
+            "label": "Rare Mana Crystal",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-015"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Arcane essence",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Arcane"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Restore 40 MP.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-06",
+        "name": "Antidote",
+        "category": "Potion",
+        "rarity": "Common",
+        "discipline": "Alchemy",
+        "requirementsText": "Purifying Salt x1 + Venom or Poison material x1",
+        "requirements": [
+          {
+            "label": "Purifying Salt",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-018"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Venom or Poison material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Venom",
+                  "Poison"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "End one ordinary Poisoned effect.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-07",
+        "name": "Cleansing Salve",
+        "category": "Salve",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Silver or Sanctified Salt x1 + Healing Herb x1",
+        "requirements": [
+          {
+            "label": "Silver or Sanctified Salt",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-003"
+                ],
+                "tags": []
+              },
+              {
+                "materialIds": [
+                  "MAT-036"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Healing Herb",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-017"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Gain +10 on the next save against disease or contamination.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-08",
+        "name": "Stabilizing Draught",
+        "category": "Potion",
+        "rarity": "Rare",
+        "discipline": "Alchemy",
+        "requirementsText": "Resonance Crystal x1 + Purifying material x1",
+        "requirements": [
+          {
+            "label": "Resonance Crystal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-029"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Purifying material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Ward",
+                  "Divine",
+                  "Life"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Advantage on one save against magical instability.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-09",
+        "name": "Awakening Salt",
+        "category": "Potion",
+        "rarity": "Common",
+        "discipline": "Alchemy",
+        "requirementsText": "Deep Salt or Purifying Salt x1 + stimulant organic x1",
+        "requirements": [
+          {
+            "label": "Deep Salt or Purifying Salt",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-079"
+                ],
+                "tags": []
+              },
+              {
+                "materialIds": [
+                  "MAT-018"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "stimulant organic",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Organic"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Immediately wakes an ordinarily sleeping creature.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-10",
+        "name": "Restoration Serum",
+        "category": "Potion",
+        "rarity": "Rare",
+        "discipline": "Alchemy",
+        "requirementsText": "Life essence x1 + Rare organic catalyst x1",
+        "requirements": [
+          {
+            "label": "Life essence",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Life"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Rare organic catalyst",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Organic"
+                ],
+                "minRarity": "Rare"
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Remove one temporary physical penalty approved by the GM.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-11",
+        "name": "Element Ward Tonic",
+        "category": "Potion",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Healing Herb x1 + chosen elemental material x1",
+        "requirements": [
+          {
+            "label": "Healing Herb",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-017"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "chosen elemental material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Elemental",
+                  "Fire",
+                  "Cold",
+                  "Lightning",
+                  "Water",
+                  "Storm"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "For 1 hour, gain +10 to saves against the chosen element.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-12",
+        "name": "Greater Element Ward",
+        "category": "Potion",
+        "rarity": "Rare",
+        "discipline": "Alchemy",
+        "requirementsText": "Rare elemental essence x1 + Gem x1",
+        "requirements": [
+          {
+            "label": "Rare elemental essence",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Elemental",
+                  "Fire",
+                  "Cold",
+                  "Lightning",
+                  "Water",
+                  "Storm"
+                ],
+                "minRarity": "Rare"
+              }
+            ]
+          },
+          {
+            "label": "Gem",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Gem"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Gain resistance to one damage type for 1 encounter.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "COA-01",
+        "name": "Venom Oil",
+        "category": "Coating",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Venom Gland x1 + Resin x1",
+        "requirements": [
+          {
+            "label": "Venom Gland",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-019"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-090"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Three successful hits deal +1d4 poison once per turn.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "COA-02",
+        "name": "Ember Oil",
+        "category": "Coating",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Fire material x1 + Resin x1",
+        "requirements": [
+          {
+            "label": "Fire material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Fire"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-090"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Three successful hits deal +1d4 fire once per turn.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "COA-03",
+        "name": "Spirit Lacquer",
+        "category": "Coating",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Silver x1 + Spirit material x1 + Resin x1",
+        "requirements": [
+          {
+            "label": "Silver",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-003"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Spirit material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Spirit"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-090"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Weapon strikes incorporeal creatures normally for 1 encounter.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "COA-04",
+        "name": "Armor-Eater Acid",
+        "category": "Coating",
+        "rarity": "Rare",
+        "discipline": "Alchemy",
+        "requirementsText": "Acid material x1 + Monster bile x1",
+        "requirements": [
+          {
+            "label": "Acid material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Acid"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Monster bile",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-089"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "For 3 hits, weapon ignores 2 AC.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "COA-05",
+        "name": "Ash Resin",
+        "category": "Coating",
+        "rarity": "Rare",
+        "discipline": "Alchemy",
+        "requirementsText": "Red Ash x1 + Resonance Crystal dust x1 + Resin x1",
+        "requirements": [
+          {
+            "label": "Red Ash",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-027"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Resonance Crystal dust",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-029"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-090"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "For 3 hits, a critical hit forces an Ash-Sickness exposure save.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "SCR-01",
+        "name": "Cantrip / 1st-Level Scroll",
+        "category": "Scroll",
+        "rarity": "Common",
+        "discipline": "Scribing",
+        "requirementsText": "Parchment x1 + Arcane Ink x1 + spell catalyst x1",
+        "requirements": [
+          {
+            "label": "Parchment",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-092"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Arcane Ink",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-020"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "spell catalyst",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Arcane"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 1,
+        "effect": "Stores one cantrip or 1st-level spell.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "SCR-02",
+        "name": "2nd-3rd Level Scroll",
+        "category": "Scroll",
+        "rarity": "Uncommon",
+        "discipline": "Scribing",
+        "requirementsText": "Fine Fiber x1 + Arcane Ink x1 + Mana Crystal x1",
+        "requirements": [
+          {
+            "label": "Fine Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-012"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Arcane Ink",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-020"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Mana Crystal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-015"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Stores one 2nd- or 3rd-level spell.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "SCR-03",
+        "name": "4th-5th Level Scroll",
+        "category": "Scroll",
+        "rarity": "Rare",
+        "discipline": "Scribing",
+        "requirementsText": "Fine Fiber x1 + Rare Ink x1 + Rare Gem x1",
+        "requirements": [
+          {
+            "label": "Fine Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-012"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Rare Ink",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Ink"
+                ],
+                "minRarity": "Rare"
+              }
+            ]
+          },
+          {
+            "label": "Rare Gem",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Gem"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Stores one 4th- or 5th-level spell.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "SCR-04",
+        "name": "6th-7th Level Scroll",
+        "category": "Scroll",
+        "rarity": "Very Rare",
+        "discipline": "Scribing",
+        "requirementsText": "Rare Fiber x1 + Very Rare Ink x1 + Very Rare Gem x1",
+        "requirements": [
+          {
+            "label": "Rare Fiber",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Very Rare Ink",
+            "quantity": 1,
+            "minRarity": "Very Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Ink"
+                ],
+                "minRarity": "Very Rare"
+              }
+            ]
+          },
+          {
+            "label": "Very Rare Gem",
+            "quantity": 1,
+            "minRarity": "Very Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Gem"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "7 days",
+        "batchYield": 1,
+        "effect": "Stores one 6th- or 7th-level spell.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "SCR-05",
+        "name": "8th-9th Level Scroll",
+        "category": "Scroll",
+        "rarity": "Legendary",
+        "discipline": "Scribing",
+        "requirementsText": "Legendary writing surface + Legendary Ink + Mythic catalyst",
+        "requirements": [
+          {
+            "label": "Legendary writing surface",
+            "quantity": 1,
+            "minRarity": "Legendary",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Fiber",
+                  "Wood",
+                  "Stone"
+                ],
+                "minRarity": "Legendary"
+              }
+            ]
+          },
+          {
+            "label": "Legendary Ink",
+            "quantity": 1,
+            "minRarity": "Legendary",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Ink"
+                ],
+                "minRarity": "Legendary"
+              }
+            ]
+          },
+          {
+            "label": "Mythic catalyst",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Divine",
+                  "Celestial",
+                  "Void",
+                  "Time",
+                  "Soul"
+                ],
+                "minRarity": "Legendary"
+              }
+            ]
+          }
+        ],
+        "dc": 0,
+        "time": "Project",
+        "batchYield": 1,
+        "effect": "Stores one 8th- or 9th-level spell.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": true
+      },
+      {
+        "id": "INK-01",
+        "name": "Soul Ink",
+        "category": "Ink",
+        "rarity": "Rare",
+        "discipline": "Scribing",
+        "requirementsText": "Soul Quartz x1 + Arcane Ink x1",
+        "requirements": [
+          {
+            "label": "Soul Quartz",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-093"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Arcane Ink",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-020"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 2,
+        "effect": "Required for identity, spirit, and resurrection scrolls.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "INK-02",
+        "name": "Blood Ink",
+        "category": "Ink",
+        "rarity": "Uncommon",
+        "discipline": "Scribing",
+        "requirementsText": "Blood-tag material x1 + Arcane Ink x1",
+        "requirements": [
+          {
+            "label": "Blood-tag material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Blood"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Arcane Ink",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-020"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Required for blood magic and binding contracts.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "INK-03",
+        "name": "Witness Ink",
+        "category": "Ink",
+        "rarity": "Very Rare",
+        "discipline": "Scribing",
+        "requirementsText": "Memory material x1 + Soul material x1 + Very Rare Ink x1",
+        "requirements": [
+          {
+            "label": "Memory material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Memory"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Soul material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Soul"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Very Rare Ink",
+            "quantity": 1,
+            "minRarity": "Very Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Ink"
+                ],
+                "minRarity": "Very Rare"
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Used for true-name, memory, and anti-erasure effects.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "WPN-01",
+        "name": "Serrated Iron Blade",
+        "category": "Weapon",
+        "rarity": "Uncommon",
+        "discipline": "Forgecraft",
+        "requirementsText": "Steel x2 + Fang or Claw x1",
+        "requirements": [
+          {
+            "label": "Steel",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-002"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Fang or Claw",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-087"
+                ],
+                "tags": []
+              },
+              {
+                "materialIds": [
+                  "MAT-088"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Martial blade. Once per turn, a strong hit deals +1d4 slashing.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-02",
+        "name": "Frostbite Spear",
+        "category": "Weapon",
+        "rarity": "Uncommon",
+        "discipline": "Forgecraft",
+        "requirementsText": "Rime Iron x2 + Cold material x1",
+        "requirements": [
+          {
+            "label": "Rime Iron",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-024"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Cold material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Cold"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Spear. Once per turn, deal +1d4 cold; on critical, reduce movement by 10 ft.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-03",
+        "name": "Emberglass Dagger",
+        "category": "Weapon",
+        "rarity": "Uncommon",
+        "discipline": "Forgecraft",
+        "requirementsText": "Sun Glass x1 + Emberstone x1 + Metal x1",
+        "requirements": [
+          {
+            "label": "Sun Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-046"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Emberstone",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-056"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Metal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Dagger. Deals +1d4 fire once per turn; emits dim orange light.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-04",
+        "name": "Grave-Iron Mace",
+        "category": "Weapon",
+        "rarity": "Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Grave Iron x2 + Marrow Resin x1 + Soul material x1",
+        "requirements": [
+          {
+            "label": "Grave Iron",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-031"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Marrow Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-033"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Soul material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Soul"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Mace. +1d6 necrotic once per turn; +10 against undead control effects.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-05",
+        "name": "Rimewood Longbow",
+        "category": "Weapon",
+        "rarity": "Rare",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Elder Livingwood x1 + Rime Iron x1 + Fine Fiber x1",
+        "requirements": [
+          {
+            "label": "Elder Livingwood",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-037"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Rime Iron",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-024"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Fine Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-012"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Longbow. Ignore ordinary cold penalties; +1d6 cold once per turn.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-06",
+        "name": "Stormcoil Staff",
+        "category": "Weapon",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Aesperium Conduit x1 + Stormglass x1 + Hardwood x1",
+        "requirements": [
+          {
+            "label": "Aesperium Conduit",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-021"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Stormglass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-075"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Hardwood",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-008"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Staff and focus. Stores one 20 MP lightning spell supplied by a willing caster.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-07",
+        "name": "Ashbound Cleaver",
+        "category": "Weapon",
+        "rarity": "Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Steel x2 + Ashbound Claw x1 + Red Ash x1",
+        "requirements": [
+          {
+            "label": "Steel",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-002"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Ashbound Claw",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-084"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Red Ash",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-027"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Heavy blade. +1d6 ash damage once per turn; critical hits expose target to red ash.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-08",
+        "name": "Spiritfang Shortsword",
+        "category": "Weapon",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Cold Iron x1 + Spirit Resin x1 + Monster Fang x1",
+        "requirements": [
+          {
+            "label": "Cold Iron",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-004"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Spirit Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-038"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Monster Fang",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-087"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Counts as magical and silvered; strikes incorporeal creatures normally.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-09",
+        "name": "Sunforged Longsword",
+        "category": "Weapon",
+        "rarity": "Very Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Temple Silver x2 + Sunstone x1 + Radiant material x1",
+        "requirements": [
+          {
+            "label": "Temple Silver",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-034"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Sunstone",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-035"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Radiant material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Radiant",
+                  "Divine"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "7 days",
+        "batchYield": 1,
+        "effect": "Longsword. +1d8 radiant once per turn; emits sunlight on command.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-10",
+        "name": "Dragonbone Maul",
+        "category": "Weapon",
+        "rarity": "Very Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Dragonbone x2 + Giant Heartblood x1 + Rare Metal x1",
+        "requirements": [
+          {
+            "label": "Dragonbone",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-095"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Giant Heartblood",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-096"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Rare Metal",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "7 days",
+        "batchYield": 1,
+        "effect": "Maul. Once per turn add +1d8 bludgeoning; +10 to break objects and structures.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-11",
+        "name": "Resonance Rapier",
+        "category": "Weapon",
+        "rarity": "Very Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Mithral x2 + Resonance Crystal x1 + Echo Thread x1",
+        "requirements": [
+          {
+            "label": "Mithral",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-005"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Resonance Crystal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-029"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Echo Thread",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-030"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "7 days",
+        "batchYield": 1,
+        "effect": "Rapier. Critical range improves by 4; cannot improve below natural 91.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-12",
+        "name": "Voidglass Knife",
+        "category": "Weapon",
+        "rarity": "Very Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Void Glass x1 + Mithral x1 + Shadow material x1",
+        "requirements": [
+          {
+            "label": "Void Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-098"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Mithral",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-005"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Shadow material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Shadow"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "7 days",
+        "batchYield": 1,
+        "effect": "Dagger. Ignores 3 RES; once per long rest suppresses a minor ward on contact.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-13",
+        "name": "Primal-Heart Axe",
+        "category": "Weapon",
+        "rarity": "Very Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Rare Metal x2 + Primal Core x1 + Livingwood x1",
+        "requirements": [
+          {
+            "label": "Rare Metal",
+            "quantity": 2,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Primal Core",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-097"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Livingwood",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-037"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "7 days",
+        "batchYield": 1,
+        "effect": "Battleaxe. +1d8 elemental damage once per turn, chosen when crafted.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-14",
+        "name": "Star-Silver Greatsword",
+        "category": "Weapon",
+        "rarity": "Very Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Star Silver x3 + Celestial catalyst x1",
+        "requirements": [
+          {
+            "label": "Star Silver",
+            "quantity": 3,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-007"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Celestial catalyst",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Celestial",
+                  "Radiant",
+                  "Divine"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "10 days",
+        "batchYield": 1,
+        "effect": "Greatsword. Counts as celestial; +1d8 radiant or force once per turn.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-15",
+        "name": "Soulbound Polearm",
+        "category": "Weapon",
+        "rarity": "Very Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Mithral x2 + Soul Quartz x1 + Blood material x1",
+        "requirements": [
+          {
+            "label": "Mithral",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-005"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Soul Quartz",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-093"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Blood material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Blood"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "7 days",
+        "batchYield": 1,
+        "effect": "Cannot be disarmed; recall to hand once per short rest.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-01",
+        "name": "Reinforced Hide Coat",
+        "category": "Armor",
+        "rarity": "Uncommon",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Monster Hide x3 + Fine Fiber x1",
+        "requirements": [
+          {
+            "label": "Monster Hide",
+            "quantity": 3,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-009"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Fine Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-012"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Light armor. Grants +1 AC over its standard form.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-02",
+        "name": "Chitin Scale Armor",
+        "category": "Armor",
+        "rarity": "Uncommon",
+        "discipline": "Forgecraft",
+        "requirementsText": "Chitin Plate x3 + Fiber x1",
+        "requirements": [
+          {
+            "label": "Chitin Plate",
+            "quantity": 3,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-010"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Medium armor. +1 AC; disadvantage on swimming unless modified by the GM.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-03",
+        "name": "Winterbeast Mantle",
+        "category": "Armor",
+        "rarity": "Uncommon",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Winterbeast Hide x2 + Fine Fiber x1",
+        "requirements": [
+          {
+            "label": "Winterbeast Hide",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-026"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Fine Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-012"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Light armor or cloak. Ignore ordinary cold penalties.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-04",
+        "name": "Rime-Iron Mail",
+        "category": "Armor",
+        "rarity": "Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Rime Iron x3 + Rune Slate x1",
+        "requirements": [
+          {
+            "label": "Rime Iron",
+            "quantity": 3,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-024"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Rune Slate",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-025"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "4 days",
+        "batchYield": 1,
+        "effect": "Medium armor. +2 AC and +10 on saves against cold.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-05",
+        "name": "Grave-Iron Coat",
+        "category": "Armor",
+        "rarity": "Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Grave Iron x3 + Marrow Resin x1",
+        "requirements": [
+          {
+            "label": "Grave Iron",
+            "quantity": 3,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-031"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Marrow Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-033"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "4 days",
+        "batchYield": 1,
+        "effect": "Medium armor. +2 RES against necrotic damage and death effects.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-06",
+        "name": "Sunwarden Plate",
+        "category": "Armor",
+        "rarity": "Very Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Temple Silver x3 + Sunstone x1 + Sanctified Salt x1",
+        "requirements": [
+          {
+            "label": "Temple Silver",
+            "quantity": 3,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-034"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Sunstone",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-035"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Sanctified Salt",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-036"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "10 days",
+        "batchYield": 1,
+        "effect": "Heavy armor. +3 RES against radiant and necrotic; sheds sunlight on command.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-07",
+        "name": "Shadowweave Cloak",
+        "category": "Armor",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Moonleaf Fiber x2 + Shadow material x1 + Feyglass x1",
+        "requirements": [
+          {
+            "label": "Moonleaf Fiber",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-039"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Shadow material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Shadow"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Feyglass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-040"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Cloak. +10 Stealth in dim light or darkness.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-08",
+        "name": "Ashproof Mantle",
+        "category": "Armor",
+        "rarity": "Rare",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Fine Fiber x2 + Purifying Salt x1 + Ash Glass x1",
+        "requirements": [
+          {
+            "label": "Fine Fiber",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-012"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Purifying Salt",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-018"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Ash Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-028"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Cloak. +10 against airborne contamination and Fittoan ash exposure.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-09",
+        "name": "Spiritguard Buckler",
+        "category": "Shield",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Temple Silver x1 + Spirit Resin x1 + Rune Slate x1",
+        "requirements": [
+          {
+            "label": "Temple Silver",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-034"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Spirit Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-038"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Rune Slate",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-025"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Shield. +2 RES against spirit, psychic, and possession effects.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-10",
+        "name": "Cloudsilver Harness",
+        "category": "Armor",
+        "rarity": "Very Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Cloudsilver x3 + Aurora Thread x1",
+        "requirements": [
+          {
+            "label": "Cloudsilver",
+            "quantity": 3,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-064"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Aurora Thread",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-065"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "10 days",
+        "batchYield": 1,
+        "effect": "Medium armor. Counts as half normal weight; +5 movement while worn.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-11",
+        "name": "Dragonhide Plate",
+        "category": "Armor",
+        "rarity": "Very Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Dragon Scale x4 + Rare Metal x1",
+        "requirements": [
+          {
+            "label": "Dragon Scale",
+            "quantity": 4,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-094"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Rare Metal",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "10 days",
+        "batchYield": 1,
+        "effect": "Heavy armor. Resistance to the dragon material’s damage type.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-12",
+        "name": "Livingwood Aegis",
+        "category": "Shield",
+        "rarity": "Very Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Elder Livingwood x3 + Life essence x1 + Ancestral Stone x1",
+        "requirements": [
+          {
+            "label": "Elder Livingwood",
+            "quantity": 3,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-037"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Life essence",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Life"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Ancestral Stone",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-045"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "7 days",
+        "batchYield": 1,
+        "effect": "Shield. Repairs itself after a long rest and restores 1d6 HP once per short rest.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-01",
+        "name": "Elemental Lantern",
+        "category": "Utility",
+        "rarity": "Uncommon",
+        "discipline": "Runecraft",
+        "requirementsText": "Metal x1 + Glass x1 + elemental material x1",
+        "requirements": [
+          {
+            "label": "Metal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Glass"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "elemental material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Elemental",
+                  "Fire",
+                  "Cold",
+                  "Lightning",
+                  "Water",
+                  "Storm"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Bright light that survives the corresponding environment.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-02",
+        "name": "Resonance Compass",
+        "category": "Utility",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Metal x1 + Resonance Crystal x1",
+        "requirements": [
+          {
+            "label": "Metal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Resonance Crystal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-029"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Points toward the nearest strong magical disturbance.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-03",
+        "name": "Echo Lens",
+        "category": "Utility",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Glass x1 + Memory material x1 + Gem x1",
+        "requirements": [
+          {
+            "label": "Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Glass"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Memory material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Memory"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Gem",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Gem"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Once per short rest, reveals one recent magical trace.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-04",
+        "name": "Holding Satchel",
+        "category": "Utility",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Fine Fiber x2 + Space material x1 + Gem x1",
+        "requirements": [
+          {
+            "label": "Fine Fiber",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-012"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Space material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Space"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Gem",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Gem"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Contents count as 20 lb. lighter; cannot hold living creatures safely.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-05",
+        "name": "Climber’s Bracers",
+        "category": "Utility",
+        "rarity": "Uncommon",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Hide x1 + Monster Claw x1 + Resin x1",
+        "requirements": [
+          {
+            "label": "Hide",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Hide"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Monster Claw",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-088"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-090"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Gain +10 to climbing checks.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-06",
+        "name": "Water Condenser",
+        "category": "Utility",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Metal x1 + Water Pearl x1",
+        "requirements": [
+          {
+            "label": "Metal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Water Pearl",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-050"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Produces clean water for two creatures each day.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-07",
+        "name": "Portable Ward Stakes",
+        "category": "Utility",
+        "rarity": "Uncommon",
+        "discipline": "Runecraft",
+        "requirementsText": "Wood or Metal x2 + Rune Slate x1",
+        "requirements": [
+          {
+            "label": "Wood or Metal",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Wood"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Rune Slate",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-025"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Create a 20-ft. alarm perimeter during a rest.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-08",
+        "name": "Spell Battery",
+        "category": "Utility",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Mana Crystal x2 + Arcane Salvage x1",
+        "requirements": [
+          {
+            "label": "Mana Crystal",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-015"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Arcane Salvage",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Salvage"
+                ],
+                "anyTags": [
+                  "Arcane"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Stores 20 MP supplied by a willing caster.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-09",
+        "name": "Spirit Bell",
+        "category": "Utility",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Silver x1 + Soul material x1",
+        "requirements": [
+          {
+            "label": "Silver",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-003"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Soul material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Soul"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Rings when an incorporeal creature enters 30 ft.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-10",
+        "name": "Silent Soles",
+        "category": "Utility",
+        "rarity": "Uncommon",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Hide x1 + Shadow material x1",
+        "requirements": [
+          {
+            "label": "Hide",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Hide"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Shadow material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Shadow"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Once per short rest, gain +10 to one Stealth check.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-11",
+        "name": "Truth Needle",
+        "category": "Utility",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Silver x1 + Mind material x1",
+        "requirements": [
+          {
+            "label": "Silver",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-003"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Mind material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Mind"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Trembles when a nearby creature knowingly speaks a direct lie.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-12",
+        "name": "Return Thread",
+        "category": "Utility",
+        "rarity": "Uncommon",
+        "discipline": "Runecraft",
+        "requirementsText": "Fine Fiber x1 + Memory material x1",
+        "requirements": [
+          {
+            "label": "Fine Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-012"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Memory material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Memory"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Shows the direction back to the place where it was tied.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-13",
+        "name": "Arcane Chalk",
+        "category": "Utility",
+        "rarity": "Common",
+        "discipline": "Scribing",
+        "requirementsText": "Stone powder x1 + Arcane Ink x1",
+        "requirements": [
+          {
+            "label": "Stone powder",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Stone"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Arcane Ink",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-020"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 1,
+        "effect": "Draw three temporary magical circles.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-14",
+        "name": "Emergency Shelter Seal",
+        "category": "Utility",
+        "rarity": "Uncommon",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Fiber x2 + Rune Slate x1 + Resin x1",
+        "requirements": [
+          {
+            "label": "Fiber",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Rune Slate",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-025"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-090"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Creates a weatherproof shelter for four creatures for one night.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-15",
+        "name": "Gatefold Marker",
+        "category": "Utility",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Resonance Crystal x1 + Arcane Ink x1",
+        "requirements": [
+          {
+            "label": "Resonance Crystal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-029"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Arcane Ink",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-020"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Records the signature of one teleportation effect.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-16",
+        "name": "Name Token",
+        "category": "Utility",
+        "rarity": "Uncommon",
+        "discipline": "Runecraft",
+        "requirementsText": "Metal, Wood, or Bone x1 + Memory Ink x1",
+        "requirements": [
+          {
+            "label": "Metal, Wood, or Bone",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Wood"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Bone"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Memory Ink",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-099"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "While carried, gain +5 against identity confusion and memory displacement.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      }
+    ],
+    "disciplines": [
+      {
+        "id": "Alchemy",
+        "tool": "Alchemist's Supplies",
+        "costGp": 20,
+        "creates": "Potions, bombs, poisons, coatings, and salves"
+      },
+      {
+        "id": "Forgecraft",
+        "tool": "Forgecraft Tools",
+        "costGp": 25,
+        "creates": "Weapons, armor, shields, and metal or bone items"
+      },
+      {
+        "id": "Runecraft",
+        "tool": "Runecraft Tools",
+        "costGp": 30,
+        "creates": "Magical items, enchanted gear, gems, and wards"
+      },
+      {
+        "id": "Scribing",
+        "tool": "Scribe's Tools",
+        "costGp": 15,
+        "creates": "Scrolls, magical inks, seals, and formulae"
+      },
+      {
+        "id": "Fieldcraft",
+        "tool": "Fieldcraft Kit",
+        "costGp": 15,
+        "creates": "Rope, ammunition, masks, traps, and leatherwork"
+      },
+      {
+        "id": "Harvesting",
+        "tool": "Harvesting Kit",
+        "costGp": 10,
+        "creates": "Recovers monster parts and dangerous organic materials"
+      }
+    ],
+    "dropBands": [
+      {
+        "max": 40,
+        "rarity": "None",
+        "label": "No useful crafting material"
+      },
+      {
+        "min": 41,
+        "max": 60,
+        "rarity": "Common",
+        "label": "Common material"
+      },
+      {
+        "min": 61,
+        "max": 80,
+        "rarity": "Uncommon",
+        "label": "Uncommon material"
+      },
+      {
+        "min": 81,
+        "max": 95,
+        "rarity": "Rare",
+        "label": "Rare material"
+      },
+      {
+        "min": 96,
+        "max": 110,
+        "rarity": "Very Rare",
+        "label": "Very Rare material, if the source qualifies"
+      },
+      {
+        "min": 111,
+        "rarity": "Legendary",
+        "label": "Signature or Legendary material, if the source qualifies"
+      }
+    ],
+    "legendaryConcepts": [
+      {
+        "id": "LEG-01",
+        "name": "World-Edge Weapon",
+        "requirements": "Legendary frame + Mythic core + Story-bound relic",
+        "function": "Additional weapon die, improved critical range, or immunity-breaking damage."
+      },
+      {
+        "id": "LEG-02",
+        "name": "Mantle of the Living Fortress",
+        "requirements": "Legendary hide or metal + Primal heart + Protection relic",
+        "function": "Greatly increases defenses, protects allies, or survives one fatal blow."
+      },
+      {
+        "id": "LEG-03",
+        "name": "Crown of the Six Virtues",
+        "requirements": "Six attribute catalysts + Legendary gem + Historic crown",
+        "function": "Changes active ability, commands bound systems, or reveals the cost of authority."
+      },
+      {
+        "id": "LEG-04",
+        "name": "Gatebreaker Engine",
+        "requirements": "Legendary mechanism + Space catalyst + Primal core",
+        "function": "Opens sealed gates, stabilizes teleportation, or prevents forced movement through space."
+      },
+      {
+        "id": "LEG-05",
+        "name": "Vessel of Returning Breath",
+        "requirements": "Legendary vessel + Life essence + Soul catalyst",
+        "function": "Preserves a soul, removes a severe affliction, or restores a creature from the edge of death."
+      },
+      {
+        "id": "LEG-06",
+        "name": "Atlas Engine",
+        "requirements": "Legendary map or book + Memory catalyst + Resonance core",
+        "function": "Maps invisible paths, records soul signatures, and reveals erased locations."
+      },
+      {
+        "id": "LEG-07",
+        "name": "Constellation Forge",
+        "requirements": "Star metal + Celestial catalyst + Ancient forge key",
+        "function": "Portable mythic forge that can create or restore Very Rare equipment at a cost."
+      }
+    ],
+    "rules": {
+      "formula": "d100 + Crafting Discipline Bonus + 25 with the correct tool kit",
+      "assistantBonus": 10,
+      "workshopAdvantage": true,
+      "rarityDcs": {
+        "Common": 40,
+        "Uncommon": 55,
+        "Rare": 70,
+        "Very Rare": 85
+      },
+      "criticalFailureRange": [
+        1,
+        5
+      ],
+      "criticalSuccessRange": [
+        96,
+        100
+      ],
+      "lowerRarityDcIncrease": 10
+    },
+    "sections": [
+      {
+        "name": "Common Materials",
+        "headers": [
+          "Material",
+          "Source",
+          "Value",
+          "Uses"
+        ],
+        "rows": [
+          [
+            "Leather Hide",
+            "Beasts",
+            "3 sp",
+            "Armor, straps"
+          ],
+          [
+            "Thick Fur",
+            "Northern animals",
+            "4 sp",
+            "Winter gear"
+          ],
+          [
+            "Bone Fragment",
+            "Any creature",
+            "1 sp",
+            "Handles, tools"
+          ],
+          [
+            "Horn Shard",
+            "Horned beasts",
+            "4 sp",
+            "Weapons, charms"
+          ],
+          [
+            "Beast Tendon",
+            "Large animals",
+            "2 sp",
+            "Bowstrings"
+          ],
+          [
+            "Sharp Fang",
+            "Predators",
+            "3 sp",
+            "Daggers, poison"
+          ],
+          [
+            "Feather Bundle",
+            "Birds",
+            "2 sp",
+            "Fletching"
+          ],
+          [
+            "Spider Silk",
+            "Giant spiders",
+            "6 sp",
+            "Rope, clothing"
+          ],
+          [
+            "Giant Chitin Plate",
+            "Insects",
+            "8 sp",
+            "Shields"
+          ],
+          [
+            "Resin Sap",
+            "Forest trees",
+            "2 sp",
+            "Adhesive"
+          ],
+          [
+            "Hardwood Branch",
+            "Forest",
+            "1 sp",
+            "Crafting"
+          ],
+          [
+            "Iron Ore",
+            "Mines",
+            "5 sp",
+            "Smithing"
+          ],
+          [
+            "Copper Ore",
+            "Mines",
+            "3 sp",
+            "Components"
+          ],
+          [
+            "Coal Stone",
+            "Mines",
+            "2 sp",
+            "Fuel"
+          ],
+          [
+            "Salt Crystal",
+            "Caverns",
+            "2 sp",
+            "Food, preservation"
+          ]
+        ]
+      },
+      {
+        "name": "Herbs",
+        "headers": [
+          "Material",
+          "Region",
+          "Effect"
+        ],
+        "rows": [
+          [
+            "Nayara Leaf",
+            "Central",
+            "Healing herb"
+          ],
+          [
+            "Charcoal Root",
+            "Fittoa",
+            "Purifies toxins"
+          ],
+          [
+            "Frost Moss",
+            "Ronoa",
+            "Cooling"
+          ],
+          [
+            "Morvane Vine",
+            "Karrnath",
+            "Preservative"
+          ],
+          [
+            "Silver Reed",
+            "Fittoa",
+            "Disease resistance"
+          ],
+          [
+            "Lysael Blossom",
+            "Asura",
+            "Mana restoration"
+          ],
+          [
+            "Vaelwyn Bark",
+            "Milis",
+            "Stimulant"
+          ],
+          [
+            "Ember Fern",
+            "Demon Continent",
+            "Fire resistance"
+          ],
+          [
+            "Ghost Orchid",
+            "Ruins",
+            "Spirit rituals"
+          ],
+          [
+            "Bellflower Seed",
+            "Fittoa",
+            "Anti-memory loss"
+          ]
+        ]
+      },
+      {
+        "name": "Mushrooms",
+        "headers": [
+          "Material",
+          "Effect"
+        ],
+        "rows": [
+          [
+            "Glowcap",
+            "Light source"
+          ],
+          [
+            "Ashcap",
+            "Neutralizes poison"
+          ],
+          [
+            "Grave Morel",
+            "Necromantic catalyst"
+          ],
+          [
+            "Storm Puff",
+            "Smoke bombs"
+          ],
+          [
+            "Stone Fungus",
+            "Hardening agent"
+          ]
+        ]
+      },
+      {
+        "name": "Monster Components: Fiend",
+        "headers": [
+          "Drop",
+          "Chance",
+          "Uses"
+        ],
+        "rows": [
+          [
+            "Ashbound Claw",
+            "Common",
+            "Weapons"
+          ],
+          [
+            "Ash Sac",
+            "Common",
+            "Bombs"
+          ],
+          [
+            "Red Ash Heart",
+            "Rare",
+            "Powerful alchemy"
+          ],
+          [
+            "Echo Eye",
+            "Rare",
+            "Detection potions"
+          ],
+          [
+            "Memory Shard",
+            "Very Rare",
+            "Soul rituals"
+          ]
+        ]
+      },
+      {
+        "name": "Monster Components: Silk-wielding Creatures",
+        "headers": [
+          "Drop",
+          "Uses"
+        ],
+        "rows": [
+          [
+            "Venom Sac",
+            "Poison"
+          ],
+          [
+            "Silk Gland",
+            "Rope"
+          ],
+          [
+            "Spinneret",
+            "Alchemy"
+          ],
+          [
+            "Chitin",
+            "Armor"
+          ]
+        ]
+      },
+      {
+        "name": "Monster Components: Animal",
+        "headers": [
+          "Drop",
+          "Uses"
+        ],
+        "rows": [
+          [
+            "Alpha Fang",
+            "Weapons"
+          ],
+          [
+            "Heartblood",
+            "Strength potion"
+          ],
+          [
+            "Thick Hide",
+            "Armor"
+          ]
+        ]
+      },
+      {
+        "name": "Monster Components: Ghostly Creatures",
+        "headers": [
+          "Drop",
+          "Uses"
+        ],
+        "rows": [
+          [
+            "Soul Ash",
+            "Enchantments"
+          ],
+          [
+            "Cold Essence",
+            "Frost magic"
+          ],
+          [
+            "Echo Fragment",
+            "Divination"
+          ]
+        ]
+      },
+      {
+        "name": "Monster Components: Aberration",
+        "headers": [
+          "Drop",
+          "Uses"
+        ],
+        "rows": [
+          [
+            "Regeneration Gland",
+            "Healing"
+          ],
+          [
+            "Thick Bone",
+            "Shields"
+          ],
+          [
+            "Acid Bile",
+            "Corrosion"
+          ]
+        ]
+      },
+      {
+        "name": "Monster Components: Dragon",
+        "headers": [
+          "Drop",
+          "Uses"
+        ],
+        "rows": [
+          [
+            "Venom Gland",
+            "High poison"
+          ],
+          [
+            "Wing Membrane",
+            "Gliders"
+          ],
+          [
+            "Wyvern Scale",
+            "Medium armor"
+          ]
+        ]
+      },
+      {
+        "name": "Monster Components: Basilisk",
+        "headers": [
+          "Drop",
+          "Uses"
+        ],
+        "rows": [
+          [
+            "Petrifying Eye",
+            "Bombs"
+          ],
+          [
+            "Stone Blood",
+            "Alchemy"
+          ],
+          [
+            "Scale Plate",
+            "Heavy armor"
+          ]
+        ]
+      },
+      {
+        "name": "Monster Components: Undead",
+        "headers": [
+          "Drop",
+          "Uses"
+        ],
+        "rows": [
+          [
+            "Grave Dust",
+            "Rituals"
+          ],
+          [
+            "Soul Ember",
+            "Enchanting"
+          ],
+          [
+            "Cursed Bone",
+            "Necromancy"
+          ]
+        ]
+      },
+      {
+        "name": "Magical Minerals",
+        "headers": [
+          "Material",
+          "Source",
+          "Uses"
+        ],
+        "rows": [
+          [
+            "Mana Crystal",
+            "Asura",
+            "Magic items"
+          ],
+          [
+            "Resonance Crystal",
+            "Fittoa",
+            "Artifacts"
+          ],
+          [
+            "Soul Quartz",
+            "Deep ruins",
+            "Soul rituals"
+          ],
+          [
+            "Void Glass",
+            "Meteor impact",
+            "High enchantment"
+          ],
+          [
+            "Frost Crystal",
+            "Ronoa",
+            "Ice gear"
+          ],
+          [
+            "Blood Amber",
+            "Karrnath",
+            "Blood rituals"
+          ],
+          [
+            "Star Silver",
+            "Meteors",
+            "Legendary weapons"
+          ],
+          [
+            "Aesperium Fragment",
+            "Ruins",
+            "Arcane engineering"
+          ]
+        ]
+      },
+      {
+        "name": "Fittoan Materials",
+        "headers": [
+          "Material",
+          "Uses"
+        ],
+        "rows": [
+          [
+            "Bell Metal",
+            "Anti-echo charms"
+          ],
+          [
+            "Registry Ink",
+            "Identity rituals"
+          ],
+          [
+            "Ash Glass",
+            "Magical lenses"
+          ],
+          [
+            "Red Ash",
+            "Bombs, curses"
+          ],
+          [
+            "Black Ash",
+            "Camouflage"
+          ],
+          [
+            "Broken Transit Plate",
+            "Salvage"
+          ],
+          [
+            "Soul Resin",
+            "Legendary recipes"
+          ],
+          [
+            "Echo Thread",
+            "Memory enchantments"
+          ]
+        ]
+      },
+      {
+        "name": "Rare Soul Materials",
+        "headers": [
+          "Material",
+          "Source"
+        ],
+        "rows": [
+          [
+            "Echo Heart",
+            "Ashbound Fiend"
+          ],
+          [
+            "Soul Thread",
+            "Ghosts"
+          ],
+          [
+            "Name Fragment",
+            "Living ruins"
+          ],
+          [
+            "Promise Stone",
+            "Old shrines"
+          ],
+          [
+            "Memory Pearl",
+            "Atlas locations"
+          ],
+          [
+            "Rune Fragment",
+            "World Rune ruins"
+          ],
+          [
+            "Custodian Moss",
+            "Near Custodian sites"
+          ],
+          [
+            "Witness Tear",
+            "Holy miracles"
+          ]
+        ]
+      }
+    ]
+  },
+  "skills": [
+    {
+      "sourceCell": "A28",
+      "sourceRow": 28,
+      "group": "Strength",
+      "ability": "strength",
+      "name": "Climb",
+      "description": "You’re skilled at ascending and descending surfaces.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A29",
+      "sourceRow": 29,
+      "group": "Strength",
+      "ability": "strength",
+      "name": "Grapple",
+      "description": "You’re a trained wrestler.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A30",
+      "sourceRow": 30,
+      "group": "Strength",
+      "ability": "strength",
+      "name": "Jump",
+      "description": "You’ve practiced jumping with strength and precision.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A31",
+      "sourceRow": 31,
+      "group": "Strength",
+      "ability": "strength",
+      "name": "Lift",
+      "description": "You’ve lifted weights can do all sorts of applying strength directly to a problem.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A32",
+      "sourceRow": 32,
+      "group": "Strength",
+      "ability": "strength",
+      "name": "Swim",
+      "description": "In the water, you do more than just a dog paddle.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A34",
+      "sourceRow": 34,
+      "group": "Speed",
+      "ability": "speed",
+      "name": "Stealth",
+      "description": "You’re good at moving without making a sound.",
+      "defaultProficient": true,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A35",
+      "sourceRow": 35,
+      "group": "Speed",
+      "ability": "speed",
+      "name": "Sleight of Hand",
+      "description": "You’re good at moving your hands carefully and precisely. As well as, hiding things in your hands and moving things without being noticed. This is not pickpocketing, this is secretly drawing a knife or stacking a deck of cards)",
+      "defaultProficient": true,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A36",
+      "sourceRow": 36,
+      "group": "Speed",
+      "ability": "speed",
+      "name": "Disarm Trap",
+      "description": "Once the trap is found, your steady hand lets you cut the right wire.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A37",
+      "sourceRow": 37,
+      "group": "Speed",
+      "ability": "speed",
+      "name": "Pick Lock",
+      "description": "You can open the locks on chests and doors.",
+      "defaultProficient": true,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A38",
+      "sourceRow": 38,
+      "group": "Speed",
+      "ability": "speed",
+      "name": "Pick Pocket",
+      "description": "You can remove things from other people’s possession without their notice.",
+      "defaultProficient": true,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A39",
+      "sourceRow": 39,
+      "group": "Speed",
+      "ability": "speed",
+      "name": "Rope Control",
+      "description": "From tying knots, to carefully landing a grappling hook, if it has more to do with rope then just pulling, this is the skill.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A40",
+      "sourceRow": 40,
+      "group": "Speed",
+      "ability": "speed",
+      "name": "Balance",
+      "description": "You’re good at staying on your feet where other people would fall over.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A41",
+      "sourceRow": 41,
+      "group": "Speed",
+      "ability": "speed",
+      "name": "Escape",
+      "description": "You’re skilled at slipping out of a grapple, of tied ropes, or crawling through tight spaces",
+      "defaultProficient": true,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A42",
+      "sourceRow": 42,
+      "group": "Speed",
+      "ability": "speed",
+      "name": "Landing",
+      "description": "You’re skilled at landing safely on your feet.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A44",
+      "sourceRow": 44,
+      "group": "Vitality",
+      "ability": "vitality",
+      "name": "Deep Breath",
+      "description": "You have good control over your breathing and can hold your breath for a long time. This skill might add to a Vitality saving throw, and not just an ability check.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A45",
+      "sourceRow": 45,
+      "group": "Vitality",
+      "ability": "vitality",
+      "name": "Forced March",
+      "description": "You’ve trained up your endurance, allowing you to travel further and longer than anyone else. This Subskill might add to a Vitality saving throw, and not just an ability check.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A46",
+      "sourceRow": 46,
+      "group": "Vitality",
+      "ability": "vitality",
+      "name": "Hold Liqour",
+      "description": "You’ve spent many hours knowing your limits, and overcoming them. You know how to pace yourself, and how to tell if your drink has been tampered with. This Subskill might add to a Vitality saving throw, and not just an ability check.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A48",
+      "sourceRow": 48,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Location",
+      "description": "You’ve studied a location and know it’s history and how to navigate it, as well as places and people within it. If you grew up in one place, you probably start with this skill for your home town",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A49",
+      "sourceRow": 49,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Race",
+      "description": "This skill tells you things about a race. Perhaps you were fascinated with Elvish culture, or you spent a lot of time dealing with dwarves. You know things about the people, their history, their legends and stories, their specialty foods, their craftsmanship. You likely have this for your own species, unless you grew up in another one.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A50",
+      "sourceRow": 50,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Alchemy",
+      "description": "You know things about alchemical liquids, and you can make and brew potions and other items.\n\nThis includes using brewer’s kit and poisoners kit to make alcoholic and poisonous products.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A51",
+      "sourceRow": 51,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Appraisal",
+      "description": "You’re good at figuring out the worth of items, and you know the market value of a lot of goods.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A52",
+      "sourceRow": 52,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Craft",
+      "description": "You’re skilled at making things.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A53",
+      "sourceRow": 53,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Engineering",
+      "description": "You’ve studied the arcane knowledge of the fulcrum and the sliding rule. You know how complicated machines function, and can figure out ways to make, break, or fix various devices",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A54",
+      "sourceRow": 54,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Forgery",
+      "description": "You can create replicas, draft realistic looking documents, and copy official seals.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A55",
+      "sourceRow": 55,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Research",
+      "description": "You know how to efficiently locate, analyze, and connect information from books, records, archives, and other sources to uncover useful knowledge.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A56",
+      "sourceRow": 56,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Trapmaking",
+      "description": "You know how to set traps, and where to place traps for most effective use. Also handing for finding traps others have set.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A57",
+      "sourceRow": 57,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Magic Identification",
+      "description": "This is used when trying to determine if something is magical. The higher the roll, the more information you get. Detect Magic does all of this.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A58",
+      "sourceRow": 58,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Magic Items",
+      "description": "You’ve studied magic items, how they’re made, the history of some famous items, common activation methods, and so on.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A59",
+      "sourceRow": 59,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Monster Identification",
+      "description": "You’ve studied all sorts of monsters, from the Aboleth to the Zombie. You know their habits, their strengths, and their weaknesses.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A60",
+      "sourceRow": 60,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "The Planes",
+      "description": "You’ve studied the differences and the lore of the Six Planes and their manifest zones.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A61",
+      "sourceRow": 61,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Rituals",
+      "description": "You know the meaning behind rites, ceremonies, and the like, whether arcane or divine.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A62",
+      "sourceRow": 62,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Spell Lore",
+      "description": "You know the effects of many spells, the components required, and what is possible with magic.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A63",
+      "sourceRow": 63,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Architecture",
+      "description": "You know how buildings work, which pillars are load bearing, and how old this place probably is.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A64",
+      "sourceRow": 64,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Geography",
+      "description": "You know the area, how to read maps, and where the nearest river is.",
+      "defaultProficient": true,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A65",
+      "sourceRow": 65,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Politics",
+      "description": "You know the ways of politics, how to subtly promise support, and how to read between the lines of intrigue.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A66",
+      "sourceRow": 66,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Social",
+      "description": "You know who the important people are.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A67",
+      "sourceRow": 67,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Rifle Pockets",
+      "description": "You are good at frisking an individual, alive or dead, and seeing what they have in their pockets.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A68",
+      "sourceRow": 68,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Scene Investigation",
+      "description": "You know how to look around and find clues.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A69",
+      "sourceRow": 69,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Skim Read",
+      "description": "You know how to quickly parse a paper, looking for the things that you need to know immediately.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A70",
+      "sourceRow": 70,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Animals",
+      "description": "You know things about animals, including their behaviors, the tasty parts, the scary bits, and how to take care of them.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A71",
+      "sourceRow": 71,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Minerals and Metals",
+      "description": "You’ve studied various types of rocks, ores, and metals, their properties and where they can be found.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A72",
+      "sourceRow": 72,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Plants",
+      "description": "You’ve read up on the differences between plants, you know the best woods to make a cabinet out of, and you know the difference between aloe vera and poison oak.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A73",
+      "sourceRow": 73,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Seasons and Weather",
+      "description": "You know when to plant, when to harvest, how long a storm will last, and what type of cloud that is.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A74",
+      "sourceRow": 74,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Deities",
+      "description": "You’ve studied the gods, not only the ones of your own beliefs, but those of others as well.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A75",
+      "sourceRow": 75,
+      "group": "Intelligence",
+      "ability": "intelligence",
+      "name": "Dogma",
+      "description": "You understand the beliefs behind various faiths, and can make educated guesses at faiths you know little about.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A77",
+      "sourceRow": 77,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Persuade Animal",
+      "description": "You can convince animals in ton doing what you want, from coming",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A78",
+      "sourceRow": 78,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Ride Animal",
+      "description": "You’re good on the back of a horse or a griffon, or whatever animal you’re in. (Saddles work like tools)",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A79",
+      "sourceRow": 79,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Detect Lies",
+      "description": "You are good at sussing out when someone is trying to deceive you.",
+      "defaultProficient": true,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A80",
+      "sourceRow": 80,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Gut Check",
+      "description": "Kind of a meta ability. If you’re stuck, or unsure about something, perhaps the DM can give some advice.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A81",
+      "sourceRow": 81,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Mime Language",
+      "description": "You can communicate with gestures, miming, and pointing. Good for communicating with people who do not speak your language. This Subskill lets you win at charades.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A82",
+      "sourceRow": 82,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Pierce Disguise",
+      "description": "You are good at seeing past the makeup, the mannerisms, the clothes, and seeing who is behind the disguise. Or a tleast, that they are in disguise.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A83",
+      "sourceRow": 83,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Autopsy",
+      "description": "There is a lot you can learn from a dead body. I mean, it’s mostly “how did they die?”, but learning when, and where are also useful questions.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A84",
+      "sourceRow": 84,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Medical Examination",
+      "description": "You can examine a living person, and determine what ails them.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A85",
+      "sourceRow": 85,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Treatment",
+      "description": "This is Medicine over a long time, a nurse at the recovery center. Treatment is about the sick, not the wounded.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A86",
+      "sourceRow": 86,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Triage",
+      "description": "This is short term medical treatment, binding wounds in combat, dealing with the immediate needs of the wounded not the sick.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A87",
+      "sourceRow": 87,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Find Hidden",
+      "description": "Your eyes are good at picking out things trying to hide. Useful for finding unseen people or looking behind the proper curtain.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A88",
+      "sourceRow": 88,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Keen Ears",
+      "description": "Your sharp ears are good at picking out the subtlest of sounds.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A89",
+      "sourceRow": 89,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Keen Eyes",
+      "description": "Your sharp eyes are good at picking up small details at a distance, or tiny details close up.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A90",
+      "sourceRow": 90,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Keen Nose",
+      "description": "Your sharp nose is good at picking up the smallest whiff.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A91",
+      "sourceRow": 91,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Notice Differences",
+      "description": "You can notice the differences when something small and subtle has changed.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A92",
+      "sourceRow": 92,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Read Lips",
+      "description": "You can understand part of a conversation, even if you can’t hear what’s being said, as long as you can see part of the conversation.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A93",
+      "sourceRow": 93,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Avoid Hazards",
+      "description": "You’re skilled at avoiding wilderness hazards, from quicksand to razor grass and wasp hives.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A94",
+      "sourceRow": 94,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Butcher",
+      "description": "You know how to take an animal apart for the most profit. After it’s dead, of course.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A95",
+      "sourceRow": 95,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Cooking",
+      "description": "Prepare meals safely, work from recipes, preserve ingredients, and produce Hearth Boons.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A96",
+      "sourceRow": 96,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Forage",
+      "description": "You’re good at finding food and water in the wild.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A97",
+      "sourceRow": 97,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Navigation",
+      "description": "You know your directions, and how to find your way without getting lost.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A98",
+      "sourceRow": 98,
+      "group": "Awareness",
+      "ability": "awareness",
+      "name": "Tracking",
+      "description": "You know how to follow a trail, and can find information about creatures that have passed along away.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": true
+    },
+    {
+      "sourceCell": "A100",
+      "sourceRow": 100,
+      "group": "Talent",
+      "ability": "talent",
+      "name": "Etiquette",
+      "description": "You know which fork to use for the fish, which title to use for the queen, and all the rules of a proper duel.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A101",
+      "sourceRow": 101,
+      "group": "Talent",
+      "ability": "talent",
+      "name": "Gambling",
+      "description": "You’re good at games of bluff, chance, and making luck your ally.",
+      "defaultProficient": true,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A102",
+      "sourceRow": 102,
+      "group": "Talent",
+      "ability": "talent",
+      "name": "Con",
+      "description": "You are good at selling a story, normally for some sort of money making scheme, but there can be other prizes.",
+      "defaultProficient": true,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A103",
+      "sourceRow": 103,
+      "group": "Talent",
+      "ability": "talent",
+      "name": "Disguise",
+      "description": "You are proficient in becoming someone else, in outfit, actions, and appearance.",
+      "defaultProficient": true,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A104",
+      "sourceRow": 104,
+      "group": "Talent",
+      "ability": "talent",
+      "name": "Lie",
+      "description": "You can tell not truths without blinking.",
+      "defaultProficient": true,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A105",
+      "sourceRow": 105,
+      "group": "Talent",
+      "ability": "talent",
+      "name": "Bluster",
+      "description": "Blustering is a way of making yourself look tougher than you are, making them not want to fight you.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A106",
+      "sourceRow": 106,
+      "group": "Talent",
+      "ability": "talent",
+      "name": "Interrogate",
+      "description": "You are good at getting answers, and you don’t care what the perp thinks about you when you’re done.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A107",
+      "sourceRow": 107,
+      "group": "Talent",
+      "ability": "talent",
+      "name": "Threaten",
+      "description": "Threatening is about trying to get someone to act in a certain manner, based on how scary you can be. Well trained individuals don’t threaten very well.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A108",
+      "sourceRow": 108,
+      "group": "Talent",
+      "ability": "talent",
+      "name": "Performance",
+      "description": "You have studied and trained in various parts of entertaining. There are many elements that this can be. While there is some overlap, each element is distinct. Options include and are not limited to: A musical instrument, sculpture, painting and drawing, storytelling, oration, journalism, fashion, dance, comedy, decoration, and so on.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A109",
+      "sourceRow": 109,
+      "group": "Talent",
+      "ability": "talent",
+      "name": "Ask Around",
+      "description": "You’re good at talking to locals to find out information without raising suspicions.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A110",
+      "sourceRow": 110,
+      "group": "Talent",
+      "ability": "talent",
+      "name": "Bribe",
+      "description": "Bribing  is a time honored tradition of exchanging money for favors, secretly. Being proficient at bribery lets you know if a person would take a bribe, and how much is appropriate.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A111",
+      "sourceRow": 111,
+      "group": "Talent",
+      "ability": "talent",
+      "name": "Diffuse Situation",
+      "description": "You are good at calming emotions and getting everyone to stop and talk for a second.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A112",
+      "sourceRow": 112,
+      "group": "Talent",
+      "ability": "talent",
+      "name": "Haggle",
+      "description": "You get the best deal out of merchants, whether buying or selling.",
+      "defaultProficient": true,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A113",
+      "sourceRow": 113,
+      "group": "Talent",
+      "ability": "talent",
+      "name": "Inspire",
+      "description": "You are good at getting the blood pumping and reinvigorating the morale of the troops.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    },
+    {
+      "sourceCell": "A114",
+      "sourceRow": 114,
+      "group": "Talent",
+      "ability": "talent",
+      "name": "Make Friends",
+      "description": "You are good at making positive impressions on people.",
+      "defaultProficient": false,
+      "defaultBonus": 0,
+      "ignoresBonus": false
+    }
+  ],
+  "equipmentSlots": [
+    {
+      "id": "righthand",
+      "label": "Right Hand",
+      "defaultItem": "Dagger",
+      "sourceCell": "I11"
+    },
+    {
+      "id": "lefthand",
+      "label": "Left Hand",
+      "defaultItem": "Dagger of the Viper",
+      "sourceCell": "I12"
+    },
+    {
+      "id": "headgear",
+      "label": "Headgear",
+      "defaultItem": "",
+      "sourceCell": "I13"
+    },
+    {
+      "id": "plate",
+      "label": "Plate",
+      "defaultItem": "Vest of the Black Hand",
+      "sourceCell": "I14"
+    },
+    {
+      "id": "footwear",
+      "label": "Footwear",
+      "defaultItem": "",
+      "sourceCell": "I15"
+    },
+    {
+      "id": "trinket",
+      "label": "Trinket",
+      "defaultItem": "Imani's Pendant",
+      "sourceCell": "I16"
+    },
+    {
+      "id": "secondarytrinket",
+      "label": "Secondary Trinket",
+      "defaultItem": "",
+      "sourceCell": "I17"
+    },
+    {
+      "id": "necklace",
+      "label": "Necklace",
+      "defaultItem": "",
+      "sourceCell": "I18"
+    }
+  ],
+  "comments": {
+    "C15": "Current HP + Temporary HP",
+    "U21": "Immunties to a damage type or status effect render them uneffective.",
+    "U22": "Take double damge.",
+    "I23": "Silver",
+    "K23": "Silver",
+    "U25": "Take half damage.",
+    "A28": "You’re skilled at ascending and descending surfaces.",
+    "L28": "Kilograms",
+    "M28": "Silver",
+    "A29": "You’re a trained wrestler.",
+    "A30": "You’ve practiced jumping with strength and precision.",
+    "A31": "You’ve lifted weights can do all sorts of applying strength directly to a problem.",
+    "A32": "In the water, you do more than just a dog paddle.",
+    "A34": "You’re good at moving without making a sound.",
+    "A35": "You’re good at moving your hands carefully and precisely. As well as, hiding things in your hands and moving things without being noticed. This is not pickpocketing, this is secretly drawing a knife or stacking a deck of cards)",
+    "A36": "Once the trap is found, your steady hand lets you cut the right wire.",
+    "A37": "You can open the locks on chests and doors.",
+    "A38": "You can remove things from other people’s possession without their notice.",
+    "A39": "From tying knots, to carefully landing a grappling hook, if it has more to do with rope then just pulling, this is the skill.",
+    "A40": "You’re good at staying on your feet where other people would fall over.",
+    "A41": "You’re skilled at slipping out of a grapple, of tied ropes, or crawling through tight spaces",
+    "A42": "You’re skilled at landing safely on your feet.",
+    "A44": "You have good control over your breathing and can hold your breath for a long time. This skill might add to a Vitality saving throw, and not just an ability check.",
+    "A45": "You’ve trained up your endurance, allowing you to travel further and longer than anyone else. This Subskill might add to a Vitality saving throw, and not just an ability check.",
+    "A46": "You’ve spent many hours knowing your limits, and overcoming them. You know how to pace yourself, and how to tell if your drink has been tampered with. This Subskill might add to a Vitality saving throw, and not just an ability check.",
+    "A48": "You’ve studied a location and know it’s history and how to navigate it, as well as places and people within it. If you grew up in one place, you probably start with this skill for your home town",
+    "A49": "This skill tells you things about a race. Perhaps you were fascinated with Elvish culture, or you spent a lot of time dealing with dwarves. You know things about the people, their history, their legends and stories, their specialty foods, their craftsmanship. You likely have this for your own species, unless you grew up in another one.",
+    "A50": "You know things about alchemical liquids, and you can make and brew potions and other items.\n\nThis includes using brewer’s kit and poisoners kit to make alcoholic and poisonous products.",
+    "W50": "Prepared",
+    "A51": "You’re good at figuring out the worth of items, and you know the market value of a lot of goods.",
+    "A52": "You’re skilled at making things.",
+    "A53": "You’ve studied the arcane knowledge of the fulcrum and the sliding rule. You know how complicated machines function, and can figure out ways to make, break, or fix various devices",
+    "A54": "You can create replicas, draft realistic looking documents, and copy official seals.",
+    "A55": "You know how to efficiently locate, analyze, and connect information from books, records, archives, and other sources to uncover useful knowledge.",
+    "A56": "You know how to set traps, and where to place traps for most effective use. Also handing for finding traps others have set.",
+    "A57": "This is used when trying to determine if something is magical. The higher the roll, the more information you get. Detect Magic does all of this.",
+    "A58": "You’ve studied magic items, how they’re made, the history of some famous items, common activation methods, and so on.",
+    "A59": "You’ve studied all sorts of monsters, from the Aboleth to the Zombie. You know their habits, their strengths, and their weaknesses.",
+    "A60": "You’ve studied the differences and the lore of the Six Planes and their manifest zones.",
+    "A61": "You know the meaning behind rites, ceremonies, and the like, whether arcane or divine.",
+    "A62": "You know the effects of many spells, the components required, and what is possible with magic.",
+    "A63": "You know how buildings work, which pillars are load bearing, and how old this place probably is.",
+    "A64": "You know the area, how to read maps, and where the nearest river is.",
+    "A65": "You know the ways of politics, how to subtly promise support, and how to read between the lines of intrigue.",
+    "A66": "You know who the important people are.",
+    "A67": "You are good at frisking an individual, alive or dead, and seeing what they have in their pockets.",
+    "A68": "You know how to look around and find clues.",
+    "A69": "You know how to quickly parse a paper, looking for the things that you need to know immediately.",
+    "A70": "You know things about animals, including their behaviors, the tasty parts, the scary bits, and how to take care of them.",
+    "A71": "You’ve studied various types of rocks, ores, and metals, their properties and where they can be found.",
+    "A72": "You’ve read up on the differences between plants, you know the best woods to make a cabinet out of, and you know the difference between aloe vera and poison oak.",
+    "A73": "You know when to plant, when to harvest, how long a storm will last, and what type of cloud that is.",
+    "A74": "You’ve studied the gods, not only the ones of your own beliefs, but those of others as well.",
+    "A75": "You understand the beliefs behind various faiths, and can make educated guesses at faiths you know little about.",
+    "A77": "You can convince animals in ton doing what you want, from coming",
+    "A78": "You’re good on the back of a horse or a griffon, or whatever animal you’re in. (Saddles work like tools)",
+    "A79": "You are good at sussing out when someone is trying to deceive you.",
+    "A80": "Kind of a meta ability. If you’re stuck, or unsure about something, perhaps the DM can give some advice.",
+    "A81": "You can communicate with gestures, miming, and pointing. Good for communicating with people who do not speak your language. This Subskill lets you win at charades.",
+    "A82": "You are good at seeing past the makeup, the mannerisms, the clothes, and seeing who is behind the disguise. Or a tleast, that they are in disguise.",
+    "A83": "There is a lot you can learn from a dead body. I mean, it’s mostly “how did they die?”, but learning when, and where are also useful questions.",
+    "A84": "You can examine a living person, and determine what ails them.",
+    "A85": "This is Medicine over a long time, a nurse at the recovery center. Treatment is about the sick, not the wounded.",
+    "A86": "This is short term medical treatment, binding wounds in combat, dealing with the immediate needs of the wounded not the sick.",
+    "A87": "Your eyes are good at picking out things trying to hide. Useful for finding unseen people or looking behind the proper curtain.",
+    "A88": "Your sharp ears are good at picking out the subtlest of sounds.",
+    "A89": "Your sharp eyes are good at picking up small details at a distance, or tiny details close up.",
+    "A90": "Your sharp nose is good at picking up the smallest whiff.",
+    "A91": "You can notice the differences when something small and subtle has changed.",
+    "A92": "You can understand part of a conversation, even if you can’t hear what’s being said, as long as you can see part of the conversation.",
+    "A93": "You’re skilled at avoiding wilderness hazards, from quicksand to razor grass and wasp hives.",
+    "A94": "You know how to take an animal apart for the most profit. After it’s dead, of course.",
+    "A95": "You know how to take an animal apart for the most profit. After it’s dead, of course.",
+    "A96": "You’re good at finding food and water in the wild.",
+    "A97": "You know your directions, and how to find your way without getting lost.",
+    "A98": "You know how to follow a trail, and can find information about creatures that have passed along away.",
+    "A100": "You know which fork to use for the fish, which title to use for the queen, and all the rules of a proper duel.",
+    "A101": "You’re good at games of bluff, chance, and making luck your ally.",
+    "A102": "You are good at selling a story, normally for some sort of money making scheme, but there can be other prizes.",
+    "A103": "You are proficient in becoming someone else, in outfit, actions, and appearance.",
+    "A104": "You can tell not truths without blinking.",
+    "A105": "Blustering is a way of making yourself look tougher than you are, making them not want to fight you.",
+    "A106": "You are good at getting answers, and you don’t care what the perp thinks about you when you’re done.",
+    "A107": "Threatening is about trying to get someone to act in a certain manner, based on how scary you can be. Well trained individuals don’t threaten very well.",
+    "A108": "You have studied and trained in various parts of entertaining. There are many elements that this can be. While there is some overlap, each element is distinct. Options include and are not limited to: A musical instrument, sculpture, painting and drawing, storytelling, oration, journalism, fashion, dance, comedy, decoration, and so on.",
+    "A109": "You’re good at talking to locals to find out information without raising suspicions.",
+    "A110": "Bribing  is a time honored tradition of exchanging money for favors, secretly. Being proficient at bribery lets you know if a person would take a bribe, and how much is appropriate.",
+    "A111": "You are good at calming emotions and getting everyone to stop and talk for a second.",
+    "A112": "You get the best deal out of merchants, whether buying or selling.",
+    "A113": "You are good at getting the blood pumping and reinvigorating the morale of the troops.",
+    "A114": "You are good at making positive impressions on people."
+  },
+  "definedNames": [
+    {
+      "name": "ItemPHYDMG",
+      "reference": "'Character Sheet'!$J$11:$J$18"
+    },
+    {
+      "name": "ItemFOC",
+      "reference": "'Character Sheet'!$X$11:$X$18"
+    },
+    {
+      "name": "ItemSTR",
+      "reference": "'Character Sheet'!$M$11:$M$18"
+    },
+    {
+      "name": "TAL",
+      "reference": "'Character Sheet'!$B$8"
+    },
+    {
+      "name": "ItemDRB",
+      "reference": "'Character Sheet'!$W$11:$W$18"
+    },
+    {
+      "name": "VITMOD",
+      "reference": "'Character Sheet'!$C$5"
+    },
+    {
+      "name": "ItemSPD",
+      "reference": "'Character Sheet'!$N$11:$N$18"
+    },
+    {
+      "name": "BEVA",
+      "reference": "'Character Sheet'!$F$21"
+    },
+    {
+      "name": "Rolls",
+      "reference": "'Character Sheet'!$AE$5"
+    },
+    {
+      "name": "BRES",
+      "reference": "'Character Sheet'!$B$25"
+    },
+    {
+      "name": "INTMOD",
+      "reference": "'Character Sheet'!$C$6"
+    },
+    {
+      "name": "STR",
+      "reference": "'Character Sheet'!$B$3"
+    },
+    {
+      "name": "BHP",
+      "reference": "'Character Sheet'!$B$22"
+    },
+    {
+      "name": "ItemTAL",
+      "reference": "'Character Sheet'!$R$11:$R$18"
+    },
+    {
+      "name": "PROFMOD",
+      "reference": "'Character Sheet'!$B$13"
+    },
+    {
+      "name": "ItemAC",
+      "reference": "'Character Sheet'!$T$11:$T$18"
+    },
+    {
+      "name": "ItemDMGREF",
+      "reference": "'Character Sheet'!$Z$11:$Z$18"
+    },
+    {
+      "name": "ItemMAGDMG",
+      "reference": "'Character Sheet'!$K$11:$K$18"
+    },
+    {
+      "name": "SPDMOD",
+      "reference": "'Character Sheet'!$C$4"
+    },
+    {
+      "name": "AWR",
+      "reference": "'Character Sheet'!$B$7"
+    },
+    {
+      "name": "ItemXpMulti",
+      "reference": "'Character Sheet'!$AB$11:$AB$18"
+    },
+    {
+      "name": "ItemCRC",
+      "reference": "'Character Sheet'!$L$11:$L$18"
+    },
+    {
+      "name": "ItemINT",
+      "reference": "'Character Sheet'!$P$11:$P$18"
+    },
+    {
+      "name": "ItemHPREG",
+      "reference": "'Character Sheet'!$Y$11:$Y$18"
+    },
+    {
+      "name": "SpellCastingMOD",
+      "reference": "'Character Sheet'!$I$47"
+    },
+    {
+      "name": "ItemEVA",
+      "reference": "'Character Sheet'!$V$11:$V$18"
+    },
+    {
+      "name": "ClassTable",
+      "reference": "Data!$F$2:$M$14"
+    },
+    {
+      "name": "BAC",
+      "reference": "'Character Sheet'!$B$24"
+    },
+    {
+      "name": "SPD",
+      "reference": "'Character Sheet'!$B$4"
+    },
+    {
+      "name": "BSPELLDMG",
+      "reference": "'Character Sheet'!$B$23"
+    },
+    {
+      "name": "ItemGoldMulti",
+      "reference": "'Character Sheet'!$AA$11:$AA$18"
+    },
+    {
+      "name": "BMOVSPD",
+      "reference": "'Character Sheet'!$F$25"
+    },
+    {
+      "name": "ItemLUCK",
+      "reference": "'Character Sheet'!$S$11:$S$18"
+    },
+    {
+      "name": "BCRC",
+      "reference": "'Character Sheet'!$F$23"
+    },
+    {
+      "name": "ItemVIT",
+      "reference": "'Character Sheet'!$O$11:$O$18"
+    },
+    {
+      "name": "BPHYDMG",
+      "reference": "'Character Sheet'!$B$21"
+    },
+    {
+      "name": "ItemRES",
+      "reference": "'Character Sheet'!$U$11:$U$18"
+    },
+    {
+      "name": "ItemAWR",
+      "reference": "'Character Sheet'!$Q$11:$Q$18"
+    },
+    {
+      "name": "ItemTable",
+      "reference": "Items!$A$1:$Y$1000"
+    },
+    {
+      "name": "LVL",
+      "reference": "'Character Sheet'!$B$11"
+    },
+    {
+      "name": "STRMOD",
+      "reference": "'Character Sheet'!$C$3"
+    },
+    {
+      "name": "INT",
+      "reference": "'Character Sheet'!$B$6"
+    },
+    {
+      "name": "VIT",
+      "reference": "'Character Sheet'!$B$5"
+    },
+    {
+      "name": "BFOCUS",
+      "reference": "'Character Sheet'!$F$22"
+    },
+    {
+      "name": "AWRMOD",
+      "reference": "'Character Sheet'!$C$7"
+    },
+    {
+      "name": "TALMOD",
+      "reference": "'Character Sheet'!$C$8"
+    },
+    {
+      "name": "BMANA",
+      "reference": "'Character Sheet'!$F$24"
+    }
+  ],
+  "formulaAddresses": {
+    "Character Sheet": [
+      "B3",
+      "C3",
+      "B4",
+      "C4",
+      "B5",
+      "C5",
+      "B6",
+      "C6",
+      "B7",
+      "C7",
+      "AG7",
+      "AH7",
+      "B8",
+      "C8",
+      "AG8",
+      "AH8",
+      "F9",
+      "AG9",
+      "AH9",
+      "AG10",
+      "AH10",
+      "F11",
+      "I11",
+      "J11",
+      "K11",
+      "L11",
+      "M11",
+      "N11",
+      "O11",
+      "P11",
+      "Q11",
+      "R11",
+      "S11",
+      "T11",
+      "U11",
+      "V11",
+      "W11",
+      "X11",
+      "Y11",
+      "Z11",
+      "AA11",
+      "AB11",
+      "AG11",
+      "AH11",
+      "B12",
+      "F12",
+      "I12",
+      "J12",
+      "K12",
+      "L12",
+      "M12",
+      "N12",
+      "O12",
+      "P12",
+      "Q12",
+      "R12",
+      "S12",
+      "T12",
+      "U12",
+      "V12",
+      "W12",
+      "X12",
+      "Y12",
+      "Z12",
+      "AA12",
+      "AB12",
+      "AG12",
+      "AH12",
+      "B13",
+      "I13",
+      "J13",
+      "K13",
+      "L13",
+      "M13",
+      "N13",
+      "O13",
+      "P13",
+      "Q13",
+      "R13",
+      "S13",
+      "T13",
+      "U13",
+      "V13",
+      "W13",
+      "X13",
+      "Y13",
+      "Z13",
+      "AA13",
+      "AB13",
+      "AG13",
+      "AH13",
+      "B14",
+      "F14",
+      "I14",
+      "J14",
+      "K14",
+      "L14",
+      "M14",
+      "N14",
+      "O14",
+      "P14",
+      "Q14",
+      "R14",
+      "S14",
+      "T14",
+      "U14",
+      "V14",
+      "W14",
+      "X14",
+      "Y14",
+      "Z14",
+      "AA14",
+      "AB14",
+      "B15",
+      "F15",
+      "I15",
+      "J15",
+      "K15",
+      "L15",
+      "M15",
+      "N15",
+      "O15",
+      "P15",
+      "Q15",
+      "R15",
+      "S15",
+      "T15",
+      "U15",
+      "V15",
+      "W15",
+      "X15",
+      "Y15",
+      "Z15",
+      "AA15",
+      "AB15",
+      "AF15",
+      "B16",
+      "F16",
+      "I16",
+      "J16",
+      "K16",
+      "L16",
+      "M16",
+      "N16",
+      "O16",
+      "P16",
+      "Q16",
+      "R16",
+      "S16",
+      "T16",
+      "U16",
+      "V16",
+      "W16",
+      "X16",
+      "Y16",
+      "Z16",
+      "AA16",
+      "AB16",
+      "B17",
+      "F17",
+      "I17",
+      "J17",
+      "K17",
+      "L17",
+      "M17",
+      "N17",
+      "O17",
+      "P17",
+      "Q17",
+      "R17",
+      "S17",
+      "T17",
+      "U17",
+      "V17",
+      "W17",
+      "X17",
+      "Y17",
+      "Z17",
+      "AA17",
+      "AB17",
+      "B18",
+      "F18",
+      "I18",
+      "J18",
+      "K18",
+      "L18",
+      "M18",
+      "N18",
+      "O18",
+      "P18",
+      "Q18",
+      "R18",
+      "S18",
+      "T18",
+      "U18",
+      "V18",
+      "W18",
+      "X18",
+      "Y18",
+      "Z18",
+      "AA18",
+      "AB18",
+      "AE18",
+      "AF18",
+      "B19",
+      "F19",
+      "I20",
+      "AG21",
+      "AI21",
+      "AE22",
+      "AH26",
+      "AI26",
+      "AJ26",
+      "F27",
+      "AH27",
+      "AI27",
+      "AJ27",
+      "B28",
+      "F28",
+      "AH28",
+      "AI28",
+      "AJ28",
+      "B29",
+      "F29",
+      "I29",
+      "J29",
+      "K29",
+      "L29",
+      "M29",
+      "AH29",
+      "AI29",
+      "AJ29",
+      "B30",
+      "I30",
+      "J30",
+      "K30",
+      "L30",
+      "M30",
+      "AH30",
+      "AI30",
+      "AJ30",
+      "B31",
+      "F31",
+      "I31",
+      "J31",
+      "K31",
+      "L31",
+      "M31",
+      "AH31",
+      "AI31",
+      "AJ31",
+      "B32",
+      "I32",
+      "J32",
+      "K32",
+      "M32",
+      "AH32",
+      "AI32",
+      "AJ32",
+      "I33",
+      "J33",
+      "K33",
+      "L33",
+      "M33",
+      "AH33",
+      "AI33",
+      "AJ33",
+      "B34",
+      "I34",
+      "J34",
+      "K34",
+      "L34",
+      "M34",
+      "AH34",
+      "AI34",
+      "AJ34",
+      "B35",
+      "F35",
+      "I35",
+      "J35",
+      "K35",
+      "L35",
+      "M35",
+      "AH35",
+      "AI35",
+      "AJ35",
+      "B36",
+      "I36",
+      "J36",
+      "K36",
+      "L36",
+      "M36",
+      "AH36",
+      "AI36",
+      "AJ36",
+      "B37",
+      "H37",
+      "I37",
+      "J37",
+      "K37",
+      "L37",
+      "M37",
+      "S37",
+      "U37",
+      "W37",
+      "AH37",
+      "AI37",
+      "AJ37",
+      "B38",
+      "H38",
+      "I38",
+      "J38",
+      "K38",
+      "L38",
+      "M38",
+      "AH38",
+      "AI38",
+      "AJ38",
+      "B39",
+      "F39",
+      "H39",
+      "I39",
+      "J39",
+      "K39",
+      "L39",
+      "M39",
+      "AH39",
+      "AI39",
+      "AJ39",
+      "B40",
+      "I40",
+      "J40",
+      "K40",
+      "L40",
+      "M40",
+      "AH40",
+      "AI40",
+      "AJ40",
+      "B41",
+      "H41",
+      "I41",
+      "J41",
+      "K41",
+      "L41",
+      "M41",
+      "AH41",
+      "AI41",
+      "AJ41",
+      "B42",
+      "H42",
+      "I42",
+      "J42",
+      "K42",
+      "L42",
+      "M42",
+      "AH42",
+      "AI42",
+      "AJ42",
+      "F43",
+      "L43",
+      "M43",
+      "AH43",
+      "AI43",
+      "AJ43",
+      "B44",
+      "AH44",
+      "AI44",
+      "AJ44",
+      "B45",
+      "AH45",
+      "AI45",
+      "AJ45",
+      "B46",
+      "M46",
+      "AH46",
+      "AI46",
+      "AJ46",
+      "F47",
+      "I47",
+      "M47",
+      "AH47",
+      "AI47",
+      "AJ47",
+      "B48",
+      "AH48",
+      "AI48",
+      "AJ48",
+      "B49",
+      "AH49",
+      "AI49",
+      "AJ49",
+      "B50",
+      "AH50",
+      "AI50",
+      "AJ50",
+      "B51",
+      "F51",
+      "AH51",
+      "AI51",
+      "AJ51",
+      "B52",
+      "AH52",
+      "AI52",
+      "AJ52",
+      "B53",
+      "AH53",
+      "AI53",
+      "AJ53",
+      "B54",
+      "AH54",
+      "AI54",
+      "AJ54",
+      "B55",
+      "AH55",
+      "AI55",
+      "AJ55",
+      "B56",
+      "B57",
+      "B58",
+      "AG58",
+      "AI58",
+      "B59",
+      "AE59",
+      "B60",
+      "B61",
+      "B62",
+      "AI62",
+      "AJ62",
+      "AL62",
+      "AM62",
+      "B63",
+      "AI63",
+      "AJ63",
+      "AL63",
+      "AM63",
+      "B64",
+      "AI64",
+      "AJ64",
+      "AL64",
+      "AM64",
+      "B65",
+      "AJ65",
+      "AL65",
+      "AM65",
+      "B66",
+      "AE66",
+      "AI66",
+      "AJ66",
+      "AL66",
+      "AM66",
+      "B67",
+      "AE67",
+      "AI67",
+      "AJ67",
+      "AL67",
+      "AM67",
+      "B68",
+      "AE68",
+      "AI68",
+      "AJ68",
+      "AL68",
+      "AM68",
+      "B69",
+      "AE69",
+      "AI69",
+      "AJ69",
+      "AL69",
+      "AM69",
+      "B70",
+      "AE70",
+      "AI70",
+      "AJ70",
+      "AL70",
+      "AM70",
+      "B71",
+      "AE71",
+      "AI71",
+      "AJ71",
+      "AL71",
+      "AM71",
+      "B72",
+      "AE72",
+      "AI72",
+      "AJ72",
+      "AL72",
+      "AM72",
+      "B73",
+      "AE73",
+      "AI73",
+      "AJ73",
+      "AL73",
+      "AM73",
+      "B74",
+      "AE74",
+      "AI74",
+      "AJ74",
+      "AL74",
+      "AM74",
+      "B75",
+      "AE75",
+      "AI75",
+      "AJ75",
+      "AL75",
+      "AM75",
+      "AE76",
+      "AI76",
+      "B77",
+      "AE77",
+      "AI77",
+      "B78",
+      "AE78",
+      "AI78",
+      "B79",
+      "AE79",
+      "AI79",
+      "B80",
+      "AE80",
+      "AI80",
+      "B81",
+      "AE81",
+      "AI81",
+      "B82",
+      "B83",
+      "B84",
+      "B85",
+      "B86",
+      "B87",
+      "B88",
+      "B89",
+      "B90",
+      "B91",
+      "B92",
+      "B93",
+      "B94",
+      "B95",
+      "B96",
+      "B97",
+      "B98",
+      "B100",
+      "B101",
+      "B102",
+      "B103",
+      "B104",
+      "B105",
+      "B106",
+      "B107",
+      "B108",
+      "B109",
+      "B110",
+      "B111",
+      "B112",
+      "B113",
+      "B114",
+      "E228",
+      "E229",
+      "E230",
+      "E231",
+      "E232",
+      "E233",
+      "E238",
+      "F238",
+      "E239",
+      "F239",
+      "E240",
+      "F240",
+      "E241",
+      "F241",
+      "E242",
+      "F242",
+      "E244",
+      "F244",
+      "E245",
+      "F245",
+      "E246",
+      "F246",
+      "E247",
+      "F247",
+      "E248",
+      "F248",
+      "E249",
+      "F249",
+      "E250",
+      "F250",
+      "E251",
+      "F251",
+      "E252",
+      "F252",
+      "E254",
+      "F254",
+      "E255",
+      "F255",
+      "E256",
+      "F256",
+      "E258",
+      "F258",
+      "E259",
+      "F259",
+      "E260",
+      "F260",
+      "E261",
+      "F261",
+      "E262",
+      "F262",
+      "E263",
+      "F263",
+      "E264",
+      "F264",
+      "E265",
+      "F265",
+      "E266",
+      "F266",
+      "E267",
+      "F267",
+      "E268",
+      "F268",
+      "E269",
+      "F269",
+      "E270",
+      "F270",
+      "E271",
+      "F271",
+      "E272",
+      "F272",
+      "E273",
+      "F273",
+      "E274",
+      "F274",
+      "E275",
+      "F275",
+      "E276",
+      "F276",
+      "E277",
+      "F277",
+      "E278",
+      "F278",
+      "E279",
+      "F279",
+      "E280",
+      "F280",
+      "E281",
+      "F281",
+      "E282",
+      "F282",
+      "E283",
+      "F283",
+      "E284",
+      "F284",
+      "E285",
+      "F285",
+      "E287",
+      "F287",
+      "E288",
+      "F288",
+      "E289",
+      "F289",
+      "E290",
+      "F290",
+      "E291",
+      "F291",
+      "E292",
+      "F292",
+      "E293",
+      "F293",
+      "E294",
+      "F294",
+      "E295",
+      "F295",
+      "E296",
+      "F296",
+      "E297",
+      "F297",
+      "E298",
+      "F298",
+      "E299",
+      "F299",
+      "E300",
+      "F300",
+      "E301",
+      "F301",
+      "E302",
+      "F302",
+      "E303",
+      "F303",
+      "E304",
+      "F304",
+      "E305",
+      "F305",
+      "E306",
+      "F306",
+      "E307",
+      "F307",
+      "E308",
+      "F308",
+      "E310",
+      "F310",
+      "E311",
+      "F311",
+      "E312",
+      "F312",
+      "E313",
+      "F313",
+      "E314",
+      "F314",
+      "E315",
+      "F315",
+      "E316",
+      "F316",
+      "E317",
+      "F317",
+      "E318",
+      "F318",
+      "E319",
+      "F319",
+      "E320",
+      "F320",
+      "E321",
+      "F321",
+      "E322",
+      "F322",
+      "E323",
+      "F323",
+      "E324",
+      "F324"
+    ],
+    "Personality Traits": [],
+    "Data": [
+      "G3",
+      "H3",
+      "I3",
+      "J3",
+      "K3",
+      "L3",
+      "M3",
+      "G6",
+      "H6",
+      "I6",
+      "J6",
+      "K6",
+      "L6",
+      "M6",
+      "G7",
+      "H7",
+      "I7",
+      "J7",
+      "K7",
+      "L7",
+      "M7",
+      "G8",
+      "H8",
+      "I8",
+      "J8",
+      "K8",
+      "L8",
+      "M8",
+      "G9",
+      "H9",
+      "I9",
+      "J9",
+      "K9",
+      "L9",
+      "M9",
+      "G11",
+      "H11",
+      "I11",
+      "J11",
+      "K11",
+      "L11",
+      "M11",
+      "G13",
+      "H13",
+      "I13",
+      "J13",
+      "K13",
+      "L13",
+      "M13"
+    ],
+    "Items": [
+      "A2",
+      "I261",
+      "J261",
+      "K261",
+      "L261",
+      "M261",
+      "O261",
+      "I262",
+      "J262",
+      "K262",
+      "L262",
+      "M262",
+      "O262"
+    ],
+    "Food Catalogue": [],
+    "Crafting Catalogue": []
+  },
+  "defaultState": {
+    "schemaVersion": 8,
+    "character": {
+      "name": "",
+      "race": "",
+      "className": "",
+      "age": "",
+      "weight": "",
+      "height": "",
+      "background": "",
+      "eyes": "",
+      "skin": "",
+      "hair": "",
+      "features": "",
+      "level": 0,
+      "experience": 0,
+      "currentHitPoints": 0,
+      "temporaryHitPoints": 0,
+      "currentMana": 0,
+      "currentFocus": 0,
+      "alignment": "Unaligned",
+      "sanctum": "None",
+      "faith": "None",
+      "spellcastingAbility": "AWR"
+    },
+    "abilityBonuses": {
+      "strength": 0,
+      "speed": 0,
+      "vitality": 0,
+      "intelligence": 0,
+      "awareness": 0,
+      "talent": 0
+    },
+    "personality": [
+      {
+        "name": "",
+        "cost": 0
+      },
+      {
+        "name": "",
+        "cost": 0
+      },
+      {
+        "name": "",
+        "cost": 0
+      },
+      {
+        "name": "",
+        "cost": 0
+      },
+      {
+        "name": "",
+        "cost": 0
+      },
+      {
+        "name": "",
+        "cost": 0
+      }
+    ],
+    "otherSkills": [],
+    "bonuses": {
+      "physicalDamage": 0,
+      "hitPoints": 0,
+      "spellDamage": 0,
+      "armor": 0,
+      "resistance": 0,
+      "evasion": 0,
+      "focus": 0,
+      "criticalChance": 0,
+      "mana": 0,
+      "moveSpeed": 0
+    },
+    "equipment": {
+      "righthand": "",
+      "lefthand": "",
+      "headgear": "",
+      "plate": "",
+      "footwear": "",
+      "trinket": "",
+      "secondarytrinket": "",
+      "necklace": ""
+    },
+    "inventory": [],
+    "currency": {
+      "copper": 0,
+      "silver": 0,
+      "gold": 0,
+      "platinum": 0
+    },
+    "jewelry": [
+      "",
+      "",
+      "",
+      ""
+    ],
+    "gems": [
+      "",
+      "",
+      "",
+      ""
+    ],
+    "activeEffects": [
+      {
+        "status": "",
+        "duration": "",
+        "ailment": "",
+        "mark": ""
+      },
+      {
+        "status": "",
+        "duration": "",
+        "ailment": "",
+        "mark": ""
+      },
+      {
+        "status": "",
+        "duration": "",
+        "ailment": "",
+        "mark": ""
+      },
+      {
+        "status": "",
+        "duration": "",
+        "ailment": "",
+        "mark": ""
+      },
+      {
+        "status": "",
+        "duration": "",
+        "ailment": "",
+        "mark": ""
+      },
+      {
+        "status": "",
+        "duration": "",
+        "ailment": "",
+        "mark": ""
+      },
+      {
+        "status": "",
+        "duration": "",
+        "ailment": "",
+        "mark": ""
+      }
+    ],
+    "specialEffects": {
+      "immunities": "",
+      "vulnerabilities": "",
+      "resistances": ""
+    },
+    "skills": {
+      "28": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "29": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "30": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "31": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "32": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "34": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "35": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "36": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "37": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "38": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "39": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "40": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "41": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "42": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "44": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "45": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "46": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "48": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "49": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "50": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "51": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "52": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "53": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "54": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "55": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "56": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "57": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "58": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "59": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "60": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "61": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "62": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "63": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "64": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "65": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "66": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "67": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "68": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "69": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "70": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "71": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "72": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "73": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "74": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "75": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "77": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "78": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "79": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "80": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "81": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "82": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "83": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "84": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "85": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "86": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "87": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "88": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "89": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "90": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "91": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "92": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "93": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "94": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "95": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "96": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "97": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "98": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "100": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "101": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "102": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "103": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "104": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "105": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "106": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "107": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "108": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "109": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "110": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "111": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "112": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "113": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "114": {
+        "proficient": false,
+        "bonus": 0
+      }
+    },
+    "savingThrows": {
+      "strength": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "speed": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "vitality": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "intelligence": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "awareness": {
+        "proficient": false,
+        "bonus": 0
+      },
+      "talent": {
+        "proficient": false,
+        "bonus": 0
+      }
+    },
+    "spells": {
+      "Cantrips": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ],
+      "Level 1": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ],
+      "Level 2": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ],
+      "Level 3": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ],
+      "Level 4": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ],
+      "Level 5": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ],
+      "Level 6": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ],
+      "Level 7": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ],
+      "Level 8": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ],
+      "Level 9": [
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        },
+        {
+          "name": "",
+          "school": "",
+          "castingTime": "",
+          "range": "",
+          "areaTargets": "",
+          "effect": "",
+          "saveAttack": "",
+          "duration": "",
+          "concentration": false,
+          "ritual": false,
+          "components": "",
+          "cost": "",
+          "prepared": false
+        }
+      ]
+    },
+    "damageTool": {
+      "multiplier": 1,
+      "accuracyAbility": "STR",
+      "accuracyDebuff": 0,
+      "rollCount": 0,
+      "rolls": [
+        "",
+        "",
+        "",
+        "",
+        "",
+        "",
+        ""
+      ],
+      "criticalRoll": ""
+    },
+    "hunger": {
+      "startingRations": 0,
+      "currentDay": 1,
+      "foodGainedToday": 0,
+      "eatRationToday": false,
+      "days": [],
+      "hearthMealsEatenToday": 0
+    },
+    "hearth": {
+      "restCycle": 1,
+      "selectedDish": "",
+      "log": [],
+      "acquired": {
+        "Lysael Glassfin Parcels": 0,
+        "Vellhorn Cloud Curd": 0,
+        "Brumox Winter Pot": 0,
+        "Hrimchar Smoke-Cakes": 0,
+        "Hushback Silver-Reed Broth": 0,
+        "Telleth Bellbread ⚠": 0,
+        "Duskhide Marrow Tartine": 0,
+        "Blackwake Vigil Soup": 0,
+        "Azurefin Nayara Skewers": 0,
+        "Reedhorn Yoghurt Hearthbread": 0,
+        "Vaelwyn Bark-Honey Dumplings": 0,
+        "Qasira Well-Bowl": 0,
+        "Gorak Ash-Roast": 0,
+        "Iril Candle-Pear ✦": 0
+      }
+    },
+    "survivalHistory": [],
+    "survivalHistorySequence": 0,
+    "activeAilments": [
+      {
+        "name": "",
+        "mark": 0
+      },
+      {
+        "name": "",
+        "mark": 0
+      },
+      {
+        "name": "",
+        "mark": 0
+      },
+      {
+        "name": "",
+        "mark": 0
+      },
+      {
+        "name": "",
+        "mark": 0
+      },
+      {
+        "name": "",
+        "mark": 0
+      }
+    ],
+    "cooking": {
+      "xp": 0,
+      "familiarRecipes": [],
+      "history": [],
+      "sequence": 0,
+      "rerollUsedRest": 0,
+      "hearthwrightUsedRest": 0,
+      "homeRegion": "Asura",
+      "ingredientPantry": {},
+      "cookingKitOwned": false,
+      "ownedUtensils": []
+    },
+    "crafting": {
+      "materialInventory": {},
+      "disciplineBonuses": {
+        "Alchemy": 0,
+        "Forgecraft": 0,
+        "Runecraft": 0,
+        "Scribing": 0,
+        "Fieldcraft": 0,
+        "Harvesting": 0
+      },
+      "ownedToolKits": {
+        "Alchemy": false,
+        "Forgecraft": false,
+        "Runecraft": false,
+        "Scribing": false,
+        "Fieldcraft": false,
+        "Harvesting": false
+      },
+      "knownBlueprints": [],
+      "history": [],
+      "sequence": 0,
+      "legendaryProject": {
+        "conceptId": "",
+        "customName": "",
+        "designComplete": false,
+        "assemblyComplete": false,
+        "awakeningComplete": false,
+        "notes": ""
+      }
+    },
+    "abilityBaseScores": {
+      "strength": 0,
+      "speed": 0,
+      "vitality": 0,
+      "intelligence": 0,
+      "awareness": 0,
+      "talent": 0
+    }
+  }
+};
