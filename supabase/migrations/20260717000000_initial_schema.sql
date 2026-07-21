@@ -42,6 +42,7 @@ create table if not exists public.catalogue_entries (
       'conditions',
       'items',
       'food_dishes',
+      'food_ingredients',
       'food_rules',
       'crafting_sections'
     )
