@@ -1679,3 +1679,88 @@ button:disabled {
     width: 100%;
   }
 }
+
+.character-creation-modal {
+  width: min(100%, 47rem);
+}
+
+.modal-intro {
+  max-width: 42rem;
+  margin: 0.35rem 0 1.25rem;
+  color: #68777d;
+  line-height: 1.55;
+}
+
+.base-ability-fieldset {
+  display: grid;
+  gap: 0.85rem;
+  margin: 0;
+  padding: 1rem;
+  border: 1px solid var(--line);
+  border-radius: 0.8rem;
+  background: #f7f3eb;
+}
+
+.base-ability-fieldset legend {
+  padding: 0 0.35rem;
+  color: var(--ink);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 1.15rem;
+  font-weight: 800;
+}
+
+.base-ability-fieldset > p {
+  margin: 0;
+  color: #6d7b80;
+  font-size: 0.78rem;
+  line-height: 1.45;
+}
+
+.base-ability-grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.base-ability-grid label {
+  gap: 0.35rem;
+}
+
+.base-ability-grid label > span {
+  display: flex;
+  align-items: baseline;
+  gap: 0.4rem;
+}
+
+.base-ability-grid label b {
+  min-width: 2.2rem;
+  color: #0e5a80;
+  letter-spacing: 0.08em;
+}
+
+.base-ability-grid input {
+  text-align: center;
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.character-creation-note {
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.8rem 0.9rem;
+  border-left: 3px solid var(--teal);
+  background: #eef6f2;
+  color: #52666a;
+  font-size: 0.76rem;
+  line-height: 1.45;
+}
+
+.character-creation-note strong {
+  color: var(--ink);
+}
+
+@media (max-width: 720px) {
+  .base-ability-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}

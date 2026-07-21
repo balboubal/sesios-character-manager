@@ -593,14 +593,31 @@ function renderModal() {
 }
 
 function renderCharacterModal() {
+  const abilities = [
+    ["strength", "STR", "Strength"],
+    ["speed", "SPD", "Speed"],
+    ["vitality", "VIT", "Vitality"],
+    ["intelligence", "INT", "Intelligence"],
+    ["awareness", "AWR", "Awareness"],
+    ["talent", "TAL", "Talent"],
+  ];
   return `
     <div class="modal-backdrop" data-action="close-modal">
-      <section class="modal-card" role="dialog" aria-modal="true" aria-labelledby="character-modal-title" data-modal-panel>
+      <section class="modal-card character-creation-modal" role="dialog" aria-modal="true" aria-labelledby="character-modal-title" data-modal-panel>
         <button class="modal-close" type="button" data-action="close-modal" aria-label="Close">×</button>
-        <p class="eyebrow">New record</p><h2 id="character-modal-title">Create a character</h2>
+        <p class="eyebrow">New character</p><h2 id="character-modal-title">Create a fresh character</h2>
+        <p class="modal-intro">Enter the character name and the six base ability rolls. Everything else begins empty and can be completed on the sheet.</p>
         <form id="character-form" class="stack-form">
           <label>Character name<input name="name" type="text" maxlength="120" autocomplete="off" required autofocus /></label>
           ${isDm() ? `<label>Assign to player<select name="ownerId" required>${application.profiles.filter((profile) => profile.role === "player").map((profile) => `<option value="${profile.id}">${escapeHtml(profile.display_name || profile.email)}</option>`).join("")}</select></label>` : ""}
+          <fieldset class="base-ability-fieldset">
+            <legend>What are your base ability scores?</legend>
+            <p>Enter each original d100 ability roll. These values become the permanent reset baseline for this character.</p>
+            <div class="base-ability-grid">
+              ${abilities.map(([key, abbreviation, label]) => `<label><span><b>${abbreviation}</b>${label}</span><input name="base-${key}" type="number" min="1" max="100" step="1" inputmode="numeric" required /></label>`).join("")}
+            </div>
+          </fieldset>
+          <div class="character-creation-note"><strong>Clean start</strong><span>No test inventory, equipment, currency, traits, proficiencies, effects, food, or crafting progress will be copied into the new record.</span></div>
           <div class="button-row"><button class="button button-quiet" type="button" data-action="close-modal">Cancel</button><button class="button button-primary" type="submit">Create and open</button></div>
         </form>
       </section>
@@ -1273,7 +1290,27 @@ async function createCharacter(form) {
   const values = new FormData(form);
   const name = String(values.get("name") || "").trim();
   const ownerId = isDm() ? String(values.get("ownerId") || "") : application.session.user.id;
-  const state = cloneDefaultCharacterState(name);
+  const baseAbilityScores = {
+    strength: Number(values.get("base-strength")),
+    speed: Number(values.get("base-speed")),
+    vitality: Number(values.get("base-vitality")),
+    intelligence: Number(values.get("base-intelligence")),
+    awareness: Number(values.get("base-awareness")),
+    talent: Number(values.get("base-talent")),
+  };
+  const invalidAbility = Object.entries(baseAbilityScores).find(([, score]) => !Number.isInteger(score) || score < 1 || score > 100);
+  if (!name) {
+    showToast("Enter a character name.", "error");
+    form.elements.name?.focus();
+    return;
+  }
+  if (invalidAbility) {
+    const [ability] = invalidAbility;
+    showToast(`Enter a whole-number ${ability} score from 1 to 100.`, "error");
+    form.elements[`base-${ability}`]?.focus();
+    return;
+  }
+  const state = cloneDefaultCharacterState(name, baseAbilityScores);
   setFormBusy(form, true, "Creating…");
   const { data, error } = await supabase
     .from("characters")

@@ -12,10 +12,23 @@ export const catalogueDefinitions = Object.freeze([
   { key: "crafting_sections", label: "Legacy Crafting Sections", singular: "section" },
 ]);
 
-export function cloneDefaultCharacterState(name = "New Character") {
+export function cloneDefaultCharacterState(name = "New Character", baseAbilityScores = {}) {
   const state = structuredClone(workbookDefaults.defaultState);
-  state.character.name = name;
+  state.character.name = String(name || "").trim();
+  state.abilityBaseScores = {
+    strength: normalizeBaseAbilityScore(baseAbilityScores.strength),
+    speed: normalizeBaseAbilityScore(baseAbilityScores.speed),
+    vitality: normalizeBaseAbilityScore(baseAbilityScores.vitality),
+    intelligence: normalizeBaseAbilityScore(baseAbilityScores.intelligence),
+    awareness: normalizeBaseAbilityScore(baseAbilityScores.awareness),
+    talent: normalizeBaseAbilityScore(baseAbilityScores.talent),
+  };
   return state;
+}
+
+function normalizeBaseAbilityScore(value) {
+  const score = Number(value);
+  return Number.isFinite(score) ? Math.max(1, Math.min(100, Math.floor(score))) : 0;
 }
 
 export function catalogueLabel(category) {
