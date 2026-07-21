@@ -34,6 +34,8 @@ const requiredFiles = [
   "supabase/migrations/20260717001000_seed_catalogues.sql",
   "supabase/migrations/20260720000000_enable_character_realtime.sql",
   "supabase/migrations/20260720001000_bulk_import_catalogue_items.sql",
+  "supabase/migrations/20260721000000_hearthcraft_cooking_metadata.sql",
+  "supabase/migrations/20260721001000_hearthcraft_ingredient_catalogue.sql",
   "supabase/functions/invite-player/index.ts",
   "README.md",
 ];
@@ -50,6 +52,13 @@ assert.equal(workbook.items.length, 267, "Workbook item catalogue changed unexpe
 assert.equal(workbook.traits.length, 41, "Workbook trait catalogue changed unexpectedly");
 assert.equal(workbook.conditions.length, 27, "Workbook condition catalogue changed unexpectedly");
 assert.ok(workbook.defaultState.character, "Default character state is missing");
+assert.ok(workbook.defaultState.cooking, "Default Cooking progression state is missing");
+assert.equal(workbook.food.cooking.levels.length, 6, "Cooking progression must include Levels 0-5");
+assert.equal(workbook.food.cooking.kit.bonus, 25, "Cooking Kit bonus must remain +25");
+assert.equal(workbook.food.ingredients.length, 115, "The complete Hearthcraft ingredient catalogue must contain 115 entries");
+assert.ok(workbook.food.ingredients.some((entry) => entry.name === "Charcoal Root" && entry.region === "Fittoa"), "Fittoan ingredient reference is missing");
+assert.ok(workbook.food.ingredients.some((entry) => entry.name === "Bellfin Salt" && entry.category === "Fishery Product"), "Fishery product reference is missing");
+assert.ok(workbook.food.dishes.every((dish) => Array.isArray(dish.ingredients) && dish.ingredients.length), "Every Hearthcraft dish must link to key ingredients");
 
 const bridge = fs.readFileSync(path.join(root, "public/sheet/script.js"), "utf8");
 assert.match(bridge, /amutsu:state-change/, "Online character save bridge is missing");
@@ -58,6 +67,17 @@ assert.match(bridge, /request-long-rest/, "Character Sheet Long Rest control is 
 assert.match(bridge, /request-advance-day/, "Advance Day control is missing");
 assert.match(bridge, /request-reset-days/, "Reset days control is missing");
 assert.match(bridge, /request-selected-hearth-meal/, "Hearth Boon activation control is missing");
+assert.match(bridge, /Cooking Station/, "Interactive Cooking Station is missing");
+assert.match(bridge, /roll-cooking-check/, "Cooking Check roll control is missing");
+assert.match(bridge, /record-cooking-result/, "Cooking result recording is missing");
+assert.match(bridge, /grant-cooking-training/, "Cooking training XP control is missing");
+assert.match(bridge, /Master Cook reroll/, "Master Cook reroll control is missing");
+assert.match(bridge, /Cooking Rules & Equipment/, "Full cooking rules reference is missing");
+assert.match(bridge, /Ingredient Catalogue/, "Hearthcraft ingredient catalogue tab is missing");
+assert.match(bridge, /renderIngredientCard/, "Ingredient catalogue cards are missing");
+assert.match(bridge, /data-action="show-ingredient"/, "Dish-to-ingredient navigation is missing");
+assert.match(bridge, /data-food-results="ingredients"/, "Ingredient filter results container is missing");
+assert.match(bridge, /path === "cooking\.history"/, "Dynamic Cooking history persistence hook is missing");
 assert.match(bridge, /data-ailment-select/, "Dedicated ailment selectors are missing");
 assert.match(
   bridge,
@@ -155,6 +175,16 @@ assert.match(stylesheet, /\.current-pools-panel \.long-rest-button/, "Mobile Lon
 assert.match(stylesheet, /\.ailment-grid\s*{/, "Dedicated ailment layout styling is missing");
 assert.match(stylesheet, /\.ailment-mark-stepper\s*{/, "Ailment mark stepper styling is missing");
 assert.match(stylesheet, /\.reset-days-button/, "Reset days button styling is missing");
+assert.match(stylesheet, /\.cooking-station-grid\s*\{/, "Cooking Station layout styling is missing");
+assert.match(stylesheet, /\.cooking-options-grid\s*\{/, "Cooking modifier controls styling is missing");
+assert.match(stylesheet, /\.cooking-reference-grid\s*\{/, "Cooking rules reference styling is missing");
+assert.match(stylesheet, /\.ingredient-grid\s*\{/, "Ingredient catalogue grid styling is missing");
+assert.match(stylesheet, /\.food-ingredient-list\s*\{/, "Dish ingredient-link styling is missing");
+assert.match(stylesheet, /\.ingredient-role-grid\s*\{/, "Ingredient role reference styling is missing");
+
+const workbookSource = fs.readFileSync(path.join(root, "src/workbook.js"), "utf8");
+assert.match(workbookSource, /food_ingredients/, "DM-editable Hearthcraft Ingredients catalogue is missing");
+assert.match(workbookSource, /ingredients: grouped\.food_ingredients/, "Ingredient catalogue payload bridge is missing");
 
 const portalSource = fs.readFileSync(path.join(root, "src/main.js"), "utf8");
 assert.match(portalSource, /data-action="bulk-import-items"/, "Item bulk-import action is missing");
@@ -403,7 +433,7 @@ legacySurvivalState.activeEffects[1].mark = "Mark 2";
 delete legacySurvivalState.survivalHistory;
 delete legacySurvivalState.survivalHistorySequence;
 survivalEngine.normalizeSurvivalState(legacySurvivalState);
-assert.equal(legacySurvivalState.schemaVersion, 3, "Legacy survival state must migrate to schema 3");
+assert.equal(legacySurvivalState.schemaVersion, 4, "Legacy survival state must migrate to schema 4");
 assert.equal(legacySurvivalState.hunger.days.length, 1, "Blank legacy hunger rows must be removed");
 assert.equal(legacySurvivalState.hearth.log.length, 1, "Blank legacy meal rows must be removed");
 assert.equal(legacySurvivalState.hunger.currentDay, 2);
@@ -414,7 +444,7 @@ assert.equal(legacySurvivalState.survivalHistory.length, 3, "Legacy day, meal, a
 
 function createActionState() {
   const state = JSON.parse(JSON.stringify(workbook.defaultState));
-  state.schemaVersion = 3;
+  state.schemaVersion = 4;
   state.character.className = "Wizard";
   state.character.currentHitPoints = 12;
   state.character.temporaryHitPoints = 9;
@@ -624,6 +654,133 @@ survivalResult = survivalEngine.editSurvivalHistoryEntry(dynamicJourneyState, fi
 });
 assert.equal(survivalResult.accepted, true);
 assert.equal(dynamicJourneyState.hunger.days[0].foodGained, 5, "DM history edits must update source data");
+
+
+const cookingState = createActionState();
+cookingState.cooking = {
+  xp: 3,
+  familiarRecipes: [],
+  history: [],
+  sequence: 0,
+  rerollUsedRest: 0,
+  hearthwrightUsedRest: 0,
+};
+survivalEngine.normalizeCookingState(cookingState);
+let cookingDerived = survivalEngine.calculate(cookingState, workbook);
+assert.equal(cookingDerived.cooking.level, 1, "3 Cooking XP must grant Hearthhand");
+assert.equal(
+  cookingDerived.cooking.totalBonus,
+  cookingDerived.skills["95"] + 5,
+  "Cooking Checks must combine the character Cooking skill and level bonus",
+);
+const cookingConfig = {
+  recipeKey: "Lysael Glassfin Parcels",
+  servings: 4,
+  cookingKit: true,
+  assistant: true,
+  professionalKitchen: false,
+  writtenRecipe: true,
+  poorConditions: false,
+  specialtyUtensil: true,
+  underPressure: true,
+  useCampCook: true,
+  useHearthwright: true,
+};
+let cookingRoll = survivalEngine.rollCookingCheck(
+  cookingState,
+  workbook,
+  cookingConfig,
+  cookingDerived.skills,
+  () => 0.8,
+);
+assert.equal(cookingRoll.naturalRoll, 81);
+assert.equal(cookingRoll.modifierBreakdown.cookingKit, 25);
+assert.equal(cookingRoll.modifierBreakdown.assistant, 10);
+assert.equal(cookingRoll.outcome, "strong-success");
+assert.equal(cookingRoll.preparedServings, 5, "Strong success must add one serving");
+let cookingRecord = survivalEngine.recordCookingResult(
+  cookingState,
+  workbook,
+  cookingRoll,
+  cookingDerived.skills,
+);
+assert.equal(cookingRecord.accepted, true);
+assert.equal(cookingRecord.pantryAdded, 5, "Successful Hearthcraft must add prepared servings to the pantry");
+assert.equal(cookingRecord.actualXp, 2, "A regional pressured success may grant 2 XP");
+assert.equal(survivalEngine.calculate(cookingState, workbook).cooking.xpThisRest, 2);
+assert.equal(
+  survivalEngine.grantCookingTrainingXp(cookingState, cookingDerived.skills).accepted,
+  false,
+  "Cooking XP must be limited to 2 per long rest",
+);
+
+const ordinaryCookingState = createActionState();
+ordinaryCookingState.cooking.xp = 3;
+survivalEngine.normalizeCookingState(ordinaryCookingState);
+const ordinaryDerived = survivalEngine.calculate(ordinaryCookingState, workbook);
+const failedMeal = survivalEngine.rollCookingCheck(
+  ordinaryCookingState,
+  workbook,
+  { ...cookingConfig, recipeKey: "__familiar", customName: "Ration stew", assistant: false, cookingKit: false, writtenRecipe: true },
+  ordinaryDerived.skills,
+  () => 0.1,
+);
+assert.equal(failedMeal.success, false);
+const foodBeforeCooking = ordinaryCookingState.hunger.foodGainedToday;
+const failedRecord = survivalEngine.recordCookingResult(ordinaryCookingState, workbook, failedMeal, ordinaryDerived.skills);
+assert.equal(failedRecord.standardFoodAdded, 4, "Failed edible meals must add ordinary food rather than a Hearth Boon");
+assert.equal(ordinaryCookingState.hunger.foodGainedToday, foodBeforeCooking + 4);
+
+const journeymanState = createActionState();
+journeymanState.cooking.xp = 12;
+journeymanState.cooking.history = [];
+survivalEngine.normalizeCookingState(journeymanState);
+const journeymanDerived = survivalEngine.calculate(journeymanState, workbook);
+const regionalSuccess = survivalEngine.rollCookingCheck(
+  journeymanState,
+  workbook,
+  cookingConfig,
+  journeymanDerived.skills,
+  () => 0.9,
+);
+assert.equal(regionalSuccess.becomesFamiliar, true, "Journeyman success must familiarize a regional recipe");
+survivalEngine.recordCookingResult(journeymanState, workbook, regionalSuccess, journeymanDerived.skills);
+assert.ok(journeymanState.cooking.familiarRecipes.includes("Lysael Glassfin Parcels"));
+const familiarPreview = survivalEngine.previewCookingCheck(journeymanState, workbook, cookingConfig, journeymanDerived.skills);
+assert.equal(familiarPreview.baseDc, 35, "A familiar regional recipe must use the familiar DC");
+
+const hearthwrightState = createActionState();
+hearthwrightState.cooking.xp = 18;
+hearthwrightState.cooking.history = [];
+survivalEngine.normalizeCookingState(hearthwrightState);
+const hearthwrightDerived = survivalEngine.calculate(hearthwrightState, workbook);
+const hearthwrightRoll = survivalEngine.rollCookingCheck(
+  hearthwrightState,
+  workbook,
+  cookingConfig,
+  hearthwrightDerived.skills,
+  () => 0.8,
+);
+assert.equal(hearthwrightRoll.usedHearthwright, true);
+assert.equal(hearthwrightRoll.preparedServings, 6, "Hearthwright strong success must create two extra servings");
+survivalEngine.recordCookingResult(hearthwrightState, workbook, hearthwrightRoll, hearthwrightDerived.skills);
+assert.equal(survivalEngine.calculate(hearthwrightState, workbook).cooking.hearthwrightAvailable, false);
+
+const masterCookState = createActionState();
+masterCookState.cooking.xp = 25;
+masterCookState.cooking.history = [];
+survivalEngine.normalizeCookingState(masterCookState);
+const masterDerived = survivalEngine.calculate(masterCookState, workbook);
+const firstMasterRoll = survivalEngine.rollCookingCheck(masterCookState, workbook, cookingConfig, masterDerived.skills, () => 0.4);
+const rerollResult = survivalEngine.rerollCookingCheck(masterCookState, workbook, firstMasterRoll, masterDerived.skills, () => 0.9);
+assert.equal(rerollResult.accepted, true, "Master Cook must be able to reroll once per long rest");
+assert.equal(rerollResult.result.rerolled, true);
+assert.equal(survivalEngine.calculate(masterCookState, workbook).cooking.rerollAvailable, false);
+assert.equal(
+  survivalEngine.rerollCookingCheck(masterCookState, workbook, rerollResult.result, masterDerived.skills, () => 0.2).accepted,
+  false,
+  "Master Cook cannot reroll twice in the same rest",
+);
 
 
 const spreadsheetPaste = [
