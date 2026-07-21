@@ -1,6 +1,6 @@
 {
   "defaultState": {
-    "schemaVersion": 7,
+    "schemaVersion": 8,
     "character": {
       "name": "",
       "race": "",
@@ -2330,7 +2330,7 @@
         "Brumox Winter Pot": 0,
         "Hrimchar Smoke-Cakes": 0,
         "Hushback Silver-Reed Broth": 0,
-        "Telleth Bellbread ⚠": 0,
+        "Telleth Bellbread \u26a0": 0,
         "Duskhide Marrow Tartine": 0,
         "Blackwake Vigil Soup": 0,
         "Azurefin Nayara Skewers": 0,
@@ -2338,7 +2338,7 @@
         "Vaelwyn Bark-Honey Dumplings": 0,
         "Qasira Well-Bowl": 0,
         "Gorak Ash-Roast": 0,
-        "Iril Candle-Pear ✦": 0
+        "Iril Candle-Pear \u2726": 0
       }
     },
     "survivalHistory": [],
@@ -2418,6 +2418,7 @@
       "intelligence": 0,
       "awareness": 0,
       "talent": 0
-    }
+    },
+    "otherSkills": []
   }
 }
