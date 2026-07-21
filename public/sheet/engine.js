@@ -107,6 +107,469 @@
     masterwork: { key: "masterwork", label: "Masterchef Dish · Legendary", dc: 85, time: "2-4 hours", requiredLevel: 5 },
   });
 
+  const CRAFTING_DISCIPLINES = Object.freeze([
+    "Alchemy",
+    "Forgecraft",
+    "Runecraft",
+    "Scribing",
+    "Fieldcraft",
+    "Harvesting",
+  ]);
+  const CRAFTING_RARITIES = Object.freeze([
+    "Common",
+    "Uncommon",
+    "Rare",
+    "Very Rare",
+    "Legendary",
+    "Unique",
+  ]);
+
+  function craftingRarityRank(rarity) {
+    const index = CRAFTING_RARITIES.indexOf(String(rarity || "Common"));
+    return index >= 0 ? index : 0;
+  }
+
+  function ensureCraftingContainers(state) {
+    if (!state.crafting || typeof state.crafting !== "object") state.crafting = {};
+    if (!state.crafting.materialInventory || typeof state.crafting.materialInventory !== "object" || Array.isArray(state.crafting.materialInventory)) {
+      state.crafting.materialInventory = {};
+    }
+    if (!state.crafting.disciplineBonuses || typeof state.crafting.disciplineBonuses !== "object") {
+      state.crafting.disciplineBonuses = {};
+    }
+    if (!state.crafting.ownedToolKits || typeof state.crafting.ownedToolKits !== "object") {
+      state.crafting.ownedToolKits = {};
+    }
+    if (!Array.isArray(state.crafting.knownBlueprints)) state.crafting.knownBlueprints = [];
+    if (!Array.isArray(state.crafting.history)) state.crafting.history = [];
+    if (!state.crafting.legendaryProject || typeof state.crafting.legendaryProject !== "object" || Array.isArray(state.crafting.legendaryProject)) {
+      state.crafting.legendaryProject = {};
+    }
+    state.crafting.legendaryProject = {
+      conceptId: String(state.crafting.legendaryProject.conceptId || ""),
+      customName: String(state.crafting.legendaryProject.customName || ""),
+      designComplete: state.crafting.legendaryProject.designComplete === true,
+      assemblyComplete: state.crafting.legendaryProject.assemblyComplete === true,
+      awakeningComplete: state.crafting.legendaryProject.awakeningComplete === true,
+      notes: String(state.crafting.legendaryProject.notes || ""),
+    };
+    CRAFTING_DISCIPLINES.forEach((discipline) => {
+      state.crafting.disciplineBonuses[discipline] = numberValue(state.crafting.disciplineBonuses[discipline]);
+      state.crafting.ownedToolKits[discipline] = state.crafting.ownedToolKits[discipline] === true;
+    });
+    Object.keys(state.crafting.materialInventory).forEach((materialId) => {
+      const quantity = Math.max(0, Math.floor(numberValue(state.crafting.materialInventory[materialId])));
+      if (quantity) state.crafting.materialInventory[materialId] = quantity;
+      else delete state.crafting.materialInventory[materialId];
+    });
+    state.crafting.sequence = Math.max(0, Math.floor(numberValue(state.crafting.sequence)));
+  }
+
+  function nextCraftingId(state, prefix) {
+    ensureCraftingContainers(state);
+    state.crafting.sequence += 1;
+    return `${prefix}-${state.crafting.sequence}`;
+  }
+
+  function normalizeCraftingState(state) {
+    ensureCraftingContainers(state);
+    state.crafting.knownBlueprints = [...new Set(
+      state.crafting.knownBlueprints.map((value) => String(value || "").trim()).filter(Boolean),
+    )].sort((left, right) => left.localeCompare(right));
+    state.crafting.history = state.crafting.history
+      .filter((entry) => entry && typeof entry === "object")
+      .map((entry) => ({
+        ...entry,
+        id: entry.id || nextCraftingId(state, "craft"),
+        createdAt: entry.createdAt || new Date().toISOString(),
+      }));
+    state.crafting.history.forEach((entry) => {
+      const match = String(entry.id || "").match(/-(\d+)$/);
+      if (match) state.crafting.sequence = Math.max(state.crafting.sequence, Number(match[1]));
+    });
+    state.schemaVersion = Math.max(6, Math.floor(numberValue(state.schemaVersion)));
+    return state.crafting;
+  }
+
+  function craftingMaterialIndex(data) {
+    return new Map((data.crafting?.materials || []).map((material) => [String(material.id || ""), material]));
+  }
+
+  function craftingMaterialTags(material) {
+    return new Set([
+      ...(Array.isArray(material?.categoryTags) ? material.categoryTags : []),
+      ...(Array.isArray(material?.effectTags) ? material.effectTags : []),
+    ].map((tag) => String(tag || "").toLowerCase()));
+  }
+
+  function craftingMaterialMatchesAlternative(material, alternative) {
+    if (!material || !alternative) return false;
+    const materialIds = Array.isArray(alternative.materialIds) ? alternative.materialIds : [];
+    if (materialIds.length && !materialIds.includes(material.id)) return false;
+    const tags = craftingMaterialTags(material);
+    const requiredTags = Array.isArray(alternative.tags) ? alternative.tags : [];
+    if (requiredTags.some((tag) => !tags.has(String(tag).toLowerCase()))) return false;
+    const anyTags = Array.isArray(alternative.anyTags) ? alternative.anyTags : [];
+    if (anyTags.length && !anyTags.some((tag) => tags.has(String(tag).toLowerCase()))) return false;
+    return true;
+  }
+
+  function craftingMaterialMatchesRequirement(material, requirement) {
+    const alternatives = Array.isArray(requirement?.alternatives) ? requirement.alternatives : [];
+    return alternatives.some((alternative) => craftingMaterialMatchesAlternative(material, alternative));
+  }
+
+  function craftingRequirementOptions(state, data, requirement) {
+    const inventory = state.crafting.materialInventory;
+    return (data.crafting?.materials || [])
+      .filter((material) => numberValue(inventory[material.id]) > 0)
+      .filter((material) => craftingMaterialMatchesRequirement(material, requirement))
+      .map((material) => ({
+        ...material,
+        owned: Math.max(0, Math.floor(numberValue(inventory[material.id]))),
+        lowerRarity: craftingRarityRank(material.rarity) < craftingRarityRank(requirement.minRarity),
+      }))
+      .sort((left, right) => {
+        const rarityDifference = craftingRarityRank(right.rarity) - craftingRarityRank(left.rarity);
+        return rarityDifference || left.name.localeCompare(right.name);
+      });
+  }
+
+  function calculateCrafting(state, data) {
+    normalizeCraftingState(state);
+    const materialIndex = craftingMaterialIndex(data);
+    const ownedMaterials = Object.entries(state.crafting.materialInventory)
+      .map(([materialId, quantity]) => {
+        const material = materialIndex.get(materialId);
+        if (!material) return null;
+        return { ...material, quantity: Math.max(0, Math.floor(numberValue(quantity))) };
+      })
+      .filter((entry) => entry && entry.quantity > 0)
+      .sort((left, right) => left.name.localeCompare(right.name));
+    const totalBundles = ownedMaterials.reduce((sum, entry) => sum + entry.quantity, 0);
+    const disciplines = (data.crafting?.disciplines || []).map((entry) => ({
+      ...entry,
+      bonus: numberValue(state.crafting.disciplineBonuses[entry.id]),
+      toolOwned: state.crafting.ownedToolKits[entry.id] === true,
+    }));
+    return {
+      ownedMaterials,
+      totalBundles,
+      knownBlueprints: [...state.crafting.knownBlueprints],
+      disciplines,
+      history: [...state.crafting.history].reverse(),
+      legendaryProject: { ...state.crafting.legendaryProject },
+      materialIndex,
+    };
+  }
+
+  function previewCraftingCheck(state, data, config) {
+    const crafting = calculateCrafting(state, data);
+    const recipes = data.crafting?.recipes || [];
+    const recipe = recipes.find((entry) => entry.id === String(config?.recipeId || "")) || recipes[0] || null;
+    if (!recipe) return { accepted: false, reason: "missing-recipe", requirements: [] };
+    const selections = config?.selections && typeof config.selections === "object" ? config.selections : {};
+    const allocation = new Map();
+    const requirements = (recipe.requirements || []).map((requirement, index) => {
+      const options = craftingRequirementOptions(state, data, requirement);
+      const requested = String(selections[index] || "");
+      const selected = options.find((material) => material.id === requested) || options[0] || null;
+      if (selected) allocation.set(selected.id, (allocation.get(selected.id) || 0) + Math.max(1, Math.floor(numberValue(requirement.quantity) || 1)));
+      return {
+        ...requirement,
+        index,
+        options,
+        selected,
+        selectedId: selected?.id || "",
+        requiredQuantity: Math.max(1, Math.floor(numberValue(requirement.quantity) || 1)),
+        lowerRarity: selected?.lowerRarity === true,
+      };
+    });
+    const materialIndex = crafting.materialIndex;
+    const allocatedTotals = Object.fromEntries(allocation);
+    requirements.forEach((requirement) => {
+      const selected = requirement.selected;
+      const totalAllocated = selected ? numberValue(allocatedTotals[selected.id]) : 0;
+      const owned = selected ? numberValue(state.crafting.materialInventory[selected.id]) : 0;
+      requirement.ready = Boolean(selected && owned >= totalAllocated);
+      requirement.owned = owned;
+      requirement.totalAllocated = totalAllocated;
+      requirement.material = selected ? materialIndex.get(selected.id) : null;
+    });
+    const materialsReady = requirements.every((requirement) => requirement.ready);
+    const lowerSubstitute = requirements.some((requirement) => requirement.lowerRarity);
+    const blueprintRequired = recipe.blueprintRequired === true;
+    const blueprintKnown = !blueprintRequired || state.crafting.knownBlueprints.includes(recipe.id);
+    const project = recipe.project === true || recipe.rarity === "Legendary" || numberValue(recipe.dc) <= 0;
+    const disciplineBonus = numberValue(state.crafting.disciplineBonuses[recipe.discipline]);
+    const toolOwned = state.crafting.ownedToolKits[recipe.discipline] === true;
+    const assistant = config?.assistant === true;
+    const workshop = config?.workshop === true;
+    const modifier = disciplineBonus + (toolOwned ? 25 : 0) + (assistant ? 10 : 0);
+    const baseDc = Math.max(0, Math.floor(numberValue(recipe.dc)));
+    const dc = baseDc + (lowerSubstitute ? 10 : 0);
+    return {
+      accepted: materialsReady && blueprintKnown && !project,
+      recipe,
+      requirements,
+      selections: Object.fromEntries(requirements.map((requirement) => [requirement.index, requirement.selectedId])),
+      materialsReady,
+      blueprintRequired,
+      blueprintKnown,
+      project,
+      lowerSubstitute,
+      baseDc,
+      dc,
+      disciplineBonus,
+      toolOwned,
+      assistant,
+      workshop,
+      modifier,
+      rollMode: workshop ? "advantage" : "normal",
+      canAttempt: materialsReady && blueprintKnown && !project,
+      lockReason: project
+        ? "Legendary recipes use the three-stage project rules."
+        : !blueprintKnown
+          ? "This Rare or higher recipe requires a known blueprint."
+          : !materialsReady
+            ? "One or more required material bundles are missing."
+            : "",
+      crafting,
+      config: {
+        recipeId: recipe.id,
+        selections: Object.fromEntries(requirements.map((requirement) => [requirement.index, requirement.selectedId])),
+        assistant,
+        workshop,
+      },
+    };
+  }
+
+  function rollCraftingCheck(state, data, config, randomSource) {
+    const preview = previewCraftingCheck(state, data, config);
+    if (!preview.canAttempt) return { accepted: false, reason: "requirements", preview };
+    const rolls = [randomD100(randomSource)];
+    if (preview.rollMode === "advantage") rolls.push(randomD100(randomSource));
+    const naturalRoll = preview.rollMode === "advantage" ? Math.max(...rolls) : rolls[0];
+    const total = naturalRoll + preview.modifier;
+    let outcome = "failure";
+    if (naturalRoll <= 5) outcome = "critical-failure";
+    else if (naturalRoll >= 96) outcome = "critical-success";
+    else if (total >= preview.dc + 20) outcome = "strong-success";
+    else if (total >= preview.dc) outcome = "success";
+    else if (total <= preview.dc - 20) outcome = "major-failure";
+    const success = ["success", "strong-success", "critical-success"].includes(outcome);
+    const permanent = preview.recipe.permanent === true;
+    const extraOutput = !permanent && ["strong-success", "critical-success"].includes(outcome) ? 1 : 0;
+    return {
+      accepted: true,
+      ...preview,
+      rolls,
+      naturalRoll,
+      total,
+      outcome,
+      success,
+      outputQuantity: success ? Math.max(1, Math.floor(numberValue(preview.recipe.batchYield) || 1)) + extraOutput : 0,
+      halfTime: success && outcome === "strong-success" && permanent,
+      masterwork: success && outcome === "critical-success" && permanent,
+      recorded: false,
+    };
+  }
+
+  function changeCraftingMaterial(state, materialId, delta) {
+    normalizeCraftingState(state);
+    const id = String(materialId || "").trim();
+    const change = Math.floor(numberValue(delta));
+    if (!id || !change) return { accepted: false, reason: "invalid-change" };
+    const current = Math.max(0, Math.floor(numberValue(state.crafting.materialInventory[id])));
+    const next = Math.max(0, current + change);
+    if (next) state.crafting.materialInventory[id] = next;
+    else delete state.crafting.materialInventory[id];
+    return { accepted: true, materialId: id, previous: current, quantity: next };
+  }
+
+  function setCraftingBlueprint(state, recipeId, known) {
+    normalizeCraftingState(state);
+    const id = String(recipeId || "").trim();
+    if (!id) return { accepted: false };
+    const next = new Set(state.crafting.knownBlueprints);
+    if (known) next.add(id);
+    else next.delete(id);
+    state.crafting.knownBlueprints = [...next].sort((left, right) => left.localeCompare(right));
+    return { accepted: true, known: known === true };
+  }
+
+  function applyCraftingMaterialChanges(state, changes, direction) {
+    (changes || []).forEach((change) => {
+      const quantity = Math.max(0, Math.floor(numberValue(change.quantity)));
+      if (!quantity) return;
+      changeCraftingMaterial(state, change.materialId, direction * quantity);
+    });
+  }
+
+  function selectedCraftingMaterialChanges(result) {
+    const totals = new Map();
+    (result.requirements || []).forEach((requirement) => {
+      if (!requirement.selectedId) return;
+      totals.set(requirement.selectedId, (totals.get(requirement.selectedId) || 0) + requirement.requiredQuantity);
+    });
+    return [...totals.entries()].map(([materialId, quantity]) => ({ materialId, quantity }));
+  }
+
+  function removeCraftedInventoryQuantity(state, name, quantity) {
+    const entry = (state.inventory || []).find((candidate) => candidate.name === name);
+    if (!entry) return false;
+    const current = Math.max(0, Math.floor(numberValue(entry.quantity)));
+    if (current < quantity) return false;
+    entry.quantity = current - quantity;
+    if (entry.quantity <= 0) Object.assign(entry, createInventoryEntry());
+    return true;
+  }
+
+  function recordCraftingResult(state, data, result) {
+    normalizeCraftingState(state);
+    if (!result || result.recorded) return { accepted: false, reason: "already-recorded" };
+    const freshPreview = previewCraftingCheck(state, data, result.config || {});
+    if (!freshPreview.materialsReady) return { accepted: false, reason: "missing-materials" };
+    if (!freshPreview.blueprintKnown) return { accepted: false, reason: "missing-blueprint" };
+    const selectedChanges = selectedCraftingMaterialChanges({ requirements: freshPreview.requirements });
+    let materialChanges = [];
+    let inventoryAdded = null;
+    if (result.success) {
+      materialChanges = selectedChanges;
+      applyCraftingMaterialChanges(state, materialChanges, -1);
+      const quantity = Math.max(1, Math.floor(numberValue(result.outputQuantity) || 1));
+      for (let index = 0; index < quantity; index += 1) addInventoryItem(state, freshPreview.recipe.name);
+      inventoryAdded = { name: freshPreview.recipe.name, quantity };
+    } else if (result.outcome === "critical-failure") {
+      const loss = selectedChanges.find((change) => {
+        const material = freshPreview.crafting.materialIndex.get(change.materialId);
+        return material?.rarity !== "Unique";
+      });
+      if (loss) {
+        materialChanges = [{ materialId: loss.materialId, quantity: 1 }];
+        applyCraftingMaterialChanges(state, materialChanges, -1);
+      }
+    } else if (result.outcome === "major-failure") {
+      const loss = selectedChanges.find((change) => {
+        const material = freshPreview.crafting.materialIndex.get(change.materialId);
+        return ["Common", "Uncommon"].includes(material?.rarity);
+      });
+      if (loss) {
+        materialChanges = [{ materialId: loss.materialId, quantity: 1 }];
+        applyCraftingMaterialChanges(state, materialChanges, -1);
+      }
+    }
+    const entry = {
+      id: nextCraftingId(state, "craft"),
+      type: "craft",
+      createdAt: new Date().toISOString(),
+      recipeId: freshPreview.recipe.id,
+      recipeName: freshPreview.recipe.name,
+      rarity: freshPreview.recipe.rarity,
+      discipline: freshPreview.recipe.discipline,
+      naturalRoll: result.naturalRoll,
+      rolls: result.rolls,
+      total: result.total,
+      dc: result.dc,
+      outcome: result.outcome,
+      outputQuantity: result.success ? result.outputQuantity : 0,
+      halfTime: result.halfTime === true,
+      masterwork: result.masterwork === true,
+      materialChanges,
+      inventoryAdded,
+    };
+    state.crafting.history.push(entry);
+    result.recorded = true;
+    return { accepted: true, entry, materialChanges, inventoryAdded };
+  }
+
+  function craftingRecoveryRarity(total, naturalRoll, maximumRarity) {
+    const maximum = String(maximumRarity || "Very Rare");
+    const maxRank = craftingRarityRank(maximum);
+    let rarity = "None";
+    if (total >= 111) rarity = maximum === "Unique" ? "Unique" : "Legendary";
+    else if (total >= 96) rarity = "Very Rare";
+    else if (total >= 81) rarity = "Rare";
+    else if (total >= 61) rarity = "Uncommon";
+    else if (total >= 41) rarity = "Common";
+    if (naturalRoll <= 5) rarity = rarity === "None" ? "None" : "Common";
+    else if (naturalRoll >= 96 && rarity !== "None") {
+      rarity = CRAFTING_RARITIES[Math.min(maxRank, craftingRarityRank(rarity) + 1)] || rarity;
+    }
+    if (rarity !== "None" && craftingRarityRank(rarity) > maxRank) {
+      rarity = CRAFTING_RARITIES[maxRank];
+    }
+    return rarity;
+  }
+
+  function rollCraftingRecovery(state, config, randomSource) {
+    normalizeCraftingState(state);
+    const naturalRoll = randomD100(randomSource);
+    const bonus = numberValue(config?.bonus);
+    const useKit = state.crafting.ownedToolKits.Harvesting === true && config?.useKit !== false;
+    const help = config?.help === true;
+    const total = naturalRoll + bonus + (useKit ? 25 : 0) + (help ? 10 : 0);
+    const maximumRarity = String(config?.maximumRarity || "Very Rare");
+    const rarity = craftingRecoveryRarity(total, naturalRoll, maximumRarity);
+    return {
+      accepted: true,
+      naturalRoll,
+      total,
+      bonus,
+      useKit,
+      help,
+      maximumRarity,
+      rarity,
+      sourceLabel: String(config?.sourceLabel || "Recovered source").trim() || "Recovered source",
+      recorded: false,
+    };
+  }
+
+  function recordCraftingRecovery(state, data, result, materialId) {
+    normalizeCraftingState(state);
+    if (!result || result.recorded) return { accepted: false, reason: "already-recorded" };
+    if (result.rarity === "None") return { accepted: false, reason: "no-material" };
+    const material = (data.crafting?.materials || []).find((entry) => entry.id === materialId);
+    if (!material) return { accepted: false, reason: "missing-material" };
+    if (craftingRarityRank(material.rarity) > craftingRarityRank(result.rarity)) {
+      return { accepted: false, reason: "rarity-too-high" };
+    }
+    changeCraftingMaterial(state, material.id, 1);
+    const entry = {
+      id: nextCraftingId(state, "recover"),
+      type: "recovery",
+      createdAt: new Date().toISOString(),
+      materialId: material.id,
+      materialName: material.name,
+      quantity: 1,
+      rarity: result.rarity,
+      naturalRoll: result.naturalRoll,
+      total: result.total,
+      sourceLabel: result.sourceLabel,
+    };
+    state.crafting.history.push(entry);
+    result.recorded = true;
+    return { accepted: true, entry };
+  }
+
+  function undoLastCraftingAction(state) {
+    normalizeCraftingState(state);
+    const entry = state.crafting.history.at(-1);
+    if (!entry) return { accepted: false, reason: "empty-history" };
+    if (entry.type === "recovery") {
+      const current = numberValue(state.crafting.materialInventory[entry.materialId]);
+      if (current < numberValue(entry.quantity)) return { accepted: false, reason: "material-used" };
+      changeCraftingMaterial(state, entry.materialId, -numberValue(entry.quantity));
+    } else if (entry.type === "craft") {
+      if (entry.inventoryAdded && !removeCraftedInventoryQuantity(state, entry.inventoryAdded.name, numberValue(entry.inventoryAdded.quantity))) {
+        return { accepted: false, reason: "crafted-item-used" };
+      }
+      applyCraftingMaterialChanges(state, entry.materialChanges, 1);
+    }
+    state.crafting.history.pop();
+    return { accepted: true, entry };
+  }
+
   function numberValue(value) {
     if (typeof value === "number") return Number.isFinite(value) ? value : 0;
     if (typeof value === "boolean") return value ? 1 : 0;
@@ -1258,6 +1721,7 @@
   function normalizeSurvivalState(state) {
     ensureSurvivalContainers(state);
     normalizeCookingState(state);
+    normalizeCraftingState(state);
 
     const existingIds = [
       ...state.survivalHistory.map((entry) => entry?.id),
@@ -1753,6 +2217,7 @@
         abilityModifiers[skill.ability] + (input.proficient ? proficiency : 0) + bonus;
     });
     const cooking = calculateCooking(state, skillScores);
+    const crafting = calculateCrafting(state, data);
     const savingThrows = {};
     data.abilityDefinitions.forEach((ability) => {
       const input = state.savingThrows?.[ability.id] || {};
@@ -1862,6 +2327,7 @@
       },
       personality,
       cooking,
+      crafting,
       hunger,
       hearth,
       survivalHistory,
@@ -1887,6 +2353,16 @@
     changeTrackedAilmentMark,
     normalizeSurvivalState,
     normalizeCookingState,
+    normalizeCraftingState,
+    calculateCrafting,
+    previewCraftingCheck,
+    rollCraftingCheck,
+    recordCraftingResult,
+    changeCraftingMaterial,
+    setCraftingBlueprint,
+    rollCraftingRecovery,
+    recordCraftingRecovery,
+    undoLastCraftingAction,
     calculateCooking,
     previewCookingCheck,
     rollCookingCheck,

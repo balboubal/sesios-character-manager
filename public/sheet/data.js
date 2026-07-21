@@ -9772,6 +9772,6754 @@ window.AMUTSU_DATA = {
     }
   },
   "crafting": {
+    "materials": [
+      {
+        "id": "MAT-001",
+        "name": "Iron",
+        "rarity": "Common",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Mine",
+        "source": "All continents; mines and trade",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-002",
+        "name": "Steel",
+        "rarity": "Common",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Trade",
+        "source": "All major settlements",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-003",
+        "name": "Silver",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Divine"
+        ],
+        "regions": [],
+        "sourceType": "Mine",
+        "source": "Mines, temples, noble markets",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-004",
+        "name": "Cold Iron",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Fey"
+        ],
+        "regions": [],
+        "sourceType": "Trade",
+        "source": "Milis, Ronoa, specialist smiths",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-005",
+        "name": "Mithral",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Arcane"
+        ],
+        "regions": [],
+        "sourceType": "Mine",
+        "source": "Dwarven holds and deep mines",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-006",
+        "name": "Adamantine",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Mine",
+        "source": "Ancient mines and legendary vaults",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-007",
+        "name": "Star Silver",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Celestial"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Meteor sites and sealed treasuries",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-008",
+        "name": "Hardwood",
+        "rarity": "Common",
+        "categoryTags": [
+          "Wood"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Mine",
+        "source": "Forests across Sesios",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-009",
+        "name": "Monster Hide",
+        "rarity": "Common",
+        "categoryTags": [
+          "Hide"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Beasts and monstrosities",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-010",
+        "name": "Chitin Plate",
+        "rarity": "Common",
+        "categoryTags": [
+          "Hide",
+          "Bone"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Insects and armored monsters",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-011",
+        "name": "Monster Bone",
+        "rarity": "Common",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Beasts, giants, monstrosities",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-012",
+        "name": "Fine Fiber",
+        "rarity": "Common",
+        "categoryTags": [
+          "Fiber"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Silk, tendon, treated cloth",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-013",
+        "name": "Alchemical Glass",
+        "rarity": "Common",
+        "categoryTags": [
+          "Glass"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Trade",
+        "source": "Cities, laboratories, desert glassworks",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-014",
+        "name": "Clear Quartz",
+        "rarity": "Common",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Mine",
+        "source": "Mines and river deposits",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-015",
+        "name": "Mana Crystal",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Arcane"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Arcane sites and magical creatures",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-016",
+        "name": "Elemental Crystal",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Elemental"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Elementals and ley-line sites",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-017",
+        "name": "Healing Herb Bundle",
+        "rarity": "Common",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Life"
+        ],
+        "regions": [],
+        "sourceType": "Plant",
+        "source": "Wilds, farms, apothecaries",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-018",
+        "name": "Purifying Salt",
+        "rarity": "Common",
+        "categoryTags": [
+          "Stone"
+        ],
+        "effectTags": [
+          "Ward"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Coasts, temples, desert pans",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-019",
+        "name": "Venom Gland",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Venom",
+          "Poison"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Venomous monsters",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-020",
+        "name": "Arcane Ink",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Ink"
+        ],
+        "effectTags": [
+          "Arcane"
+        ],
+        "regions": [],
+        "sourceType": "Trade",
+        "source": "Scribes and magical laboratories",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-021",
+        "name": "Aesperium Conduit",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Salvage"
+        ],
+        "effectTags": [
+          "Arcane",
+          "Lightning"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Asura",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-022",
+        "name": "Refined Mana Glass",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Glass"
+        ],
+        "effectTags": [
+          "Arcane"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Asura",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-023",
+        "name": "Sky-Silk",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Fiber"
+        ],
+        "effectTags": [
+          "Air"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Asura",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-024",
+        "name": "Rime Iron",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Cold"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Ronoa",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-025",
+        "name": "Rune Slate",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Stone"
+        ],
+        "effectTags": [
+          "Ward"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Ronoa",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-026",
+        "name": "Winterbeast Hide",
+        "rarity": "Common",
+        "categoryTags": [
+          "Hide"
+        ],
+        "effectTags": [
+          "Cold"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Ronoa",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-027",
+        "name": "Red Ash",
+        "rarity": "Uncommon",
+        "categoryTags": [],
+        "effectTags": [
+          "Ash",
+          "Memory"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Fittoa",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-028",
+        "name": "Ash Glass",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Glass"
+        ],
+        "effectTags": [
+          "Ash",
+          "Soul"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Fittoa",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-029",
+        "name": "Resonance Crystal",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Arcane",
+          "Resonance"
+        ],
+        "regions": [],
+        "sourceType": "Ruin",
+        "source": "Fittoa and ancient arcane ruins",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-030",
+        "name": "Echo Thread",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Fiber"
+        ],
+        "effectTags": [
+          "Memory",
+          "Soul"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Fittoa",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-031",
+        "name": "Grave Iron",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Necrotic"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Karrnath",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-032",
+        "name": "Blood Amber",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Blood"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Karrnath",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-033",
+        "name": "Marrow Resin",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Organic",
+          "Bone"
+        ],
+        "effectTags": [
+          "Death"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Karrnath",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-034",
+        "name": "Temple Silver",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Divine"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Shirone",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-035",
+        "name": "Sunstone",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Radiant"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Shirone",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-036",
+        "name": "Sanctified Salt",
+        "rarity": "Uncommon",
+        "categoryTags": [],
+        "effectTags": [
+          "Divine",
+          "Ward"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Shirone",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-037",
+        "name": "Elder Livingwood",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Wood"
+        ],
+        "effectTags": [
+          "Life",
+          "Spirit"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Milis",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-038",
+        "name": "Spirit Resin",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Spirit"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Milis",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-039",
+        "name": "Moonleaf Fiber",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Fiber"
+        ],
+        "effectTags": [
+          "Illusion"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Milis",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-040",
+        "name": "Feyglass",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Glass"
+        ],
+        "effectTags": [
+          "Fey",
+          "Illusion"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Milis",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-041",
+        "name": "Beast Amber",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Beast"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Milis",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-042",
+        "name": "Blue Dragon Ore",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Dragon",
+          "Lightning"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Milis Blue Dragon Mountains",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-043",
+        "name": "Sacred Grove Bark",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Wood"
+        ],
+        "effectTags": [
+          "Divine",
+          "Life"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Milis",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-044",
+        "name": "Dreamcap Spores",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Mind",
+          "Sleep"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Milis",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-045",
+        "name": "Ancestral Stone",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Stone"
+        ],
+        "effectTags": [
+          "Spirit",
+          "Memory"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Milis",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-046",
+        "name": "Sun Glass",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Glass"
+        ],
+        "effectTags": [
+          "Fire",
+          "Radiant"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Begaritt",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-047",
+        "name": "Star Sand",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Stone"
+        ],
+        "effectTags": [
+          "Time",
+          "Arcane"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Begaritt",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-048",
+        "name": "Mirage Crystal",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Illusion"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Begaritt",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-049",
+        "name": "Labyrinth Stone",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Stone"
+        ],
+        "effectTags": [
+          "Ward",
+          "Space"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Begaritt",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-050",
+        "name": "Water Pearl",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Water",
+          "Life"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Begaritt",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-051",
+        "name": "Ancient Bronze",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Relic"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Begaritt",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-052",
+        "name": "Tomb Linen",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Fiber"
+        ],
+        "effectTags": [
+          "Death",
+          "Ward"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Begaritt",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-053",
+        "name": "Sandwyrm Scale",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Hide"
+        ],
+        "effectTags": [
+          "Fire"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Begaritt",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-054",
+        "name": "Star-Key Fragment",
+        "rarity": "Very Rare",
+        "categoryTags": [],
+        "effectTags": [
+          "Relic",
+          "Time",
+          "Space"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Begaritt",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-055",
+        "name": "Abyssal Iron",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Shadow",
+          "Fiend"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Demon Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-056",
+        "name": "Emberstone",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Stone"
+        ],
+        "effectTags": [
+          "Fire"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Demon Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-057",
+        "name": "Black Chitin",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Hide"
+        ],
+        "effectTags": [
+          "Shadow"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Demon Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-058",
+        "name": "Fiend Blood",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Fire",
+          "Necrotic"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Demon Continent and fiends",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-059",
+        "name": "Basalt Fiber",
+        "rarity": "Common",
+        "categoryTags": [
+          "Fiber"
+        ],
+        "effectTags": [
+          "Fire"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Demon Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-060",
+        "name": "War-Scar Alloy",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Blood"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Demon Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-061",
+        "name": "Infernal Horn",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [
+          "Fiend"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Demon Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-062",
+        "name": "Abyssal Core",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Essence"
+        ],
+        "effectTags": [
+          "Fiend",
+          "Void"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Demon Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-063",
+        "name": "Demonheart Coal",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Stone"
+        ],
+        "effectTags": [
+          "Fire",
+          "Blood"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Demon Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-064",
+        "name": "Cloudsilver",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Air",
+          "Divine"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Heaven Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-065",
+        "name": "Aurora Thread",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Fiber"
+        ],
+        "effectTags": [
+          "Radiant",
+          "Illusion"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Heaven Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-066",
+        "name": "Stasis Glass",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Glass"
+        ],
+        "effectTags": [
+          "Time"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Heaven Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-067",
+        "name": "Celestial Feather",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Fiber"
+        ],
+        "effectTags": [
+          "Radiant"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Heaven Continent and celestials",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-068",
+        "name": "Halo Crystal",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Divine",
+          "Radiant"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Heaven Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-069",
+        "name": "Sky Memory Pearl",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Memory"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Heaven Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-070",
+        "name": "First-Light Oil",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Radiant"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Heaven Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-071",
+        "name": "Timefrost Crystal",
+        "rarity": "Legendary",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Time",
+          "Cold"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Heaven Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-072",
+        "name": "Saintbone",
+        "rarity": "Legendary",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [
+          "Divine",
+          "Soul"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Heaven Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-073",
+        "name": "Unfallen Star Fragment",
+        "rarity": "Legendary",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Celestial",
+          "Fire"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Heaven Continent",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-074",
+        "name": "Coral Plate",
+        "rarity": "Common",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [
+          "Water"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Coasts and reefs",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-075",
+        "name": "Stormglass",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Glass"
+        ],
+        "effectTags": [
+          "Storm",
+          "Lightning"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Dangerous sea routes",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-076",
+        "name": "Siren Scale",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Hide"
+        ],
+        "effectTags": [
+          "Mind",
+          "Water"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Open seas",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-077",
+        "name": "Leviathan Bone",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [
+          "Water"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Deep seas",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-078",
+        "name": "Black Pearl",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Shadow",
+          "Water"
+        ],
+        "regions": [],
+        "sourceType": "Trade",
+        "source": "Deep seas and pirate markets",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-079",
+        "name": "Deep Salt",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Stone"
+        ],
+        "effectTags": [
+          "Ward",
+          "Water"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Deep sea harvests",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-080",
+        "name": "Kraken Ink",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Ink"
+        ],
+        "effectTags": [
+          "Mind",
+          "Shadow"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Deep seas",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-081",
+        "name": "Sea Serpent Venom",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Venom",
+          "Water"
+        ],
+        "regions": [],
+        "sourceType": "Quest",
+        "source": "Open seas",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-082",
+        "name": "Drowned Relic Brass",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Metal"
+        ],
+        "effectTags": [
+          "Soul",
+          "Relic"
+        ],
+        "regions": [],
+        "sourceType": "Ruin",
+        "source": "Shipwrecks and drowned ruins",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-083",
+        "name": "Tideheart",
+        "rarity": "Legendary",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Water",
+          "Storm"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Mythic sea creatures",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-084",
+        "name": "Ashbound Claw",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [
+          "Ash",
+          "Weapon"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Ashbound Fiends",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-085",
+        "name": "Fittoan Ash Sac",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Ash",
+          "Volatile"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Ashbound Fiends",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-086",
+        "name": "Warped Bone Fragment",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [
+          "Aberrant",
+          "Resonance"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Fittoan creatures",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-087",
+        "name": "Monster Fang",
+        "rarity": "Common",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [
+          "Weapon"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Beasts and monstrosities",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-088",
+        "name": "Monster Claw",
+        "rarity": "Common",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [
+          "Weapon"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Beasts, fiends, and monstrosities",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-089",
+        "name": "Monster Bile",
+        "rarity": "Uncommon",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Acid"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Large beasts and corrosive monsters",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-090",
+        "name": "Resin Bundle",
+        "rarity": "Common",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Plant",
+        "source": "Forests, alchemists, and trade",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-091",
+        "name": "Ooze Gel",
+        "rarity": "Common",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Acid"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Oozes and alchemical vats",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-092",
+        "name": "Parchment",
+        "rarity": "Common",
+        "categoryTags": [
+          "Fiber"
+        ],
+        "effectTags": [],
+        "regions": [],
+        "sourceType": "Trade",
+        "source": "Scribes and markets",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-093",
+        "name": "Soul Quartz",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Gem"
+        ],
+        "effectTags": [
+          "Soul"
+        ],
+        "regions": [],
+        "sourceType": "Ruin",
+        "source": "Spirit sites and sealed ruins",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-094",
+        "name": "Dragon Scale",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Hide"
+        ],
+        "effectTags": [
+          "Dragon"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Dragons",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-095",
+        "name": "Dragonbone",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Bone"
+        ],
+        "effectTags": [
+          "Dragon"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Dragons",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-096",
+        "name": "Giant Heartblood",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Organic"
+        ],
+        "effectTags": [
+          "Blood"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Giants and titan-blooded creatures",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-097",
+        "name": "Primal Core",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Essence"
+        ],
+        "effectTags": [
+          "Elemental"
+        ],
+        "regions": [],
+        "sourceType": "Monster",
+        "source": "Powerful elementals and primal sites",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-098",
+        "name": "Void Glass",
+        "rarity": "Very Rare",
+        "categoryTags": [
+          "Glass"
+        ],
+        "effectTags": [
+          "Void"
+        ],
+        "regions": [],
+        "sourceType": "Ruin",
+        "source": "Planar breaches and sealed laboratories",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      },
+      {
+        "id": "MAT-099",
+        "name": "Memory Ink",
+        "rarity": "Rare",
+        "categoryTags": [
+          "Ink"
+        ],
+        "effectTags": [
+          "Memory"
+        ],
+        "regions": [],
+        "sourceType": "Ruin",
+        "source": "Fittoan archives and identity rites",
+        "description": "",
+        "signatureEffect": "",
+        "maxStack": 99
+      }
+    ],
+    "recipes": [
+      {
+        "id": "BSC-01",
+        "name": "Ammunition Bundle",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Metal or Bone x1 + Wood x1",
+        "requirements": [
+          {
+            "label": "Metal or Bone",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Bone"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Wood",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Wood"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "Short rest",
+        "batchYield": 1,
+        "effect": "Creates 20 arrows, bolts, or bullets.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BSC-02",
+        "name": "Rope",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Fiber x2",
+        "requirements": [
+          {
+            "label": "Fiber",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 1,
+        "effect": "50 ft. of durable rope.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BSC-03",
+        "name": "Grappling Hook",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Forgecraft",
+        "requirementsText": "Metal x1 + Fiber x1",
+        "requirements": [
+          {
+            "label": "Metal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 1,
+        "effect": "Standard climbing tool.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BSC-04",
+        "name": "Simple Weapon",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Forgecraft",
+        "requirementsText": "Metal, Wood, or Bone x2",
+        "requirements": [
+          {
+            "label": "Metal, Wood, or Bone",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Wood"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Bone"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Create one standard simple weapon.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BSC-05",
+        "name": "Martial Weapon",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Forgecraft",
+        "requirementsText": "Metal x2 + Wood or Fiber x1",
+        "requirements": [
+          {
+            "label": "Metal",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Wood or Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Wood"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Create one standard martial weapon.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BSC-06",
+        "name": "Shield",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Forgecraft",
+        "requirementsText": "Metal or Wood x2 + Hide x1",
+        "requirements": [
+          {
+            "label": "Metal or Wood",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Wood"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Hide",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Hide"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Create one standard shield.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BSC-07",
+        "name": "Light Armor",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Hide x2 + Fiber x1",
+        "requirements": [
+          {
+            "label": "Hide",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Hide"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Create one standard light armor.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BSC-08",
+        "name": "Medium Armor",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Forgecraft",
+        "requirementsText": "Metal or Hide x3 + Fiber x1",
+        "requirements": [
+          {
+            "label": "Metal or Hide",
+            "quantity": 3,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Hide"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Create one standard medium armor.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BSC-09",
+        "name": "Heavy Armor",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Forgecraft",
+        "requirementsText": "Metal x4 + Fiber x1",
+        "requirements": [
+          {
+            "label": "Metal",
+            "quantity": 4,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 days",
+        "batchYield": 1,
+        "effect": "Create one standard heavy armor.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BSC-10",
+        "name": "Spell Focus",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Runecraft",
+        "requirementsText": "Wood, Metal, or Bone x1 + Gem x1",
+        "requirements": [
+          {
+            "label": "Wood, Metal, or Bone",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Wood"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Bone"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Gem",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Gem"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Create one standard magical focus.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BSC-11",
+        "name": "Protective Mask",
+        "category": "Basic",
+        "rarity": "Common",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Fiber x1 + Purifying material x1",
+        "requirements": [
+          {
+            "label": "Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Purifying material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Ward",
+                  "Divine",
+                  "Life"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 1,
+        "effect": "Advantage against ordinary airborne dust; does not fully stop magical contamination.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "BOM-01",
+        "name": "Firebomb",
+        "category": "Bomb",
+        "rarity": "Common",
+        "discipline": "Alchemy",
+        "requirementsText": "Alchemical Glass x1 + Fire-tag material x1",
+        "requirements": [
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Fire-tag material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Fire"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "30 ft.; 10-ft. radius. Speed save or 2d6 fire, half on success.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-02",
+        "name": "Frost Bomb",
+        "category": "Bomb",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Alchemical Glass x1 + Cold-tag material x1",
+        "requirements": [
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Cold-tag material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Cold"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "10-ft. radius. 2d4 cold; failed save reduces movement by 10 ft. for 1 round.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-03",
+        "name": "Shock Flask",
+        "category": "Bomb",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Alchemical Glass x1 + Lightning-tag material x1",
+        "requirements": [
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Lightning-tag material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Lightning"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "2d6 lightning; failed save removes reactions until next turn.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-04",
+        "name": "Acid Flask",
+        "category": "Bomb",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Alchemical Glass x1 + Acid-tag organic x1",
+        "requirements": [
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Acid-tag organic",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Organic"
+                ],
+                "anyTags": [
+                  "Acid"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "2d6 acid; target suffers -2 AC until cleaned or repaired.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-05",
+        "name": "Smoke Bomb",
+        "category": "Bomb",
+        "rarity": "Common",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Alchemical Glass x1 + Smoke or Shadow material x1",
+        "requirements": [
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Smoke or Shadow material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Ash",
+                  "Shadow"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Creates heavy obscurement in a 10-ft. radius for 3 rounds.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-06",
+        "name": "Flash Bomb",
+        "category": "Bomb",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Alchemical Glass x1 + Radiant material x1",
+        "requirements": [
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Radiant material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Radiant",
+                  "Divine"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Awareness save or Blinded until end of next turn.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-07",
+        "name": "Shrapnel Bomb",
+        "category": "Bomb",
+        "rarity": "Uncommon",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Metal x1 + Volatile material x1",
+        "requirements": [
+          {
+            "label": "Metal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Volatile material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Volatile",
+                  "Fire",
+                  "Lightning"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "10-ft. radius. Speed save or 2d8 piercing, half on success.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-08",
+        "name": "Binding Bomb",
+        "category": "Bomb",
+        "rarity": "Rare",
+        "discipline": "Alchemy",
+        "requirementsText": "Alchemical Glass x1 + Resin or Ooze Gel x1 + Arcane catalyst x1",
+        "requirements": [
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Resin or Ooze Gel",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-090"
+                ],
+                "tags": []
+              },
+              {
+                "materialIds": [
+                  "MAT-091"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Arcane catalyst",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Arcane"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Speed save or Restrained; action and Strength DC 60 to escape.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-09",
+        "name": "Spirit Bomb",
+        "category": "Bomb",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Alchemical Glass x1 + Silver x1 + Soul material x1",
+        "requirements": [
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Silver",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-003"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Soul material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Soul"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "3d6 radiant or force to undead and incorporeal creatures.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-10",
+        "name": "Null Bomb",
+        "category": "Bomb",
+        "rarity": "Very Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Refined Mana Glass x1 + Void material x1 + Arcane catalyst x1",
+        "requirements": [
+          {
+            "label": "Refined Mana Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-022"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Void material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Void"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Arcane catalyst",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Arcane"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Suppresses one non-artifact magical effect in the area for 1 round.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-11",
+        "name": "Sleep Gas",
+        "category": "Bomb",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Alchemical Glass x1 + Dreamcap Spores x1",
+        "requirements": [
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Dreamcap Spores",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-044"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Vitality save or Drowsy; a second failed exposure causes sleep for 1 minute.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "BOM-12",
+        "name": "Ash Bomb",
+        "category": "Bomb",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Fittoan Ash Sac x1 + Alchemical Glass x1",
+        "requirements": [
+          {
+            "label": "Fittoan Ash Sac",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-085"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Alchemical Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-013"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Creates a red ash cloud for 3 rounds; exposed creatures make an Ash-Sickness save.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-01",
+        "name": "Minor Healing Potion",
+        "category": "Potion",
+        "rarity": "Common",
+        "discipline": "Alchemy",
+        "requirementsText": "Healing Herb x1 + Life material x1",
+        "requirements": [
+          {
+            "label": "Healing Herb",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-017"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Life material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Life"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Restore 2d4 + 2 HP.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-02",
+        "name": "Greater Healing Potion",
+        "category": "Potion",
+        "rarity": "Rare",
+        "discipline": "Alchemy",
+        "requirementsText": "Rare Life material x1 + Healing Herb x1 + Mana Crystal x1",
+        "requirements": [
+          {
+            "label": "Rare Life material",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Life"
+                ],
+                "minRarity": "Rare"
+              }
+            ]
+          },
+          {
+            "label": "Healing Herb",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-017"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Mana Crystal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-015"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Restore 4d4 + 4 HP.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-03",
+        "name": "Superior Healing Potion",
+        "category": "Potion",
+        "rarity": "Very Rare",
+        "discipline": "Alchemy",
+        "requirementsText": "Very Rare Life material x1 + Rare catalyst x1",
+        "requirements": [
+          {
+            "label": "Very Rare Life material",
+            "quantity": 1,
+            "minRarity": "Very Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Life"
+                ],
+                "minRarity": "Very Rare"
+              }
+            ]
+          },
+          {
+            "label": "Rare catalyst",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "minRarity": "Rare"
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Restore 6d4 + 6 HP.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-04",
+        "name": "Mana Tonic",
+        "category": "Potion",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Mana Crystal x1 + Arcane organic x1",
+        "requirements": [
+          {
+            "label": "Mana Crystal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-015"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Arcane organic",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Organic"
+                ],
+                "anyTags": [
+                  "Arcane"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Restore 20 MP.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-05",
+        "name": "Greater Mana Tonic",
+        "category": "Potion",
+        "rarity": "Rare",
+        "discipline": "Alchemy",
+        "requirementsText": "Rare Mana Crystal x1 + Arcane essence x1",
+        "requirements": [
+          {
+            "label": "Rare Mana Crystal",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-015"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Arcane essence",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Arcane"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Restore 40 MP.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-06",
+        "name": "Antidote",
+        "category": "Potion",
+        "rarity": "Common",
+        "discipline": "Alchemy",
+        "requirementsText": "Purifying Salt x1 + Venom or Poison material x1",
+        "requirements": [
+          {
+            "label": "Purifying Salt",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-018"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Venom or Poison material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Venom",
+                  "Poison"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "End one ordinary Poisoned effect.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-07",
+        "name": "Cleansing Salve",
+        "category": "Salve",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Silver or Sanctified Salt x1 + Healing Herb x1",
+        "requirements": [
+          {
+            "label": "Silver or Sanctified Salt",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-003"
+                ],
+                "tags": []
+              },
+              {
+                "materialIds": [
+                  "MAT-036"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Healing Herb",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-017"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Gain +10 on the next save against disease or contamination.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-08",
+        "name": "Stabilizing Draught",
+        "category": "Potion",
+        "rarity": "Rare",
+        "discipline": "Alchemy",
+        "requirementsText": "Resonance Crystal x1 + Purifying material x1",
+        "requirements": [
+          {
+            "label": "Resonance Crystal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-029"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Purifying material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Ward",
+                  "Divine",
+                  "Life"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Advantage on one save against magical instability.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-09",
+        "name": "Awakening Salt",
+        "category": "Potion",
+        "rarity": "Common",
+        "discipline": "Alchemy",
+        "requirementsText": "Deep Salt or Purifying Salt x1 + stimulant organic x1",
+        "requirements": [
+          {
+            "label": "Deep Salt or Purifying Salt",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-079"
+                ],
+                "tags": []
+              },
+              {
+                "materialIds": [
+                  "MAT-018"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "stimulant organic",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Organic"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Immediately wakes an ordinarily sleeping creature.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-10",
+        "name": "Restoration Serum",
+        "category": "Potion",
+        "rarity": "Rare",
+        "discipline": "Alchemy",
+        "requirementsText": "Life essence x1 + Rare organic catalyst x1",
+        "requirements": [
+          {
+            "label": "Life essence",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Life"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Rare organic catalyst",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Organic"
+                ],
+                "minRarity": "Rare"
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Remove one temporary physical penalty approved by the GM.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-11",
+        "name": "Element Ward Tonic",
+        "category": "Potion",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Healing Herb x1 + chosen elemental material x1",
+        "requirements": [
+          {
+            "label": "Healing Herb",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-017"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "chosen elemental material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Elemental",
+                  "Fire",
+                  "Cold",
+                  "Lightning",
+                  "Water",
+                  "Storm"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "For 1 hour, gain +10 to saves against the chosen element.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "POT-12",
+        "name": "Greater Element Ward",
+        "category": "Potion",
+        "rarity": "Rare",
+        "discipline": "Alchemy",
+        "requirementsText": "Rare elemental essence x1 + Gem x1",
+        "requirements": [
+          {
+            "label": "Rare elemental essence",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Elemental",
+                  "Fire",
+                  "Cold",
+                  "Lightning",
+                  "Water",
+                  "Storm"
+                ],
+                "minRarity": "Rare"
+              }
+            ]
+          },
+          {
+            "label": "Gem",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Gem"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Gain resistance to one damage type for 1 encounter.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "COA-01",
+        "name": "Venom Oil",
+        "category": "Coating",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Venom Gland x1 + Resin x1",
+        "requirements": [
+          {
+            "label": "Venom Gland",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-019"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-090"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Three successful hits deal +1d4 poison once per turn.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "COA-02",
+        "name": "Ember Oil",
+        "category": "Coating",
+        "rarity": "Uncommon",
+        "discipline": "Alchemy",
+        "requirementsText": "Fire material x1 + Resin x1",
+        "requirements": [
+          {
+            "label": "Fire material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Fire"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-090"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Three successful hits deal +1d4 fire once per turn.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "COA-03",
+        "name": "Spirit Lacquer",
+        "category": "Coating",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Silver x1 + Spirit material x1 + Resin x1",
+        "requirements": [
+          {
+            "label": "Silver",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-003"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Spirit material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Spirit"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-090"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Weapon strikes incorporeal creatures normally for 1 encounter.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "COA-04",
+        "name": "Armor-Eater Acid",
+        "category": "Coating",
+        "rarity": "Rare",
+        "discipline": "Alchemy",
+        "requirementsText": "Acid material x1 + Monster bile x1",
+        "requirements": [
+          {
+            "label": "Acid material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Acid"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Monster bile",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-089"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "For 3 hits, weapon ignores 2 AC.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "COA-05",
+        "name": "Ash Resin",
+        "category": "Coating",
+        "rarity": "Rare",
+        "discipline": "Alchemy",
+        "requirementsText": "Red Ash x1 + Resonance Crystal dust x1 + Resin x1",
+        "requirements": [
+          {
+            "label": "Red Ash",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-027"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Resonance Crystal dust",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-029"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-090"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "For 3 hits, a critical hit forces an Ash-Sickness exposure save.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "SCR-01",
+        "name": "Cantrip / 1st-Level Scroll",
+        "category": "Scroll",
+        "rarity": "Common",
+        "discipline": "Scribing",
+        "requirementsText": "Parchment x1 + Arcane Ink x1 + spell catalyst x1",
+        "requirements": [
+          {
+            "label": "Parchment",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-092"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Arcane Ink",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-020"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "spell catalyst",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Arcane"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 1,
+        "effect": "Stores one cantrip or 1st-level spell.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "SCR-02",
+        "name": "2nd-3rd Level Scroll",
+        "category": "Scroll",
+        "rarity": "Uncommon",
+        "discipline": "Scribing",
+        "requirementsText": "Fine Fiber x1 + Arcane Ink x1 + Mana Crystal x1",
+        "requirements": [
+          {
+            "label": "Fine Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-012"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Arcane Ink",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-020"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Mana Crystal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-015"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Stores one 2nd- or 3rd-level spell.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "SCR-03",
+        "name": "4th-5th Level Scroll",
+        "category": "Scroll",
+        "rarity": "Rare",
+        "discipline": "Scribing",
+        "requirementsText": "Fine Fiber x1 + Rare Ink x1 + Rare Gem x1",
+        "requirements": [
+          {
+            "label": "Fine Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-012"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Rare Ink",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Ink"
+                ],
+                "minRarity": "Rare"
+              }
+            ]
+          },
+          {
+            "label": "Rare Gem",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Gem"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Stores one 4th- or 5th-level spell.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "SCR-04",
+        "name": "6th-7th Level Scroll",
+        "category": "Scroll",
+        "rarity": "Very Rare",
+        "discipline": "Scribing",
+        "requirementsText": "Rare Fiber x1 + Very Rare Ink x1 + Very Rare Gem x1",
+        "requirements": [
+          {
+            "label": "Rare Fiber",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Very Rare Ink",
+            "quantity": 1,
+            "minRarity": "Very Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Ink"
+                ],
+                "minRarity": "Very Rare"
+              }
+            ]
+          },
+          {
+            "label": "Very Rare Gem",
+            "quantity": 1,
+            "minRarity": "Very Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Gem"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "7 days",
+        "batchYield": 1,
+        "effect": "Stores one 6th- or 7th-level spell.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "SCR-05",
+        "name": "8th-9th Level Scroll",
+        "category": "Scroll",
+        "rarity": "Legendary",
+        "discipline": "Scribing",
+        "requirementsText": "Legendary writing surface + Legendary Ink + Mythic catalyst",
+        "requirements": [
+          {
+            "label": "Legendary writing surface",
+            "quantity": 1,
+            "minRarity": "Legendary",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Fiber",
+                  "Wood",
+                  "Stone"
+                ],
+                "minRarity": "Legendary"
+              }
+            ]
+          },
+          {
+            "label": "Legendary Ink",
+            "quantity": 1,
+            "minRarity": "Legendary",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Ink"
+                ],
+                "minRarity": "Legendary"
+              }
+            ]
+          },
+          {
+            "label": "Mythic catalyst",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Divine",
+                  "Celestial",
+                  "Void",
+                  "Time",
+                  "Soul"
+                ],
+                "minRarity": "Legendary"
+              }
+            ]
+          }
+        ],
+        "dc": 0,
+        "time": "Project",
+        "batchYield": 1,
+        "effect": "Stores one 8th- or 9th-level spell.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": true
+      },
+      {
+        "id": "INK-01",
+        "name": "Soul Ink",
+        "category": "Ink",
+        "rarity": "Rare",
+        "discipline": "Scribing",
+        "requirementsText": "Soul Quartz x1 + Arcane Ink x1",
+        "requirements": [
+          {
+            "label": "Soul Quartz",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-093"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Arcane Ink",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-020"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "1 day",
+        "batchYield": 2,
+        "effect": "Required for identity, spirit, and resurrection scrolls.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "INK-02",
+        "name": "Blood Ink",
+        "category": "Ink",
+        "rarity": "Uncommon",
+        "discipline": "Scribing",
+        "requirementsText": "Blood-tag material x1 + Arcane Ink x1",
+        "requirements": [
+          {
+            "label": "Blood-tag material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Blood"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Arcane Ink",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-020"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "4 hr",
+        "batchYield": 2,
+        "effect": "Required for blood magic and binding contracts.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "INK-03",
+        "name": "Witness Ink",
+        "category": "Ink",
+        "rarity": "Very Rare",
+        "discipline": "Scribing",
+        "requirementsText": "Memory material x1 + Soul material x1 + Very Rare Ink x1",
+        "requirements": [
+          {
+            "label": "Memory material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Memory"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Soul material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Soul"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Very Rare Ink",
+            "quantity": 1,
+            "minRarity": "Very Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Ink"
+                ],
+                "minRarity": "Very Rare"
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Used for true-name, memory, and anti-erasure effects.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": false,
+        "project": false
+      },
+      {
+        "id": "WPN-01",
+        "name": "Serrated Iron Blade",
+        "category": "Weapon",
+        "rarity": "Uncommon",
+        "discipline": "Forgecraft",
+        "requirementsText": "Steel x2 + Fang or Claw x1",
+        "requirements": [
+          {
+            "label": "Steel",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-002"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Fang or Claw",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-087"
+                ],
+                "tags": []
+              },
+              {
+                "materialIds": [
+                  "MAT-088"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Martial blade. Once per turn, a strong hit deals +1d4 slashing.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-02",
+        "name": "Frostbite Spear",
+        "category": "Weapon",
+        "rarity": "Uncommon",
+        "discipline": "Forgecraft",
+        "requirementsText": "Rime Iron x2 + Cold material x1",
+        "requirements": [
+          {
+            "label": "Rime Iron",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-024"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Cold material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Cold"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Spear. Once per turn, deal +1d4 cold; on critical, reduce movement by 10 ft.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-03",
+        "name": "Emberglass Dagger",
+        "category": "Weapon",
+        "rarity": "Uncommon",
+        "discipline": "Forgecraft",
+        "requirementsText": "Sun Glass x1 + Emberstone x1 + Metal x1",
+        "requirements": [
+          {
+            "label": "Sun Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-046"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Emberstone",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-056"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Metal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Dagger. Deals +1d4 fire once per turn; emits dim orange light.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-04",
+        "name": "Grave-Iron Mace",
+        "category": "Weapon",
+        "rarity": "Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Grave Iron x2 + Marrow Resin x1 + Soul material x1",
+        "requirements": [
+          {
+            "label": "Grave Iron",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-031"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Marrow Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-033"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Soul material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Soul"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Mace. +1d6 necrotic once per turn; +10 against undead control effects.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-05",
+        "name": "Rimewood Longbow",
+        "category": "Weapon",
+        "rarity": "Rare",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Elder Livingwood x1 + Rime Iron x1 + Fine Fiber x1",
+        "requirements": [
+          {
+            "label": "Elder Livingwood",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-037"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Rime Iron",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-024"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Fine Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-012"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Longbow. Ignore ordinary cold penalties; +1d6 cold once per turn.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-06",
+        "name": "Stormcoil Staff",
+        "category": "Weapon",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Aesperium Conduit x1 + Stormglass x1 + Hardwood x1",
+        "requirements": [
+          {
+            "label": "Aesperium Conduit",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-021"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Stormglass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-075"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Hardwood",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-008"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Staff and focus. Stores one 20 MP lightning spell supplied by a willing caster.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-07",
+        "name": "Ashbound Cleaver",
+        "category": "Weapon",
+        "rarity": "Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Steel x2 + Ashbound Claw x1 + Red Ash x1",
+        "requirements": [
+          {
+            "label": "Steel",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-002"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Ashbound Claw",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-084"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Red Ash",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-027"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Heavy blade. +1d6 ash damage once per turn; critical hits expose target to red ash.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-08",
+        "name": "Spiritfang Shortsword",
+        "category": "Weapon",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Cold Iron x1 + Spirit Resin x1 + Monster Fang x1",
+        "requirements": [
+          {
+            "label": "Cold Iron",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-004"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Spirit Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-038"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Monster Fang",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-087"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Counts as magical and silvered; strikes incorporeal creatures normally.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-09",
+        "name": "Sunforged Longsword",
+        "category": "Weapon",
+        "rarity": "Very Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Temple Silver x2 + Sunstone x1 + Radiant material x1",
+        "requirements": [
+          {
+            "label": "Temple Silver",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-034"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Sunstone",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-035"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Radiant material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Radiant",
+                  "Divine"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "7 days",
+        "batchYield": 1,
+        "effect": "Longsword. +1d8 radiant once per turn; emits sunlight on command.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-10",
+        "name": "Dragonbone Maul",
+        "category": "Weapon",
+        "rarity": "Very Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Dragonbone x2 + Giant Heartblood x1 + Rare Metal x1",
+        "requirements": [
+          {
+            "label": "Dragonbone",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-095"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Giant Heartblood",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-096"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Rare Metal",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "7 days",
+        "batchYield": 1,
+        "effect": "Maul. Once per turn add +1d8 bludgeoning; +10 to break objects and structures.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-11",
+        "name": "Resonance Rapier",
+        "category": "Weapon",
+        "rarity": "Very Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Mithral x2 + Resonance Crystal x1 + Echo Thread x1",
+        "requirements": [
+          {
+            "label": "Mithral",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-005"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Resonance Crystal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-029"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Echo Thread",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-030"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "7 days",
+        "batchYield": 1,
+        "effect": "Rapier. Critical range improves by 4; cannot improve below natural 91.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-12",
+        "name": "Voidglass Knife",
+        "category": "Weapon",
+        "rarity": "Very Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Void Glass x1 + Mithral x1 + Shadow material x1",
+        "requirements": [
+          {
+            "label": "Void Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-098"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Mithral",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-005"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Shadow material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Shadow"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "7 days",
+        "batchYield": 1,
+        "effect": "Dagger. Ignores 3 RES; once per long rest suppresses a minor ward on contact.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-13",
+        "name": "Primal-Heart Axe",
+        "category": "Weapon",
+        "rarity": "Very Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Rare Metal x2 + Primal Core x1 + Livingwood x1",
+        "requirements": [
+          {
+            "label": "Rare Metal",
+            "quantity": 2,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Primal Core",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-097"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Livingwood",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-037"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "7 days",
+        "batchYield": 1,
+        "effect": "Battleaxe. +1d8 elemental damage once per turn, chosen when crafted.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-14",
+        "name": "Star-Silver Greatsword",
+        "category": "Weapon",
+        "rarity": "Very Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Star Silver x3 + Celestial catalyst x1",
+        "requirements": [
+          {
+            "label": "Star Silver",
+            "quantity": 3,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-007"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Celestial catalyst",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Celestial",
+                  "Radiant",
+                  "Divine"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "10 days",
+        "batchYield": 1,
+        "effect": "Greatsword. Counts as celestial; +1d8 radiant or force once per turn.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "WPN-15",
+        "name": "Soulbound Polearm",
+        "category": "Weapon",
+        "rarity": "Very Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Mithral x2 + Soul Quartz x1 + Blood material x1",
+        "requirements": [
+          {
+            "label": "Mithral",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-005"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Soul Quartz",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-093"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Blood material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Blood"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "7 days",
+        "batchYield": 1,
+        "effect": "Cannot be disarmed; recall to hand once per short rest.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-01",
+        "name": "Reinforced Hide Coat",
+        "category": "Armor",
+        "rarity": "Uncommon",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Monster Hide x3 + Fine Fiber x1",
+        "requirements": [
+          {
+            "label": "Monster Hide",
+            "quantity": 3,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-009"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Fine Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-012"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Light armor. Grants +1 AC over its standard form.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-02",
+        "name": "Chitin Scale Armor",
+        "category": "Armor",
+        "rarity": "Uncommon",
+        "discipline": "Forgecraft",
+        "requirementsText": "Chitin Plate x3 + Fiber x1",
+        "requirements": [
+          {
+            "label": "Chitin Plate",
+            "quantity": 3,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-010"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Medium armor. +1 AC; disadvantage on swimming unless modified by the GM.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-03",
+        "name": "Winterbeast Mantle",
+        "category": "Armor",
+        "rarity": "Uncommon",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Winterbeast Hide x2 + Fine Fiber x1",
+        "requirements": [
+          {
+            "label": "Winterbeast Hide",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-026"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Fine Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-012"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Light armor or cloak. Ignore ordinary cold penalties.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-04",
+        "name": "Rime-Iron Mail",
+        "category": "Armor",
+        "rarity": "Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Rime Iron x3 + Rune Slate x1",
+        "requirements": [
+          {
+            "label": "Rime Iron",
+            "quantity": 3,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-024"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Rune Slate",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-025"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "4 days",
+        "batchYield": 1,
+        "effect": "Medium armor. +2 AC and +10 on saves against cold.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-05",
+        "name": "Grave-Iron Coat",
+        "category": "Armor",
+        "rarity": "Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Grave Iron x3 + Marrow Resin x1",
+        "requirements": [
+          {
+            "label": "Grave Iron",
+            "quantity": 3,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-031"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Marrow Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-033"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "4 days",
+        "batchYield": 1,
+        "effect": "Medium armor. +2 RES against necrotic damage and death effects.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-06",
+        "name": "Sunwarden Plate",
+        "category": "Armor",
+        "rarity": "Very Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Temple Silver x3 + Sunstone x1 + Sanctified Salt x1",
+        "requirements": [
+          {
+            "label": "Temple Silver",
+            "quantity": 3,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-034"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Sunstone",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-035"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Sanctified Salt",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-036"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "10 days",
+        "batchYield": 1,
+        "effect": "Heavy armor. +3 RES against radiant and necrotic; sheds sunlight on command.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-07",
+        "name": "Shadowweave Cloak",
+        "category": "Armor",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Moonleaf Fiber x2 + Shadow material x1 + Feyglass x1",
+        "requirements": [
+          {
+            "label": "Moonleaf Fiber",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-039"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Shadow material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Shadow"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Feyglass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-040"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Cloak. +10 Stealth in dim light or darkness.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-08",
+        "name": "Ashproof Mantle",
+        "category": "Armor",
+        "rarity": "Rare",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Fine Fiber x2 + Purifying Salt x1 + Ash Glass x1",
+        "requirements": [
+          {
+            "label": "Fine Fiber",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-012"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Purifying Salt",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-018"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Ash Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-028"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Cloak. +10 against airborne contamination and Fittoan ash exposure.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-09",
+        "name": "Spiritguard Buckler",
+        "category": "Shield",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Temple Silver x1 + Spirit Resin x1 + Rune Slate x1",
+        "requirements": [
+          {
+            "label": "Temple Silver",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-034"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Spirit Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-038"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Rune Slate",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-025"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Shield. +2 RES against spirit, psychic, and possession effects.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-10",
+        "name": "Cloudsilver Harness",
+        "category": "Armor",
+        "rarity": "Very Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Cloudsilver x3 + Aurora Thread x1",
+        "requirements": [
+          {
+            "label": "Cloudsilver",
+            "quantity": 3,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-064"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Aurora Thread",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-065"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "10 days",
+        "batchYield": 1,
+        "effect": "Medium armor. Counts as half normal weight; +5 movement while worn.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-11",
+        "name": "Dragonhide Plate",
+        "category": "Armor",
+        "rarity": "Very Rare",
+        "discipline": "Forgecraft",
+        "requirementsText": "Dragon Scale x4 + Rare Metal x1",
+        "requirements": [
+          {
+            "label": "Dragon Scale",
+            "quantity": 4,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-094"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Rare Metal",
+            "quantity": 1,
+            "minRarity": "Rare",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "10 days",
+        "batchYield": 1,
+        "effect": "Heavy armor. Resistance to the dragon material’s damage type.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "ARM-12",
+        "name": "Livingwood Aegis",
+        "category": "Shield",
+        "rarity": "Very Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Elder Livingwood x3 + Life essence x1 + Ancestral Stone x1",
+        "requirements": [
+          {
+            "label": "Elder Livingwood",
+            "quantity": 3,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-037"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Life essence",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Life"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Ancestral Stone",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-045"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 85,
+        "time": "7 days",
+        "batchYield": 1,
+        "effect": "Shield. Repairs itself after a long rest and restores 1d6 HP once per short rest.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-01",
+        "name": "Elemental Lantern",
+        "category": "Utility",
+        "rarity": "Uncommon",
+        "discipline": "Runecraft",
+        "requirementsText": "Metal x1 + Glass x1 + elemental material x1",
+        "requirements": [
+          {
+            "label": "Metal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Glass"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "elemental material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Elemental",
+                  "Fire",
+                  "Cold",
+                  "Lightning",
+                  "Water",
+                  "Storm"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Bright light that survives the corresponding environment.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-02",
+        "name": "Resonance Compass",
+        "category": "Utility",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Metal x1 + Resonance Crystal x1",
+        "requirements": [
+          {
+            "label": "Metal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Resonance Crystal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-029"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Points toward the nearest strong magical disturbance.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-03",
+        "name": "Echo Lens",
+        "category": "Utility",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Glass x1 + Memory material x1 + Gem x1",
+        "requirements": [
+          {
+            "label": "Glass",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Glass"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Memory material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Memory"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Gem",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Gem"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Once per short rest, reveals one recent magical trace.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-04",
+        "name": "Holding Satchel",
+        "category": "Utility",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Fine Fiber x2 + Space material x1 + Gem x1",
+        "requirements": [
+          {
+            "label": "Fine Fiber",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-012"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Space material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Space"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Gem",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Gem"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Contents count as 20 lb. lighter; cannot hold living creatures safely.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-05",
+        "name": "Climber’s Bracers",
+        "category": "Utility",
+        "rarity": "Uncommon",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Hide x1 + Monster Claw x1 + Resin x1",
+        "requirements": [
+          {
+            "label": "Hide",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Hide"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Monster Claw",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-088"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-090"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Gain +10 to climbing checks.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-06",
+        "name": "Water Condenser",
+        "category": "Utility",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Metal x1 + Water Pearl x1",
+        "requirements": [
+          {
+            "label": "Metal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Water Pearl",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-050"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Produces clean water for two creatures each day.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-07",
+        "name": "Portable Ward Stakes",
+        "category": "Utility",
+        "rarity": "Uncommon",
+        "discipline": "Runecraft",
+        "requirementsText": "Wood or Metal x2 + Rune Slate x1",
+        "requirements": [
+          {
+            "label": "Wood or Metal",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Wood"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Rune Slate",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-025"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Create a 20-ft. alarm perimeter during a rest.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-08",
+        "name": "Spell Battery",
+        "category": "Utility",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Mana Crystal x2 + Arcane Salvage x1",
+        "requirements": [
+          {
+            "label": "Mana Crystal",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-015"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Arcane Salvage",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Salvage"
+                ],
+                "anyTags": [
+                  "Arcane"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "3 days",
+        "batchYield": 1,
+        "effect": "Stores 20 MP supplied by a willing caster.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-09",
+        "name": "Spirit Bell",
+        "category": "Utility",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Silver x1 + Soul material x1",
+        "requirements": [
+          {
+            "label": "Silver",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-003"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Soul material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Soul"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Rings when an incorporeal creature enters 30 ft.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-10",
+        "name": "Silent Soles",
+        "category": "Utility",
+        "rarity": "Uncommon",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Hide x1 + Shadow material x1",
+        "requirements": [
+          {
+            "label": "Hide",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Hide"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Shadow material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Shadow"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Once per short rest, gain +10 to one Stealth check.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-11",
+        "name": "Truth Needle",
+        "category": "Utility",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Silver x1 + Mind material x1",
+        "requirements": [
+          {
+            "label": "Silver",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-003"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Mind material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Mind"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Trembles when a nearby creature knowingly speaks a direct lie.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-12",
+        "name": "Return Thread",
+        "category": "Utility",
+        "rarity": "Uncommon",
+        "discipline": "Runecraft",
+        "requirementsText": "Fine Fiber x1 + Memory material x1",
+        "requirements": [
+          {
+            "label": "Fine Fiber",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-012"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Memory material",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [],
+                "anyTags": [
+                  "Memory"
+                ]
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Shows the direction back to the place where it was tied.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-13",
+        "name": "Arcane Chalk",
+        "category": "Utility",
+        "rarity": "Common",
+        "discipline": "Scribing",
+        "requirementsText": "Stone powder x1 + Arcane Ink x1",
+        "requirements": [
+          {
+            "label": "Stone powder",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Stone"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Arcane Ink",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-020"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 40,
+        "time": "4 hr",
+        "batchYield": 1,
+        "effect": "Draw three temporary magical circles.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-14",
+        "name": "Emergency Shelter Seal",
+        "category": "Utility",
+        "rarity": "Uncommon",
+        "discipline": "Fieldcraft",
+        "requirementsText": "Fiber x2 + Rune Slate x1 + Resin x1",
+        "requirements": [
+          {
+            "label": "Fiber",
+            "quantity": 2,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Fiber"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Rune Slate",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-025"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Resin",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-090"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "Creates a weatherproof shelter for four creatures for one night.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-15",
+        "name": "Gatefold Marker",
+        "category": "Utility",
+        "rarity": "Rare",
+        "discipline": "Runecraft",
+        "requirementsText": "Resonance Crystal x1 + Arcane Ink x1",
+        "requirements": [
+          {
+            "label": "Resonance Crystal",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-029"
+                ],
+                "tags": []
+              }
+            ]
+          },
+          {
+            "label": "Arcane Ink",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-020"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 70,
+        "time": "2 days",
+        "batchYield": 1,
+        "effect": "Records the signature of one teleportation effect.",
+        "saveDc": null,
+        "blueprintRequired": true,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      },
+      {
+        "id": "UTL-16",
+        "name": "Name Token",
+        "category": "Utility",
+        "rarity": "Uncommon",
+        "discipline": "Runecraft",
+        "requirementsText": "Metal, Wood, or Bone x1 + Memory Ink x1",
+        "requirements": [
+          {
+            "label": "Metal, Wood, or Bone",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": false,
+            "alternatives": [
+              {
+                "materialIds": [],
+                "tags": [
+                  "Metal"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Wood"
+                ]
+              },
+              {
+                "materialIds": [],
+                "tags": [
+                  "Bone"
+                ]
+              }
+            ]
+          },
+          {
+            "label": "Memory Ink",
+            "quantity": 1,
+            "minRarity": "Common",
+            "named": true,
+            "alternatives": [
+              {
+                "materialIds": [
+                  "MAT-099"
+                ],
+                "tags": []
+              }
+            ]
+          }
+        ],
+        "dc": 55,
+        "time": "1 day",
+        "batchYield": 1,
+        "effect": "While carried, gain +5 against identity confusion and memory displacement.",
+        "saveDc": null,
+        "blueprintRequired": false,
+        "attunement": false,
+        "permanent": true,
+        "project": false
+      }
+    ],
+    "disciplines": [
+      {
+        "id": "Alchemy",
+        "tool": "Alchemist's Supplies",
+        "costGp": 20,
+        "creates": "Potions, bombs, poisons, coatings, and salves"
+      },
+      {
+        "id": "Forgecraft",
+        "tool": "Forgecraft Tools",
+        "costGp": 25,
+        "creates": "Weapons, armor, shields, and metal or bone items"
+      },
+      {
+        "id": "Runecraft",
+        "tool": "Runecraft Tools",
+        "costGp": 30,
+        "creates": "Magical items, enchanted gear, gems, and wards"
+      },
+      {
+        "id": "Scribing",
+        "tool": "Scribe's Tools",
+        "costGp": 15,
+        "creates": "Scrolls, magical inks, seals, and formulae"
+      },
+      {
+        "id": "Fieldcraft",
+        "tool": "Fieldcraft Kit",
+        "costGp": 15,
+        "creates": "Rope, ammunition, masks, traps, and leatherwork"
+      },
+      {
+        "id": "Harvesting",
+        "tool": "Harvesting Kit",
+        "costGp": 10,
+        "creates": "Recovers monster parts and dangerous organic materials"
+      }
+    ],
+    "dropBands": [
+      {
+        "max": 40,
+        "rarity": "None",
+        "label": "No useful crafting material"
+      },
+      {
+        "min": 41,
+        "max": 60,
+        "rarity": "Common",
+        "label": "Common material"
+      },
+      {
+        "min": 61,
+        "max": 80,
+        "rarity": "Uncommon",
+        "label": "Uncommon material"
+      },
+      {
+        "min": 81,
+        "max": 95,
+        "rarity": "Rare",
+        "label": "Rare material"
+      },
+      {
+        "min": 96,
+        "max": 110,
+        "rarity": "Very Rare",
+        "label": "Very Rare material, if the source qualifies"
+      },
+      {
+        "min": 111,
+        "rarity": "Legendary",
+        "label": "Signature or Legendary material, if the source qualifies"
+      }
+    ],
+    "legendaryConcepts": [
+      {
+        "id": "LEG-01",
+        "name": "World-Edge Weapon",
+        "requirements": "Legendary frame + Mythic core + Story-bound relic",
+        "function": "Additional weapon die, improved critical range, or immunity-breaking damage."
+      },
+      {
+        "id": "LEG-02",
+        "name": "Mantle of the Living Fortress",
+        "requirements": "Legendary hide or metal + Primal heart + Protection relic",
+        "function": "Greatly increases defenses, protects allies, or survives one fatal blow."
+      },
+      {
+        "id": "LEG-03",
+        "name": "Crown of the Six Virtues",
+        "requirements": "Six attribute catalysts + Legendary gem + Historic crown",
+        "function": "Changes active ability, commands bound systems, or reveals the cost of authority."
+      },
+      {
+        "id": "LEG-04",
+        "name": "Gatebreaker Engine",
+        "requirements": "Legendary mechanism + Space catalyst + Primal core",
+        "function": "Opens sealed gates, stabilizes teleportation, or prevents forced movement through space."
+      },
+      {
+        "id": "LEG-05",
+        "name": "Vessel of Returning Breath",
+        "requirements": "Legendary vessel + Life essence + Soul catalyst",
+        "function": "Preserves a soul, removes a severe affliction, or restores a creature from the edge of death."
+      },
+      {
+        "id": "LEG-06",
+        "name": "Atlas Engine",
+        "requirements": "Legendary map or book + Memory catalyst + Resonance core",
+        "function": "Maps invisible paths, records soul signatures, and reveals erased locations."
+      },
+      {
+        "id": "LEG-07",
+        "name": "Constellation Forge",
+        "requirements": "Star metal + Celestial catalyst + Ancient forge key",
+        "function": "Portable mythic forge that can create or restore Very Rare equipment at a cost."
+      }
+    ],
+    "rules": {
+      "formula": "d100 + Crafting Discipline Bonus + 25 with the correct tool kit",
+      "assistantBonus": 10,
+      "workshopAdvantage": true,
+      "rarityDcs": {
+        "Common": 40,
+        "Uncommon": 55,
+        "Rare": 70,
+        "Very Rare": 85
+      },
+      "criticalFailureRange": [
+        1,
+        5
+      ],
+      "criticalSuccessRange": [
+        96,
+        100
+      ],
+      "lowerRarityDcIncrease": 10
+    },
     "sections": [
       {
         "name": "Common Materials",
@@ -10281,8 +17029,7 @@ window.AMUTSU_DATA = {
           ]
         ]
       }
-    ],
-    "referenceImage": "assets/craftable-equipment-catalogue.webp"
+    ]
   },
   "skills": [
     {
@@ -12318,7 +19065,7 @@ window.AMUTSU_DATA = {
     "Crafting Catalogue": []
   },
   "defaultState": {
-    "schemaVersion": 5,
+    "schemaVersion": 6,
     "character": {
       "name": "Zele Kopsffmann",
       "race": "Human (Sesian)",
@@ -15074,6 +21821,36 @@ window.AMUTSU_DATA = {
       "ingredientPantry": {},
       "cookingKitOwned": false,
       "ownedUtensils": []
+    },
+    "crafting": {
+      "materialInventory": {},
+      "disciplineBonuses": {
+        "Alchemy": 0,
+        "Forgecraft": 0,
+        "Runecraft": 0,
+        "Scribing": 0,
+        "Fieldcraft": 0,
+        "Harvesting": 0
+      },
+      "ownedToolKits": {
+        "Alchemy": false,
+        "Forgecraft": false,
+        "Runecraft": false,
+        "Scribing": false,
+        "Fieldcraft": false,
+        "Harvesting": false
+      },
+      "knownBlueprints": [],
+      "history": [],
+      "sequence": 0,
+      "legendaryProject": {
+        "conceptId": "",
+        "customName": "",
+        "designComplete": false,
+        "assemblyComplete": false,
+        "awakeningComplete": false,
+        "notes": ""
+      }
     }
   }
 };
