@@ -1,6 +1,6 @@
 {
   "defaultState": {
-    "schemaVersion": 3,
+    "schemaVersion": 4,
     "character": {
       "name": "Zele Kopsffmann",
       "race": "Human (Sesian)",
@@ -2743,11 +2743,15 @@
       {
         "name": "",
         "mark": 0
-      },
-      {
-        "name": "",
-        "mark": 0
       }
-    ]
+    ],
+    "cooking": {
+      "xp": 0,
+      "familiarRecipes": [],
+      "history": [],
+      "sequence": 0,
+      "rerollUsedRest": 0,
+      "hearthwrightUsedRest": 0
+    }
   }
 }
