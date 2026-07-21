@@ -1424,6 +1424,7 @@ async function changeCharacterOwner(characterId, ownerId) {
     return;
   }
   replaceCharacter(data);
+  sendCharacterToSheet();
   showToast("Character owner updated.", "success");
 }
 
@@ -1745,11 +1746,14 @@ function sendCharacterToSheet() {
   const character = activeCharacter();
   const frame = document.getElementById("sheet-frame");
   if (!character || !frame?.contentWindow) return;
+  const owner = ownerProfile(character.owner_id);
+  const ownerName = owner?.display_name || owner?.email || application.profile?.display_name || application.profile?.email || "Player";
   frame.contentWindow.postMessage(
     {
       type: "amutsu:load",
       state: character.state,
       catalogues: buildWorkbookCataloguePayload(application.catalogues),
+      ownerName,
     },
     window.location.origin,
   );
