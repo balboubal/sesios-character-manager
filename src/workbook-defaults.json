@@ -1,6 +1,6 @@
 {
   "defaultState": {
-    "schemaVersion": 6,
+    "schemaVersion": 7,
     "character": {
       "name": "",
       "race": "",
@@ -21,7 +21,8 @@
       "alignment": "Unaligned",
       "sanctum": "None",
       "faith": "None",
-      "spellcastingAbility": "AWR"
+      "spellcastingAbility": "AWR",
+      "experience": 0
     },
     "abilityBonuses": {
       "strength": 0,
