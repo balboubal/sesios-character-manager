@@ -4,7 +4,7 @@ An invite-only, single-campaign web application built from the Amutsu character 
 
 The complete workbook-derived formula engine remains in `public/sheet`. Character inputs are stored in Supabase and recalculated in the browser whenever they change.
 
-## What is included
+## What is includedd
 
 - Email and password login with no public registration page
 - Invitation acceptance and password reset flows
