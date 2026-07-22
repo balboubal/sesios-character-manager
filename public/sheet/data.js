@@ -17040,8 +17040,7 @@ window.AMUTSU_DATA = {
       "name": "Climb",
       "description": "You’re skilled at ascending and descending surfaces.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A29",
@@ -17051,8 +17050,7 @@ window.AMUTSU_DATA = {
       "name": "Grapple",
       "description": "You’re a trained wrestler.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A30",
@@ -17062,8 +17060,7 @@ window.AMUTSU_DATA = {
       "name": "Jump",
       "description": "You’ve practiced jumping with strength and precision.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A31",
@@ -17073,8 +17070,7 @@ window.AMUTSU_DATA = {
       "name": "Lift",
       "description": "You’ve lifted weights can do all sorts of applying strength directly to a problem.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A32",
@@ -17084,8 +17080,7 @@ window.AMUTSU_DATA = {
       "name": "Swim",
       "description": "In the water, you do more than just a dog paddle.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A34",
@@ -17095,8 +17090,7 @@ window.AMUTSU_DATA = {
       "name": "Stealth",
       "description": "You’re good at moving without making a sound.",
       "defaultProficient": true,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A35",
@@ -17106,8 +17100,7 @@ window.AMUTSU_DATA = {
       "name": "Sleight of Hand",
       "description": "You’re good at moving your hands carefully and precisely. As well as, hiding things in your hands and moving things without being noticed. This is not pickpocketing, this is secretly drawing a knife or stacking a deck of cards)",
       "defaultProficient": true,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A36",
@@ -17117,8 +17110,7 @@ window.AMUTSU_DATA = {
       "name": "Disarm Trap",
       "description": "Once the trap is found, your steady hand lets you cut the right wire.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A37",
@@ -17128,8 +17120,7 @@ window.AMUTSU_DATA = {
       "name": "Pick Lock",
       "description": "You can open the locks on chests and doors.",
       "defaultProficient": true,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A38",
@@ -17139,8 +17130,7 @@ window.AMUTSU_DATA = {
       "name": "Pick Pocket",
       "description": "You can remove things from other people’s possession without their notice.",
       "defaultProficient": true,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A39",
@@ -17150,8 +17140,7 @@ window.AMUTSU_DATA = {
       "name": "Rope Control",
       "description": "From tying knots, to carefully landing a grappling hook, if it has more to do with rope then just pulling, this is the skill.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A40",
@@ -17161,8 +17150,7 @@ window.AMUTSU_DATA = {
       "name": "Balance",
       "description": "You’re good at staying on your feet where other people would fall over.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A41",
@@ -17172,8 +17160,7 @@ window.AMUTSU_DATA = {
       "name": "Escape",
       "description": "You’re skilled at slipping out of a grapple, of tied ropes, or crawling through tight spaces",
       "defaultProficient": true,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A42",
@@ -17183,8 +17170,7 @@ window.AMUTSU_DATA = {
       "name": "Landing",
       "description": "You’re skilled at landing safely on your feet.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A44",
@@ -17194,8 +17180,7 @@ window.AMUTSU_DATA = {
       "name": "Deep Breath",
       "description": "You have good control over your breathing and can hold your breath for a long time. This skill might add to a Vitality saving throw, and not just an ability check.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A45",
@@ -17205,8 +17190,7 @@ window.AMUTSU_DATA = {
       "name": "Forced March",
       "description": "You’ve trained up your endurance, allowing you to travel further and longer than anyone else. This Subskill might add to a Vitality saving throw, and not just an ability check.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A46",
@@ -17216,8 +17200,7 @@ window.AMUTSU_DATA = {
       "name": "Hold Liqour",
       "description": "You’ve spent many hours knowing your limits, and overcoming them. You know how to pace yourself, and how to tell if your drink has been tampered with. This Subskill might add to a Vitality saving throw, and not just an ability check.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A48",
@@ -17227,8 +17210,7 @@ window.AMUTSU_DATA = {
       "name": "Location",
       "description": "You’ve studied a location and know it’s history and how to navigate it, as well as places and people within it. If you grew up in one place, you probably start with this skill for your home town",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A49",
@@ -17238,8 +17220,7 @@ window.AMUTSU_DATA = {
       "name": "Race",
       "description": "This skill tells you things about a race. Perhaps you were fascinated with Elvish culture, or you spent a lot of time dealing with dwarves. You know things about the people, their history, their legends and stories, their specialty foods, their craftsmanship. You likely have this for your own species, unless you grew up in another one.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A50",
@@ -17249,8 +17230,7 @@ window.AMUTSU_DATA = {
       "name": "Alchemy",
       "description": "You know things about alchemical liquids, and you can make and brew potions and other items.\n\nThis includes using brewer’s kit and poisoners kit to make alcoholic and poisonous products.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A51",
@@ -17260,8 +17240,7 @@ window.AMUTSU_DATA = {
       "name": "Appraisal",
       "description": "You’re good at figuring out the worth of items, and you know the market value of a lot of goods.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A52",
@@ -17271,8 +17250,7 @@ window.AMUTSU_DATA = {
       "name": "Craft",
       "description": "You’re skilled at making things.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A53",
@@ -17282,8 +17260,7 @@ window.AMUTSU_DATA = {
       "name": "Engineering",
       "description": "You’ve studied the arcane knowledge of the fulcrum and the sliding rule. You know how complicated machines function, and can figure out ways to make, break, or fix various devices",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A54",
@@ -17293,8 +17270,7 @@ window.AMUTSU_DATA = {
       "name": "Forgery",
       "description": "You can create replicas, draft realistic looking documents, and copy official seals.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A55",
@@ -17304,8 +17280,7 @@ window.AMUTSU_DATA = {
       "name": "Research",
       "description": "You know how to efficiently locate, analyze, and connect information from books, records, archives, and other sources to uncover useful knowledge.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A56",
@@ -17315,8 +17290,7 @@ window.AMUTSU_DATA = {
       "name": "Trapmaking",
       "description": "You know how to set traps, and where to place traps for most effective use. Also handing for finding traps others have set.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A57",
@@ -17326,8 +17300,7 @@ window.AMUTSU_DATA = {
       "name": "Magic Identification",
       "description": "This is used when trying to determine if something is magical. The higher the roll, the more information you get. Detect Magic does all of this.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A58",
@@ -17337,8 +17310,7 @@ window.AMUTSU_DATA = {
       "name": "Magic Items",
       "description": "You’ve studied magic items, how they’re made, the history of some famous items, common activation methods, and so on.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A59",
@@ -17348,8 +17320,7 @@ window.AMUTSU_DATA = {
       "name": "Monster Identification",
       "description": "You’ve studied all sorts of monsters, from the Aboleth to the Zombie. You know their habits, their strengths, and their weaknesses.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A60",
@@ -17359,8 +17330,7 @@ window.AMUTSU_DATA = {
       "name": "The Planes",
       "description": "You’ve studied the differences and the lore of the Six Planes and their manifest zones.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A61",
@@ -17370,8 +17340,7 @@ window.AMUTSU_DATA = {
       "name": "Rituals",
       "description": "You know the meaning behind rites, ceremonies, and the like, whether arcane or divine.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A62",
@@ -17381,8 +17350,7 @@ window.AMUTSU_DATA = {
       "name": "Spell Lore",
       "description": "You know the effects of many spells, the components required, and what is possible with magic.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A63",
@@ -17392,8 +17360,7 @@ window.AMUTSU_DATA = {
       "name": "Architecture",
       "description": "You know how buildings work, which pillars are load bearing, and how old this place probably is.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A64",
@@ -17403,8 +17370,7 @@ window.AMUTSU_DATA = {
       "name": "Geography",
       "description": "You know the area, how to read maps, and where the nearest river is.",
       "defaultProficient": true,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A65",
@@ -17414,8 +17380,7 @@ window.AMUTSU_DATA = {
       "name": "Politics",
       "description": "You know the ways of politics, how to subtly promise support, and how to read between the lines of intrigue.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A66",
@@ -17425,8 +17390,7 @@ window.AMUTSU_DATA = {
       "name": "Social",
       "description": "You know who the important people are.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A67",
@@ -17436,8 +17400,7 @@ window.AMUTSU_DATA = {
       "name": "Rifle Pockets",
       "description": "You are good at frisking an individual, alive or dead, and seeing what they have in their pockets.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A68",
@@ -17447,8 +17410,7 @@ window.AMUTSU_DATA = {
       "name": "Scene Investigation",
       "description": "You know how to look around and find clues.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A69",
@@ -17458,8 +17420,7 @@ window.AMUTSU_DATA = {
       "name": "Skim Read",
       "description": "You know how to quickly parse a paper, looking for the things that you need to know immediately.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A70",
@@ -17469,8 +17430,7 @@ window.AMUTSU_DATA = {
       "name": "Animals",
       "description": "You know things about animals, including their behaviors, the tasty parts, the scary bits, and how to take care of them.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A71",
@@ -17480,8 +17440,7 @@ window.AMUTSU_DATA = {
       "name": "Minerals and Metals",
       "description": "You’ve studied various types of rocks, ores, and metals, their properties and where they can be found.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A72",
@@ -17491,8 +17450,7 @@ window.AMUTSU_DATA = {
       "name": "Plants",
       "description": "You’ve read up on the differences between plants, you know the best woods to make a cabinet out of, and you know the difference between aloe vera and poison oak.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A73",
@@ -17502,8 +17460,7 @@ window.AMUTSU_DATA = {
       "name": "Seasons and Weather",
       "description": "You know when to plant, when to harvest, how long a storm will last, and what type of cloud that is.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A74",
@@ -17513,8 +17470,7 @@ window.AMUTSU_DATA = {
       "name": "Deities",
       "description": "You’ve studied the gods, not only the ones of your own beliefs, but those of others as well.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A75",
@@ -17524,8 +17480,7 @@ window.AMUTSU_DATA = {
       "name": "Dogma",
       "description": "You understand the beliefs behind various faiths, and can make educated guesses at faiths you know little about.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A77",
@@ -17535,8 +17490,7 @@ window.AMUTSU_DATA = {
       "name": "Persuade Animal",
       "description": "You can convince animals in ton doing what you want, from coming",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A78",
@@ -17546,8 +17500,7 @@ window.AMUTSU_DATA = {
       "name": "Ride Animal",
       "description": "You’re good on the back of a horse or a griffon, or whatever animal you’re in. (Saddles work like tools)",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A79",
@@ -17557,8 +17510,7 @@ window.AMUTSU_DATA = {
       "name": "Detect Lies",
       "description": "You are good at sussing out when someone is trying to deceive you.",
       "defaultProficient": true,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A80",
@@ -17568,8 +17520,7 @@ window.AMUTSU_DATA = {
       "name": "Gut Check",
       "description": "Kind of a meta ability. If you’re stuck, or unsure about something, perhaps the DM can give some advice.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A81",
@@ -17579,8 +17530,7 @@ window.AMUTSU_DATA = {
       "name": "Mime Language",
       "description": "You can communicate with gestures, miming, and pointing. Good for communicating with people who do not speak your language. This Subskill lets you win at charades.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A82",
@@ -17590,8 +17540,7 @@ window.AMUTSU_DATA = {
       "name": "Pierce Disguise",
       "description": "You are good at seeing past the makeup, the mannerisms, the clothes, and seeing who is behind the disguise. Or a tleast, that they are in disguise.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A83",
@@ -17601,8 +17550,7 @@ window.AMUTSU_DATA = {
       "name": "Autopsy",
       "description": "There is a lot you can learn from a dead body. I mean, it’s mostly “how did they die?”, but learning when, and where are also useful questions.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A84",
@@ -17612,8 +17560,7 @@ window.AMUTSU_DATA = {
       "name": "Medical Examination",
       "description": "You can examine a living person, and determine what ails them.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A85",
@@ -17623,8 +17570,7 @@ window.AMUTSU_DATA = {
       "name": "Treatment",
       "description": "This is Medicine over a long time, a nurse at the recovery center. Treatment is about the sick, not the wounded.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A86",
@@ -17634,8 +17580,7 @@ window.AMUTSU_DATA = {
       "name": "Triage",
       "description": "This is short term medical treatment, binding wounds in combat, dealing with the immediate needs of the wounded not the sick.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A87",
@@ -17645,8 +17590,7 @@ window.AMUTSU_DATA = {
       "name": "Find Hidden",
       "description": "Your eyes are good at picking out things trying to hide. Useful for finding unseen people or looking behind the proper curtain.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A88",
@@ -17656,8 +17600,7 @@ window.AMUTSU_DATA = {
       "name": "Keen Ears",
       "description": "Your sharp ears are good at picking out the subtlest of sounds.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A89",
@@ -17667,8 +17610,7 @@ window.AMUTSU_DATA = {
       "name": "Keen Eyes",
       "description": "Your sharp eyes are good at picking up small details at a distance, or tiny details close up.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A90",
@@ -17678,8 +17620,7 @@ window.AMUTSU_DATA = {
       "name": "Keen Nose",
       "description": "Your sharp nose is good at picking up the smallest whiff.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A91",
@@ -17689,8 +17630,7 @@ window.AMUTSU_DATA = {
       "name": "Notice Differences",
       "description": "You can notice the differences when something small and subtle has changed.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A92",
@@ -17700,8 +17640,7 @@ window.AMUTSU_DATA = {
       "name": "Read Lips",
       "description": "You can understand part of a conversation, even if you can’t hear what’s being said, as long as you can see part of the conversation.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A93",
@@ -17711,8 +17650,7 @@ window.AMUTSU_DATA = {
       "name": "Avoid Hazards",
       "description": "You’re skilled at avoiding wilderness hazards, from quicksand to razor grass and wasp hives.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A94",
@@ -17722,8 +17660,7 @@ window.AMUTSU_DATA = {
       "name": "Butcher",
       "description": "You know how to take an animal apart for the most profit. After it’s dead, of course.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A95",
@@ -17733,8 +17670,7 @@ window.AMUTSU_DATA = {
       "name": "Cooking",
       "description": "Prepare meals safely, work from recipes, preserve ingredients, and produce Hearth Boons.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A96",
@@ -17744,8 +17680,7 @@ window.AMUTSU_DATA = {
       "name": "Forage",
       "description": "You’re good at finding food and water in the wild.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A97",
@@ -17755,8 +17690,7 @@ window.AMUTSU_DATA = {
       "name": "Navigation",
       "description": "You know your directions, and how to find your way without getting lost.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A98",
@@ -17766,8 +17700,7 @@ window.AMUTSU_DATA = {
       "name": "Tracking",
       "description": "You know how to follow a trail, and can find information about creatures that have passed along away.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": true
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A100",
@@ -17777,8 +17710,7 @@ window.AMUTSU_DATA = {
       "name": "Etiquette",
       "description": "You know which fork to use for the fish, which title to use for the queen, and all the rules of a proper duel.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A101",
@@ -17788,8 +17720,7 @@ window.AMUTSU_DATA = {
       "name": "Gambling",
       "description": "You’re good at games of bluff, chance, and making luck your ally.",
       "defaultProficient": true,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A102",
@@ -17799,8 +17730,7 @@ window.AMUTSU_DATA = {
       "name": "Con",
       "description": "You are good at selling a story, normally for some sort of money making scheme, but there can be other prizes.",
       "defaultProficient": true,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A103",
@@ -17810,8 +17740,7 @@ window.AMUTSU_DATA = {
       "name": "Disguise",
       "description": "You are proficient in becoming someone else, in outfit, actions, and appearance.",
       "defaultProficient": true,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A104",
@@ -17821,8 +17750,7 @@ window.AMUTSU_DATA = {
       "name": "Lie",
       "description": "You can tell not truths without blinking.",
       "defaultProficient": true,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A105",
@@ -17832,8 +17760,7 @@ window.AMUTSU_DATA = {
       "name": "Bluster",
       "description": "Blustering is a way of making yourself look tougher than you are, making them not want to fight you.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A106",
@@ -17843,8 +17770,7 @@ window.AMUTSU_DATA = {
       "name": "Interrogate",
       "description": "You are good at getting answers, and you don’t care what the perp thinks about you when you’re done.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A107",
@@ -17854,8 +17780,7 @@ window.AMUTSU_DATA = {
       "name": "Threaten",
       "description": "Threatening is about trying to get someone to act in a certain manner, based on how scary you can be. Well trained individuals don’t threaten very well.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A108",
@@ -17865,8 +17790,7 @@ window.AMUTSU_DATA = {
       "name": "Performance",
       "description": "You have studied and trained in various parts of entertaining. There are many elements that this can be. While there is some overlap, each element is distinct. Options include and are not limited to: A musical instrument, sculpture, painting and drawing, storytelling, oration, journalism, fashion, dance, comedy, decoration, and so on.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A109",
@@ -17876,8 +17800,7 @@ window.AMUTSU_DATA = {
       "name": "Ask Around",
       "description": "You’re good at talking to locals to find out information without raising suspicions.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A110",
@@ -17887,8 +17810,7 @@ window.AMUTSU_DATA = {
       "name": "Bribe",
       "description": "Bribing  is a time honored tradition of exchanging money for favors, secretly. Being proficient at bribery lets you know if a person would take a bribe, and how much is appropriate.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A111",
@@ -17898,8 +17820,7 @@ window.AMUTSU_DATA = {
       "name": "Diffuse Situation",
       "description": "You are good at calming emotions and getting everyone to stop and talk for a second.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A112",
@@ -17909,8 +17830,7 @@ window.AMUTSU_DATA = {
       "name": "Haggle",
       "description": "You get the best deal out of merchants, whether buying or selling.",
       "defaultProficient": true,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A113",
@@ -17920,8 +17840,7 @@ window.AMUTSU_DATA = {
       "name": "Inspire",
       "description": "You are good at getting the blood pumping and reinvigorating the morale of the troops.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     },
     {
       "sourceCell": "A114",
@@ -17931,8 +17850,7 @@ window.AMUTSU_DATA = {
       "name": "Make Friends",
       "description": "You are good at making positive impressions on people.",
       "defaultProficient": false,
-      "defaultBonus": 0,
-      "ignoresBonus": false
+      "defaultBonus": 0
     }
   ],
   "equipmentSlots": [

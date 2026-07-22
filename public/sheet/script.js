@@ -1322,9 +1322,8 @@
             const tooltip = skill.description
               ? `<button class="tooltip-button" type="button" data-tooltip="${escapeHtml(skill.description)}" aria-label="About ${escapeHtml(skill.name)}">?</button>`
               : "";
-            const bonusHint = skill.ignoresBonus ? `<span class="pill pill-amber">Manual bonus not applied</span>` : "";
             return `<div class="skill-row">
-              <div class="skill-name"><span>${escapeHtml(skill.name)}</span>${tooltip}${bonusHint}</div>
+              <div class="skill-name"><span>${escapeHtml(skill.name)}</span>${tooltip}</div>
               ${checkbox(`skills.${skill.sourceRow}.proficient`, skillState.proficient, "Proficient")}
               <label class="visually-hidden" for="skill-bonus-${skill.sourceRow}">Bonus for ${escapeHtml(skill.name)}</label>
               <input class="table-input" id="skill-bonus-${skill.sourceRow}" type="number" step="1" data-value-type="number" data-bind="skills.${skill.sourceRow}.bonus" value="${escapeHtml(skillState.bonus)}" aria-label="Bonus for ${escapeHtml(skill.name)}" />

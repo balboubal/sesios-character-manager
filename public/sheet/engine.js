@@ -2308,7 +2308,7 @@
     const skillScores = {};
     data.skills.forEach((skill) => {
       const input = state.skills?.[String(skill.sourceRow)] || {};
-      const bonus = skill.ignoresBonus ? 0 : numberValue(input.bonus);
+      const bonus = numberValue(input.bonus);
       skillScores[String(skill.sourceRow)] =
         abilityModifiers[skill.ability] + (input.proficient ? proficiency : 0) + bonus;
     });
